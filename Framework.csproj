@@ -8,7 +8,7 @@
     <ProjectGuid>{8D3B3F25-C18D-4800-B258-2877AC831905}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Framework</RootNamespace>
+    <RootNamespace>AddOne.Framework</RootNamespace>
     <AssemblyName>Framework</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -31,8 +31,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\Core\Windsor\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.Logging">
+      <HintPath>..\Core\Windsor\Castle.Facilities.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\Core\Windsor\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>external-references\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="SAPbouiCOM">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\Extensions\SAP\Business One Studio\SAPbouiCOM.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,7 +58,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BootStrap.cs" />
+    <Compile Include="DAO\BusinessOneDAO.cs" />
+    <Compile Include="DAO\BusinessOneDAOSQLImpl.cs" />
+    <Compile Include="Factory\SAPServiceFactory.cs" />
+    <Compile Include="Log\SAPAppender.cs" />
+    <Compile Include="MicroCore.cs" />
+    <Compile Include="Model\Assembly\AssemblyInformation.cs" />
+    <Compile Include="Model\SAP\BOM.cs" />
+    <Compile Include="Model\SAP\UserField.cs" />
+    <Compile Include="Model\SAP\UserTable.cs" />
+    <Compile Include="Model\SAP\ValidValues.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\AssemblyLoader.cs" />
+    <Compile Include="Service\DatabaseConfiguration.cs" />
+    <Compile Include="Service\DatabaseConfigurationSQLImpl.cs" />
+    <Compile Include="Service\MachineInformation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="SAPbobsCOM">
+      <Guid>{FC8030BE-F5D2-4B8E-8F92-44228FE30090}</Guid>
+      <VersionMajor>9</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DatabaseTables.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
