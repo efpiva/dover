@@ -2,24 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.Model.SAP.Assembly;
+using AddOne.Framework.Model.Assembly;
+using AddOne.Framework.Model.SAP;
+using System.IO;
 
 namespace AddOne.Framework.DAO
 {
     public interface BusinessOneDAO
     {
 
-        void CreateTables(List<Model.SAP.GAUserTable> tables);
+        void SaveBOMIfNotExists(UserTableBOM tables);
 
-        void CreateTable(Model.SAP.GAUserTable table);
+        void SaveBOMIfNotExists(UserFieldBOM fields);
 
-        void CreateField(Model.SAP.GAUserField field);
-
-        List<Model.SAP.GAUserTable> CheckTablesExists(List<Model.SAP.GAUserTable> tables);
-
-        List<Model.SAP.GAUserField> CheckFieldsExists(List<Model.SAP.GAUserTable> tables);
-
-        void CreateFields(List<Model.SAP.GAUserField> fieldsToCreate);
+        void UpdateOrSaveBOMIfNotExists(UDOBOM filteredUdoBOM);
 
         string GetNextCode(String udt);
 
@@ -27,10 +23,22 @@ namespace AddOne.Framework.DAO
 
         void ExecuteStatement(string sql);
 
-        List<AssemblyInformation> GetCoreAssemblies();
+        T ExecuteSqlForObject<T>(string sql);
 
-        List<AssemblyInformation> GetAddinsAssemblies();
+        List<T> ExecuteSqlForList<T>(string sql);
 
-        byte[] GetAssembly(AssemblyInformation asm);
+        T GetBOMFromXML<T>(Stream resourceStream);
+
+        string GetUserTableXMLBOMFromNames(string[] userTables);
+
+        string GetUserFieldXMLBOMFromNames(string[] userTables);
+
+        void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute);
+
+        void UpdateOrSaveBOMIfNotExists(FormattedSearchBOM fsBOM);
+
+        void UpdateOrSaveBOMIfNotExists(UserQueriesBOM qcBOM);
+
+        void UpdateOrSaveBOMIfNotExists(QueryCategoriesBOM qcBOM);
     }
 }
