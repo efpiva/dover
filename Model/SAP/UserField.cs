@@ -1,114 +1,365 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Xml.Serialization;
 using SAPbobsCOM;
-using System.Xml.Serialization;
+using System;
 
 namespace AddOne.Framework.Model.SAP
 {
-
-    [XmlRoot("BOM")]
-    public class GAUserFieldBOM
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [System.Xml.Serialization.XmlRootAttribute(ElementName="BOM", Namespace = "", IsNullable = false)]
+    public class UserFieldBOM
     {
-        [XmlElement("BO")]
-        public List<GAUserFieldMD> BO;
-    }
 
-    public class GAUserFieldMD : BO
-    {
+        private UserFieldBOMBO[] boField;
 
-        [XmlArray("UserFieldsMD")]
-        [XmlArrayItem("row")]
-        public List<GAUserField> UserFieldMD = new List<GAUserField>();
-        [XmlArray("ValidValuesMD")]
-        [XmlArrayItem("row")]
-        public List<GAValidValues> ValidValuesMD;
-
-    }
-
-    [XmlRoot("row")]
-    public class GAUserField : IComparable<GAUserField>
-    {
-        private string tableName;
-        private string name;
-        private string description;
-        private int editSize;
-
-        public BoFieldTypes Type;
-        public BoFldSubTypes SubType = BoFldSubTypes.st_None;
-        public string DefaultValue = "";
-        public BoYesNoEnum Mandatory = BoYesNoEnum.tNO;
-        public string LinkedTable = "";
-        [XmlIgnore]
-        public List<GAValidValues> ValidValuesMD = new List<GAValidValues>();
-
-        public GAUserField() { }
-
-        public GAUserField(string fieldName, string description, BoFieldTypes type, int size, BoFldSubTypes subType,
-            string tableName = "", string validValues = "", BoYesNoEnum mandatory = BoYesNoEnum.tNO, string linkedTable = "")
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("BO")]
+        public UserFieldBOMBO[] BO
         {
-            this.TableName = tableName;
-            this.Name = fieldName;
-            this.Description = description;
-            this.Type = type;
-            this.SubType = subType;
-            this.editSize = size;
-            this.DefaultValue = validValues;
-            this.Mandatory = mandatory;
-            this.LinkedTable = linkedTable;
-        }
-
-        public string TableName
-        {
-            get { return tableName; }
+            get
+            {
+                return this.boField;
+            }
             set
             {
-                if (value != null && value.Length > 20)
-                    throw new Exception("Table name longer than 20");
-                this.tableName = value;
+                this.boField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class UserFieldBOMBO : IComparable<UserFieldBOMBO>
+    {
+
+        private BOMBOAdmInfo admInfoField;
+
+        private BOMBOQueryParams queryParamsField;
+
+        private UserField[] userFieldsMDField;
+
+        private ValidValues[] validValuesMDField;
+
+        /// <remarks/>
+        public BOMBOAdmInfo AdmInfo
+        {
+            get
+            {
+                return this.admInfoField;
+            }
+            set
+            {
+                this.admInfoField = value;
             }
         }
 
+        /// <remarks/>
+        public BOMBOQueryParams QueryParams
+        {
+            get
+            {
+                return this.queryParamsField;
+            }
+            set
+            {
+                this.queryParamsField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("row", IsNullable = false)]
+        public UserField[] UserFieldsMD
+        {
+            get
+            {
+                return this.userFieldsMDField;
+            }
+            set
+            {
+                this.userFieldsMDField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayItemAttribute("row", IsNullable = false)]
+        public ValidValues[] ValidValuesMD
+        {
+            get
+            {
+                return this.validValuesMDField;
+            }
+            set
+            {
+                this.validValuesMDField = value;
+            }
+        }
+
+        public int CompareTo(UserFieldBOMBO other)
+        {
+            if (this.userFieldsMDField != null && this.userFieldsMDField.Length == 1
+                && other.userFieldsMDField != null && other.userFieldsMDField.Length == 1)
+            {
+                if (this.userFieldsMDField[0].TableName == other.userFieldsMDField[0].TableName)
+                    return this.userFieldsMDField[0].Name.CompareTo(other.userFieldsMDField[0].Name);
+                else
+                    return this.userFieldsMDField[0].TableName.CompareTo(other.userFieldsMDField[0].TableName);
+            }
+            return -1;
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class UserField
+    {
+
+        private string nameField;
+
+        private BoFieldTypes typeField;
+
+        private long sizeField;
+
+        private bool sizeFieldSpecified;
+
+        private string descriptionField;
+
+        private BoFldSubTypes subTypeField = BoFldSubTypes.st_None;
+
+        private string linkedTableField = "";
+
+        private string defaultValueField = "";
+
+        private string tableNameField;
+
+        private long editSizeField;
+
+        private bool editSizeFieldSpecified;
+
+        private BoYesNoEnum mandatoryField = BoYesNoEnum.tNO;
+
+        private string linkedUDOField;
+
+        /// <remarks/>
         public string Name
         {
-            get { return name; }
+            get
+            {
+                return this.nameField;
+            }
             set
             {
-                if (value != null && value.Length > 18)
-                    throw new Exception("Name longer than 18");
-                this.name = value;
+                this.nameField = value;
             }
         }
 
+        /// <remarks/>
+        public BoFieldTypes Type
+        {
+            get
+            {
+                return this.typeField;
+            }
+            set
+            {
+                this.typeField = value;
+            }
+        }
+
+        /// <remarks/>
+        public long Size
+        {
+            get
+            {
+                return this.sizeField;
+            }
+            set
+            {
+                this.sizeField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool SizeSpecified
+        {
+            get
+            {
+                return this.sizeFieldSpecified;
+            }
+            set
+            {
+                this.sizeFieldSpecified = value;
+            }
+        }
+
+        /// <remarks/>
         public string Description
         {
-            get { return description; }
+            get
+            {
+                return this.descriptionField;
+            }
             set
             {
-                if (value != null && value.Length > 30)
-                    throw new Exception("Description longer than 30");
-                this.description = value;
+                this.descriptionField = value;
             }
         }
 
-        public String EditSize
+        /// <remarks/>
+        public BoFldSubTypes SubType
         {
-            get { return (editSize > 0) ? editSize.ToString() : ""; }
-            set { Int32.TryParse(value, out editSize); }
+            get
+            {
+                return this.subTypeField;
+            }
+            set
+            {
+                this.subTypeField = value;
+            }
         }
 
-        public int CompareTo(GAUserField other)
+        /// <remarks/>
+        public string LinkedTable
         {
-            if (other == null)
-                return -1;
-
-            int tableCompare = this.TableName.CompareTo(other.TableName);
-            if (tableCompare == 0)
-                return this.Name.CompareTo(other.Name);
-            else
-                return tableCompare;
+            get
+            {
+                return this.linkedTableField;
+            }
+            set
+            {
+                this.linkedTableField = value;
+            }
         }
 
+        /// <remarks/>
+        public string DefaultValue
+        {
+            get
+            {
+                return this.defaultValueField;
+            }
+            set
+            {
+                this.defaultValueField = value;
+            }
+        }
+
+        /// <remarks/>
+        public string TableName
+        {
+            get
+            {
+                return this.tableNameField;
+            }
+            set
+            {
+                this.tableNameField = value;
+            }
+        }
+
+        /// <remarks/>
+        public long EditSize
+        {
+            get
+            {
+                return this.editSizeField;
+            }
+            set
+            {
+                this.editSizeField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool EditSizeSpecified
+        {
+            get
+            {
+                return this.editSizeFieldSpecified;
+            }
+            set
+            {
+                this.editSizeFieldSpecified = value;
+            }
+        }
+
+        /// <remarks/>
+        public BoYesNoEnum Mandatory
+        {
+            get
+            {
+                return this.mandatoryField;
+            }
+            set
+            {
+                this.mandatoryField = value;
+            }
+        }
+
+        /// <remarks/>
+        public string LinkedUDO
+        {
+            get
+            {
+                return this.linkedUDOField;
+            }
+            set
+            {
+                this.linkedUDOField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class ValidValues
+    {
+
+        private string valueField;
+
+        private string descriptionField;
+
+        /// <remarks/>
+        public string Value
+        {
+            get
+            {
+                return this.valueField;
+            }
+            set
+            {
+                this.valueField = value;
+            }
+        }
+
+        /// <remarks/>
+        public string Description
+        {
+            get
+            {
+                return this.descriptionField;
+            }
+            set
+            {
+                this.descriptionField = value;
+            }
+        }
     }
 }
