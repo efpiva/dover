@@ -31,20 +31,6 @@ namespace AddOne.Framework.Factory
             // inception!
             if (application != null && company != null)
             {
-                String CompanyDB = company.CompanyDB;
-                bool isConnected = company.Connected;
-
-                Recordset rs = (Recordset)company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset);
-                rs.DoQuery("select CardCode, CardName from OCRD");
-
-                while (!rs.EoF)
-                {
-                    string cardCode = (String)rs.Fields.Item("CardCode").Value;
-                    string cardName = (String)rs.Fields.Item("CardName").Value;
-                    rs.MoveNext();
-                }
-
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
                 return;
             }
 
