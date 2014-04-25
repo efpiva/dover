@@ -32,7 +32,7 @@ namespace AddOne.Framework.Log
             Type objectType = (from asm in AppDomain.CurrentDomain.GetAssemblies()
                                from type in asm.GetTypes()
                                where type.IsClass && type.FullName == className
-                               select type).Single();
+                               select type).First();
             Version ver = objectType.Assembly.GetName().Version;
             asmName = objectType.Assembly.GetName().Name;
             version = ver.Major.ToString() + "." + ver.Minor.ToString() + "." + ver.Build.ToString()
