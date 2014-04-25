@@ -7,7 +7,7 @@ using SAPbobsCOM;
 using System.IO;
 using AddOne.Framework.Service;
 using Castle.Core.Logging;
-using AddOne.Framework.Model.SAP.Assembly;
+using AddOne.Framework.Model.Assembly;
 
 namespace AddOne
 {
@@ -26,7 +26,7 @@ namespace AddOne
             this.assemblyLoader = assemblyLoader;
         }
 
-        public string PrepareCore()
+        public string PrepareFramework()
         {
             try
             {
@@ -79,7 +79,8 @@ namespace AddOne
 
         private bool InsideInception()
         {
-            return AppDomain.CurrentDomain.FriendlyName == "AddOne.Inception";
+            return AppDomain.CurrentDomain.FriendlyName == "AddOne.Inception"
+                || AppDomain.CurrentDomain.FriendlyName == "AddOne.AddIn";
         }
     }
 }
