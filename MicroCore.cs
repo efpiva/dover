@@ -9,9 +9,9 @@ using AddOne.Framework.Service;
 using Castle.Core.Logging;
 using AddOne.Framework.Model.Assembly;
 
-namespace AddOne
+namespace AddOne.Framework
 {
-    public class MicroCore
+    internal class MicroCore
     {
         private SAPbobsCOM.Company company;
         private DatabaseConfiguration dbConf;
@@ -26,25 +26,34 @@ namespace AddOne
             this.assemblyLoader = assemblyLoader;
         }
 
-        public string PrepareFramework()
+        internal string PrepareFramework()
         {
             try
             {
+                Logger.Debug(Messages.PreparingFramework);
                 dbConf.PrepareDatabase();
 
                 if (InsideInception())
                     return null;
 
                 string appFolder = CheckAppFolder();
+                Logger.Debug(String.Format(Messages.CreatedAppFolder, appFolder));
 
-                UpdateCore(appFolder);
-                UpdateAddins(appFolder);
+                assemblyLoader.UpdateAssemblies(AssemblySource.Core, appFolder);
+                assemblyLoader.UpdateAssemblies(AssemblySource.AddIn, appFolder);
+
+                var appLog = Path.Combine(appFolder, "log4net.config");
+                var defaultLog = Path.Combine(Environment.CurrentDirectory, "log4netAddin.config");
+                if (!File.Exists(appLog) && File.Exists(defaultLog))
+                {
+                    File.Copy(defaultLog, appLog);
+                }
 
                 return appFolder;
             }
             catch (Exception e)
             {
-                Logger.Fatal("Erro inicializando Core.", e);
+                Logger.Fatal(String.Format(Messages.GeneralError, e.Message), e);
                 Environment.Exit(10);
                 return null;
             }
@@ -65,16 +74,6 @@ namespace AddOne
             {
                 System.IO.Directory.CreateDirectory(appFolder);
             }
-        }
-
-        private void UpdateAddins(string appFolder)
-        {
-            assemblyLoader.UpdateAssemblies(AssemblySource.AddIn, appFolder);
-        }
-
-        private void UpdateCore(string appFolder)
-        {
-            assemblyLoader.UpdateAssemblies(AssemblySource.Core, appFolder);
         }
 
         private bool InsideInception()
