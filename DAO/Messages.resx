@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddInPermission" xml:space="preserve">
+    <value>Adicionando permissão para addin {0} - Valor: {1}</value>
+  </data>
+  <data name="AddInUserPermission" xml:space="preserve">
+    <value>Adicionando permissão para usuário {0} - addin {1} - Valor: {2}</value>
+  </data>
+  <data name="AuthorizationMessage" xml:space="preserve">
+    <value>Retorno do metodo {1} de tipo {0} nao e booleano</value>
+  </data>
+  <data name="EndExecuteStatement" xml:space="preserve">
+    <value>Finalizando execução de SQL - {0}</value>
+  </data>
+  <data name="EndUpdateOrSave" xml:space="preserve">
+    <value>Finalizado UpdateOrSave para {0}</value>
+  </data>
+  <data name="ErrorAddingDI" xml:space="preserve">
+    <value>Erro adicionando {0} {1} - {2}</value>
+  </data>
+  <data name="ErrorExecuteStatement" xml:space="preserve">
+    <value>Erro executando SQL {0} - {1}</value>
+  </data>
+  <data name="ErrorUpdatingDI" xml:space="preserve">
+    <value>Erro atualizando {0} {1} - {2}</value>
+  </data>
+  <data name="ExecuteForListCommand" xml:space="preserve">
+    <value>Executando SQL {0}</value>
+  </data>
+  <data name="ExecuteForListReturn" xml:space="preserve">
+    <value>Adicionado objeto {0} ao retorno em ExecuteSqlForList</value>
+  </data>
+  <data name="ExecuteForObjectArgument" xml:space="preserve">
+    <value>Objeto do tipo {0}. Retorno da consulta no tipo {1}</value>
+  </data>
+  <data name="ExecuteForObjectError" xml:space="preserve">
+    <value>Erro executando SQL: {0}</value>
+  </data>
+  <data name="ExecuteForObjectReturn" xml:space="preserve">
+    <value>Retornando objeto {0} em para consulta {1}</value>
+  </data>
+  <data name="GetBomFromXMLError" xml:space="preserve">
+    <value>Erro lendo BOM do XML - {0}</value>
+  </data>
+  <data name="GetNextCodeEnd" xml:space="preserve">
+    <value>Finalizada execução de GetNextCode para {0}</value>
+  </data>
+  <data name="GetNextCodeStart" xml:space="preserve">
+    <value>Iniciando execução de GetNextCode para {0}</value>
+  </data>
+  <data name="GetXMLBOMError" xml:space="preserve">
+    <value>Erro processando XML BOM - {0}</value>
+  </data>
+  <data name="MenuEnd" xml:space="preserve">
+    <value>Menu Processado</value>
+  </data>
+  <data name="MenuError" xml:space="preserve">
+    <value>Erro processando Menu - {0}</value>
+  </data>
+  <data name="MenuI18NFormatError" xml:space="preserve">
+    <value>Nome {0} com formato i18n incorreto.</value>
+  </data>
+  <data name="MenuProcess" xml:space="preserve">
+    <value>Processando Menu {0} - {1}</value>
+  </data>
+  <data name="MenuStart" xml:space="preserve">
+    <value>Processando XML de Menu.\n{0}</value>
+  </data>
+  <data name="PermissionEnd" xml:space="preserve">
+    <value>Finalizado processamento da permissão {0}</value>
+  </data>
+  <data name="PermissionError" xml:space="preserve">
+    <value>Erro adicionando Permissão {0} - {1}</value>
+  </data>
+  <data name="PermissionStart" xml:space="preserve">
+    <value>Iniciando processamento da permissão {0}</value>
+  </data>
+  <data name="PermissionSuccess" xml:space="preserve">
+    <value>Permissão {0} adicionada</value>
+  </data>
+  <data name="PermissionUpdateError" xml:space="preserve">
+    <value>Erro atualizando Permissão {0} - {1}</value>
+  </data>
+  <data name="PermissionUpdateSuccess" xml:space="preserve">
+    <value>Permissão {0} atualizada</value>
+  </data>
+  <data name="PrepareObjectError" xml:space="preserve">
+    <value>Erro setando propriedade {0}</value>
+  </data>
+  <data name="PrepareObjectInvalidParameter" xml:space="preserve">
+    <value>Objeto {0} tem propriedade {1} do tipo {2}. Retorno da consulta no tipo {3}.</value>
+  </data>
+  <data name="PrepareObjectMissingParameter" xml:space="preserve">
+    <value>Objeto {0} não tem tem propriedade {1}</value>
+  </data>
+  <data name="ProcessTupleError" xml:space="preserve">
+    <value>Type {0} nao suportado</value>
+  </data>
+  <data name="StartExecuteStatement" xml:space="preserve">
+    <value>Inicializando execução de SQL - {0}</value>
+  </data>
+  <data name="StartUpdateOrSave" xml:space="preserve">
+    <value>Iniciando UpdateOrSave para {0}</value>
+  </data>
+  <data name="SuccessAddindDI" xml:space="preserve">
+    <value>{0} {1} adicionado com sucesso</value>
+  </data>
+  <data name="SuccessUpdatingDI" xml:space="preserve">
+    <value>{0} {1} atualizado com sucesso</value>
+  </data>
+  <data name="UpdateDINotNecessary" xml:space="preserve">
+    <value>Atualização de {0} não necessária</value>
+  </data>
+  <data name="UpdateOrSavePermissionError" xml:space="preserve">
+    <value>Erro processando Permissões - {0}</value>
+  </data>
+</root>
