@@ -20,5 +20,7 @@ namespace AddOne.Framework.Model.Assembly
         public int Size { get; set; }
 
         public string Code { get; set; }
+
+        public string Type { get; set; }
     }
 }
