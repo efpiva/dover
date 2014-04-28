@@ -18,13 +18,15 @@ namespace AddOne.Framework.Service
         AddIn
     }
 
-    public class AssemblyLoader
+    internal class AssemblyLoader
     {
         private string[] coreAssemblies = {
+            "SAPbouiCOM.dll",
             "Framework.dll",
             "log4net.dll",
             "Castle.Core.dll",
             "Castle.Facilities.Logging.dll",
+            "Castle.Services.Logging.Log4netIntegration.dll",
             "Castle.Windsor.dll",
             "AddOne.exe"
         };
@@ -40,16 +42,18 @@ namespace AddOne.Framework.Service
         internal void UpdateAssemblies(AssemblySource assemblyLocation, string appFolder)
         {
             List<AssemblyInformation> asms;
+            Logger.Debug(String.Format(Messages.UpdatingAssembly, assemblyLocation));
             if (assemblyLocation == AssemblySource.Core)
             {
                 asms = InitializeCoreAssemblies(appFolder);
             }
             else
-                asms = asmDAO.GetAddinsAssemblies();
+                asms = InitializeAddInAssemblies(appFolder);
 
             foreach(var asm in asms)
             {
                 string fullPath = Path.Combine(appFolder, asm.Name);
+                // TODO: checar md5sum de B1s
                 if (IsDifferent(asm, appFolder, fullPath))
                 {
                     UpdateAssembly(asm, fullPath);
@@ -63,22 +67,48 @@ namespace AddOne.Framework.Service
         {
             try
             {
+                if (asmMeta.ResourceName == null)
+                {
+                    Logger.Debug(String.Format(Messages.B1SResourceMissing, asmMeta.Name));
+                    return;
+                }
                 string fullPath = Path.Combine(appFolder, asmMeta.ResourceName);
-                string b1resource = asmDAO.GetB1StudioResource(asmMeta);
+                var b1resource = asmDAO.GetB1StudioResource(asmMeta);
                 if (b1resource != null)
                 {
-                    File.WriteAllText(fullPath, b1resource);
-                    Logger.Info(String.Format("Atualizado arquivo {0} - Versao {1}", asmMeta.Name, asmMeta.Version));
+                    File.WriteAllBytes(fullPath, b1resource);
+                    Logger.Info(String.Format(Messages.FileUpdated, asmMeta.Name, asmMeta.Version));
                 }
                 else
                 {
-                    Logger.Warn(String.Format("Arquivo {0} - Versao {1} - não encontrado", asmMeta.Name, asmMeta.Version));
+                    Logger.Warn(String.Format(Messages.FileMissing, asmMeta.Name, asmMeta.Version));
                 }
             }
             catch (Exception e)
             {
-                Logger.Error(String.Format("Erro atualizando arquivo {0} - Versao {1}.", asmMeta.Name, asmMeta.Version), e);
+                Logger.Error(String.Format(Messages.FileError, asmMeta.Name, asmMeta.Version), e);
             }
+        }
+
+        private List<AssemblyInformation> InitializeAddInAssemblies(string appFolder)
+        {
+            List<AssemblyInformation> ret = asmDAO.GetAddinsAssemblies();
+            bool hasSetup = false;
+            foreach (var asm in ret)
+                if (asm.Name == "addInSetup.exe")
+                    hasSetup = true;
+
+            if (!hasSetup)
+            {
+                var asm = asmDAO.GetAddInAssembly("addInSetup.exe");
+                var newAsm = new AssemblyInformation();
+                if (asm != null)
+                    newAsm.Code = asm.Code; // Prepare for update.
+
+                ret.Add(SaveIfNotExists(asm, "addInSetup.exe", "A"));
+            }
+
+            return ret;
         }
 
         private List<AssemblyInformation> InitializeCoreAssemblies(string appFolder)
@@ -87,31 +117,47 @@ namespace AddOne.Framework.Service
             foreach(var asmFile in coreAssemblies)
             {
                 var asm = asmDAO.GetCoreAssembly(asmFile);
-                var newAsm = new AssemblyInformation();
-                if (asm != null)
-                    newAsm.Code = asm.Code; // Prepare for update.
-
-                var asmPath = Path.Combine(Environment.CurrentDirectory, asmFile);
-                newAsm.Name = asmFile;
-                byte[] asmBytes = File.ReadAllBytes(asmPath);
-                newAsm.Version = GetFileVersion(asmBytes);
-                newAsm.MD5 = MD5Sum(asmBytes);
-                newAsm.Size = asmBytes.Length;
-                newAsm.Date = DateTime.Now;
-
-                if (asm == null || newAsm.Version.CompareTo(asm.Version) == 1
-                    || (newAsm.Version == asm.Version && newAsm.MD5 != asm.MD5))
-                {
-                    asmDAO.SaveAssembly(newAsm, asmBytes);
-                    ret.Add(newAsm);
-                }
-                else
-                {
-                    ret.Add(asm);
-                }
-
+                ret.Add(SaveIfNotExists(asm, asmFile, "C"));
             }
             return ret;
+        }
+
+        private AssemblyInformation SaveIfNotExists(AssemblyInformation existingAsm, 
+            string asmFile, string type)
+        {
+
+            AssemblyInformation newAsm = new AssemblyInformation();
+            if (existingAsm != null)
+                newAsm.Code = existingAsm.Code; // Prepare for update.
+            var asmPath = Path.Combine(Environment.CurrentDirectory, asmFile);
+            newAsm.Name = asmFile;
+            byte[] asmBytes = File.ReadAllBytes(asmPath);
+            newAsm.Version = GetFileVersion(asmBytes);
+            newAsm.MD5 = MD5Sum(asmBytes);
+            newAsm.Size = asmBytes.Length;
+            newAsm.Date = DateTime.Now;
+            newAsm.Type = type;
+
+            if (existingAsm == null || newAsm.Version.CompareTo(existingAsm.Version) == 1
+                || (newAsm.Version == existingAsm.Version && newAsm.MD5 != existingAsm.MD5))
+            {
+                var resourceName = asmFile.Substring(0, asmFile.Length-3) + "b1s";
+                var b1sPath = Path.Combine(Environment.CurrentDirectory, resourceName);
+                byte[] resource = null;
+                if (File.Exists(b1sPath))
+                {
+                    resource = File.ReadAllBytes(b1sPath);
+                    newAsm.ResourceName = resourceName;
+                }
+
+                asmDAO.SaveAssembly(newAsm, asmBytes, resource);
+                return newAsm;
+            }
+            else
+            {
+                return existingAsm;
+            }
+
         }
 
         private string GetFileVersion(byte[] asmBytes)
@@ -130,16 +176,16 @@ namespace AddOne.Framework.Service
                 if (asm != null)
                 {
                     File.WriteAllBytes(fullPath, asm);
-                    Logger.Info(String.Format("Atualizado arquivo {0} - Versao {1}", asmMeta.Name, asmMeta.Version));
+                    Logger.Info(String.Format(Messages.FileUpdated, asmMeta.Name, asmMeta.Version));
                 }
                 else
                 {
-                    Logger.Warn(String.Format("Arquivo {0} - Versao {1} - não encontrado", asmMeta.Name, asmMeta.Version));
+                    Logger.Warn(String.Format(Messages.FileMissing, asmMeta.Name, asmMeta.Version));
                 }
             }
             catch (Exception e)
             {
-                Logger.Error(String.Format("Erro atualizando arquivo {0} - Versao {1}.", asmMeta.Name, asmMeta.Version), e);
+                Logger.Error(String.Format(Messages.FileError, asmMeta.Name, asmMeta.Version), e);
             }
         }
 
@@ -158,12 +204,15 @@ namespace AddOne.Framework.Service
                 {
                     sb.Append(hash[i].ToString("X2"));
                 }
-                return sb.ToString();
+                var md5sum = sb.ToString();
+                Logger.Debug(String.Format(Messages.MD5Sum, md5sum));
+                return md5sum;
             }
         }
 
         private bool CheckSum(string asmHash, string filename)
         {
+            Logger.Debug(String.Format(Messages.CheckSum, asmHash, filename));
             byte[] fileByte = File.ReadAllBytes(filename);
             return MD5Sum(fileByte) == asmHash;
         }
