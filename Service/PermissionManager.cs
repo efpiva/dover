@@ -6,7 +6,7 @@ using AddOne.Framework.DAO;
 
 namespace AddOne.Framework.Service
 {
-    public class PermissionManager
+    internal class PermissionManager
     {
 
         private PermissionDAO permissionDAO;

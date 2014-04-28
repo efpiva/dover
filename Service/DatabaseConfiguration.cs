@@ -6,10 +6,11 @@ using AddOne.Framework.DAO;
 using AddOne.Framework.Model.SAP;
 using System.Reflection;
 using System.Xml.Serialization;
+using SAPbobsCOM;
 
 namespace AddOne.Framework.Service
 {
-    public class DatabaseConfiguration
+    internal class DatabaseConfiguration
     {
         private BusinessOneDAO b1DAO;
         private const string DBTABLES_XML = "AddOne.Framework.DatabaseTables.xml";
@@ -20,7 +21,7 @@ namespace AddOne.Framework.Service
             this.b1DAO = b1DAO;
         }
 
-        public void PrepareDatabase()
+        internal void PrepareDatabase()
         {
             UserTableBOM tables;
             UserFieldBOM fields;
