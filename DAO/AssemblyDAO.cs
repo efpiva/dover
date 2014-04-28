@@ -12,10 +12,12 @@ namespace AddOne.Framework.DAO
 
         byte[] GetAssembly(AssemblyInformation asm);
 
-        String GetB1StudioResource(AssemblyInformation asm);
+        byte[] GetB1StudioResource(AssemblyInformation asm);
 
         AssemblyInformation GetCoreAssembly(string asmFile);
 
-        void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes);
+        void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes, byte[] b1SResource);
+
+        AssemblyInformation GetAddInAssembly(string p);
     }
 }
