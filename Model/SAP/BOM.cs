@@ -103,4 +103,12 @@ namespace AddOne.Framework.Model.SAP
         }
     }
 
+    public abstract class IBOM 
+    {
+        internal abstract string[] GetKey();
+        internal abstract SAPbobsCOM.BoObjectTypes GetBOType();
+        internal abstract Type GetBOClassType();
+        internal abstract string GetName();
+        internal abstract string GetFormatName(int i);
+    }
 }
