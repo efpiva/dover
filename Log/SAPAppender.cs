@@ -75,7 +75,7 @@ namespace AddOne.Framework.Log
             string msg = String.Format("{0}: {1}", asm, loggingEvent.RenderedMessage);
             if (loggingEvent.Level == Level.Alert)
                 app.StatusBar.SetText(msg, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_None);
-            else if (loggingEvent.Level == Level.Info)
+            else if (loggingEvent.Level == Level.Info || loggingEvent.Level == Level.Debug)
                 app.StatusBar.SetText(msg, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
             else if (loggingEvent.Level == Level.Warn)
                 app.StatusBar.SetText(msg, SAPbouiCOM.BoMessageTime.bmt_Medium, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
