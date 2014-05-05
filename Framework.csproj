@@ -32,13 +32,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
-      <HintPath>..\Core\Windsor\Castle.Core.dll</HintPath>
+      <HintPath>external-references\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Facilities.Logging">
-      <HintPath>..\Core\Windsor\Castle.Facilities.Logging.dll</HintPath>
+      <HintPath>external-references\Castle.Facilities.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Services.Logging.Log4netIntegration">
+      <HintPath>external-references\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Windsor">
-      <HintPath>..\Core\Windsor\Castle.Windsor.dll</HintPath>
+      <HintPath>external-references\Castle.Windsor.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
@@ -89,6 +92,7 @@
     <Compile Include="MicroCore.cs" />
     <Compile Include="Model\Assembly\AssemblyInformation.cs" />
     <Compile Include="Model\SAP\BOM.cs" />
+    <Compile Include="Model\SAP\Documents.cs" />
     <Compile Include="Model\SAP\FormattedSearch.cs" />
     <Compile Include="Model\SAP\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -126,7 +130,7 @@
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
   <ItemGroup>
