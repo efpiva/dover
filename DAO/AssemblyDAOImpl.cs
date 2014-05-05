@@ -43,6 +43,15 @@ namespace AddOne.Framework.DAO
             return b1DAO.ExecuteSqlForList<AssemblyInformation>(sql);
         }
 
+        public List<AssemblyInformation> GetCoreAssemblies()
+        {
+            String sql = @"SELECT Code, U_Name Name, U_ResourceName ResourceName, U_Version Version, U_MD5 MD5, U_Date Date, 
+                                U_Size Size, U_Type Type 
+                            FROM [@GA_AO_MODULES]
+                                where U_Type = 'C'";
+            return b1DAO.ExecuteSqlForList<AssemblyInformation>(sql);
+        }
+        
         public byte[] GetAssembly(AssemblyInformation asm)
         {
             List<String> hexFile = b1DAO.ExecuteSqlForList<String>(
@@ -92,6 +101,7 @@ namespace AddOne.Framework.DAO
                 sql = String.Format(@"UPDATE [@GA_AO_MODULES] Set U_Version = '{0}', U_MD5 = '{1}', U_Date = '{2}', U_Size = {3}
                              WHERE Code = '{4}'", asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length, asm.Code);
                 b1DAO.ExecuteStatement(String.Format("DELETE FROM [@GA_AO_MODULES_BIN] WHERE U_Code = '{0}'", asm.Code));
+                b1DAO.ExecuteStatement(String.Format("DELETE FROM [@GA_AO_MODULES_B1S] WHERE U_Code = '{0}'", asm.Code));
             }
 
             b1DAO.ExecuteStatement(sql);

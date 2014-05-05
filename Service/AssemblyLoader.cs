@@ -20,6 +20,10 @@ namespace AddOne.Framework.Service
 
     internal class AssemblyLoader
     {
+        private string[] addinsAssemblies = {
+            "addInSetup.exe"
+        };
+
         private string[] coreAssemblies = {
             "SAPbouiCOM.dll",
             "Framework.dll",
@@ -77,52 +81,58 @@ namespace AddOne.Framework.Service
                 if (b1resource != null)
                 {
                     File.WriteAllBytes(fullPath, b1resource);
-                    Logger.Info(String.Format(Messages.FileUpdated, asmMeta.Name, asmMeta.Version));
+                    Logger.Info(String.Format(Messages.FileUpdated, asmMeta.ResourceName, asmMeta.Version));
                 }
                 else
                 {
-                    Logger.Warn(String.Format(Messages.FileMissing, asmMeta.Name, asmMeta.Version));
+                    Logger.Warn(String.Format(Messages.FileMissing, asmMeta.ResourceName, asmMeta.Version));
                 }
             }
             catch (Exception e)
             {
-                Logger.Error(String.Format(Messages.FileError, asmMeta.Name, asmMeta.Version), e);
+                Logger.Error(String.Format(Messages.FileError, asmMeta.ResourceName, asmMeta.Version), e);
             }
         }
 
         private List<AssemblyInformation> InitializeAddInAssemblies(string appFolder)
         {
-            List<AssemblyInformation> ret = asmDAO.GetAddinsAssemblies();
-            bool hasSetup = false;
-            foreach (var asm in ret)
-                if (asm.Name == "addInSetup.exe")
-                    hasSetup = true;
+            List<AssemblyInformation> addinsAsms = asmDAO.GetAddinsAssemblies();
 
-            if (!hasSetup)
-            {
-                var asm = asmDAO.GetAddInAssembly("addInSetup.exe");
-                var newAsm = new AssemblyInformation();
-                if (asm != null)
-                    newAsm.Code = asm.Code; // Prepare for update.
-
-                ret.Add(SaveIfNotExists(asm, "addInSetup.exe", "A"));
-            }
-
-            return ret;
+            return GenericInitialize(addinsAsms, "A", addinsAssemblies);
         }
 
         private List<AssemblyInformation> InitializeCoreAssemblies(string appFolder)
         {
-            List<AssemblyInformation> ret = new List<AssemblyInformation>();
-            foreach(var asmFile in coreAssemblies)
-            {
-                var asm = asmDAO.GetCoreAssembly(asmFile);
-                ret.Add(SaveIfNotExists(asm, asmFile, "C"));
-            }
-            return ret;
+            List<AssemblyInformation> coreAsms = asmDAO.GetCoreAssemblies();
+
+            return GenericInitialize(coreAsms, "C", coreAssemblies);
         }
 
-        private AssemblyInformation SaveIfNotExists(AssemblyInformation existingAsm, 
+        private List<AssemblyInformation> GenericInitialize(List<AssemblyInformation> asms, string type,
+            string[] defaultAsms)
+        {
+            List<AssemblyInformation> ret = new List<AssemblyInformation>();
+            if (asms.Count > 0)
+            {
+
+                foreach (var asm in asms)
+                {
+                    ret.Add(SaveIfNotExistsOrDifferent(asm, asm.Name, type));
+                }
+            }
+            else
+            {
+                foreach (var asmFile in defaultAsms)
+                {
+                    ret.Add(SaveIfNotExistsOrDifferent(null, asmFile, type));
+                }
+
+            }
+            return ret;
+
+        }
+
+        private AssemblyInformation SaveIfNotExistsOrDifferent(AssemblyInformation existingAsm, 
             string asmFile, string type)
         {
 
