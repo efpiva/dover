@@ -117,8 +117,50 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DefaultDocument" xml:space="preserve">
+    <value>Documento</value>
+  </data>
   <data name="FormattedSearch" xml:space="preserve">
     <value>Consulta Formatada</value>
+  </data>
+  <data name="oCreditNotes" xml:space="preserve">
+    <value>Dev. Nota fiscal de saída</value>
+  </data>
+  <data name="oDeliveryNotes" xml:space="preserve">
+    <value>Entrega</value>
+  </data>
+  <data name="oInventoryGenEntry" xml:space="preserve">
+    <value>Entrada de mercadoria</value>
+  </data>
+  <data name="oInventoryGenExit" xml:space="preserve">
+    <value>Saída de mercadoria</value>
+  </data>
+  <data name="oInvoices" xml:space="preserve">
+    <value>Nota fiscal de saída</value>
+  </data>
+  <data name="oOrders" xml:space="preserve">
+    <value>Pedido de venda</value>
+  </data>
+  <data name="oPurchaseCreditNotes" xml:space="preserve">
+    <value>Dev. Nota fiscal de entrada</value>
+  </data>
+  <data name="oPurchaseDelivertNotes" xml:space="preserve">
+    <value>Recebimento</value>
+  </data>
+  <data name="oPurchaseInvoices" xml:space="preserve">
+    <value>Nota fiscal de entrada</value>
+  </data>
+  <data name="oPurchaseOrders" xml:space="preserve">
+    <value>Pedido de compra</value>
+  </data>
+  <data name="oPurchaseReturns" xml:space="preserve">
+    <value>Devolução compra</value>
+  </data>
+  <data name="oQuotations" xml:space="preserve">
+    <value>Cotação de compra</value>
+  </data>
+  <data name="oReturns" xml:space="preserve">
+    <value>Devolução venda</value>
   </data>
   <data name="QueryCategory" xml:space="preserve">
     <value>Categoria de Consulta</value>

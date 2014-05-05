@@ -104,5 +104,14 @@ namespace AddOne.Framework {
                 return ResourceManager.GetString("Starting", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Iniciando assemblies na pasta {0}.
+        /// </summary>
+        internal static string StartupFolder {
+            get {
+                return ResourceManager.GetString("StartupFolder", resourceCulture);
+            }
+        }
     }
 }
