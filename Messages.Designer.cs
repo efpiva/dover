@@ -61,6 +61,15 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Todos os argumentos são obrigatórios..
+        /// </summary>
+        internal static string AllArgumentsMandatory {
+            get {
+                return ResourceManager.GetString("AllArgumentsMandatory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Criada AppFolder {0} - iniciando addins e core.
         /// </summary>
         internal static string CreatedAppFolder {
@@ -75,6 +84,24 @@ namespace AddOne.Framework {
         internal static string ErrorStartup {
             get {
                 return ResourceManager.GetString("ErrorStartup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Informe o nome do Arquivo.
+        /// </summary>
+        internal static string FileDialogTitle {
+            get {
+                return ResourceManager.GetString("FileDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Informe a pasta.
+        /// </summary>
+        internal static string FolderDialogTitle {
+            get {
+                return ResourceManager.GetString("FolderDialogTitle", resourceCulture);
             }
         }
         

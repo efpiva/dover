@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AllArgumentsMandatory" xml:space="preserve">
+    <value>Todos os argumentos são obrigatórios.</value>
+  </data>
   <data name="CreatedAppFolder" xml:space="preserve">
     <value>Criada AppFolder {0} - iniciando addins e core</value>
   </data>
   <data name="ErrorStartup" xml:space="preserve">
     <value>Erro iniciando addin: {0}</value>
+  </data>
+  <data name="FileDialogTitle" xml:space="preserve">
+    <value>Informe o nome do Arquivo</value>
+  </data>
+  <data name="FolderDialogTitle" xml:space="preserve">
+    <value>Informe a pasta</value>
   </data>
   <data name="GeneralError" xml:space="preserve">
     <value>Erro preparando Framework - {0}</value>
