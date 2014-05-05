@@ -17,7 +17,7 @@ using System.Xml.Linq;
 namespace AddOne.Framework.DAO
 {
 
-    class BusinessOneDAOSQLImpl : BusinessOneDAO
+    public class BusinessOneDAOSQLImpl : BusinessOneDAO
     {
         private Company company;
 
@@ -28,539 +28,137 @@ namespace AddOne.Framework.DAO
             this.company = company;
         }
 
-
-        public void SaveBOMIfNotExists(UserTableBOM bom)
+        public override void SaveBOMIfNotExists(IBOM bom)
         {
-            bom = bom.Do(x => FilterMissingTablesFromBOM(bom));
-
-            var xml = this.With(x => bom).Serialize<UserTableBOM>();
-    
-            if (xml != null)
-                CreateTablesFromXML(xml);
+            UpdateOrSaveBOMIfNotExists(bom, false);
         }
 
-        public void SaveBOMIfNotExists(UserFieldBOM bom)
+        public override void UpdateOrSaveBOMIfNotExists(IBOM bom)
         {
-            if (bom == null || bom.BO == null || bom.BO.Length == 0)
-                return;
-
-            bom = FilterMissingFieldsFromBOM(bom);
-
-            var xml = bom.Serialize<UserFieldBOM>();
-            CreateFieldsFromXML(xml);
+            UpdateOrSaveBOMIfNotExists(bom, true);
         }
 
-        public void UpdateOrSaveBOMIfNotExists(FormattedSearchBOM bom)
-        {
-            FormattedSearches fs = null;
-            if (bom == null || bom.BO == null || bom.BO.Length == 0)
-                return;
-            String xmlBom = bom.Serialize();
+        private void UpdateOrSaveBOMIfNotExists(IBOM bom, bool Update = true)
+        {            
+            object obj = null;
+            Type type = bom.GetBOClassType();
+            string xmlBom = bom.Serialize();
 
             company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
             company.XMLAsString = true;
 
-            for (int i = 0; i < company.GetXMLelementCount(xmlBom); i++)
+            Logger.Debug(String.Format(Messages.StartUpdateOrSave, bom.GetName()));
+            int length = company.GetXMLelementCount(xmlBom);
+            for (int i = 0; i < length; i++)
             {
                 try
                 {
-                    fs = (FormattedSearches)company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oFormattedSearches);
-                    fs.Browser.ReadXml(xmlBom, i);
-                    var resourceFS = XDocument.Parse(fs.GetAsXML());
-                    var index = fs.Index;
-                    if (fs.GetByKey(index))
+                    obj = company.GetBusinessObject(bom.GetBOType());
+                    var browser = type.InvokeMember("Browser", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
+                    browser.GetType().InvokeMember("ReadXml", BindingFlags.InvokeMethod | BindingFlags.Public, 
+                        null, browser, new object[]{xmlBom, i});
+                    string xml = (string)type.InvokeMember("GetAsXML", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
+                    var resourceXml = XDocument.Parse(xml);
+                    object[] keys = GetKeys(obj, bom.GetBOType(), bom.GetKey());
+                    bool found = (bool)type.InvokeMember("GetByKey", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, keys);
+                    if (found)
                     {
-                        UpdateFS(fs, resourceFS);
+                        if (Update)
+                            UpdateDIObject(obj, resourceXml, bom.GetName(), bom.GetFormatName(i));
                     }
                     else
                     {
-                        AddFS(fs, xmlBom, i);
+                        AddDIObject(obj, xmlBom, i, bom.GetName(), bom.GetFormatName(i));
                     }
+                    
                 }
                 finally
                 {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(fs);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
                 }
             }
+            Logger.Debug(String.Format(Messages.EndUpdateOrSave, bom.GetName()));
+
+
         }
 
-        private void AddFS(FormattedSearches fs, string xmlBom, int index)
+        private void AddDIObject<T>(T obj, string xmlBom, int i, string name, string formatName)
         {
-            fs.Browser.ReadXml(xmlBom, index);
-            int ret = fs.Add();
+            Type type = typeof(T);
+            var browser = type.InvokeMember("Browser", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
+            browser.GetType().InvokeMember("ReadXml", BindingFlags.InvokeMethod | BindingFlags.Public,
+                null, browser, new object[] { xmlBom, i });
+            int ret = (int)type.InvokeMember("Add", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
             if (ret != 0)
             {
                 string err;
                 company.GetLastError(out ret, out err);
-                string exceptionErr = String.Format("Erro criando Pesquisa Formatada {0} - {1}", fs.Index, err);
+                string exceptionErr = String.Format(Messages.ErrorAddingDI, name, formatName, err);
                 Logger.Error(exceptionErr);
+            }
+            else
+            {
+                Logger.Info(String.Format(Messages.SuccessAddindDI, formatName, name));
             }
         }
 
-        private void UpdateFS(FormattedSearches fs, XDocument resourceFS)
+        private void UpdateDIObject<T>(T obj, XDocument resourceXml, string name, string formatName)
         {
-            var currFS = XDocument.Parse(fs.GetAsXML());
-            if (!XDocument.DeepEquals(currFS, resourceFS))
+            Type type = typeof(T);
+            string xml = (string)type.InvokeMember("GetAsXML", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
+            var currXml = XDocument.Parse(xml);
+            if (!XDocument.DeepEquals(currXml, resourceXml))
             {
-                fs.Browser.ReadXml(resourceFS.ToString(), 0);
-                int ret = fs.Update();
+                var browser = type.InvokeMember("Browser", BindingFlags.GetField | BindingFlags.Public, null, obj, null);
+                browser.GetType().InvokeMember("ReadXml", BindingFlags.InvokeMethod | BindingFlags.Public,
+                    null, obj, new object[] { resourceXml.ToString(), 0 });
+                int ret = (int)type.InvokeMember("Update", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
                 if (ret != 0)
                 {
                     string err;
                     company.GetLastError(out ret, out err);
-                    string exceptionErr = String.Format("Erro atualizando Pesquisa Formatada {0} - {1}", fs.Index, err);
+                    string exceptionErr = String.Format(Messages.ErrorUpdatingDI, name, formatName, err);
                     Logger.Error(exceptionErr);
-                }
-            }
-        }
-
-        public void UpdateOrSaveBOMIfNotExists(UserQueriesBOM bom)
-        {
-            UserQueries uq = null;
-            if (bom == null || bom.BO == null || bom.BO.Length == 0)
-                return;
-            String xmlBom = bom.Serialize();
-
-            company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
-            company.XMLAsString = true;
-
-            for (int i = 0; i < company.GetXMLelementCount(xmlBom); i++)
-            {
-                try
-                {
-                    uq = (UserQueries)company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oUserQueries);
-                    uq.Browser.ReadXml(xmlBom, i);
-                    var resourceFS = XDocument.Parse(uq.GetAsXML());
-                    var internalKey = uq.InternalKey;
-                    var category = uq.QueryCategory;
-                    if (uq.GetByKey(internalKey, category))
-                    {
-                        UpdateUQ(uq, resourceFS);
-                    }
-                    else
-                    {
-                        AddUQ(uq, xmlBom, i);
-                    }
-                }
-                finally
-                {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(uq);
-                }
-            }
-        }
-
-        private void AddUQ(UserQueries uq, string xmlBom, int index)
-        {
-            uq.Browser.ReadXml(xmlBom, index);
-            int ret = uq.Add();
-            if (ret != 0)
-            {
-                string err;
-                company.GetLastError(out ret, out err);
-                string exceptionErr = String.Format("Erro criando Consulta de Usuário {0}:{1} - {2}",
-                    uq.InternalKey, uq.QueryCategory, err);
-                Logger.Error(exceptionErr);
-            }
-        }
-
-        private void UpdateUQ(UserQueries uq, XDocument resourceFS)
-        {
-            var currFS = XDocument.Parse(uq.GetAsXML());
-            if (!XDocument.DeepEquals(currFS, resourceFS))
-            {
-                uq.Browser.ReadXml(resourceFS.ToString(), 0);
-                int ret = uq.Update();
-                if (ret != 0)
-                {
-                    string err;
-                    company.GetLastError(out ret, out err);
-                    string exceptionErr = String.Format("Erro atualizando Consulta de Usuário {0}:{1} - {2}", 
-                        uq.InternalKey, uq.QueryCategory, err);
-                    Logger.Error(exceptionErr);
-                }
-            }
-        }
-
-        public void UpdateOrSaveBOMIfNotExists(QueryCategoriesBOM bom)
-        {
-            QueryCategories qc = null;
-            if (bom == null || bom.BO == null || bom.BO.Length == 0)
-                return;
-            String xmlBom = bom.Serialize();
-
-            company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
-            company.XMLAsString = true;
-
-            for (int i = 0; i < company.GetXMLelementCount(xmlBom); i++)
-            {
-                try
-                {
-                    qc = (QueryCategories)company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oQueryCategories);
-                    qc.Browser.ReadXml(xmlBom, i);
-                    var resourceFS = XDocument.Parse(qc.GetAsXML());
-                    var id = qc.Code;
-                    if (qc.GetByKey(id))
-                    {
-                        UpdateQC(qc, resourceFS);
-                    }
-                    else
-                    {
-                        AddQC(qc, xmlBom, i);
-                    }
-                }
-                finally
-                {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(qc);
-                }
-            }
-        }
-
-        private void AddQC(QueryCategories qc, string xmlBom, int index)
-        {
-            qc.Browser.ReadXml(xmlBom, index);
-            int ret = qc.Add();
-            if (ret != 0)
-            {
-                string err;
-                company.GetLastError(out ret, out err);
-                string exceptionErr = String.Format("Erro criando Consulta de Usuário {0} - {1}",
-                    qc.Code, err);
-                Logger.Error(exceptionErr);
-            }
-        }
-
-        private void UpdateQC(QueryCategories qc, XDocument resourceFS)
-        {
-            var currFS = XDocument.Parse(qc.GetAsXML());
-            if (!XDocument.DeepEquals(currFS, resourceFS))
-            {
-                qc.Browser.ReadXml(resourceFS.ToString(), 0);
-                int ret = qc.Update();
-                if (ret != 0)
-                {
-                    string err;
-                    company.GetLastError(out ret, out err);
-                    string exceptionErr = String.Format("Erro atualizando Consulta de Usuário {0} - {1}",
-                        qc.Code, err);
-                    Logger.Error(exceptionErr);
-                }
-            }
-        }
-
-        public void UpdateOrSaveBOMIfNotExists(UDOBOM bom)
-        {
-            UserObjectsMD udo = null;
-            if (bom == null || bom.BO == null || bom.BO.Length == 0)
-                return;
-            String xmlBom = bom.Serialize<UDOBOM>();
-
-            company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
-            company.XMLAsString = true;
-
-            for (int i = 0; i < company.GetXMLelementCount(xmlBom); i++)
-            {
-                try
-                {
-                    udo = (UserObjectsMD)company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oUserObjectsMD);
-                    udo.Browser.ReadXml(xmlBom, i);
-                    var resourceUDO = XDocument.Parse(udo.GetAsXML());
-                    var code = udo.Code;
-                    if (udo.GetByKey(code))
-                    {
-                        UpdateUDO(udo, resourceUDO);
-                    }
-                    else
-                    {
-                        AddUDO(udo, xmlBom, i);
-                    }
-                }
-                finally
-                {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(udo);
-                }
-            }
-        }
-
-        private void AddUDO(UserObjectsMD udo, String xmlBom, int index)
-        {
-            udo.Browser.ReadXml(xmlBom, index);
-            int ret = udo.Add();
-            if (ret != 0)
-            {
-                string err;
-                company.GetLastError(out ret, out err);
-                string exceptionErr = String.Format("Erro criando UDO {0} - {1}", udo.Code, err);
-                Logger.Error(exceptionErr);
-            }
-        }
-
-        private void UpdateUDO(UserObjectsMD udo, XDocument resourceUDO)
-        {
-            var currUdo = XDocument.Parse(udo.GetAsXML());
-            if (!XDocument.DeepEquals(currUdo, resourceUDO))
-            {
-                udo.Browser.ReadXml(resourceUDO.ToString(), 0);
-                int ret = udo.Update();
-                if (ret != 0)
-                {
-                    string err;
-                    company.GetLastError(out ret, out err);
-                    string exceptionErr = String.Format("Erro atualizando UDO {0} - {1}", udo.Code, err);
-                    Logger.Error(exceptionErr);
-                }
-            }
-        }
-
-        public void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute)
-        {
-            UserPermissionTree userPermissionTree = null;
-
-            try
-            {
-                userPermissionTree = (UserPermissionTree)company.GetBusinessObject(BoObjectTypes.oUserPermissionTree);
-                if (userPermissionTree.GetByKey(permissionAttribute.PermissionID))
-                {
-                    UpdatePermission(userPermissionTree, permissionAttribute);
                 }
                 else
                 {
-                    AddPermission(userPermissionTree, permissionAttribute);
+                    Logger.Info(String.Format(Messages.SuccessUpdatingDI, formatName, name));
                 }
             }
-            finally
+            else
             {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(userPermissionTree);
+                Logger.Debug(String.Format(Messages.UpdateDINotNecessary, name));
             }
         }
 
-        private void AddPermission(UserPermissionTree userPermissionTree, Attribute.PermissionAttribute permissionAttribute)
+        private object[] GetKeys<T>(T obj, BoObjectTypes objType, string[] args)
         {
-            userPermissionTree.PermissionID = permissionAttribute.PermissionID;
-            userPermissionTree.Name = permissionAttribute.Name;
-            userPermissionTree.ParentID = permissionAttribute.ParentID;
-            userPermissionTree.UserPermissionForms.FormType = permissionAttribute.FormType;
-            userPermissionTree.Options = permissionAttribute.Options;
+            Type type = typeof(T);
+            object[] ret;
 
-            int ret = userPermissionTree.Add();
-            if (ret != 0)
+            ret = new object[args.Length];
+            for (int i=0 ; i < args.Length ; i++)
             {
-                string err;
-                company.GetLastError(out ret, out err);
-                string exceptionErr = String.Format("Erro adicionando Permissão {0} - {1}", permissionAttribute.PermissionID, err);
-                Logger.Error(exceptionErr);
+                ret[i] = type.InvokeMember(args[i],
+                    BindingFlags.GetField | BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
             }
 
-        }
-
-        private void UpdatePermission(UserPermissionTree userPermissionTree, Attribute.PermissionAttribute permissionAttribute)
-        {
-            var currPerm = XDocument.Parse(userPermissionTree.GetAsXML());
-            userPermissionTree.PermissionID = permissionAttribute.PermissionID;
-            userPermissionTree.Name = permissionAttribute.Name;
-            userPermissionTree.ParentID = permissionAttribute.ParentID;
-            userPermissionTree.UserPermissionForms.FormType = permissionAttribute.FormType;
-            userPermissionTree.Options = permissionAttribute.Options;
-            var attrPerm = XDocument.Parse(userPermissionTree.GetAsXML());
-
-            if (!XDocument.DeepEquals(currPerm, attrPerm))
+            if (objType == BoObjectTypes.oUserFields)
             {
-                int ret = userPermissionTree.Update();
-                if (ret != 0)
-                {
-                    string err;
-                    company.GetLastError(out ret, out err);
-                    string exceptionErr = String.Format("Erro atualizando Permissão {0} - {1}", permissionAttribute.PermissionID, err);
-                    Logger.Error(exceptionErr);
-                }
-            }
-        }
 
-        private UserTableBOM FilterMissingTablesFromBOM(UserTableBOM bom)
-        {
-            int searchHead = 0;
-            var ret = new UserTableBOM();
-            int length = bom.With(x => x.BO).Return(x => x.Length, 0);
-
-            if (length == 0)
-                return ret;
-
-            List<UserTableBOMBO> filtered = new List<UserTableBOMBO>();
-
-            Recordset rs = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
-            try
-            {
-                rs.DoQuery(CheckTablesSQL(bom));
-                Array.Sort<UserTableBOMBO>(bom.BO);
-
-                /**
-                 * Using searchHead all search operation is done in O(n) of tables, at once.
-                 */
-                string tableName = "", resourceTableName = "";
-                while (!rs.EoF)
-                {
-                    tableName = (string)rs.Fields.Item("TableName").Value;
-                    resourceTableName = bom.BO[searchHead].With(x => x.UserTablesMD[0]).Return(x => x.TableName, String.Empty);
-                    for (; searchHead < length && tableName != resourceTableName; searchHead++)
-                        filtered.Add(bom.BO[searchHead]);
-
-                    if (tableName == resourceTableName)
-                        searchHead++;
-                    rs.MoveNext();
-                }
-
-                for (; searchHead < length && tableName != resourceTableName; searchHead++)
-                    filtered.Add(bom.BO[searchHead]);
-            }
-            finally
-            {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
+                ret[1] = ExecuteSqlForObject<string>(
+                    String.Format("SELECT cast(FieldId as nvarchar) FROM CUFD WHERE TableId = '{0}' and AliasId = '{1}'", ret[0], ret[1]));
+                if (ret[1] == null)
+                    ret[1] = "-1";
             }
 
-            ret.BO = filtered.ToArray();
             return ret;
         }
 
-        private string CheckTablesSQL(UserTableBOM bom)
-        {
-            StringBuilder sqlSb = new StringBuilder("select TableName from OUTB where OUTB.TableName in (");
-            bool first = true;
-            foreach (var table in bom.BO)
-            {
-                if (!first)
-                    sqlSb.Append(", ");
-                sqlSb.Append(String.Format("'{0}'", table.With(x => x.UserTablesMD[0])
-                    .Return(x => x.TableName, String.Empty)));
-                first = false;
-            }
-            sqlSb.Append(") order by TableName");
-            return sqlSb.ToString();
-        }
-
-        private UserFieldBOM FilterMissingFieldsFromBOM(UserFieldBOM bom)
-        {
-            int searchHead = 0;
-            var ret = new UserFieldBOM();
-            int length = bom.With(x => x.BO).Return(x => x.Length, 0);
-
-            if (length == 0)
-                return ret;
-
-            List<UserFieldBOMBO> filtered = new List<UserFieldBOMBO>();
-            var fields = bom.BO;
-
-            Recordset rs = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
-            try
-            {
-                rs.DoQuery(CheckFieldsSQL(bom));
-                Array.Sort<UserFieldBOMBO>(bom.BO);
-
-                /**
-                 * Using searchHead all search operation is done in O(n) of tables, at once.
-                 */
-                string fieldName = "", tableName = "", resourceFieldName = "", resourceTableName = "";
-                while (!rs.EoF)
-                {
-                    fieldName = (string)rs.Fields.Item("AliasID").Value;
-                    tableName = (string)rs.Fields.Item("TableID").Value;
-
-                    resourceFieldName = fields[searchHead].With(x => x.UserFieldsMD[0]).Return(x => x.TableName, String.Empty);
-                    resourceTableName = fields[searchHead].With(x => x.UserFieldsMD[0]).Return(x => x.TableName, String.Empty);
-
-                    for (; searchHead < length && (fieldName != resourceFieldName || tableName != resourceTableName); searchHead++)
-                        filtered.Add(fields[searchHead]);
-
-                    if (tableName == resourceTableName && fieldName == resourceFieldName)
-                        searchHead++;
-
-                    rs.MoveNext();
-                }
-                for (; searchHead < length && (fieldName != resourceFieldName|| tableName != resourceTableName); searchHead++)
-                    filtered.Add(fields[searchHead]);
-            }
-            finally
-            {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
-            }
-
-            ret.BO = filtered.ToArray();
-            return ret;
-        }
-
-        private string CheckFieldsSQL(UserFieldBOM fields)
-        {
-            StringBuilder sqlSb = new StringBuilder("select AliasID, TableID from CUFD where ");
-            bool first = true;
-            foreach (var field in fields.BO)
-            {
-                if (!first)
-                    sqlSb.Append(" or ");
-                sqlSb.Append(String.Format("(TableID = '{0}' and AliasID = '{1}')", field.UserFieldsMD[0].TableName,
-                    field.UserFieldsMD[0].Name));
-                first = false;
-            }
-            sqlSb.Append(" order by TableID, AliasID");
-            return sqlSb.ToString();
-        }
-
-        private void CreateFieldsFromXML(string xmlFields)
-        {
-            int result;
-            company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
-            company.XMLAsString = true;
-
-            for (int i = 0; i < company.GetXMLelementCount(xmlFields); i++)
-            {
-                var objUserField = (SAPbobsCOM.UserFieldsMD)company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oUserFields);
-                try
-                {
-                    objUserField.Browser.ReadXml(xmlFields, i);
-                    Logger.Info(String.Format("Criando campo [{0}].{1}", objUserField.TableName, objUserField.Name));
-                    result = objUserField.Add();
-                    if ((result != 0) && (result != -2035))
-                    {
-                        string errMsg = company.GetLastErrorDescription();
-                        Logger.Error(String.Format("Erro ao criar campo de usuário[{0}].{1} {2}", objUserField.TableName,
-                            objUserField.Name, errMsg));
-                    }
-                }
-                finally
-                {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(objUserField);
-                }
-            }
-
-        }
-
-        private void CreateTablesFromXML(string xmlTables)
-        {
-            int result;
-            var objUserTable = (SAPbobsCOM.UserTablesMD)company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oUserTables);
-            try
-            {
-                company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
-                company.XMLAsString = true;
-
-                for (int i = 0; i < company.GetXMLelementCount(xmlTables); i++)
-                {
-                    objUserTable.Browser.ReadXml(xmlTables, i);
-                    Logger.Info(String.Format("Criando a tabela [{0}]", objUserTable.TableName));
-                    result = objUserTable.Add();
-                    if ((result != 0) && (result != -2035))
-                    {
-                        string errMsg = company.GetLastErrorDescription();
-                        Logger.Error(String.Format("Erro ao criar Tabela de Usuário [{0}] {1}", objUserTable.TableName, errMsg));
-                    }
-                }
-            }
-            finally
-            {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(objUserTable);
-            }
-        }
-
-        public string GetNextCode(string udt)
+        public override string GetNextCode(string udt)
         {
             SAPbobsCOM.Recordset objRecordSet = (SAPbobsCOM.Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            Logger.Debug(String.Format(Messages.GetNextCodeStart, udt));
             string id;
             try
             {
@@ -622,28 +220,37 @@ namespace AddOne.Framework.DAO
             {
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(objRecordSet);
             }
+            Logger.Debug(String.Format(Messages.GetNextCodeEnd, udt));
+
             return (id);
         }
 
-        public string GetCurrentUser()
+        public override string GetCurrentUser()
         {
             return company.UserName;
         }
 
-        public void ExecuteStatement(string sql)
+        public override void ExecuteStatement(string sql)
         {
             var objRecordSet = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            Logger.Debug(String.Format(Messages.StartExecuteStatement, sql));
             try
             {
                 objRecordSet.DoQuery(sql);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(String.Format(Messages.ErrorExecuteStatement, sql, e.Message), e);
+                throw e;
             }
             finally
             {
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(objRecordSet);
             }
+            Logger.Debug(String.Format(Messages.EndExecuteStatement, sql));
         }
 
-        public T ExecuteSqlForObject<T>(string sql)
+        public override T ExecuteSqlForObject<T>(string sql)
         {
             Type type = typeof(T);
             Recordset rs = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
@@ -659,23 +266,26 @@ namespace AddOne.Framework.DAO
                         if (obj.GetType() != type)
                         {
                             String errMsg = String.Format(
-                                "Objeto do tipo {0}. Retorno da consulta no tipo {1}.",
+                                Messages.ExecuteForObjectArgument,
                                 obj.GetType(), type);
                             Logger.Error(errMsg);
-                            throw new Exception(errMsg);
+                            throw new ArgumentException(errMsg);
                         }
+                        Logger.Debug(String.Format(Messages.ExecuteForObjectReturn, obj, sql));
                         return (T)obj;
                     }
                     else
                     {
-                        return PrepareObject<T>(rs);
+                        var ret = PrepareObject<T>(rs);
+                        Logger.Debug(String.Format(Messages.ExecuteForObjectReturn, ret, sql));
+                        return ret;
                     }
                 }
                 return default(T);
             }
             catch (Exception e)
             {
-                Logger.Error(String.Format("Erro executando SQL: {0}", e.Message), e);
+                Logger.Error(String.Format(Messages.ExecuteForObjectError, e.Message));
                 throw e;
             }
             finally
@@ -689,11 +299,13 @@ namespace AddOne.Framework.DAO
             return (type != typeof(object) && Type.GetTypeCode(type) == TypeCode.Object);
         }
 
-        public List<T> ExecuteSqlForList<T>(string sql)
+        public override List<T> ExecuteSqlForList<T>(string sql)
         {
             var retValue = new List<T>();
             Type type = typeof(T);
             Recordset rs = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            Logger.Debug(String.Format(Messages.ExecuteForListCommand, sql));
+
             try
             {
                 rs.DoQuery(sql);
@@ -708,13 +320,14 @@ namespace AddOne.Framework.DAO
                         if (rs.Fields.Item(0).Value.GetType() != type)
                         {
                             String errMsg = String.Format(
-                                "Objeto do tipo {0}. Retorno da consulta no tipo {1}.",
+                                Messages.ExecuteForObjectArgument,
                                 rs.Fields.Item(0).Value.GetType(), type);
                             Logger.Error(errMsg);
                             throw new Exception(errMsg);
                         }
                         obj = (T)rs.Fields.Item(0).Value;
                     }
+                    Logger.Debug(String.Format(Messages.ExecuteForListReturn, obj));
                     retValue.Add(obj);
                     rs.MoveNext();
                 }
@@ -722,7 +335,7 @@ namespace AddOne.Framework.DAO
             }
             catch (Exception e)
             {
-                Logger.Error(String.Format("Erro executando SQL: {0}", e.Message), e);
+                Logger.Error(String.Format(Messages.ExecuteForObjectError, e.Message), e);
                 throw e;
             }
             finally
@@ -741,17 +354,17 @@ namespace AddOne.Framework.DAO
                 try
                 {
                     object value = rs.Fields.Item(i).Value;
-                    var prop = type.GetProperty(name);
+                    var prop = type.GetProperty(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
                     if (prop == null)
                     {
-                        String errMsg = String.Format("Objeto {0} não tem tem propriedade {1}", type, name);
+                        String errMsg = String.Format(Messages.PrepareObjectMissingParameter, type, name);
                         Logger.Error(errMsg);
                         throw new Exception(errMsg);
                     }
                     if (prop.PropertyType != value.GetType())
                     {
                         String errMsg = String.Format(
-                            "Objeto {0} tem propriedade {1} do tipo {2}. Retorno da consulta no tipo {3}.",
+                            Messages.PrepareObjectInvalidParameter,
                             type, name, prop.PropertyType, value.GetType());
                         Logger.Error(errMsg);
                         throw new Exception(errMsg);
@@ -760,86 +373,225 @@ namespace AddOne.Framework.DAO
                 }
                 catch (Exception e)
                 {
-                    Logger.Error(String.Format("Erro setando propriedade {0}", name), e);
+                    Logger.Error(String.Format(Messages.PrepareObjectError, name), e);
                     throw e;
                 }
             }
             return obj;
         }
 
-        public T GetBOMFromXML<T>(Stream stream)
+        public override T GetBOMFromXML<T>(Stream stream)
         {
-            var deserializer = new XmlSerializer(typeof(T));
-            var bom = (T)deserializer.Deserialize(stream);
-            return bom;
-        }
-
-        public string GetUserTableXMLBOMFromNames(string[] userTables)
-        {
-            var ut = (IUserTablesMD)company.GetBusinessObject(BoObjectTypes.oUserTables);
-            List<UserTableBOM> userTableBOMList = new List<UserTableBOM>();
             try
             {
-                company.XMLAsString = true;
-                company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
-
-                foreach (var table in userTables)
-                {
-                    if (!ut.GetByKey(table))
-                        throw new Exception("Não foi possível encontrar a tabela " + table);
-
-                    var xml = ut.GetAsXML();
-                    userTableBOMList.Add(xml.Deserialize<UserTableBOM>());
-                }
+                var deserializer = new XmlSerializer(typeof(T));
+                var bom = (T)deserializer.Deserialize(stream);
+                return bom;
             }
-            finally
+            catch (Exception e)
             {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(ut);
+                Logger.Error(String.Format(Messages.GetBomFromXMLError, e.Message), e);
+                throw e;
             }
-            return userTableBOMList.Serialize<List<UserTableBOM>>();
         }
 
-        public string GetUserFieldXMLBOMFromNames(string[] userTables)
+        private object[] ProcessTuple(object tuple)
         {
-            var uf = (IUserFieldsMD)company.GetBusinessObject(BoObjectTypes.oUserFields);
-            UserFieldBOM userFieldBOM = null, tmpBOM = null;
-            Recordset rs = null;
-            try
-            {
-                company.XMLAsString = true;
-                company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
+            var type = tuple.GetType();
+            object[] ret;
 
-                foreach (var table in userTables)
+            if (type == typeof(Tuple<object>))
+            {
+                var ntuple = (Tuple<object>)tuple;
+                ret = new object[] { ntuple.Item1 };
+            }
+            else if (type == typeof(Tuple<object, object>))
+            {
+                var ntuple = (Tuple<object, object>)tuple;
+                ret = new object[] { ntuple.Item1, ntuple.Item2 };
+            } 
+            else 
+            {
+                throw new ArgumentException(String.Format(Messages.ProcessTupleError, type));
+            }
+
+            return ret;
+        }
+
+        private string GetXMLBom<T, V>(object[] keys, BoObjectTypes objType)
+            where T: class
+        {
+            Type type = typeof(V);
+            T userFieldBOM = null, tmpBOM = null;
+            V obj = default(V);
+            company.XMLAsString = true;
+            company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
+
+            foreach (var key in keys)
+            {
+                try
                 {
-                    try
+                    obj = (V)company.GetBusinessObject(objType);
+                    bool found = (bool)type.InvokeMember("GetByKey", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj,
+                        ProcessTuple(key));
+                    if (found)
                     {
-                        rs = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
-                        rs.DoQuery(string.Format(
-                            "select TableID, FieldID from CUFD where TableID = '@{0}' order by FieldID", table));
-                        uf.Browser.Recordset = rs;
-                        while (!uf.Browser.EoF)
+                        var xml = (string)type.InvokeMember("GetAsXML", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
+                        tmpBOM = xml.Deserialize<T>();
+                        if (userFieldBOM == null)
+                            userFieldBOM = tmpBOM;
+                        else
                         {
-                            var xml = uf.GetAsXML();
-                            tmpBOM = xml.Deserialize<UserFieldBOM>();
-                            if (userFieldBOM == null)
-                                userFieldBOM = tmpBOM;
-                            else
-                                userFieldBOM.BO = tmpBOM.BO.Concat(userFieldBOM.BO).ToArray();
-                            uf.Browser.MoveNext();
+                            object[] ufBO = (object[])userFieldBOM.GetType().InvokeMember("BO", BindingFlags.GetField | BindingFlags.GetProperty
+                                | BindingFlags.Public, null, userFieldBOM, null);
+                            object[] tmpBO = (object[])tmpBOM.GetType().InvokeMember("BO", BindingFlags.GetField | BindingFlags.GetProperty
+                                | BindingFlags.Public, null, tmpBOM, null);
+
+                            userFieldBOM.GetType().InvokeMember("BO", BindingFlags.SetField | BindingFlags.SetField
+                                | BindingFlags.Public, null, userFieldBOM, tmpBO.Concat(ufBO).ToArray());
                         }
                     }
-                    finally
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(String.Format(Messages.GetXMLBOMError, e.Message), e);
+                    throw e;
+                }
+                finally
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                }
+            }
+            return userFieldBOM.Serialize();
+        }
+
+
+        public override string GetUserTableXMLBOMFromNames(string[] userTables)
+        {
+            Tuple<object>[] keys = new Tuple<object>[userTables.Length];
+            for (int i=0 ; i<userTables.Length; i++)
+            {
+                keys[i] = new Tuple<object>(userTables[i]);
+            }
+
+            return GetXMLBom<UserTableBOM, IUserTablesMD>(keys, BoObjectTypes.oUserTables);
+        }
+
+        public override string GetUserFieldXMLBOMFromNames(string[] userTables)
+        {
+            Recordset rs = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
+            List<Tuple<object, object>> keys = new List<Tuple<object, object>>();
+
+            try
+            {
+                foreach(var table in userTables)
+                {
+                    rs.DoQuery(String.Format("SELECT TableID, FieldID FROM CUFD where TableID = '{0}'", table));
+                    if (!rs.EoF)
                     {
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
+                        keys.Add(new Tuple<object, object>(rs.Fields.Item(0).Value, rs.Fields.Item(1).Value));
                     }
                 }
             }
             finally
             {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(uf);
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
             }
-            return userFieldBOM.Serialize<UserFieldBOM>();
+            return GetXMLBom<UserTableBOM, IUserTablesMD>(keys.ToArray(), BoObjectTypes.oUserTables);
         }
 
+        public override void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute)
+        {
+            UserPermissionTree userPermissionTree = null;
+
+            Logger.Debug(string.Format(Messages.PermissionStart, permissionAttribute.PermissionID));
+            try
+            {
+                userPermissionTree = (UserPermissionTree)company.GetBusinessObject(BoObjectTypes.oUserPermissionTree);
+                if (userPermissionTree.GetByKey(permissionAttribute.PermissionID))
+                {
+                    UpdatePermission(userPermissionTree, permissionAttribute);
+                }
+                else
+                {
+                    AddPermission(userPermissionTree, permissionAttribute);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(String.Format(Messages.UpdateOrSavePermissionError, e.Message), e);
+                throw e;
+            }
+            finally
+            {
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(userPermissionTree);
+            }
+            Logger.Debug(string.Format(Messages.PermissionEnd, permissionAttribute.PermissionID));
+
+        }
+
+        private void AddPermission(UserPermissionTree userPermissionTree, Attribute.PermissionAttribute permissionAttribute)
+        {
+            userPermissionTree.PermissionID = permissionAttribute.PermissionID;
+            userPermissionTree.Name = permissionAttribute.Name;
+            userPermissionTree.ParentID = permissionAttribute.ParentID;
+            userPermissionTree.UserPermissionForms.FormType = permissionAttribute.FormType;
+            userPermissionTree.Options = permissionAttribute.Options;
+
+            int ret = userPermissionTree.Add();
+            if (ret != 0)
+            {
+                string err;
+                company.GetLastError(out ret, out err);
+                string exceptionErr = String.Format(Messages.PermissionError, permissionAttribute.PermissionID, err);
+                Logger.Error(exceptionErr);
+            }
+            else
+            {
+                Logger.Info(String.Format(Messages.PermissionSuccess, permissionAttribute.PermissionID));
+            }
+
+        }
+
+        private void UpdatePermission(UserPermissionTree userPermissionTree, Attribute.PermissionAttribute permissionAttribute)
+        {
+            var currPerm = XDocument.Parse(userPermissionTree.GetAsXML());
+            userPermissionTree.PermissionID = permissionAttribute.PermissionID;
+            userPermissionTree.Name = permissionAttribute.Name;
+            userPermissionTree.ParentID = permissionAttribute.ParentID;
+            userPermissionTree.UserPermissionForms.FormType = permissionAttribute.FormType;
+            userPermissionTree.Options = permissionAttribute.Options;
+            var attrPerm = XDocument.Parse(userPermissionTree.GetAsXML());
+
+            if (!XDocument.DeepEquals(currPerm, attrPerm))
+            {
+                int ret = userPermissionTree.Update();
+                if (ret != 0)
+                {
+                    string err;
+                    company.GetLastError(out ret, out err);
+                    string exceptionErr = String.Format(Messages.PermissionUpdateError, permissionAttribute.PermissionID, err);
+                    Logger.Error(exceptionErr);
+                }
+                else
+                {
+                    Logger.Info(String.Format(Messages.PermissionUpdateSuccess, permissionAttribute.PermissionID));
+                }
+            }
+        }
+
+
+        public override bool IsSuperUser()
+        {
+            string superUser = ExecuteSqlForObject<string>(String.Format(
+                "Select T10.SuperUser From OUSR T10 Where T10.User_Code = '{0}'", company.UserName));
+
+            return superUser.Return(x => x == "Y", false);
+        }
+
+        public override bool HasPermission(string permissionID)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

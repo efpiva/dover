@@ -1,6 +1,7 @@
 ﻿using System.Xml.Serialization;
 using SAPbobsCOM;
 using System;
+using AddOne.Framework.Monad;
 
 namespace AddOne.Framework.Model.SAP
 {
@@ -11,7 +12,7 @@ namespace AddOne.Framework.Model.SAP
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     [System.Xml.Serialization.XmlRootAttribute(ElementName="BOM", Namespace = "", IsNullable = false)]
-    public class UserFieldBOM
+    public class UserFieldBOM : IBOM
     {
 
         private UserFieldBOMBO[] boField;
@@ -28,6 +29,39 @@ namespace AddOne.Framework.Model.SAP
             {
                 this.boField = value;
             }
+        }
+
+        internal override string[] GetKey()
+        {
+            return new string[] { "TableName", "Name" };
+        }
+
+        internal override BoObjectTypes GetBOType()
+        {
+            return BoObjectTypes.oUserFields;
+        }
+
+        internal override Type GetBOClassType()
+        {
+            return typeof(IUserFieldsMD);
+        }
+
+        internal override string GetName()
+        {
+            return Messages.UDF;
+        }
+
+        internal override string GetFormatName(int i)
+        {
+            return "[" + boField.With(x => x[i])
+                .With(x => x.UserFieldsMD)
+                .With(x => x[0])
+                .Return(x => x.TableName, string.Empty) + "].["
+                +
+                boField.With(x => x[i])
+                .With(x => x.UserFieldsMD)
+                .With(x => x[0])
+                .Return(x => x.Name, string.Empty) + "]";
         }
     }
 

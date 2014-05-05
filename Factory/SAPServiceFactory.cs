@@ -25,8 +25,10 @@ namespace AddOne.Framework.Factory
         private static void B1Connect(String version)
         {
             SAPbouiCOM.SboGuiApi objGUIApi = null;
-            application = (SAPbouiCOM.Application)AppDomain.CurrentDomain.GetData("SAPApplication");
             company = (SAPbobsCOM.Company)AppDomain.CurrentDomain.GetData("SAPCompany");
+
+            frameworkApplication = FrameworkApplicationFactory();
+            application = SAPbouiCOM.Framework.Application.SBO_Application;
 
             // inception!
             if (application != null && company != null)
@@ -112,7 +114,6 @@ namespace AddOne.Framework.Factory
             {
                 if (application == null && company == null)
                     B1Connect(GetVersion());
-                inception.SetData("SAPApplication", application);
                 inception.SetData("SAPCompany", company);
             }
         }

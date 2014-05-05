@@ -8,6 +8,7 @@ using AddOne.Framework.Attribute;
 using Castle.Core.Logging;
 using AddOne.Framework.DAO;
 using AddOne.Framework.Model.SAP;
+using AddOne.Framework.Factory;
 
 namespace AddOne.Framework.Service
 {
@@ -22,12 +23,16 @@ namespace AddOne.Framework.Service
 
         internal void Run()
         {
-            AppDomain domain = AppDomain.CreateDomain("AddOne.AddIn");
-            domain.ExecuteAssembly(name);
+            var setup = new AppDomainSetup();
+            setup.ApplicationName = "AddOne.Inception";
+            setup.ApplicationBase = Environment.CurrentDirectory;
+
+            AppDomain domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
+            domain.ExecuteAssembly(name + ".exe");
         }
     }
 
-    public class AddinLoader
+    internal class AddinLoader
     {
 
         public ILogger Logger { get; set; }
@@ -35,15 +40,18 @@ namespace AddOne.Framework.Service
         private PermissionManager permissionManager;
         private BusinessOneDAO b1DAO;
         private BusinessOneUIDAO uiDAO;
+        private EventDispatcher dispatcher;
 
         public AddinLoader(PermissionManager permissionManager, 
-            BusinessOneDAO b1DAO, BusinessOneUIDAO uiDAO)
+            BusinessOneDAO b1DAO, BusinessOneUIDAO uiDAO,
+            EventDispatcher dispatcher)
         {
             this.permissionManager = permissionManager;
             this.b1DAO = b1DAO;
             this.uiDAO = uiDAO;
+            this.dispatcher = dispatcher;
         }
-
+        
         internal void LoadAddins(List<string> addins)
         {
             var authorizedAddins = FilterAuthorizedAddins(addins);
@@ -56,10 +64,20 @@ namespace AddOne.Framework.Service
 
         private void ConfigureAddin(string addin)
         {
-            List<MenuAttribute> menus = new List<MenuAttribute>();
-            var assembly = (from asm in AppDomain.CurrentDomain.GetAssemblies()
-                                 where asm.FullName == addin
-                                 select asm).First();
+            Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
+            Assembly assembly;
+
+            try
+            {
+                assembly = (from asm in AppDomain.CurrentDomain.GetAssemblies()
+                                where asm.GetName().Name == addin
+                                select asm).First();
+            }
+            catch (InvalidOperationException e)
+            {
+                Logger.Error(String.Format(Messages.AddInNotFound, addin), e);
+                return;
+            }
 
             var types = (from type in assembly.GetTypes()
                                  where type.IsClass
@@ -67,9 +85,10 @@ namespace AddOne.Framework.Service
 
             foreach (var type in types)
             {
-                var attrs = System.Attribute.GetCustomAttributes(assembly, type);
+                var attrs = type.GetCustomAttributes(true);
                 foreach (var attr in attrs)
                 {
+                    Logger.Debug(String.Format(Messages.ProcessingAttribute, attr, type));
                     if (attr is ResourceBOMAttribute)
                     {
                         ProcessAddInAttribute((ResourceBOMAttribute)attr);
@@ -78,13 +97,8 @@ namespace AddOne.Framework.Service
                     {
                         ProcessPermissionAttribute((PermissionAttribute)attr);
                     }
-                    else if (attr is MenuAttribute)
-                    {
-                        menus.Add((MenuAttribute)attr);
-                    }
                 }
             }
-            uiDAO.ProcessMenuAttribute(menus);
         }
 
         private void ProcessPermissionAttribute(PermissionAttribute permissionAttribute)
@@ -154,8 +168,53 @@ namespace AddOne.Framework.Service
 
         internal void StartThis()
         {
-            // Registrar os menus events.
-            throw new NotImplementedException();
+            try
+            {
+                var addin = Assembly.GetEntryAssembly().FullName;
+                Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
+                List<MenuAttribute> menus = new List<MenuAttribute>();
+                var assembly = Assembly.GetEntryAssembly();
+                var types = (from type in assembly.GetTypes()
+                             where type.IsClass
+                             select type);
+
+                foreach (var type in types)
+                {
+                    var attrs = type.GetCustomAttributes(true);
+                    ProcessAddInStartupAttribute(attrs, type);
+                    foreach (var method in type.GetMethods())
+                    {
+                        attrs = method.GetCustomAttributes(true);
+                        ProcessAddInStartupAttribute(attrs, type);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(Messages.StartThisError, e);
+            }
         }
+
+        private void ProcessAddInStartupAttribute(object[] attrs, Type type)
+        {
+            List<MenuAttribute> menus = new List<MenuAttribute>();
+
+            foreach (var attr in attrs)
+            {
+                Logger.Debug(String.Format(Messages.ProcessingAttribute, attr, type));
+                if (attr is MenuEventAttribute)
+                {
+                    ((MenuEventAttribute)attr).OriginalType = type;
+                    dispatcher.RegisterMenuEvent((MenuEventAttribute)attr);
+                }
+                else if (attr is MenuAttribute)
+                {
+                    ((MenuAttribute)attr).OriginalType = type;
+                    menus.Add((MenuAttribute)attr);
+                }
+            }
+            uiDAO.ProcessMenuAttribute(menus);
+        }
+
     }
 }

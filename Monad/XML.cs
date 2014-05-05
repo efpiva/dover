@@ -30,7 +30,7 @@ namespace AddOne.Framework.Monad
             if (obj == null)
                 return null;
 
-            var listSerializer = new XmlSerializer(typeof(T));
+            var listSerializer = new XmlSerializer(obj.GetType());
             var xnameSpace = new XmlSerializerNamespaces();
             xnameSpace.Add("", "");
             var stream = new MemoryStream();

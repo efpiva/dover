@@ -58,6 +58,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attribute\AddInAttribute.cs" />
+    <Compile Include="Attribute\MenuAttribute.cs" />
+    <Compile Include="Attribute\MenuEventAttribute.cs" />
     <Compile Include="Attribute\PermissionAttribute.cs" />
     <Compile Include="Attribute\ResourceBOMAttribute.cs" />
     <Compile Include="DAO\AssemblyDAO.cs" />
@@ -65,26 +68,53 @@
     <Compile Include="DAO\BusinessOneDAO.cs" />
     <Compile Include="DAO\BusinessOneDAOSQLImpl.cs" />
     <Compile Include="Boot.cs" />
+    <Compile Include="DAO\BusinessOneUIDAO.cs" />
+    <Compile Include="DAO\BusinessOneUIDAOImpl.cs" />
+    <Compile Include="DAO\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="DAO\PermissionDAO.cs" />
     <Compile Include="DAO\PermissionDAOSQLImpl.cs" />
+    <Compile Include="Factory\ContainerManager.cs" />
     <Compile Include="Factory\SAPServiceFactory.cs" />
     <Compile Include="B1Application.cs" />
     <Compile Include="Log\SAPAppender.cs" />
+    <Compile Include="Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="MicroCore.cs" />
     <Compile Include="Model\Assembly\AssemblyInformation.cs" />
     <Compile Include="Model\SAP\BOM.cs" />
     <Compile Include="Model\SAP\FormattedSearch.cs" />
+    <Compile Include="Model\SAP\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\SAP\UIApplication.cs" />
+    <Compile Include="Model\SAP\UIMenu.cs" />
     <Compile Include="Model\SAP\QueryCategories.cs" />
     <Compile Include="Model\SAP\UDO.cs" />
     <Compile Include="Model\SAP\UserField.cs" />
     <Compile Include="Model\SAP\UserQueries.cs" />
     <Compile Include="Model\SAP\UserTable.cs" />
+    <Compile Include="Monad\XML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AddinLoader.cs" />
     <Compile Include="Service\AssemblyLoader.cs" />
     <Compile Include="Service\DatabaseConfiguration.cs" />
+    <Compile Include="Service\EventDispatcher.cs" />
     <Compile Include="Service\LicenseManager.cs" />
     <Compile Include="Service\MachineInformation.cs" />
+    <Compile Include="Service\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Service\PermissionManager.cs" />
     <Compile Include="Monad\Maybe.cs" />
   </ItemGroup>
@@ -96,11 +126,27 @@
       <Lcid>0</Lcid>
       <WrapperTool>tlbimp</WrapperTool>
       <Isolated>False</Isolated>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DAO\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="DatabaseTables.xml" />
+    <EmbeddedResource Include="Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Model\SAP\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Service\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DatabaseFields.xml" />

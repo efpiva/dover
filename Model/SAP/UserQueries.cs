@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using AddOne.Framework.Monad;
 
 namespace AddOne.Framework.Model.SAP
 {
@@ -9,7 +10,7 @@ namespace AddOne.Framework.Model.SAP
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     [System.Xml.Serialization.XmlRootAttribute(ElementName = "BOM", Namespace = "", IsNullable = false)]
-    public partial class UserQueriesBOM
+    public partial class UserQueriesBOM : IBOM
     {
 
         private UserQueriesBOMBO[] boField;
@@ -26,6 +27,34 @@ namespace AddOne.Framework.Model.SAP
             {
                 this.boField = value;
             }
+        }
+
+        internal override string[] GetKey()
+        {
+            return new string[] { "InternalKey", "QueryCategory" };
+        }
+
+        internal override SAPbobsCOM.BoObjectTypes GetBOType()
+        {
+            return SAPbobsCOM.BoObjectTypes.oUserQueries;
+        }
+
+        internal override System.Type GetBOClassType()
+        {
+            return typeof(SAPbobsCOM.IUserQueries);
+        }
+
+        internal override string GetName()
+        {
+            return Messages.UserQuery;
+        }
+
+        internal override string GetFormatName(int i)
+        {
+            return "[" + boField.With(x => x[i])
+                .With(x => x.UserQueries)
+                .With(x => x[0])
+                .Return(x => x.QueryDescription, string.Empty) + "]";
         }
     }
 

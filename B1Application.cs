@@ -10,7 +10,9 @@ using AddOne.Framework.Log;
 using Castle.Core.Logging;
 using AddOne.Framework.DAO;
 using AddOne.Framework.Service;
+using AddOne.Framework.Factory;
 using System.Reflection;
+using SAPbouiCOM.Framework;
 
 namespace AddOne.Framework
 {
@@ -18,34 +20,13 @@ namespace AddOne.Framework
     {
         private string appDomainFolder;
 
-        private static WindsorContainer BuildContainer()
-        {
-            WindsorContainer container = new WindsorContainer();
-            container.Register(Component.For<SAPbouiCOM.Application>().UsingFactoryMethod(SAPServiceFactory.ApplicationFactory));
-            container.Register(Component.For<SAPbouiCOM.Framework.Application>().UsingFactoryMethod(SAPServiceFactory.FrameworkApplicationFactory));
-            container.Register(Component.For<SAPbobsCOM.Company>().UsingFactoryMethod(SAPServiceFactory.CompanyFactory));
-            container.Register(Classes.FromAssemblyInDirectory(new AssemblyFilter(Environment.CurrentDirectory))
-                        .IncludeNonPublicTypes().InSameNamespaceAs<MicroCore>(true)
-                        .WithService.DefaultInterfaces().LifestyleSingleton());
-            container.AddFacility<LoggingFacility>(f => f.UseLog4Net());
-            // Factory injections.
-
-            var logger = container.Resolve<ILogger>();
-            SAPServiceFactory.Logger = logger;
-
-            var b1dao = container.Resolve<BusinessOneDAO>();
-            SAPAppender.B1DAO = b1dao;
-
-            return container;
-        }
-
         public B1Application()
         {
             if (AppDomain.CurrentDomain.FriendlyName == "AddOne.AddIn"
                 || AppDomain.CurrentDomain.FriendlyName == "AddOne.Inception")
                 return;
 
-            var container = BuildContainer();
+            var container = ContainerManager.BuildContainer();
             var microCore = container.Resolve<MicroCore>();
             appDomainFolder = microCore.PrepareFramework();
             container.Dispose();
@@ -55,22 +36,26 @@ namespace AddOne.Framework
         {
             if (appDomainFolder != null)
             {
-                AppDomain inception = AppDomain.CreateDomain("AddOne.Inception");
-                inception.SetData("APPBASE", appDomainFolder);
+                AppDomainSetup setup = new AppDomainSetup();
+                setup.ApplicationName = "AddOne.Inception";
+                setup.ApplicationBase = appDomainFolder;
+                AppDomain inception = AppDomain.CreateDomain("AddOne.Inception", null, setup);
                 Environment.CurrentDirectory = appDomainFolder;
                 SAPServiceFactory.PrepareForInception(inception);
                 inception.ExecuteAssembly("AddOne.exe", Environment.GetCommandLineArgs());
             }
             else if (AppDomain.CurrentDomain.FriendlyName == "AddOne.AddIn")
             {
-                var container = BuildContainer();
+                var container = ContainerManager.BuildContainer();
                 var loader = container.Resolve<AddinLoader>();
+                var app = container.Resolve<Application>();
                 loader.StartThis();
+                app.Run();
                 container.Dispose();
             } 
             else
             {
-                var container = BuildContainer();
+                var container = ContainerManager.BuildContainer();
                 var boot = container.Resolve<Boot>();
                 boot.StartUp();
                 container.Dispose();

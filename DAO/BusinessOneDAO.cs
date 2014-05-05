@@ -8,37 +8,33 @@ using System.IO;
 
 namespace AddOne.Framework.DAO
 {
-    public interface BusinessOneDAO
+    public abstract class BusinessOneDAO
     {
+        public abstract void SaveBOMIfNotExists(IBOM bom);
 
-        void SaveBOMIfNotExists(UserTableBOM tables);
+        public abstract void UpdateOrSaveBOMIfNotExists(IBOM udoBOM);
 
-        void SaveBOMIfNotExists(UserFieldBOM fields);
+        public abstract string GetNextCode(String udt);
 
-        void UpdateOrSaveBOMIfNotExists(UDOBOM filteredUdoBOM);
+        public abstract string GetCurrentUser();
 
-        string GetNextCode(String udt);
+        public abstract void ExecuteStatement(string sql);
 
-        string GetCurrentUser();
+        public abstract T ExecuteSqlForObject<T>(string sql);
 
-        void ExecuteStatement(string sql);
+        public abstract List<T> ExecuteSqlForList<T>(string sql);
 
-        T ExecuteSqlForObject<T>(string sql);
+        public abstract T GetBOMFromXML<T>(Stream resourceStream);
 
-        List<T> ExecuteSqlForList<T>(string sql);
+        public abstract string GetUserTableXMLBOMFromNames(string[] userTables);
 
-        T GetBOMFromXML<T>(Stream resourceStream);
+        public abstract string GetUserFieldXMLBOMFromNames(string[] userTables);
 
-        string GetUserTableXMLBOMFromNames(string[] userTables);
+        public abstract void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute);
 
-        string GetUserFieldXMLBOMFromNames(string[] userTables);
+        public abstract bool IsSuperUser();
 
-        void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute);
+        public abstract bool HasPermission(string permissionID);
 
-        void UpdateOrSaveBOMIfNotExists(FormattedSearchBOM fsBOM);
-
-        void UpdateOrSaveBOMIfNotExists(UserQueriesBOM qcBOM);
-
-        void UpdateOrSaveBOMIfNotExists(QueryCategoriesBOM qcBOM);
     }
 }
