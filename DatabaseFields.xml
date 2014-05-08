@@ -385,6 +385,27 @@
     </AdmInfo>
     <UserFieldsMD>
       <row>
+        <Name>FileName</Name>
+        <Type>db_Alpha</Type>
+        <Size>200</Size>
+        <Description>FileName</Description>
+        <SubType>st_None</SubType>
+        <LinkedTable />
+        <DefaultValue />
+        <TableName>@GA_AO_MODULES</TableName>
+        <EditSize>200</EditSize>
+        <Mandatory>tNO</Mandatory>
+      </row>
+    </UserFieldsMD>
+    <ValidValuesMD></ValidValuesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
         <Name>ResourceName</Name>
         <Type>db_Alpha</Type>
         <Size>200</Size>
@@ -500,6 +521,49 @@
         <DefaultValue />
         <TableName>@GA_AO_MODULES_USER</TableName>
         <EditSize>30</EditSize>
+        <Mandatory>tNO</Mandatory>
+      </row>
+    </UserFieldsMD>
+    <ValidValuesMD></ValidValuesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
+        <Name>Data</Name>
+        <Type>db_Alpha</Type>
+        <Size>30</Size>
+        <Description>Data</Description>
+        <SubType>st_None</SubType>
+        <LinkedTable />
+        <DefaultValue />
+        <TableName>@GA_AO_LICENSE</TableName>
+        <EditSize>30</EditSize>
+        <Mandatory>tNO</Mandatory>
+
+      </row>
+    </UserFieldsMD>
+    <ValidValuesMD></ValidValuesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
+        <Name>Resource</Name>
+        <Type>db_Memo</Type>
+        <Size>4</Size>
+        <Description>Resource</Description>
+        <SubType>st_Link</SubType>
+        <LinkedTable />
+        <DefaultValue />
+        <TableName>@GA_AO_LICENSE_BIN</TableName>
+        <EditSize>254</EditSize>
         <Mandatory>tNO</Mandatory>
       </row>
     </UserFieldsMD>

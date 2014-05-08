@@ -70,4 +70,32 @@
       </row>
     </UserTablesMD>
   </BO>
+  <BO>
+    <AdmInfo>
+      <Object>153</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserTablesMD>
+      <row>
+        <TableName>GA_AO_LICENSE</TableName>
+        <TableDescription>Licença AddOne</TableDescription>
+        <TableType>bott_NoObject</TableType>
+        <Archivable>tNO</Archivable>
+      </row>
+    </UserTablesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>153</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserTablesMD>
+      <row>
+        <TableName>GA_AO_LICENSE_BIN</TableName>
+        <TableDescription>Licença AddOne</TableDescription>
+        <TableType>bott_NoObject</TableType>
+        <Archivable>tNO</Archivable>
+      </row>
+    </UserTablesMD>
+  </BO>
 </BOM>
