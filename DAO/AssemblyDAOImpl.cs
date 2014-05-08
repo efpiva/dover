@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.Model.Assembly;
+using AddOne.Framework.Model;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 namespace AddOne.Framework.DAO
@@ -18,7 +18,7 @@ namespace AddOne.Framework.DAO
 
         public AssemblyInformation GetCoreAssembly(string asmFile)
         {
-            String sql = string.Format(@"SELECT Code, U_Name Name, U_ResourceName ResourceName, U_Version Version, U_MD5 MD5, U_Date Date, 
+            String sql = string.Format(@"SELECT Code, U_Name Name, U_FileName FileName, U_ResourceName ResourceName, U_Version Version, U_MD5 MD5, U_Date Date, 
                                 U_Size Size, U_Type Type 
                             FROM [@GA_AO_MODULES]
                                 where U_Type = 'C' and U_Name = '{0}'", asmFile);
@@ -27,7 +27,7 @@ namespace AddOne.Framework.DAO
 
         public AssemblyInformation GetAddInAssembly(string asmFile)
         {
-            String sql = string.Format(@"SELECT Code, U_Name Name, U_ResourceName ResourceName, U_Version Version, U_MD5 MD5, U_Date Date, 
+            String sql = string.Format(@"SELECT Code, U_Name Name, U_FileName FileName, U_ResourceName ResourceName, U_Version Version, U_MD5 MD5, U_Date Date, 
                                 U_Size Size, U_Type Type 
                             FROM [@GA_AO_MODULES]
                                 where U_Type = 'A' and U_Name = '{0}'", asmFile);
@@ -36,7 +36,7 @@ namespace AddOne.Framework.DAO
 
         public List<AssemblyInformation> GetAddinsAssemblies()
         {
-            String sql = @"SELECT Code, U_Name Name, U_ResourceName ResourceName, U_Version Version, U_MD5 MD5, U_Date Date, 
+            String sql = @"SELECT Code, U_Name Name, U_FileName FileName, U_ResourceName ResourceName, U_Version Version, U_MD5 MD5, U_Date Date, 
                                 U_Size Size, U_Type Type 
                             FROM [@GA_AO_MODULES]
                                 where U_Type = 'A'";
@@ -45,7 +45,7 @@ namespace AddOne.Framework.DAO
 
         public List<AssemblyInformation> GetCoreAssemblies()
         {
-            String sql = @"SELECT Code, U_Name Name, U_ResourceName ResourceName, U_Version Version, U_MD5 MD5, U_Date Date, 
+            String sql = @"SELECT Code, U_Name Name, U_FileName FileName, U_ResourceName ResourceName, U_Version Version, U_MD5 MD5, U_Date Date, 
                                 U_Size Size, U_Type Type 
                             FROM [@GA_AO_MODULES]
                                 where U_Type = 'C'";
@@ -55,7 +55,7 @@ namespace AddOne.Framework.DAO
         public byte[] GetAssembly(AssemblyInformation asm)
         {
             List<String> hexFile = b1DAO.ExecuteSqlForList<String>(
-                String.Format("Select U_asm from [@GA_AO_MODULES_BIN] where U_Code = '{0}'", asm.Code));
+                String.Format("Select U_asm from [@GA_AO_MODULES_BIN] where U_Code = '{0}' ORDER BY Code", asm.Code));
             StringBuilder sb = new StringBuilder();
             foreach (var hex in hexFile)
             {
@@ -68,7 +68,7 @@ namespace AddOne.Framework.DAO
         public byte[] GetB1StudioResource(AssemblyInformation asm)
         {
             List<String> lines = b1DAO.ExecuteSqlForList<String>(
-                String.Format("Select U_Resource from [@GA_AO_MODULES_B1S] where U_Code = '{0}'", asm.Code));
+                String.Format("Select U_Resource from [@GA_AO_MODULES_B1S] where U_Code = '{0}' ORDER BY Code", asm.Code));
             StringBuilder sb = new StringBuilder();
             foreach (var line in lines)
             {
@@ -92,9 +92,9 @@ namespace AddOne.Framework.DAO
             if (String.IsNullOrEmpty(asm.Code))
             {
                 asm.Code = b1DAO.GetNextCode("GA_AO_MODULES");
-                sql = String.Format(@"INSERT INTO [@GA_AO_MODULES] (Code, Name, U_Name, U_ResourceName, U_Version, U_MD5, U_Date, U_Size, U_Type)
-                VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', {7}, '{8}')",
-                        asm.Code, asm.Code, asm.Name, asm.ResourceName, asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length, asm.Type);
+                sql = String.Format(@"INSERT INTO [@GA_AO_MODULES] (Code, Name, U_Name, U_FileName, U_ResourceName, U_Version, U_MD5, U_Date, U_Size, U_Type)
+                VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8}, '{9}')",
+                        asm.Code, asm.Code, asm.Name, asm.FileName, asm.ResourceName, asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length, asm.Type);
             }
             else
             {
@@ -160,6 +160,18 @@ namespace AddOne.Framework.DAO
                 sql = String.Format("INSERT INTO [@GA_AO_MODULES_B1S] (Code, Name, U_Code, U_Resource) VALUES ('{0}', '{1}', '{2}', '{3}')",
                     code, code, asm.Code, b1SResource.Substring(insertedText));
                 b1DAO.ExecuteStatement(sql);
+            }
+        }
+
+        public void RemoveAsm(string moduleName)
+        {
+            string code = b1DAO.ExecuteSqlForObject<string>(
+                string.Format("SELECT Code FROM [@GA_AO_MODULES] WHERE U_Name = '{0}'", moduleName));
+            if (moduleName != null)
+            {
+                b1DAO.ExecuteStatement(String.Format("DELETE FROM [@GA_AO_MODULES] WHERE Code = '{0}'", code));
+                b1DAO.ExecuteStatement(String.Format("DELETE FROM [@GA_AO_MODULES_B1S] WHERE U_Code = '{0}'", code));
+                b1DAO.ExecuteStatement(String.Format("DELETE FROM [@GA_AO_MODULES_BIN] WHERE U_Code = '{0}'", code));
             }
         }
     }

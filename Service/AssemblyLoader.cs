@@ -19,7 +19,7 @@ namespace AddOne.Framework.Service
         AddIn
     }
 
-    internal class AssemblyLoader
+    public class AssemblyLoader
     {
         private string[] addinsAssemblies = {
             "addInSetup.exe"
@@ -44,6 +44,33 @@ namespace AddOne.Framework.Service
             this.asmDAO = asmDAO;
         }
 
+        public void RemoveAddIn(string moduleName)
+        {
+            // TODO: reload appDomain!
+            asmDAO.RemoveAsm(moduleName);
+        }
+
+        public void SaveAddIn(string path)
+        {
+            if (path == null || path.Length < 4)
+            {
+                Logger.Error(string.Format(Messages.SaveAddInError, path.Return( x => x, String.Empty)));
+            }
+            else
+            {
+                try
+                {
+                    SaveIfNotExistsOrDifferent(null, path.Substring(0, path.Length - 3), path, "A");
+                    Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(string.Format(Messages.SaveAddInError, path), e);
+                }
+            }
+
+        }
+
         internal void UpdateAssemblies(AssemblySource assemblyLocation, string appFolder)
         {
             List<AssemblyInformation> asms;
@@ -57,7 +84,7 @@ namespace AddOne.Framework.Service
 
             foreach(var asm in asms)
             {
-                string fullPath = Path.Combine(appFolder, asm.Name);
+                string fullPath = Path.Combine(appFolder, asm.FileName);
                 // TODO: checar md5sum de B1s
                 if (IsDifferent(asm, appFolder, fullPath))
                 {
@@ -118,14 +145,14 @@ namespace AddOne.Framework.Service
 
                 foreach (var asm in asms)
                 {
-                    ret.Add(SaveIfNotExistsOrDifferent(asm, asm.Name, type));
+                    ret.Add(SaveIfNotExistsOrDifferent(asm, asm.Name, asm.FileName, type));
                 }
             }
             else
             {
                 foreach (var asmFile in defaultAsms)
                 {
-                    ret.Add(SaveIfNotExistsOrDifferent(null, asmFile, type));
+                    ret.Add(SaveIfNotExistsOrDifferent(null, asmFile.Substring(0, asmFile.Length - 4), asmFile, type));
                 }
 
             }
@@ -134,14 +161,15 @@ namespace AddOne.Framework.Service
         }
 
         private AssemblyInformation SaveIfNotExistsOrDifferent(AssemblyInformation existingAsm, 
-            string asmFile, string type)
+            string name, string asmFile, string type)
         {
 
             AssemblyInformation newAsm = new AssemblyInformation();
             if (existingAsm != null)
                 newAsm.Code = existingAsm.Code; // Prepare for update.
             var asmPath = Path.Combine(Environment.CurrentDirectory, asmFile);
-            newAsm.Name = asmFile;
+            newAsm.Name = name;
+            newAsm.FileName = asmFile;
             byte[] asmBytes = File.ReadAllBytes(asmPath);
             newAsm.Version = GetFileVersion(asmBytes);
             newAsm.MD5 = MD5Sum(asmBytes);

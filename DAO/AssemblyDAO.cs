@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.Model.Assembly;
+using AddOne.Framework.Model;
 
 namespace AddOne.Framework.DAO
 {
@@ -21,5 +21,7 @@ namespace AddOne.Framework.DAO
         AssemblyInformation GetAddInAssembly(string p);
 
         List<AssemblyInformation> GetCoreAssemblies();
+
+        void RemoveAsm(string moduleName);
     }
 }
