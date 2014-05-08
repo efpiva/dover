@@ -88,6 +88,15 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tipo Documents precisa ter boObjectType definido.
+        /// </summary>
+        internal static string DocumentObjectTypeInvalid {
+            get {
+                return ResourceManager.GetString("DocumentObjectTypeInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Finalizando execução de SQL - {0}.
         /// </summary>
         internal static string EndExecuteStatement {

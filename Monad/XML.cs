@@ -35,8 +35,12 @@ namespace AddOne.Framework.Monad
             xnameSpace.Add("", "");
             var stream = new MemoryStream();
             var writer = new MyXmlTextWriter(stream);
+
             listSerializer.Serialize(writer, obj, xnameSpace);
-            return Encoding.Unicode.GetString(stream.ToArray());
+            stream.Position = 0;
+            var streamReader = new StreamReader(stream);
+
+            return streamReader.ReadToEnd();
         }
 
         public static V Deserialize<V>(this string xml)
@@ -50,11 +54,11 @@ namespace AddOne.Framework.Monad
         {
             // wront UTF-16 return from SAP.
             // TODO: testar tratamento utilizando no Serialize<T>.
-            if (s.ToUpper().StartsWith("<?xml version=\"1.0\" encoding=\"UTF-16\"?>".ToUpper()))
-                s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + s.Substring(39);
+            //if (s.StartsWith("<?xml version=\"1.0\" encoding=\"UTF-16\"?>", StringComparison.InvariantCultureIgnoreCase))
+            //    s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + s.Substring(39);
 
             MemoryStream stream = new MemoryStream();
-            StreamWriter writer = new StreamWriter(stream);
+            StreamWriter writer = new StreamWriter(stream, Encoding.Unicode);
             writer.Write(s);
             writer.Flush();
             stream.Position = 0;

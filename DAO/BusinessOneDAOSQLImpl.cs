@@ -28,17 +28,22 @@ namespace AddOne.Framework.DAO
             this.company = company;
         }
 
-        public override void SaveBOMIfNotExists(IBOM bom)
+        public override void SaveBOM(IBOM bom, INotifier notifier = null)
         {
-            UpdateOrSaveBOMIfNotExists(bom, false);
+            UpdateOrSaveBOMIfNotExists(bom, false, false, notifier);
         }
 
-        public override void UpdateOrSaveBOMIfNotExists(IBOM bom)
+        public override void SaveBOMIfNotExists(IBOM bom, INotifier notifier = null)
         {
-            UpdateOrSaveBOMIfNotExists(bom, true);
+            UpdateOrSaveBOMIfNotExists(bom, false, true, notifier);
         }
 
-        private void UpdateOrSaveBOMIfNotExists(IBOM bom, bool Update = true)
+        public override void UpdateOrSaveBOMIfNotExists(IBOM bom, INotifier notifier = null)
+        {
+            UpdateOrSaveBOMIfNotExists(bom, true, true, notifier);
+        }
+
+        private void UpdateOrSaveBOMIfNotExists(IBOM bom, bool Update = true, bool CheckExists = true, INotifier notifier = null)
         {            
             object obj = null;
             Type type = bom.GetBOClassType();
@@ -54,27 +59,35 @@ namespace AddOne.Framework.DAO
                 try
                 {
                     obj = company.GetBusinessObject(bom.GetBOType());
-                    var browser = type.InvokeMember("Browser", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
-                    browser.GetType().InvokeMember("ReadXml", BindingFlags.InvokeMethod | BindingFlags.Public, 
-                        null, browser, new object[]{xmlBom, i});
-                    string xml = (string)type.InvokeMember("GetAsXML", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
-                    var resourceXml = XDocument.Parse(xml);
-                    object[] keys = GetKeys(obj, bom.GetBOType(), bom.GetKey());
-                    bool found = (bool)type.InvokeMember("GetByKey", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, keys);
-                    if (found)
+                    if (CheckExists)
                     {
-                        if (Update)
-                            UpdateDIObject(obj, resourceXml, bom.GetName(), bom.GetFormatName(i));
+                        var browser = type.InvokeMember("Browser", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
+                        browser.GetType().InvokeMember("ReadXml", BindingFlags.InvokeMethod | BindingFlags.Public,
+                            null, browser, new object[] { xmlBom, i });
+                        string xml = (string)type.InvokeMember("GetAsXML", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
+                        var resourceXml = XDocument.Parse(xml);
+                        object[] keys = GetKeys(obj, bom.GetBOType(), bom.GetKey());
+                        bool found = (bool)type.InvokeMember("GetByKey", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, keys);
+                        if (found)
+                        {
+                            if (Update)
+                                UpdateDIObject(obj, resourceXml, bom.GetName(), bom.GetFormatName(i), notifier);
+                        }
+                        else
+                        {
+                            AddDIObject(obj, xmlBom, i, bom.GetName(), bom.GetFormatName(i), notifier);
+                        }
                     }
                     else
                     {
-                        AddDIObject(obj, xmlBom, i, bom.GetName(), bom.GetFormatName(i));
+                        AddDIObject(obj, xmlBom, i, bom.GetName(), bom.GetFormatName(i), notifier);
                     }
                     
                 }
                 finally
                 {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                    if (obj != null)
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
                 }
             }
             Logger.Debug(String.Format(Messages.EndUpdateOrSave, bom.GetName()));
@@ -82,27 +95,32 @@ namespace AddOne.Framework.DAO
 
         }
 
-        private void AddDIObject<T>(T obj, string xmlBom, int i, string name, string formatName)
+        private void AddDIObject<T>(T obj, string xmlBom, int i, string name, string formatName, INotifier notifier)
         {
             Type type = typeof(T);
             var browser = type.InvokeMember("Browser", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
             browser.GetType().InvokeMember("ReadXml", BindingFlags.InvokeMethod | BindingFlags.Public,
                 null, browser, new object[] { xmlBom, i });
             int ret = (int)type.InvokeMember("Add", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
+            string xml = (string)type.InvokeMember("GetAsXml", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
+            File.WriteAllText("c:\\temp\\ige_framework.xml", xml);
             if (ret != 0)
             {
                 string err;
                 company.GetLastError(out ret, out err);
                 string exceptionErr = String.Format(Messages.ErrorAddingDI, name, formatName, err);
                 Logger.Error(exceptionErr);
+                notifier.Do(x => x.OnError(xmlBom, ret, err));
             }
             else
             {
-                Logger.Info(String.Format(Messages.SuccessAddindDI, formatName, name));
+                string key = company.GetNewObjectKey();
+                Logger.Info(String.Format(Messages.SuccessAddindDI, name, formatName));
+                notifier.Do(x => x.OnSuccess(xmlBom, key));
             }
         }
 
-        private void UpdateDIObject<T>(T obj, XDocument resourceXml, string name, string formatName)
+        private void UpdateDIObject<T>(T obj, XDocument resourceXml, string name, string formatName, INotifier notifier)
         {
             Type type = typeof(T);
             string xml = (string)type.InvokeMember("GetAsXML", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
@@ -119,10 +137,12 @@ namespace AddOne.Framework.DAO
                     company.GetLastError(out ret, out err);
                     string exceptionErr = String.Format(Messages.ErrorUpdatingDI, name, formatName, err);
                     Logger.Error(exceptionErr);
+                    notifier.Do(x => x.OnError(resourceXml.ToString(), ret, err));
                 }
                 else
                 {
-                    Logger.Info(String.Format(Messages.SuccessUpdatingDI, formatName, name));
+                    Logger.Info(String.Format(Messages.SuccessUpdatingDI, name, formatName));
+                    notifier.Do(x => x.OnSuccess(resourceXml.ToString(), ""));
                 }
             }
             else

@@ -141,4 +141,7 @@
   <data name="Starting" xml:space="preserve">
     <value>Iniciando Framework({0})</value>
   </data>
+  <data name="StartupFolder" xml:space="preserve">
+    <value>Iniciando assemblies na pasta {0}</value>
+  </data>
 </root>

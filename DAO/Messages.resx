@@ -126,6 +126,9 @@
   <data name="AuthorizationMessage" xml:space="preserve">
     <value>Retorno do metodo {1} de tipo {0} nao e booleano</value>
   </data>
+  <data name="DocumentObjectTypeInvalid" xml:space="preserve">
+    <value>Tipo Documents precisa ter boObjectType definido</value>
+  </data>
   <data name="EndExecuteStatement" xml:space="preserve">
     <value>Finalizando execução de SQL - {0}</value>
   </data>

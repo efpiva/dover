@@ -5,14 +5,21 @@ using System.Text;
 using AddOne.Framework.Model;
 using AddOne.Framework.Model.SAP;
 using System.IO;
+using SAPbobsCOM;
 
 namespace AddOne.Framework.DAO
 {
+    public interface INotifier
+    {
+        void OnSuccess(string xml, string addedKey);
+        void OnError(string xml, int errCode, string errMessage);
+    }
+
     public abstract class BusinessOneDAO
     {
-        public abstract void SaveBOMIfNotExists(IBOM bom);
+        public abstract void SaveBOMIfNotExists(IBOM bom, INotifier notifier = null);
 
-        public abstract void UpdateOrSaveBOMIfNotExists(IBOM udoBOM);
+        public abstract void UpdateOrSaveBOMIfNotExists(IBOM udoBOM, INotifier notifier = null);
 
         public abstract string GetNextCode(String udt);
 
@@ -36,5 +43,6 @@ namespace AddOne.Framework.DAO
 
         public abstract bool HasPermission(string permissionID);
 
+        public abstract void SaveBOM(IBOM doc, INotifier notifier = null);
     }
 }
