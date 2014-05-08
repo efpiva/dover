@@ -88,7 +88,7 @@
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
     <Compile Include="MicroCore.cs" />
-    <Compile Include="Model\Assembly\AssemblyInformation.cs" />
+    <Compile Include="Model\AssemblyInformation.cs" />
     <Compile Include="Model\SAP\BOM.cs" />
     <Compile Include="Model\SAP\FormattedSearch.cs" />
     <Compile Include="Model\SAP\Messages.Designer.cs">

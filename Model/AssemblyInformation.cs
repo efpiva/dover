@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AddOne.Framework.Model.Assembly
+namespace AddOne.Framework.Model
 {
     public class AssemblyInformation
     {
@@ -22,5 +22,9 @@ namespace AddOne.Framework.Model.Assembly
         public string Code { get; set; }
 
         public string Type { get; set; }
+
+        public DateTime ExpireDate { get; set; }
+
+        public string FileName { get; set; }
     }
 }

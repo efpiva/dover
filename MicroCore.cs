@@ -7,7 +7,7 @@ using SAPbobsCOM;
 using System.IO;
 using AddOne.Framework.Service;
 using Castle.Core.Logging;
-using AddOne.Framework.Model.Assembly;
+using AddOne.Framework.Model;
 
 namespace AddOne.Framework
 {

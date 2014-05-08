@@ -10,7 +10,7 @@ using Castle.Core.Logging;
 using System.Reflection;
 using AddOne.Framework.Monad;
 using AddOne.Framework.Model.SAP;
-using AddOne.Framework.Model.Assembly;
+using AddOne.Framework.Model;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Xml.Linq;
 

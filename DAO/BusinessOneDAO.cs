@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.Model.Assembly;
+using AddOne.Framework.Model;
 using AddOne.Framework.Model.SAP;
 using System.IO;
 
