@@ -157,6 +157,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="dotfuscator.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DatabaseFields.xml" />
