@@ -27,7 +27,7 @@ namespace AddOne.Framework.Factory
 
             Container = new WindsorContainer();
             Container.Kernel.Resolver.AddSubResolver(new ArrayResolver(Container.Kernel));
-            container.Register(Component.For<LicenseDAO>().ImplementedBy<LicenseDAOSQLImpl>());
+            Container.Register(Component.For<LicenseDAO>().ImplementedBy<LicenseDAOSQLImpl>());
 
             Container.Register(Component.For<SAPbouiCOM.Application>().UsingFactoryMethod(SAPServiceFactory.ApplicationFactory));
             Container.Register(Component.For<SAPbouiCOM.Framework.Application>().UsingFactoryMethod(SAPServiceFactory.FrameworkApplicationFactory));
