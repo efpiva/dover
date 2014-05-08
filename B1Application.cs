@@ -20,7 +20,7 @@ namespace AddOne.Framework
     public class B1Application
     {
         private string appDomainFolder;
-        private WindsorContainer appContainer;
+        private IWindsorContainer appContainer;
 
         public B1Application()
         {

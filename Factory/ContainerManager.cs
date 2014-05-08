@@ -20,44 +20,42 @@ namespace AddOne.Framework.Factory
         public static Func<SAPbobsCOM.Company>[] customCompanyFactory {get; set; }
         public static IWindsorContainer Container { get; private set; }
 
-        internal static WindsorContainer BuildContainer()
+        internal static IWindsorContainer BuildContainer()
         {
             Func<SAPbobsCOM.Company>[] companyFactory =  (customCompanyFactory == null) 
                 ? new Func<SAPbobsCOM.Company>[] {SAPServiceFactory.CompanyFactory} : customCompanyFactory;
 
-            WindsorContainer container = new WindsorContainer();
-            container.Kernel.Resolver.AddSubResolver(new ArrayResolver(container.Kernel));
+            Container = new WindsorContainer();
+            Container.Kernel.Resolver.AddSubResolver(new ArrayResolver(Container.Kernel));
 
-            container.Register(Component.For<SAPbouiCOM.Application>().UsingFactoryMethod(SAPServiceFactory.ApplicationFactory));
-            container.Register(Component.For<SAPbouiCOM.Framework.Application>().UsingFactoryMethod(SAPServiceFactory.FrameworkApplicationFactory));
+            Container.Register(Component.For<SAPbouiCOM.Application>().UsingFactoryMethod(SAPServiceFactory.ApplicationFactory));
+            Container.Register(Component.For<SAPbouiCOM.Framework.Application>().UsingFactoryMethod(SAPServiceFactory.FrameworkApplicationFactory));
 
             for(int i=0 ; i< companyFactory.Length ; i++)
-                container.Register(Component.For<SAPbobsCOM.Company>().UsingFactoryMethod(companyFactory[i]).Named("company" + i));
+                Container.Register(Component.For<SAPbobsCOM.Company>().UsingFactoryMethod(companyFactory[i]).Named("company" + i));
 
             for (int i = 0; i < companyFactory.Length; i++)
-                container.Register(Component.For<BusinessOneDAO>().ImplementedBy<BusinessOneDAOSQLImpl>()
+                Container.Register(Component.For<BusinessOneDAO>().ImplementedBy<BusinessOneDAOSQLImpl>()
                     .DependsOn(Dependency.OnComponent(typeof(SAPbobsCOM.Company), "company" + i)).Named("b1dao" + i));
-            container.Register(Component.For<BusinessOneUIDAO>().ImplementedBy<BusinessOneUIDAOImpl>());
+            Container.Register(Component.For<BusinessOneUIDAO>().ImplementedBy<BusinessOneUIDAOImpl>());
 
             string runningFolder = Path.GetDirectoryName( Assembly.GetEntryAssembly().Location );
 
 
-            container.Register(Classes.FromAssemblyInDirectory(new AssemblyFilter(runningFolder))
+            Container.Register(Classes.FromAssemblyInDirectory(new AssemblyFilter(runningFolder))
                         .IncludeNonPublicTypes().Pick()
                         .WithService.DefaultInterfaces().LifestyleTransient());
-            container.AddFacility<LoggingFacility>(f => f.UseLog4Net());
+            Container.AddFacility<LoggingFacility>(f => f.UseLog4Net());
             // Factory injections.
 
-            var logger = container.Resolve<ILogger>();
+            var logger = Container.Resolve<ILogger>();
             logger.Debug(String.Format(Messages.StartupFolder, runningFolder));
             SAPServiceFactory.Logger = logger;
 
-            var b1dao = container.Resolve<BusinessOneDAO>();
+            var b1dao = Container.Resolve<BusinessOneDAO>();
             SAPAppender.B1DAO = b1dao;
 
-            Container = container;
-
-            return container;
+            return Container;
         }
 
    }
