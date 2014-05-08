@@ -86,7 +86,8 @@ namespace AddOne.Framework.DAO
                 }
                 finally
                 {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                    if (obj != null)
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
                 }
             }
             Logger.Debug(String.Format(Messages.EndUpdateOrSave, bom.GetName()));
