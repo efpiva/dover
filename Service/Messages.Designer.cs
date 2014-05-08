@@ -124,6 +124,24 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Licença inválida.
+        /// </summary>
+        internal static string InvalidLicense {
+            get {
+                return ResourceManager.GetString("InvalidLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arquivo {0} não encontrado.
+        /// </summary>
+        internal static string LicenseFileMissing {
+            get {
+                return ResourceManager.GetString("LicenseFileMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to MD5Sum: {0}.
         /// </summary>
         internal static string MD5Sum {
@@ -178,11 +196,47 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erro salvando addin {0}.
+        /// </summary>
+        internal static string SaveAddInError {
+            get {
+                return ResourceManager.GetString("SaveAddInError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AddIn {0} salvo com sucesso.
+        /// </summary>
+        internal static string SaveAddInSuccess {
+            get {
+                return ResourceManager.GetString("SaveAddInSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Erro inicializando addin.
         /// </summary>
         internal static string StartThisError {
             get {
                 return ResourceManager.GetString("StartThisError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erro inesperado em CryptoService.
+        /// </summary>
+        internal static string UnhandledCrypto {
+            get {
+                return ResourceManager.GetString("UnhandledCrypto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erro inesperado iniciando serviço de licença.
+        /// </summary>
+        internal static string UnhandledLicense {
+            get {
+                return ResourceManager.GetString("UnhandledLicense", resourceCulture);
             }
         }
         

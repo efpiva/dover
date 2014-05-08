@@ -138,6 +138,12 @@
   <data name="FileUpdated" xml:space="preserve">
     <value>Atualizado arquivo {0} - Versao {1}</value>
   </data>
+  <data name="InvalidLicense" xml:space="preserve">
+    <value>Licença inválida</value>
+  </data>
+  <data name="LicenseFileMissing" xml:space="preserve">
+    <value>Arquivo {0} não encontrado</value>
+  </data>
   <data name="MD5Sum" xml:space="preserve">
     <value>MD5Sum: {0}</value>
   </data>
@@ -156,8 +162,20 @@
   <data name="RegisteringAssembly" xml:space="preserve">
     <value>Registrando assembly {0} no container</value>
   </data>
+  <data name="SaveAddInError" xml:space="preserve">
+    <value>Erro salvando addin {0}</value>
+  </data>
+  <data name="SaveAddInSuccess" xml:space="preserve">
+    <value>AddIn {0} salvo com sucesso</value>
+  </data>
   <data name="StartThisError" xml:space="preserve">
     <value>Erro inicializando addin</value>
+  </data>
+  <data name="UnhandledCrypto" xml:space="preserve">
+    <value>Erro inesperado em CryptoService</value>
+  </data>
+  <data name="UnhandledLicense" xml:space="preserve">
+    <value>Erro inesperado iniciando serviço de licença</value>
   </data>
   <data name="UpdatingAssembly" xml:space="preserve">
     <value>Iniciando atualização de assemblies - {0}</value>
