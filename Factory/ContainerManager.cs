@@ -25,6 +25,7 @@ namespace AddOne.Framework.Factory
 
             container.Register(Component.For<BusinessOneDAO>().ImplementedBy<BusinessOneDAOSQLImpl>());
             container.Register(Component.For<BusinessOneUIDAO>().ImplementedBy<BusinessOneUIDAOImpl>());
+            container.Register(Component.For<LicenseDAO>().ImplementedBy<LicenseDAOSQLImpl>());
 
             container.Register(Classes.FromAssemblyInDirectory(new AssemblyFilter(Environment.CurrentDirectory))
                         .IncludeNonPublicTypes().Pick()
