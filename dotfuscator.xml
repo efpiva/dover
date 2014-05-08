@@ -24,7 +24,7 @@
     <option>xmlserialization</option>
     <mapping>
       <mapoutput overwrite="true">
-        <file dir="${configdir}\Obfuscated" name="map_addinSetup.xml" />
+        <file dir="${configdir}\Obfuscated" name="map_Framework.xml" />
       </mapoutput>
     </mapping>
     <referencerulelist>
