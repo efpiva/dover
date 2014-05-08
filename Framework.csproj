@@ -50,6 +50,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -110,6 +111,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AddinLoader.cs" />
     <Compile Include="Service\AssemblyLoader.cs" />
+    <Compile Include="Service\CryptoService.cs" />
     <Compile Include="Service\DatabaseConfiguration.cs" />
     <Compile Include="Service\EventDispatcher.cs" />
     <Compile Include="Service\LicenseManager.cs" />
