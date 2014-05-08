@@ -103,6 +103,7 @@
     <Compile Include="Model\SAP\UserField.cs" />
     <Compile Include="Model\SAP\UserQueries.cs" />
     <Compile Include="Model\SAP\UserTable.cs" />
+    <Compile Include="Monad\StringExtension.cs" />
     <Compile Include="Monad\XML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AddinLoader.cs" />
