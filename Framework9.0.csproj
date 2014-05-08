@@ -167,8 +167,8 @@
     <PostBuildEvent>dotfuscator dotfuscator.xml
 rm -rf Original
 mkdir Original
-cp *.exe Original
-cp Obfuscated/*.exe .
+cp *.dll Original
+cp Obfuscated/*.dll .
 </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
