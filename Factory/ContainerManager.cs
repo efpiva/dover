@@ -11,6 +11,7 @@ using AddOne.Framework.Log;
 using System.Reflection;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using System.IO;
+using AddOne.Framework.Service;
 
 namespace AddOne.Framework.Factory
 {
@@ -42,13 +43,15 @@ namespace AddOne.Framework.Factory
 
             string runningFolder = Path.GetDirectoryName( Assembly.GetEntryAssembly().Location );
 
+            // TODO: register all services as singletons.
+            Container.Register(Component.For<MenuEventHandler>().ImplementedBy<MenuEventHandler>().LifestyleSingleton());
 
             Container.Register(Classes.FromAssemblyInDirectory(new AssemblyFilter(runningFolder))
                         .IncludeNonPublicTypes().Pick()
                         .WithService.DefaultInterfaces().LifestyleTransient());
-            Container.AddFacility<LoggingFacility>(f => f.UseLog4Net());
+            Container.AddFacility<LoggingFacility>(f => f.UseLog4Net(Assembly.GetEntryAssembly().GetName().Name + ".config"));
             // Factory injections.
-
+            
             var logger = Container.Resolve<ILogger>();
             logger.Debug(String.Format(Messages.StartupFolder, runningFolder));
             SAPServiceFactory.Logger = logger;
