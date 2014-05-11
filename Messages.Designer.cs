@@ -61,6 +61,15 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erro no addin {0} versão {1}.
+        /// </summary>
+        internal static string AddInError {
+            get {
+                return ResourceManager.GetString("AddInError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Erro inesperado no AddOne: {0}\n {1}.
         /// </summary>
         internal static string AddInException {

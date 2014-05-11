@@ -86,6 +86,7 @@
     <Compile Include="Factory\ContainerManager.cs" />
     <Compile Include="Factory\SAPServiceFactory.cs" />
     <Compile Include="B1Application.cs" />
+    <Compile Include="Form\EventHandler.cs" />
     <Compile Include="Form\SelectFileDialog.cs" />
     <Compile Include="Log\SAPAppender.cs" />
     <Compile Include="Messages.Designer.cs">
