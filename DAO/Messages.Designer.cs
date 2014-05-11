@@ -196,6 +196,24 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resource {0} encontrado.
+        /// </summary>
+        internal static string GetLocalizedStringFoundResource {
+            get {
+                return ResourceManager.GetString("GetLocalizedStringFoundResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resource {0} não encontrado.
+        /// </summary>
+        internal static string GetLocalizedStringNotFoundResource {
+            get {
+                return ResourceManager.GetString("GetLocalizedStringNotFoundResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Finalizada execução de GetNextCode para {0}.
         /// </summary>
         internal static string GetNextCodeEnd {

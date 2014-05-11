@@ -61,6 +61,15 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erro inesperado no AddOne: {0}\n {1}.
+        /// </summary>
+        internal static string AddInException {
+            get {
+                return ResourceManager.GetString("AddInException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Todos os argumentos são obrigatórios..
         /// </summary>
         internal static string AllArgumentsMandatory {
@@ -79,7 +88,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro iniciando addin: {0}.
+        ///   Looks up a localized string similar to Erro iniciando addins.
         /// </summary>
         internal static string ErrorStartup {
             get {

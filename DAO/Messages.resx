@@ -162,6 +162,12 @@
   <data name="GetBomFromXMLError" xml:space="preserve">
     <value>Erro lendo BOM do XML - {0}</value>
   </data>
+  <data name="GetLocalizedStringFoundResource" xml:space="preserve">
+    <value>Resource {0} encontrado</value>
+  </data>
+  <data name="GetLocalizedStringNotFoundResource" xml:space="preserve">
+    <value>Resource {0} não encontrado</value>
+  </data>
   <data name="GetNextCodeEnd" xml:space="preserve">
     <value>Finalizada execução de GetNextCode para {0}</value>
   </data>
