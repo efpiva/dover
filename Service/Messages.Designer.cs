@@ -97,6 +97,33 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erro reiniciando addins.
+        /// </summary>
+        internal static string ErrorReboot {
+            get {
+                return ResourceManager.GetString("ErrorReboot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erro atualizando AddOne, em troca de base de dados..
+        /// </summary>
+        internal static string EventCompanyChangedError {
+            get {
+                return ResourceManager.GetString("EventCompanyChangedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erro atualizando AddOne. Evento de troca de idioma..
+        /// </summary>
+        internal static string EventLanguageChangedError {
+            get {
+                return ResourceManager.GetString("EventLanguageChangedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Erro atualizando arquivo {0} - Versao {1}..
         /// </summary>
         internal static string FileError {
@@ -192,6 +219,24 @@ namespace AddOne.Framework.Service {
         internal static string RegisteringAssembly {
             get {
                 return ResourceManager.GetString("RegisteringAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registrando menu {0} - para tipo {1}.
+        /// </summary>
+        internal static string RegisteringMenuEvent {
+            get {
+                return ResourceManager.GetString("RegisteringMenuEvent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reiniciando AddOne.
+        /// </summary>
+        internal static string Restarting {
+            get {
+                return ResourceManager.GetString("Restarting", resourceCulture);
             }
         }
         

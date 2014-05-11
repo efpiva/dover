@@ -129,6 +129,15 @@
   <data name="ConfiguringAddin" xml:space="preserve">
     <value>Inicializando configuração do AddIn {0}</value>
   </data>
+  <data name="ErrorReboot" xml:space="preserve">
+    <value>Erro reiniciando addins</value>
+  </data>
+  <data name="EventCompanyChangedError" xml:space="preserve">
+    <value>Erro atualizando AddOne, em troca de base de dados.</value>
+  </data>
+  <data name="EventLanguageChangedError" xml:space="preserve">
+    <value>Erro atualizando AddOne. Evento de troca de idioma.</value>
+  </data>
   <data name="FileError" xml:space="preserve">
     <value>Erro atualizando arquivo {0} - Versao {1}.</value>
   </data>
@@ -161,6 +170,12 @@
   </data>
   <data name="RegisteringAssembly" xml:space="preserve">
     <value>Registrando assembly {0} no container</value>
+  </data>
+  <data name="RegisteringMenuEvent" xml:space="preserve">
+    <value>Registrando menu {0} - para tipo {1}</value>
+  </data>
+  <data name="Restarting" xml:space="preserve">
+    <value>Reiniciando AddOne</value>
   </data>
   <data name="SaveAddInError" xml:space="preserve">
     <value>Erro salvando addin {0}</value>
