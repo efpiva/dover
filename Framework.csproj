@@ -114,12 +114,14 @@
     <Compile Include="Monad\XML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AddinLoader.cs" />
+    <Compile Include="Service\AppEventHandler.cs" />
     <Compile Include="Service\AssemblyLoader.cs" />
     <Compile Include="Service\CryptoService.cs" />
     <Compile Include="Service\DatabaseConfiguration.cs" />
     <Compile Include="Service\EventDispatcher.cs" />
     <Compile Include="Service\LicenseManager.cs" />
     <Compile Include="Service\MachineInformation.cs" />
+    <Compile Include="Service\MenuEventHandler.cs" />
     <Compile Include="Service\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -161,7 +163,6 @@
   <ItemGroup>
     <EmbeddedResource Include="DatabaseFields.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

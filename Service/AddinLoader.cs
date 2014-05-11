@@ -40,16 +40,16 @@ namespace AddOne.Framework.Service
         private PermissionManager permissionManager;
         private BusinessOneDAO b1DAO;
         private BusinessOneUIDAO uiDAO;
-        private EventDispatcher dispatcher;
+        private MenuEventHandler menuHandler;
 
         public AddinLoader(PermissionManager permissionManager, 
             BusinessOneDAO b1DAO, BusinessOneUIDAO uiDAO,
-            EventDispatcher dispatcher)
+            MenuEventHandler menuHandler)
         {
             this.permissionManager = permissionManager;
             this.b1DAO = b1DAO;
             this.uiDAO = uiDAO;
-            this.dispatcher = dispatcher;
+            this.menuHandler = menuHandler;
         }
         
         internal void LoadAddins(List<string> addins)
@@ -205,7 +205,7 @@ namespace AddOne.Framework.Service
                 if (attr is MenuEventAttribute)
                 {
                     ((MenuEventAttribute)attr).OriginalType = type;
-                    dispatcher.RegisterMenuEvent((MenuEventAttribute)attr);
+                    menuHandler.RegisterMenuEvent((MenuEventAttribute)attr);
                 }
                 else if (attr is MenuAttribute)
                 {
