@@ -41,13 +41,7 @@ namespace AddOne.Framework
 
                 assemblyLoader.UpdateAssemblies(AssemblySource.Core, appFolder);
                 assemblyLoader.UpdateAssemblies(AssemblySource.AddIn, appFolder);
-
-                var appLog = Path.Combine(appFolder, "log4net.config");
-                var defaultLog = Path.Combine(Environment.CurrentDirectory, "log4netAddin.config");
-                if (!File.Exists(appLog) && File.Exists(defaultLog))
-                {
-                    File.Copy(defaultLog, appLog);
-                }
+                CopyInstallResources(appFolder, Environment.CurrentDirectory);
 
                 return appFolder;
             }
@@ -57,6 +51,32 @@ namespace AddOne.Framework
                 Environment.Exit(10);
                 return null;
             }
+        }
+
+        private void CopyInstallResources(string appFolder, string sourceFolder)
+        {
+            string source, destination;
+            source = Path.Combine(sourceFolder, "AddOneInception.config");
+            destination = Path.Combine(appFolder, "AddOne.config");
+            if (!File.Exists(destination) && File.Exists(source))
+            {
+                File.Copy(source, destination);
+            }
+
+            source = Path.Combine(sourceFolder, "gweadded.jpg");
+            destination = Path.Combine(appFolder, "gweadded.jpg");
+            if (!File.Exists(destination) && File.Exists(source))
+            {
+                File.Copy(source, destination);
+            }
+
+            source = Path.Combine(sourceFolder, "AddOneAddin.config");
+            destination = Path.Combine(appFolder, "AddOneAddin.config");
+            if (!File.Exists(destination) && File.Exists(source))
+            {
+                File.Copy(source, destination);
+            }
+
         }
 
         private string CheckAppFolder()
