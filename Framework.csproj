@@ -130,6 +130,7 @@
     </Compile>
     <Compile Include="Service\PermissionManager.cs" />
     <Compile Include="Monad\Maybe.cs" />
+    <Compile Include="Service\RawPrinter.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="SAPbobsCOM">
