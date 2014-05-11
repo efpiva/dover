@@ -19,6 +19,7 @@ namespace AddOne.Framework.Factory
         private static object threadLock = new System.Object();
         private static bool b1Connected = false;
         private static bool frameworkConnected = false;
+        private static bool connString = true;
 
         public static ILogger Logger { get; set; }
 
@@ -38,10 +39,6 @@ namespace AddOne.Framework.Factory
 
             try
             {
-                objGUIApi = new SAPbouiCOM.SboGuiApi();
-                objGUIApi.Connect(GetConnectionString());
-                application = objGUIApi.GetApplication(-1);
-
                 company = (SAPbobsCOM.Company)application.Company.GetDICompany();
 
                 b1Connected = company.Connected;
@@ -56,10 +53,20 @@ namespace AddOne.Framework.Factory
 
         private static string GetConnectionString()
         {
-            if (Environment.GetCommandLineArgs().Length > 1)
-                return Environment.GetCommandLineArgs()[1];
+            string ret;
+            if (Environment.GetCommandLineArgs().Length > 1 && connString
+                && AppDomain.CurrentDomain.FriendlyName != "AddOne.AddIn"
+                && AppDomain.CurrentDomain.FriendlyName != "AddOne.Inception")
+            {
+                ret = Environment.GetCommandLineArgs()[1];
+                connString = false;
+            }
             else
-                return "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
+            {
+                ret = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
+            }
+
+            return ret;
         }
 
 
