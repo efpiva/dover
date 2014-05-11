@@ -14,24 +14,48 @@ namespace AddOne.Framework
 
         private LicenseManager licenseManager;
         private AddinLoader addinLoader;
+        private EventDispatcher dispatcher;
+        private SAPbouiCOM.Framework.Application app;
 
-        public Boot(LicenseManager licenseValidation, AddinLoader addinLoader)
+        public Boot(LicenseManager licenseValidation, AddinLoader addinLoader, EventDispatcher dispatcher,
+            SAPbouiCOM.Framework.Application app)
         {
             this.licenseManager = licenseValidation;
             this.addinLoader = addinLoader;
+            this.dispatcher = dispatcher;
+            this.app = app;
         }
 
-        public void StartUp()
+        internal void StartUp()
         {
             try
             {
                 Logger.Info(String.Format(Messages.Starting, this.GetType().Assembly.GetName().Version));
-                List<string> addins = licenseManager.ListAddins();
+                var addins = licenseManager.ListAddins();
                 addinLoader.LoadAddins(addins);
+                dispatcher.RegisterEvents();
+                app.Run();
             }
             catch (Exception e)
             {
-                Logger.Fatal(String.Format(Messages.ErrorStartup, e), e);
+                Logger.Fatal(Messages.ErrorStartup, e);
+                Environment.Exit(10);
+            }
+        }
+
+
+        internal void StartThis()
+        {
+            try
+            {
+                Logger.Info(String.Format(Messages.Starting, this.GetType().Assembly.GetName().Version));
+                addinLoader.StartThis();
+                dispatcher.RegisterEvents();
+                app.Run();
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal(Messages.ErrorStartup, e);
                 Environment.Exit(10);
             }
         }

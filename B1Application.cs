@@ -76,10 +76,8 @@ namespace AddOne.Framework
             else if (AppDomain.CurrentDomain.FriendlyName == "AddOne.AddIn")
             {
                 var container = ContainerManager.BuildContainer();
-                var loader = container.Resolve<AddinLoader>();
-                var app = container.Resolve<Application>();
+                var loader = container.Resolve<Boot>();
                 loader.StartThis();
-                app.Run();
                 container.Dispose();
             } 
             else
