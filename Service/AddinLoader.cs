@@ -9,16 +9,19 @@ using Castle.Core.Logging;
 using AddOne.Framework.DAO;
 using AddOne.Framework.Model.SAP;
 using AddOne.Framework.Factory;
+using AddOne.Framework.Model;
+using System.IO;
+using System.Xml.Linq;
 
 namespace AddOne.Framework.Service
 {
     class AddInRunner
     {
-        private string name;
+        private AssemblyInformation asm;
 
-        internal AddInRunner(string name)
+        internal AddInRunner(AssemblyInformation asm)
         {
-            this.name = name;
+            this.asm = asm;
         }
 
         internal void Run()
@@ -28,7 +31,7 @@ namespace AddOne.Framework.Service
             setup.ApplicationBase = Environment.CurrentDirectory;
 
             AppDomain domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
-            domain.ExecuteAssembly(name + ".exe");
+            domain.ExecuteAssembly(asm.Name + ".exe");
         }
     }
 
@@ -51,18 +54,41 @@ namespace AddOne.Framework.Service
             this.uiDAO = uiDAO;
             this.menuHandler = menuHandler;
         }
-        
-        internal void LoadAddins(List<string> addins)
+
+        internal void LoadAddins(List<AssemblyInformation> addins)
         {
             var authorizedAddins = FilterAuthorizedAddins(addins);
             foreach (var addin in authorizedAddins)
             {
                 ConfigureAddin(addin);
                 RegisterAddin(addin);
+                ConfigureLog(addin);
             }
         }
 
-        private void ConfigureAddin(string addin)
+        private void ConfigureLog(AssemblyInformation addin)
+        {
+            var source = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AddOneAddin.config");
+            var destination = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, addin.Name + ".config");
+
+            if (File.Exists(source) && !File.Exists(destination)) 
+            {
+                var doc = XDocument.Load(source);
+
+                var query = from c in doc.Elements("configuration").Elements("log4net")
+                            .Elements("appender").Elements("file")
+                            select c;
+
+                foreach (var fileTag in query)
+                {
+                    fileTag.Attribute("value").Value = addin.Name + ".log";
+                }
+
+                doc.Save(destination);
+            }
+        }
+
+        private void ConfigureAddin(AssemblyInformation addin)
         {
             Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
             Assembly assembly;
@@ -70,7 +96,7 @@ namespace AddOne.Framework.Service
             try
             {
                 assembly = (from asm in AppDomain.CurrentDomain.GetAssemblies()
-                                where asm.GetName().Name == addin
+                                where asm.GetName().Name == addin.Name
                                 select asm).First();
             }
             catch (InvalidOperationException e)
@@ -148,19 +174,19 @@ namespace AddOne.Framework.Service
             }
         }
 
-        private void RegisterAddin(string addin)
+        private void RegisterAddin(AssemblyInformation addin)
         {
             AddInRunner runner = new AddInRunner(addin);
             var thread = new Thread(new ThreadStart(runner.Run));
             thread.Start();
         }
 
-        private List<string> FilterAuthorizedAddins(List<string> addins)
+        private List<AssemblyInformation> FilterAuthorizedAddins(List<AssemblyInformation> addins)
         {
-            List<string> authorized = new List<string>();
-            foreach (string addin in addins)
+            var authorized = new List<AssemblyInformation>();
+            foreach (var addin in addins)
             {
-                if (permissionManager.AddInEnabled(addin))
+                if (permissionManager.AddInEnabled(addin.Name))
                     authorized.Add(addin);
             }
             return authorized;
@@ -213,8 +239,17 @@ namespace AddOne.Framework.Service
                     menus.Add((MenuAttribute)attr);
                 }
             }
-            uiDAO.ProcessMenuAttribute(menus);
+
+            if (menus.Count > 0)
+            {
+                uiDAO.ProcessMenuAttribute(menus);
+            }
         }
 
+
+        internal void ShutdownAddins()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

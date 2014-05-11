@@ -9,6 +9,7 @@ using SAPbouiCOM;
 using Castle.Core.Logging;
 using AddOne.Framework.Factory;
 using System.Reflection;
+using System.IO;
 
 namespace AddOne.Framework.DAO
 {
@@ -51,7 +52,8 @@ namespace AddOne.Framework.DAO
                 actionMenu.Checked = menu.Return(x => x.Checked, "0");
                 actionMenu.Enabled = menu.Return(x => x.Enabled, "1");
                 actionMenu.FatherUID = menu.FatherUID;
-                actionMenu.Image = menu.Image;
+                if (menu.Image != null)
+                    actionMenu.Image = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, menu.Image);
                 actionMenu.String = menu.String;
                 actionMenu.Type = ((int)menu.Type).ToString();
                 actionMenu.UniqueID = menu.UniqueID;
@@ -77,6 +79,8 @@ namespace AddOne.Framework.DAO
                 Logger.Error(String.Format(Messages.MenuError, e.Message), e);
                 throw e;
             }
+            string result = application.GetLastBatchResults();
+
             Logger.Debug(Messages.MenuEnd);
         }
 
@@ -106,11 +110,20 @@ namespace AddOne.Framework.DAO
             string typeName = menu.i18n.Substring(0, index);
             index++;
             string propertyName = menu.i18n.Substring(index);
+            var assembly = Assembly.GetEntryAssembly();
 
-            var t = Assembly.GetEntryAssembly().GetType(typeName);
-            var prop = t.With(x => x.GetProperty(propertyName, 
-                BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic));
-            return (string)prop.Return(x => prop.GetValue(null, null), menu.i18n);
+            // TODO: cache e resourceCulture.
+            var resource = new System.Resources.ResourceManager(typeName, assembly);
+
+            if (resource != null)
+            {
+                Logger.Debug(String.Format(Messages.GetLocalizedStringFoundResource, menu.i18n));
+            } else
+            {
+                Logger.Debug(String.Format(Messages.GetLocalizedStringNotFoundResource, menu.i18n));
+            }
+
+            return resource.GetString(propertyName);
         }
 
         private bool NotAuthorized(MenuAttribute menu)
