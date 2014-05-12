@@ -12,9 +12,6 @@ namespace AddOne.Framework.Form
     public static class EventHandler
     {
 
-        public delegate void InternalEvent(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent);
-        public delegate void InternalAfterEvent(object sboObject, SAPbouiCOM.SBOItemEventArg pVal);
-
         public static _IButtonEvents_ClickBeforeEventHandler ExceptionHandler(this _IButtonEvents_ClickBeforeEventHandler eventTrigger, FormBase form, ILogger Logger)
         {
             _IButtonEvents_ClickBeforeEventHandler retFunction = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent) =>
@@ -43,9 +40,9 @@ namespace AddOne.Framework.Form
             return retFunction;
         }
 
-        public static InternalAfterEvent ExceptionHandler(this InternalAfterEvent eventTrigger, FormBase form, ILogger Logger)
+        public static _IButtonComboEvents_ClickAfterEventHandler ExceptionHandler(this _IButtonComboEvents_ClickAfterEventHandler eventTrigger, FormBase form, ILogger Logger)
         {
-            InternalAfterEvent retFunction = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal) =>
+            _IButtonComboEvents_ClickAfterEventHandler retFunction = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal) =>
             {
                 try
                 {
@@ -70,9 +67,9 @@ namespace AddOne.Framework.Form
             return retFunction;
         }
 
-        public static InternalAfterEvent ChooseFromListHandler(this SAPbouiCOM.EditText targetEdit, SAPbouiCOM.UserDataSource ds, ILogger Logger)
+        public static _IButtonComboEvents_ClickAfterEventHandler ChooseFromListHandler(this SAPbouiCOM.EditText targetEdit, SAPbouiCOM.UserDataSource ds, ILogger Logger)
         {
-            InternalAfterEvent handler = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal) =>
+            _IButtonComboEvents_ClickAfterEventHandler handler = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal) =>
             {
                 var cflE = (SAPbouiCOM.SBOChooseFromListEventArg)pVal;
                 var oDT = cflE.SelectedObjects;
