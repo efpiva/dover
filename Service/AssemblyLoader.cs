@@ -145,14 +145,28 @@ namespace AddOne.Framework.Service
 
                 foreach (var asm in asms)
                 {
-                    ret.Add(SaveIfNotExistsOrDifferent(asm, asm.Name, asm.FileName, type));
+                    try
+                    {
+                        ret.Add(SaveIfNotExistsOrDifferent(asm, asm.Name, asm.FileName, type));
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        Logger.Warn(String.Format(Messages.IgnoringFile, asm.FileName));
+                    }
                 }
             }
             else
             {
                 foreach (var asmFile in defaultAsms)
                 {
-                    ret.Add(SaveIfNotExistsOrDifferent(null, asmFile.Substring(0, asmFile.Length - 4), asmFile, type));
+                    try
+                    {
+                        ret.Add(SaveIfNotExistsOrDifferent(null, asmFile.Substring(0, asmFile.Length - 4), asmFile, type));
+                    }
+                    catch (FileNotFoundException)
+                    {
+                        Logger.Warn(String.Format(Messages.IgnoringFile, asmFile));
+                    }
                 }
 
             }
