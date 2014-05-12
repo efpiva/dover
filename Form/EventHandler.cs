@@ -5,20 +5,19 @@ using System.Text;
 using System.Reflection;
 using Castle.Core.Logging;
 using SAPbouiCOM.Framework;
+using SAPbouiCOM;
 
 namespace AddOne.Framework.Form
 {
-    public class EventHandler
+    public static class EventHandler
     {
-
-        public ILogger Logger { get; set; }
 
         public delegate void InternalEvent(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent);
         public delegate void InternalAfterEvent(object sboObject, SAPbouiCOM.SBOItemEventArg pVal);
 
-        public InternalEvent ExceptionHandler(InternalEvent eventTrigger, FormBase form)
+        public static _IButtonEvents_ClickBeforeEventHandler ExceptionHandler(this _IButtonEvents_ClickBeforeEventHandler eventTrigger, FormBase form, ILogger Logger)
         {
-            InternalEvent retFunction = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent) =>
+            _IButtonEvents_ClickBeforeEventHandler retFunction = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent) =>
             {
                 BubbleEvent = true;
                 try
@@ -44,7 +43,7 @@ namespace AddOne.Framework.Form
             return retFunction;
         }
 
-        public InternalAfterEvent ExceptionHandler(InternalAfterEvent eventTrigger, FormBase form)
+        public static InternalAfterEvent ExceptionHandler(this InternalAfterEvent eventTrigger, FormBase form, ILogger Logger)
         {
             InternalAfterEvent retFunction = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal) =>
             {
@@ -71,7 +70,7 @@ namespace AddOne.Framework.Form
             return retFunction;
         }
 
-        public InternalAfterEvent ChooseFromListHandler(SAPbouiCOM.EditText targetEdit, SAPbouiCOM.UserDataSource ds)
+        public static InternalAfterEvent ChooseFromListHandler(this SAPbouiCOM.EditText targetEdit, SAPbouiCOM.UserDataSource ds, ILogger Logger)
         {
             InternalAfterEvent handler = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal) =>
             {
@@ -84,7 +83,7 @@ namespace AddOne.Framework.Form
 
             };
 
-            return ExceptionHandler(handler, null);
+            return handler.ExceptionHandler(null, Logger);
         }
     }
 }
