@@ -7,7 +7,7 @@ using System.IO;
 
 namespace AddOne.Framework.Service
 {
-    class RawPrinter
+    public class RawPrinter
     {
         // Structure and API declarions:
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
