@@ -60,7 +60,8 @@ namespace AddOne.Framework.Service
             {
                 try
                 {
-                    SaveIfNotExistsOrDifferent(null, path.Substring(0, path.Length - 3), path, "A");
+                    var fileName = Path.GetFileName(path);
+                    SaveIfNotExistsOrDifferent(null, fileName.Substring(0, fileName.Length - 4), path, "A");
                     Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
                 }
                 catch (Exception e)
