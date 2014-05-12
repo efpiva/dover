@@ -147,6 +147,9 @@
   <data name="FileUpdated" xml:space="preserve">
     <value>Atualizado arquivo {0} - Versao {1}</value>
   </data>
+  <data name="IgnoringFile" xml:space="preserve">
+    <value>Ignorando arquivo {0} - não encontrado</value>
+  </data>
   <data name="InvalidLicense" xml:space="preserve">
     <value>Licença inválida</value>
   </data>

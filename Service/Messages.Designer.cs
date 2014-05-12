@@ -151,6 +151,15 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ignorando arquivo {0} - não encontrado.
+        /// </summary>
+        internal static string IgnoringFile {
+            get {
+                return ResourceManager.GetString("IgnoringFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Licença inválida.
         /// </summary>
         internal static string InvalidLicense {
