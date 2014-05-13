@@ -86,10 +86,14 @@ namespace AddOne.Framework.DAO
 
         private bool RemoveIfNotEqual(MenuAttribute menu)
         {
+            string sapMenuFileName = string.Empty;
             var sapMenu = application.Menus.Item(menu.UniqueID);
+            if (sapMenu.Image != null)
+                sapMenuFileName = Path.GetFileName(sapMenu.Image);
+
             bool same = sapMenu.Checked == menu.Return(x => x.Checked, "0").Equals("1")
-                && sapMenu.Enabled == menu.Return(x => x.Checked, "0").Equals("0")
-                && sapMenu.Image == menu.Image
+                && sapMenu.Enabled == menu.Return(x => x.Enabled, "0").Equals("1")
+                && sapMenuFileName == menu.Return(x => x.Image, string.Empty)
                 && sapMenu.String == menu.String
                 && sapMenu.Type == menu.Type
                 && sapMenu.UID == menu.UniqueID;
