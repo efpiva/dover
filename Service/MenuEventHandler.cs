@@ -10,7 +10,7 @@ using SAPbouiCOM.Framework;
 
 namespace AddOne.Framework.Service
 {
-    class MenuEventHandler
+    public class MenuEventHandler
     {
         public ILogger Logger { get; set; }
         Dictionary<string, List<MenuEventAttribute>> menuEvents = new Dictionary<string, List<MenuEventAttribute>>();

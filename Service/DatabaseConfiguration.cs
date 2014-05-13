@@ -10,7 +10,7 @@ using SAPbobsCOM;
 
 namespace AddOne.Framework.Service
 {
-    internal class DatabaseConfiguration
+    public class DatabaseConfiguration
     {
         private BusinessOneDAO b1DAO;
         private const string DBTABLES_XML = "AddOne.Framework.DatabaseTables.xml";

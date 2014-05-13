@@ -19,7 +19,7 @@ namespace AddOne.Framework
 
         public ILogger Logger { get; set; }
 
-        internal MicroCore(DatabaseConfiguration dbConf, SAPbobsCOM.Company company, AssemblyLoader assemblyLoader)
+        public MicroCore(DatabaseConfiguration dbConf, SAPbobsCOM.Company company, AssemblyLoader assemblyLoader)
         {
             this.company = company;
             this.dbConf = dbConf;

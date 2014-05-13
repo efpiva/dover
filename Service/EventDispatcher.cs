@@ -10,7 +10,7 @@ using Castle.Core.Logging;
 
 namespace AddOne.Framework.Service
 {
-    internal class EventDispatcher
+    public class EventDispatcher
     {
         public ILogger Logger { get; set; }
         private SAPbouiCOM.Application sapApp;

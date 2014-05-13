@@ -6,7 +6,7 @@ using Castle.Core.Logging;
 
 namespace AddOne.Framework.Service
 {
-    internal class AppEventHandler
+    public class AppEventHandler
     {
         public ILogger Logger { get; set; }
         private AddinLoader addinLoader;

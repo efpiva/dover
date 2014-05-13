@@ -8,7 +8,7 @@ using System.Security.Principal;
 
 namespace AddOne.Framework.Service
 {
-    internal class MachineInformation
+    public class MachineInformation
     {
         private string ip;
         private string macAddress;

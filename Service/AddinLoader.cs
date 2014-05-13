@@ -44,7 +44,7 @@ namespace AddOne.Framework.Service
         private BusinessOneUIDAO uiDAO;
         private MenuEventHandler menuHandler;
 
-        internal AddinLoader(PermissionManager permissionManager, 
+        public AddinLoader(PermissionManager permissionManager, 
             BusinessOneDAO b1DAO, BusinessOneUIDAO uiDAO,
             MenuEventHandler menuHandler)
         {
