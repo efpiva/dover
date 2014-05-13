@@ -150,6 +150,9 @@
   <data name="IgnoringFile" xml:space="preserve">
     <value>Ignorando arquivo {0} - não encontrado</value>
   </data>
+  <data name="InternalResourceMissing" xml:space="preserve">
+    <value>Recurso {0} não encontrado no assembly</value>
+  </data>
   <data name="InvalidLicense" xml:space="preserve">
     <value>Licença inválida</value>
   </data>

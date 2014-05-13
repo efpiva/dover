@@ -86,6 +86,7 @@
     <Compile Include="Factory\ContainerManager.cs" />
     <Compile Include="Factory\SAPServiceFactory.cs" />
     <Compile Include="B1Application.cs" />
+    <Compile Include="Form\EventHandler.cs" />
     <Compile Include="Form\SelectFileDialog.cs" />
     <Compile Include="Log\SAPAppender.cs" />
     <Compile Include="Messages.Designer.cs">
@@ -114,12 +115,14 @@
     <Compile Include="Monad\XML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AddinLoader.cs" />
+    <Compile Include="Service\AppEventHandler.cs" />
     <Compile Include="Service\AssemblyLoader.cs" />
     <Compile Include="Service\CryptoService.cs" />
     <Compile Include="Service\DatabaseConfiguration.cs" />
     <Compile Include="Service\EventDispatcher.cs" />
     <Compile Include="Service\LicenseManager.cs" />
     <Compile Include="Service\MachineInformation.cs" />
+    <Compile Include="Service\MenuEventHandler.cs" />
     <Compile Include="Service\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -127,6 +130,7 @@
     </Compile>
     <Compile Include="Service\PermissionManager.cs" />
     <Compile Include="Monad\Maybe.cs" />
+    <Compile Include="Service\RawPrinter.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="SAPbobsCOM">

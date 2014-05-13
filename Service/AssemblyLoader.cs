@@ -61,7 +61,10 @@ namespace AddOne.Framework.Service
                 try
                 {
                     var fileName = Path.GetFileName(path);
-                    SaveIfNotExistsOrDifferent(null, fileName.Substring(0, fileName.Length - 4), path, "A");
+                    var addInName = fileName.Substring(0, fileName.Length - 4);
+                    var existingAsm = asmDAO.GetAddInAssembly(addInName);
+                    SaveIfNotExistsOrDifferent(existingAsm, addInName, fileName, 
+                        Path.GetDirectoryName(path), "A");
                     Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
                 }
                 catch (Exception e)
@@ -148,10 +151,11 @@ namespace AddOne.Framework.Service
                 {
                     try
                     {
-                        ret.Add(SaveIfNotExistsOrDifferent(asm, asm.Name, asm.FileName, type));
+                        ret.Add(SaveIfNotExistsOrDifferent(asm, asm.Name, asm.FileName, Environment.CurrentDirectory, type));
                     }
                     catch (FileNotFoundException)
                     {
+                        ret.Add(asm);
                         Logger.Warn(String.Format(Messages.IgnoringFile, asm.FileName));
                     }
                 }
@@ -162,7 +166,7 @@ namespace AddOne.Framework.Service
                 {
                     try
                     {
-                        ret.Add(SaveIfNotExistsOrDifferent(null, asmFile.Substring(0, asmFile.Length - 4), asmFile, type));
+                        ret.Add(SaveIfNotExistsOrDifferent(null, asmFile.Substring(0, asmFile.Length - 4), asmFile, Environment.CurrentDirectory, type));
                     }
                     catch (FileNotFoundException)
                     {
@@ -176,13 +180,13 @@ namespace AddOne.Framework.Service
         }
 
         private AssemblyInformation SaveIfNotExistsOrDifferent(AssemblyInformation existingAsm, 
-            string name, string asmFile, string type)
+            string name, string asmFile, string path, string type)
         {
 
             AssemblyInformation newAsm = new AssemblyInformation();
             if (existingAsm != null)
                 newAsm.Code = existingAsm.Code; // Prepare for update.
-            var asmPath = Path.Combine(Environment.CurrentDirectory, asmFile);
+            var asmPath = Path.Combine(path, asmFile);
             newAsm.Name = name;
             newAsm.FileName = asmFile;
             byte[] asmBytes = File.ReadAllBytes(asmPath);
@@ -196,7 +200,7 @@ namespace AddOne.Framework.Service
                 || (newAsm.Version == existingAsm.Version && newAsm.MD5 != existingAsm.MD5))
             {
                 var resourceName = asmFile.Substring(0, asmFile.Length-3) + "b1s";
-                var b1sPath = Path.Combine(Environment.CurrentDirectory, resourceName);
+                var b1sPath = Path.Combine(path, resourceName);
                 byte[] resource = null;
                 if (File.Exists(b1sPath))
                 {

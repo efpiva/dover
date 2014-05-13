@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AddOne.Framework.Monad;
 
 namespace AddOne.Framework.Model
 {
@@ -26,5 +27,10 @@ namespace AddOne.Framework.Model
         public DateTime ExpireDate { get; set; }
 
         public string FileName { get; set; }
+
+        public override string ToString()
+        {
+            return Name.Return(x => x, string.Empty) + " " + Version.Return(x => x, string.Empty);
+        }
     }
 }
