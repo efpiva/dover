@@ -34,7 +34,7 @@ namespace AddOne.Framework.Service
         }
     }
 
-    internal class AddinLoader
+    public class AddinLoader
     {
 
         public ILogger Logger { get; set; }
@@ -44,7 +44,7 @@ namespace AddOne.Framework.Service
         private BusinessOneUIDAO uiDAO;
         private MenuEventHandler menuHandler;
 
-        public AddinLoader(PermissionManager permissionManager, 
+        internal AddinLoader(PermissionManager permissionManager, 
             BusinessOneDAO b1DAO, BusinessOneUIDAO uiDAO,
             MenuEventHandler menuHandler)
         {
