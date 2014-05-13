@@ -17,7 +17,7 @@ namespace AddOne.Framework
         private EventDispatcher dispatcher;
         private SAPbouiCOM.Framework.Application app;
 
-        public Boot(LicenseManager licenseValidation, AddinLoader addinLoader, EventDispatcher dispatcher,
+        internal Boot(LicenseManager licenseValidation, AddinLoader addinLoader, EventDispatcher dispatcher,
             SAPbouiCOM.Framework.Application app)
         {
             this.licenseManager = licenseValidation;
