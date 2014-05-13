@@ -29,7 +29,6 @@ namespace AddOne.Framework.Service
             var setup = new AppDomainSetup();
             setup.ApplicationName = "AddOne.Inception";
             setup.ApplicationBase = Environment.CurrentDirectory;
-
             AppDomain domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
             domain.ExecuteAssembly(asm.Name + ".exe");
         }
@@ -117,7 +116,7 @@ namespace AddOne.Framework.Service
                     Logger.Debug(String.Format(Messages.ProcessingAttribute, attr, type));
                     if (attr is ResourceBOMAttribute)
                     {
-                        ProcessAddInAttribute((ResourceBOMAttribute)attr);
+                        ProcessAddInAttribute((ResourceBOMAttribute)attr, assembly);
                     }
                     else if (attr is PermissionAttribute)
                     {
@@ -132,12 +131,17 @@ namespace AddOne.Framework.Service
             b1DAO.UpdateOrSavePermissionIfNotExists(permissionAttribute);
         }
 
-        private void ProcessAddInAttribute(ResourceBOMAttribute resourceBOMAttribute)
+        private void ProcessAddInAttribute(ResourceBOMAttribute resourceBOMAttribute, Assembly asm)
         {
             try
             {
-                using (var resourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceBOMAttribute.ResourceName))
+                using (var resourceStream = asm.GetManifestResourceStream(resourceBOMAttribute.ResourceName))
                 {
+                    if (resourceStream == null)
+                    {
+                        Logger.Error(string.Format(Messages.InternalResourceMissing, resourceBOMAttribute.ResourceName));
+                        return;
+                    }
                     switch (resourceBOMAttribute.Type)
                     {
                         case ResourceType.UserField:
@@ -178,6 +182,7 @@ namespace AddOne.Framework.Service
         {
             AddInRunner runner = new AddInRunner(addin);
             var thread = new Thread(new ThreadStart(runner.Run));
+            thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
         }
 
