@@ -41,6 +41,9 @@ namespace AddOne.Framework.Factory
                     .DependsOn(Dependency.OnComponent(typeof(SAPbobsCOM.Company), "company" + i)).Named("b1dao" + i));
             Container.Register(Component.For<BusinessOneUIDAO>().ImplementedBy<BusinessOneUIDAOImpl>());
 
+            // pther components.
+            Container.Register(Component.For<AssemblyDAO>().ImplementedBy<AssemblyDAOImpl>());
+
             string runningFolder = Path.GetDirectoryName( Assembly.GetEntryAssembly().Location );
 
             // TODO: register all services as singletons.
