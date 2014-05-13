@@ -6,8 +6,8 @@ using AddOne.Framework.Attribute;
 
 namespace AddOne.Framework.DAO
 {
-    internal abstract class BusinessOneUIDAO
+    public abstract class BusinessOneUIDAO
     {
-        internal abstract void ProcessMenuAttribute(List<MenuAttribute> menus);
+        public abstract void ProcessMenuAttribute(List<MenuAttribute> menus);
     }
 }

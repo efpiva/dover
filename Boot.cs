@@ -8,7 +8,7 @@ using AddOne.Framework.Service;
 
 namespace AddOne.Framework
 {
-    internal class Boot
+    public class Boot
     {
         public ILogger Logger { get; set; }
 
@@ -26,7 +26,7 @@ namespace AddOne.Framework
             this.app = app;
         }
 
-        internal void StartUp()
+        public void StartUp()
         {
             try
             {
@@ -44,7 +44,7 @@ namespace AddOne.Framework
         }
 
 
-        internal void StartThis()
+        public void StartThis()
         {
             try
             {

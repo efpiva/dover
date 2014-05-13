@@ -23,7 +23,7 @@ namespace AddOne.Framework.DAO
         }
 
 
-        internal override string ReadLicense()
+        public override string ReadLicense()
         {
             List<String> hexFile = b1DAO.ExecuteSqlForList<String>(
                 String.Format("Select U_Resource from [@GA_AO_LICENSE_BIN] ORDER BY Code"));
@@ -36,7 +36,7 @@ namespace AddOne.Framework.DAO
             return System.Text.Encoding.UTF8.GetString(shb.Value);
         }
 
-        internal override void SaveLicense(string xml)
+        public override void SaveLicense(string xml)
         {
             string sql;
             int maxtext = 256000;
@@ -64,23 +64,23 @@ namespace AddOne.Framework.DAO
             }
         }
 
-        internal override string GetSystemID()
+        public override string GetSystemID()
         {
             return application.Company.SystemId;
         }
 
-        internal override string GetInstallationID()
+        public override string GetInstallationID()
         {
             return application.Company.InstallationId;
         }
 
-        internal class ServerDate
+        public class ServerDate
         {
-            internal string Code { get; set; }
-            internal string Data { get; set; }
+            public string Code { get; set; }
+            public string Data { get; set; }
         };
 
-        internal override DateTime GetServerDate()
+        public override DateTime GetServerDate()
         {
 
             ServerDate serverCodeData = b1DAO.ExecuteSqlForObject<ServerDate>(

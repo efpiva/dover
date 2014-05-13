@@ -13,7 +13,7 @@ using System.IO;
 
 namespace AddOne.Framework.DAO
 {
-    internal class BusinessOneUIDAOImpl : BusinessOneUIDAO
+    public class BusinessOneUIDAOImpl : BusinessOneUIDAO
     {
         private Application application;
 
@@ -24,7 +24,7 @@ namespace AddOne.Framework.DAO
             this.application = application;
         }
 
-        internal override void ProcessMenuAttribute(List<MenuAttribute> menus)
+        public override void ProcessMenuAttribute(List<MenuAttribute> menus)
         {
             UIApplication appCommand;
             List<ApplicationMenusActionMenu> actionMenus = new List<ApplicationMenusActionMenu>();

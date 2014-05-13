@@ -13,10 +13,10 @@ namespace AddOne.Framework.DAO
 
         public ILogger Logger { get; set; }
 
-        internal class AddInPermission
+        public class AddInPermission
         {
-            internal String AddInName { get; set; }
-            internal Permission Permission
+            public String AddInName { get; set; }
+            public Permission Permission
             {
                 get
                 {
@@ -31,7 +31,7 @@ namespace AddOne.Framework.DAO
                     }
                 }
             }
-            internal string PermissionStr { get; set; }
+            public string PermissionStr { get; set; }
         }
 
         private BusinessOneDAO b1DAO;

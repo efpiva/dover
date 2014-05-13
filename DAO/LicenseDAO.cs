@@ -7,15 +7,15 @@ namespace AddOne.Framework.DAO
 {
     public abstract class LicenseDAO
     {
-        internal abstract string ReadLicense();
+        public abstract string ReadLicense();
 
-        internal abstract void SaveLicense(string xml);
+        public abstract void SaveLicense(string xml);
 
-        internal abstract string GetSystemID();
+        public abstract string GetSystemID();
 
-        internal abstract string GetInstallationID();
+        public abstract string GetInstallationID();
 
-        internal abstract DateTime GetServerDate();
+        public abstract DateTime GetServerDate();
 
     }
 }

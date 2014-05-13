@@ -11,7 +11,7 @@ using AddOne.Framework.Model;
 
 namespace AddOne.Framework
 {
-    internal class MicroCore
+    public class MicroCore
     {
         private SAPbobsCOM.Company company;
         private DatabaseConfiguration dbConf;
@@ -26,7 +26,7 @@ namespace AddOne.Framework
             this.assemblyLoader = assemblyLoader;
         }
 
-        internal string PrepareFramework()
+        public string PrepareFramework()
         {
             try
             {
