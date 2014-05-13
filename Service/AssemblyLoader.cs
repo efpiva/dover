@@ -61,7 +61,9 @@ namespace AddOne.Framework.Service
                 try
                 {
                     var fileName = Path.GetFileName(path);
-                    SaveIfNotExistsOrDifferent(null, fileName.Substring(0, fileName.Length - 4), fileName, 
+                    var addInName = fileName.Substring(0, fileName.Length - 4);
+                    var existingAsm = asmDAO.GetAddInAssembly(addInName);
+                    SaveIfNotExistsOrDifferent(existingAsm, addInName, fileName, 
                         Path.GetDirectoryName(path), "A");
                     Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
                 }
@@ -153,6 +155,7 @@ namespace AddOne.Framework.Service
                     }
                     catch (FileNotFoundException)
                     {
+                        ret.Add(asm);
                         Logger.Warn(String.Format(Messages.IgnoringFile, asm.FileName));
                     }
                 }
