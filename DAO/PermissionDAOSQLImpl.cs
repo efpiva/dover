@@ -8,7 +8,7 @@ using AddOne.Framework.Monad;
 namespace AddOne.Framework.DAO
 {
 
-    class PermissionDAOSQLImpl : PermissionDAO
+    public class PermissionDAOSQLImpl : PermissionDAO
     {
 
         public ILogger Logger { get; set; }

@@ -7,7 +7,7 @@ using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 namespace AddOne.Framework.DAO
 {
-    class AssemblyDAOImpl : AssemblyDAO
+    public class AssemblyDAOImpl : AssemblyDAO
     {
         private BusinessOneDAO b1DAO;
 
