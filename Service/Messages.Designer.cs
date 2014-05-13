@@ -160,6 +160,15 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Recurso {0} não encontrado no assembly.
+        /// </summary>
+        internal static string InternalResourceMissing {
+            get {
+                return ResourceManager.GetString("InternalResourceMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Licença inválida.
         /// </summary>
         internal static string InvalidLicense {
