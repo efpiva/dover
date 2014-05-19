@@ -21,6 +21,13 @@ namespace AddOne.Framework.Factory
         public static Func<SAPbobsCOM.Company>[] customCompanyFactory {get; set; }
         public static IWindsorContainer Container { get; private set; }
 
+        internal static void RegisterAssembly(Assembly addIn)
+        {
+                Container.Register(Classes.FromAssembly(addIn)
+                            .IncludeNonPublicTypes().Pick()
+                            .WithService.DefaultInterfaces().LifestyleTransient());
+        }
+
         internal static IWindsorContainer BuildContainer()
         {
             Func<SAPbobsCOM.Company>[] companyFactory =  (customCompanyFactory == null) 
@@ -43,15 +50,10 @@ namespace AddOne.Framework.Factory
 
             string runningFolder = Path.GetDirectoryName( Assembly.GetEntryAssembly().Location );
 
-            // TODO: register all services as singletons.
-            Container.Register(Component.For<MenuEventHandler>().ImplementedBy<MenuEventHandler>().LifestyleSingleton());
-
-            Container.Register(Classes.FromAssemblyInDirectory(new AssemblyFilter(runningFolder))
-                        .IncludeNonPublicTypes().Pick()
-                        .WithService.DefaultInterfaces().LifestyleTransient());
+            Container.Register(Classes.FromThisAssembly().IncludeNonPublicTypes().Pick()
+                .WithService.DefaultInterfaces().LifestyleSingleton());
             Container.AddFacility<LoggingFacility>(f => f.UseLog4Net(Assembly.GetEntryAssembly().GetName().Name + ".config"));
-            // Factory injections.
-            
+
             var logger = Container.Resolve<ILogger>();
             logger.Debug(String.Format(Messages.StartupFolder, runningFolder));
             SAPServiceFactory.Logger = logger;

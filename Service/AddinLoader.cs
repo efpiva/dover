@@ -59,6 +59,8 @@ namespace AddOne.Framework.Service
             var authorizedAddins = FilterAuthorizedAddins(addins);
             foreach (var addin in authorizedAddins)
             {
+                var asm = Assembly.Load(addin.Name);
+                RegisterObjects(asm);
                 ConfigureAddin(addin);
                 RegisterAddin(addin);
                 ConfigureLog(addin);
@@ -201,7 +203,9 @@ namespace AddOne.Framework.Service
         {
             try
             {
-                var addin = Assembly.GetEntryAssembly().FullName;
+                Assembly thisAsm = Assembly.GetEntryAssembly();
+                RegisterObjects(thisAsm);
+                var addin = thisAsm.FullName;
                 Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
                 List<MenuAttribute> menus = new List<MenuAttribute>();
                 var assembly = Assembly.GetEntryAssembly();
@@ -223,6 +227,18 @@ namespace AddOne.Framework.Service
             catch (Exception e)
             {
                 Logger.Error(Messages.StartThisError, e);
+            }
+        }
+
+        private void RegisterObjects(Assembly thisAsm)
+        {
+            ContainerManager.RegisterAssembly(thisAsm);
+            foreach (var asm in thisAsm.GetReferencedAssemblies())
+            {
+                if (permissionManager.AddInEnabled(asm.Name))
+                {
+                    ContainerManager.RegisterAssembly(Assembly.Load(asm));
+                }
             }
         }
 
