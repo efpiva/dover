@@ -8,8 +8,8 @@ namespace AddOne.Framework.DAO
 
     public enum Permission
     {
-        Active,
         Inactive,
+        Active,
         Default
     }
 
