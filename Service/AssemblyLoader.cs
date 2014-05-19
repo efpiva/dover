@@ -27,6 +27,7 @@ namespace AddOne.Framework.Service
 
         private string[] coreAssemblies = {
             "SAPbouiCOM.dll",
+            "Interop.SAPbobsCOM.dll",
             "Framework.dll",
             "log4net.dll",
             "Castle.Core.dll",
@@ -144,7 +145,7 @@ namespace AddOne.Framework.Service
             string[] defaultAsms)
         {
             List<AssemblyInformation> ret = new List<AssemblyInformation>();
-            if (asms.Count > 0)
+            if (asms.Count > 0 && defaultAsms.Length == asms.Count)
             {
 
                 foreach (var asm in asms)
@@ -166,7 +167,9 @@ namespace AddOne.Framework.Service
                 {
                     try
                     {
-                        ret.Add(SaveIfNotExistsOrDifferent(null, asmFile.Substring(0, asmFile.Length - 4), asmFile, Environment.CurrentDirectory, type));
+                        AssemblyInformation asm = (type == "A") ? asmDAO.GetAddInAssembly(asmFile.Substring(0, asmFile.Length - 4))
+                            : asmDAO.GetCoreAssembly(asmFile.Substring(0, asmFile.Length - 4));
+                        ret.Add(SaveIfNotExistsOrDifferent(asm, asmFile.Substring(0, asmFile.Length - 4), asmFile, Environment.CurrentDirectory, type));
                     }
                     catch (FileNotFoundException)
                     {
