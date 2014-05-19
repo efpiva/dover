@@ -52,9 +52,11 @@ namespace AddOne.Framework.DAO
             }
             string currentUser = b1DAO.GetCurrentUser();
             addInPermission = b1DAO.ExecuteSqlForList<AddInPermission>(
-                String.Format(@"SELECT [@GA_AO_MODULES].U_Name AddInName, [@GA_AO_MODULES_USER].U_Status PermissionStr from [@GA_AO_MODULES]
-                        INNER JOIN [@GA_AO_MODULES_USER] ON [@GA_AO_MODULES].Code = [@GA_AO_MODULES_USER].U_Code
-            where [@GA_AO_MODULES].U_Type = 'A' and [@GA_AO_MODULES_USER].U_User = '{0}'", currentUser)
+                String.Format(@"SELECT [@GA_AO_MODULES].U_Name AddInName, ISNULL([@GA_AO_MODULES_USER].U_Status, 'A') PermissionStr
+                     from [@GA_AO_MODULES]
+                                            LEFT JOIN [@GA_AO_MODULES_USER] ON [@GA_AO_MODULES].Code = [@GA_AO_MODULES_USER].U_Code
+                                where [@GA_AO_MODULES].U_Type = 'A' 
+                    and ([@GA_AO_MODULES_USER].U_User is null or [@GA_AO_MODULES_USER].U_User = '{0}')", currentUser)
                 );
             foreach (var permission in addInPermission)
             {
