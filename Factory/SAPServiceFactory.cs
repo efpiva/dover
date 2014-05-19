@@ -7,12 +7,12 @@ using System.Windows.Forms;
 using System.Reflection;
 using SAPbobsCOM;
 using Castle.Core.Logging;
+using AddOne.Framework.Monad;
 
 namespace AddOne.Framework.Factory
 {
     public class SAPServiceFactory
     {
-
         private static SAPbouiCOM.Application application;
         private static SAPbobsCOM.Company company;
         private static SAPbouiCOM.Framework.Application frameworkApplication;
@@ -25,7 +25,6 @@ namespace AddOne.Framework.Factory
 
         private static void B1Connect(String version)
         {
-            SAPbouiCOM.SboGuiApi objGUIApi = null;
             company = (SAPbobsCOM.Company)AppDomain.CurrentDomain.GetData("SAPCompany");
 
             frameworkApplication = FrameworkApplicationFactory();
