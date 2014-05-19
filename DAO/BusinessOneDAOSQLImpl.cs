@@ -238,7 +238,8 @@ namespace AddOne.Framework.DAO
             }
             finally
             {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(objRecordSet);
+                if (objRecordSet != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(objRecordSet);
             }
             Logger.Debug(String.Format(Messages.GetNextCodeEnd, udt));
 
@@ -265,7 +266,8 @@ namespace AddOne.Framework.DAO
             }
             finally
             {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(objRecordSet);
+                if (objRecordSet != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(objRecordSet);
             }
             Logger.Debug(String.Format(Messages.EndExecuteStatement, sql));
         }
@@ -310,7 +312,8 @@ namespace AddOne.Framework.DAO
             }
             finally
             {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
+                if (rs != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
             }
         }
 
@@ -360,7 +363,8 @@ namespace AddOne.Framework.DAO
             }
             finally
             {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
+                if (rs != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
             }
         }
 
@@ -479,7 +483,8 @@ namespace AddOne.Framework.DAO
                 }
                 finally
                 {
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                    if (obj != null)
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
                 }
             }
             return userFieldBOM.Serialize();
@@ -515,7 +520,8 @@ namespace AddOne.Framework.DAO
             }
             finally
             {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
+                if (rs != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
             }
             return GetXMLBom<UserTableBOM, IUserTablesMD>(keys.ToArray(), BoObjectTypes.oUserTables);
         }
@@ -544,7 +550,8 @@ namespace AddOne.Framework.DAO
             }
             finally
             {
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(userPermissionTree);
+                if (userPermissionTree != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userPermissionTree);
             }
             Logger.Debug(string.Format(Messages.PermissionEnd, permissionAttribute.PermissionID));
 
