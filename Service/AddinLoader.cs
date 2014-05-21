@@ -12,13 +12,16 @@ using AddOne.Framework.Factory;
 using AddOne.Framework.Model;
 using System.IO;
 using System.Xml.Linq;
+using AddOne.Framework.IPC;
+using System.ServiceModel;
 
 namespace AddOne.Framework.Service
 {
     class AddInRunner
     {
-        private AssemblyInformation asm;
-
+        internal AssemblyInformation asm;
+        internal ManualResetEvent shutdownEvent = new ManualResetEvent(false);
+        internal AppDomain domain;
         internal AddInRunner(AssemblyInformation asm)
         {
             this.asm = asm;
@@ -29,12 +32,17 @@ namespace AddOne.Framework.Service
             var setup = new AppDomainSetup();
             setup.ApplicationName = "AddOne.Inception";
             setup.ApplicationBase = Environment.CurrentDirectory;
-            AppDomain domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
+            domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
             domain.ExecuteAssembly(asm.Name + ".exe");
+            shutdownEvent.WaitOne(); // Wait until shutdown event is signaled.
         }
     }
 
-    public class AddinLoader
+     [ServiceBehavior(
+    ConcurrencyMode = ConcurrencyMode.Multiple,
+    InstanceContextMode = InstanceContextMode.Single
+  )]
+    public class AddinLoader : InceptionServer
     {
 
         public ILogger Logger { get; set; }
@@ -43,6 +51,8 @@ namespace AddOne.Framework.Service
         private BusinessOneDAO b1DAO;
         private BusinessOneUIDAO uiDAO;
         private MenuEventHandler menuHandler;
+        private List<AddInRunner> runningAddIns = new List<AddInRunner>();
+        private ServiceHost host; // namedPipe server;
 
         public AddinLoader(PermissionManager permissionManager, 
             BusinessOneDAO b1DAO, BusinessOneUIDAO uiDAO,
@@ -183,6 +193,7 @@ namespace AddOne.Framework.Service
         private void RegisterAddin(AssemblyInformation addin)
         {
             AddInRunner runner = new AddInRunner(addin);
+            runningAddIns.Add(runner);
             var thread = new Thread(new ThreadStart(runner.Run));
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
@@ -268,9 +279,41 @@ namespace AddOne.Framework.Service
         }
 
 
-        internal void ShutdownAddins()
+        public void ShutdownAddins()
         {
-            throw new NotImplementedException();
+            Logger.Info("foo");
+            foreach (var runner in runningAddIns)
+            {
+                Logger.Info(string.Format(Messages.ShutdownAddin, runner.asm.Name));
+                runner.shutdownEvent.Set();
+                AppDomain.Unload(runner.domain);
+            }
+            runningAddIns = new List<AddInRunner>(); // clean running AddIns.
+        }
+
+        internal void CreateInceptionServer()
+        {
+            try
+            {
+                string pipeName = (string)AppDomain.CurrentDomain.GetData("AddOnePIPE");
+
+                host = new ServiceHost(
+                    this,
+                    new Uri[] { new Uri("net.pipe://localhost/" + pipeName) });
+                host.AddServiceEndpoint(typeof(InceptionServer),
+                    new NetNamedPipeBinding(NetNamedPipeSecurityMode.None),
+                    "InceptionServer");
+                host.Open();
+
+                foreach (var serviceEndpoint in host.Description.Endpoints)
+                {
+                    Logger.Debug(serviceEndpoint.ListenUri.AbsoluteUri);
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e.Message, e);
+            }
         }
     }
 }

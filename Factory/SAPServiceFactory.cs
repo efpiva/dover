@@ -18,8 +18,8 @@ namespace AddOne.Framework.Factory
         private static SAPbouiCOM.Framework.Application frameworkApplication;
         private static object threadLock = new System.Object();
         private static bool b1Connected = false;
-        private static bool frameworkConnected = false;
         private static bool connString = true;
+        internal static string connStringValue = string.Empty;
 
         public static ILogger Logger { get; set; }
 
@@ -59,10 +59,15 @@ namespace AddOne.Framework.Factory
             {
                 ret = Environment.GetCommandLineArgs()[1];
                 connString = false;
+                connStringValue = ret;
             }
             else
             {
                 ret = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
+                if (connStringValue == string.Empty)
+                {
+                    connStringValue = ret; // debug only.
+                }
             }
 
             return ret;
@@ -98,10 +103,8 @@ namespace AddOne.Framework.Factory
         {
             lock (threadLock)
             {
-                if (!frameworkConnected)
-                {
+                if (frameworkApplication == null)
                     frameworkApplication = new SAPbouiCOM.Framework.Application(GetConnectionString());
-                }
                 return frameworkApplication;
             }
         }
@@ -118,9 +121,13 @@ namespace AddOne.Framework.Factory
         {
             lock (threadLock)
             {
+                string pipeName = "addOne" + connStringValue;
+                AppDomain.CurrentDomain.SetData("AddOnePIPE", pipeName);
+
                 if (application == null && company == null)
                     B1Connect(GetVersion());
                 inception.SetData("SAPCompany", company);
+                inception.SetData("AddOnePIPE", pipeName);
             }
         }
     }

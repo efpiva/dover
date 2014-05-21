@@ -34,6 +34,7 @@ namespace AddOne.Framework
                 var addins = licenseManager.ListAddins();
                 addinLoader.LoadAddins(addins);
                 dispatcher.RegisterEvents();
+                addinLoader.CreateInceptionServer();
                 app.Run();
             }
             catch (Exception e)
@@ -51,7 +52,6 @@ namespace AddOne.Framework
                 Logger.Info(String.Format(Messages.Starting, this.GetType().Assembly.GetName().Version));
                 addinLoader.StartThis();
                 dispatcher.RegisterEvents();
-                app.Run();
             }
             catch (Exception e)
             {
