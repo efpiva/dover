@@ -10,24 +10,24 @@ using Castle.Core.Logging;
 
 namespace AddOne.Framework.Service
 {
+    /// <summary>
+    /// User just by Inception / addins. No App event.
+    /// </summary>
     public class EventDispatcher
     {
         public ILogger Logger { get; set; }
         private SAPbouiCOM.Application sapApp;
         private MenuEventHandler menuHandler;
-        private AppEventHandler appHandler;
 
-        public EventDispatcher(SAPbouiCOM.Application sapApp, MenuEventHandler menuHandler, AppEventHandler appHandler)
+        public EventDispatcher(SAPbouiCOM.Application sapApp, MenuEventHandler menuHandler)
         {
             this.sapApp = sapApp;
             this.menuHandler = menuHandler;
-            this.appHandler = appHandler;
         }
 
         internal void RegisterEvents()
         {
             sapApp.MenuEvent += new _IApplicationEvents_MenuEventEventHandler(menuHandler.sapApp_MenuEvent);
-            sapApp.AppEvent += new _IApplicationEvents_AppEventEventHandler(appHandler.sapApp_AppEvent);
         }
 
     }

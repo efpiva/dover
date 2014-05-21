@@ -189,6 +189,12 @@
   <data name="SaveAddInSuccess" xml:space="preserve">
     <value>AddIn {0} salvo com sucesso</value>
   </data>
+  <data name="Shutdown" xml:space="preserve">
+    <value>Desligando AddOne</value>
+  </data>
+  <data name="ShutdownAddin" xml:space="preserve">
+    <value>Desligando AddIn {0}</value>
+  </data>
   <data name="StartThisError" xml:space="preserve">
     <value>Erro inicializando addin</value>
   </data>

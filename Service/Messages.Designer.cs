@@ -277,6 +277,24 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Desligando AddOne.
+        /// </summary>
+        internal static string Shutdown {
+            get {
+                return ResourceManager.GetString("Shutdown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Desligando AddIn {0}.
+        /// </summary>
+        internal static string ShutdownAddin {
+            get {
+                return ResourceManager.GetString("ShutdownAddin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Erro inicializando addin.
         /// </summary>
         internal static string StartThisError {
