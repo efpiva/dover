@@ -145,7 +145,8 @@ namespace AddOne.Framework.Service
             string[] defaultAsms)
         {
             List<AssemblyInformation> ret = new List<AssemblyInformation>();
-            if (asms.Count > 0 && defaultAsms.Length == asms.Count)
+            // load databaseAddins.
+            if (asms.Count > 0 && defaultAsms.Length <= asms.Count)
             {
 
                 foreach (var asm in asms)
