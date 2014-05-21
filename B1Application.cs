@@ -59,19 +59,7 @@ namespace AddOne.Framework
             {
                 var container = ContainerManager.BuildContainer();
                 var microCore = container.Resolve<MicroCore>();
-                appDomainFolder = microCore.PrepareFramework();
-                container.Dispose();
-            }
-
-            if (appDomainFolder != null)
-            {
-                AppDomainSetup setup = new AppDomainSetup();
-                setup.ApplicationName = "AddOne.Inception";
-                setup.ApplicationBase = appDomainFolder;
-                AppDomain inception = AppDomain.CreateDomain("AddOne.Inception", null, setup);
-                Environment.CurrentDirectory = appDomainFolder;
-                SAPServiceFactory.PrepareForInception(inception);
-                inception.ExecuteAssembly("AddOne.exe", Environment.GetCommandLineArgs());
+                microCore.PrepareFramework();
             }
             else if (AppDomain.CurrentDomain.FriendlyName == "AddOne.AddIn")
             {

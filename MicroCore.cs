@@ -8,25 +8,33 @@ using System.IO;
 using AddOne.Framework.Service;
 using Castle.Core.Logging;
 using AddOne.Framework.Model;
+using AddOne.Framework.Factory;
 
 namespace AddOne.Framework
 {
     public class MicroCore
     {
         private SAPbobsCOM.Company company;
+        private SAPbouiCOM.Framework.Application frameworkApp;
         private DatabaseConfiguration dbConf;
         private AssemblyLoader assemblyLoader;
+        private MicroCoreEventDispatcher dispatcher;
+        private MicroBoot microBoot;
 
         public ILogger Logger { get; set; }
 
-        public MicroCore(DatabaseConfiguration dbConf, SAPbobsCOM.Company company, AssemblyLoader assemblyLoader)
+        public MicroCore(DatabaseConfiguration dbConf, SAPbobsCOM.Company company, AssemblyLoader assemblyLoader,
+            MicroCoreEventDispatcher dispatcher, MicroBoot microBoot, SAPbouiCOM.Framework.Application frameworkApp)
         {
+            this.microBoot = microBoot;
             this.company = company;
             this.dbConf = dbConf;
             this.assemblyLoader = assemblyLoader;
+            this.dispatcher = dispatcher;
+            this.frameworkApp = frameworkApp;
         }
 
-        public string PrepareFramework()
+        public void PrepareFramework()
         {
             try
             {
@@ -34,7 +42,7 @@ namespace AddOne.Framework
                 dbConf.PrepareDatabase();
 
                 if (InsideInception())
-                    return null;
+                    return;
 
                 string appFolder = CheckAppFolder();
                 Logger.Debug(String.Format(Messages.CreatedAppFolder, appFolder));
@@ -43,13 +51,18 @@ namespace AddOne.Framework
                 assemblyLoader.UpdateAssemblies(AssemblySource.AddIn, appFolder);
                 CopyInstallResources(appFolder, Environment.CurrentDirectory);
 
-                return appFolder;
+                dispatcher.RegisterEvents();
+
+                microBoot.AppFolder = appFolder;
+                microBoot.StartInception();
+                dispatcher.RegisterInception(microBoot.Inception);
+                microBoot.Boot();
+                frameworkApp.Run();
             }
             catch (Exception e)
             {
                 Logger.Fatal(String.Format(Messages.GeneralError, e.Message), e);
                 Environment.Exit(10);
-                return null;
             }
         }
 
