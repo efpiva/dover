@@ -10,6 +10,7 @@ using System.IO;
 using Castle.Core.Logging;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Reflection;
+using AddOne.Framework.Attribute;
 
 namespace AddOne.Framework.Service
 {
@@ -37,18 +38,23 @@ namespace AddOne.Framework.Service
             "AddOne.exe"
         };
         private AssemblyDAO asmDAO;
+        private LicenseManager licenseManager;
+        private AddIni18n addIni18n;
         public ILogger Logger { get; set; }
 
 
-        public AssemblyLoader(AssemblyDAO asmDAO)
+        public AssemblyLoader(AssemblyDAO asmDAO, LicenseManager licenseManager, AddIni18n addIni18n)
         {
             this.asmDAO = asmDAO;
+            this.licenseManager = licenseManager;
+            this.addIni18n = addIni18n;
         }
 
         public void RemoveAddIn(string moduleName)
         {
             // TODO: reload appDomain!
             asmDAO.RemoveAsm(moduleName);
+            Logger.Info(string.Format(Messages.RemoveAddinSuccess, moduleName));
         }
 
         public void SaveAddIn(string path)
@@ -66,6 +72,7 @@ namespace AddOne.Framework.Service
                     var existingAsm = asmDAO.GetAddInAssembly(addInName);
                     SaveIfNotExistsOrDifferent(existingAsm, addInName, fileName, 
                         Path.GetDirectoryName(path), "A");
+                    licenseManager.BootLicense(); // reload licenses to include added license.
                     Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
                 }
                 catch (Exception e)
@@ -194,7 +201,7 @@ namespace AddOne.Framework.Service
             newAsm.Name = name;
             newAsm.FileName = asmFile;
             byte[] asmBytes = File.ReadAllBytes(asmPath);
-            newAsm.Version = GetFileVersion(asmBytes);
+            GetAssemblyInfoFromBin(asmBytes, newAsm);
             newAsm.MD5 = MD5Sum(asmBytes);
             newAsm.Size = asmBytes.Length;
             newAsm.Date = DateTime.Now;
@@ -222,12 +229,42 @@ namespace AddOne.Framework.Service
 
         }
 
-        private string GetFileVersion(byte[] asmBytes)
+        private void GetAssemblyInfoFromBin(byte[] asmBytes, AssemblyInformation asmInfo)
         {
+            bool found = false;
             Assembly asm = AppDomain.CurrentDomain.Load(asmBytes);
             var version = asm.GetName().Version;
-            return version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString()
+            asmInfo.Version = version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString()
                     + "." + version.Revision;
+
+            var types = (from type in asm.GetTypes()
+                        where type.IsClass
+                        select type);
+
+            foreach (var type in types)
+            {
+                var attrs = type.GetCustomAttributes(true);
+                foreach (var attr in attrs)
+                {
+                    if (attr is AddInAttribute)
+                    {
+                        var addInAttribute = ((AddInAttribute)attr);
+                        if (!string.IsNullOrEmpty(addInAttribute.i18n))
+                        {
+                            asmInfo.Description = addIni18n.GetLocalizedString(addInAttribute.i18n, asm);
+                        }
+                        else
+                        {
+                            asmInfo.Description = ((AddInAttribute)attr).Description;
+                        }
+                        found = true;
+                        break;
+                    }
+                }
+                if (found)
+                    break;
+            }
+
         }
 
         private void UpdateAssembly(AssemblyInformation asmMeta, string fullPath)
