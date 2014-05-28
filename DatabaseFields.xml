@@ -427,6 +427,27 @@
     </AdmInfo>
     <UserFieldsMD>
       <row>
+        <Name>Description</Name>
+        <Type>db_Alpha</Type>
+        <Size>254</Size>
+        <Description>Description</Description>
+        <SubType>st_None</SubType>
+        <LinkedTable />
+        <DefaultValue />
+        <TableName>@GA_AO_MODULES</TableName>
+        <EditSize>254</EditSize>
+        <Mandatory>tNO</Mandatory>
+      </row>
+    </UserFieldsMD>
+    <ValidValuesMD></ValidValuesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
         <Name>Status</Name>
         <Type>db_Alpha</Type>
         <Size>200</Size>
