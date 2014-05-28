@@ -10,18 +10,21 @@ using Castle.Core.Logging;
 using AddOne.Framework.Factory;
 using System.Reflection;
 using System.IO;
+using AddOne.Framework.Service;
 
 namespace AddOne.Framework.DAO
 {
     public class BusinessOneUIDAOImpl : BusinessOneUIDAO
     {
         private Application application;
+        private AddIni18n addIni18n;
 
         public ILogger Logger { get; set; }
 
-        public BusinessOneUIDAOImpl(Application application)
+        public BusinessOneUIDAOImpl(Application application, AddIni18n addIni18n)
         {
             this.application = application;
+            this.addIni18n = addIni18n;
         }
 
         public override void ProcessMenuAttribute(List<MenuAttribute> menus)
@@ -45,7 +48,7 @@ namespace AddOne.Framework.DAO
 
                 var actionMenu = new ApplicationMenusActionMenu();
                 if (!string.IsNullOrEmpty(menu.i18n))
-                    menu.String = GetLocalizedString(menu);
+                    menu.String = addIni18n.GetLocalizedString(menu.i18n);
 
                 Logger.Info(String.Format(Messages.MenuProcess, menu.String, menu.UniqueID));
 
@@ -101,33 +104,6 @@ namespace AddOne.Framework.DAO
             if (!same)
                 application.Menus.RemoveEx(menu.UniqueID);
             return same;
-        }
-
-        private string GetLocalizedString(MenuAttribute menu)
-        {
-            var index = menu.Return(x => x.i18n, String.Empty).LastIndexOf(".");
-            if (index < 0)
-            {
-                Logger.Error(String.Format(Messages.MenuI18NFormatError, menu.i18n));
-                return menu.Return(x => x.i18n, String.Empty);
-            }
-            string typeName = menu.i18n.Substring(0, index);
-            index++;
-            string propertyName = menu.i18n.Substring(index);
-            var assembly = Assembly.GetEntryAssembly();
-
-            // TODO: cache e resourceCulture.
-            var resource = new System.Resources.ResourceManager(typeName, assembly);
-
-            if (resource != null)
-            {
-                Logger.Debug(String.Format(Messages.GetLocalizedStringFoundResource, menu.i18n));
-            } else
-            {
-                Logger.Debug(String.Format(Messages.GetLocalizedStringNotFoundResource, menu.i18n));
-            }
-
-            return resource.GetString(propertyName);
         }
 
         private bool NotAuthorized(MenuAttribute menu)
