@@ -21,7 +21,6 @@ namespace AddOne.Framework.Service
     {
         internal AssemblyInformation asm;
         internal ManualResetEvent shutdownEvent = new ManualResetEvent(false);
-        internal AppDomain domain;
         internal AddInRunner(AssemblyInformation asm)
         {
             this.asm = asm;
@@ -32,9 +31,10 @@ namespace AddOne.Framework.Service
             var setup = new AppDomainSetup();
             setup.ApplicationName = "AddOne.Inception";
             setup.ApplicationBase = Environment.CurrentDirectory;
-            domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
+            var domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
             domain.ExecuteAssembly(asm.Name + ".exe");
             shutdownEvent.WaitOne(); // Wait until shutdown event is signaled.
+            AppDomain.Unload(domain);
         }
     }
 
@@ -281,14 +281,13 @@ namespace AddOne.Framework.Service
 
         public void ShutdownAddins()
         {
-            Logger.Info("foo");
             foreach (var runner in runningAddIns)
             {
                 Logger.Info(string.Format(Messages.ShutdownAddin, runner.asm.Name));
                 runner.shutdownEvent.Set();
-                AppDomain.Unload(runner.domain);
             }
             runningAddIns = new List<AddInRunner>(); // clean running AddIns.
+            System.Windows.Forms.Application.Exit(); // free main Inception thread.
         }
 
         internal void CreateInceptionServer()
