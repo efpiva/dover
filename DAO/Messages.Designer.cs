@@ -196,24 +196,6 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Resource {0} encontrado.
-        /// </summary>
-        internal static string GetLocalizedStringFoundResource {
-            get {
-                return ResourceManager.GetString("GetLocalizedStringFoundResource", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Resource {0} não encontrado.
-        /// </summary>
-        internal static string GetLocalizedStringNotFoundResource {
-            get {
-                return ResourceManager.GetString("GetLocalizedStringNotFoundResource", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Finalizada execução de GetNextCode para {0}.
         /// </summary>
         internal static string GetNextCodeEnd {
@@ -255,15 +237,6 @@ namespace AddOne.Framework.DAO {
         internal static string MenuError {
             get {
                 return ResourceManager.GetString("MenuError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Nome {0} com formato i18n incorreto..
-        /// </summary>
-        internal static string MenuI18NFormatError {
-            get {
-                return ResourceManager.GetString("MenuI18NFormatError", resourceCulture);
             }
         }
         

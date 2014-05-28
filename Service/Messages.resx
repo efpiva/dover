@@ -147,6 +147,9 @@
   <data name="FileUpdated" xml:space="preserve">
     <value>Atualizado arquivo {0} - Versao {1}</value>
   </data>
+  <data name="i18nError" xml:space="preserve">
+    <value>Nome {0} com formato i18n incorreto.</value>
+  </data>
   <data name="IgnoringFile" xml:space="preserve">
     <value>Ignorando arquivo {0} - não encontrado</value>
   </data>
@@ -180,6 +183,9 @@
   <data name="RegisteringMenuEvent" xml:space="preserve">
     <value>Registrando menu {0} - para tipo {1}</value>
   </data>
+  <data name="RemoveAddinSuccess" xml:space="preserve">
+    <value>Addin {0} removido com sucesso</value>
+  </data>
   <data name="Restarting" xml:space="preserve">
     <value>Reiniciando AddOne</value>
   </data>
@@ -188,6 +194,9 @@
   </data>
   <data name="SaveAddInSuccess" xml:space="preserve">
     <value>AddIn {0} salvo com sucesso</value>
+  </data>
+  <data name="SaveLicenseSuccess" xml:space="preserve">
+    <value>Licença salva com sucesso</value>
   </data>
   <data name="Shutdown" xml:space="preserve">
     <value>Desligando AddOne</value>
@@ -206,5 +215,11 @@
   </data>
   <data name="UpdatingAssembly" xml:space="preserve">
     <value>Iniciando atualização de assemblies - {0}</value>
+  </data>
+  <data name="GetLocalizedStringFoundResource" xml:space="preserve">
+    <value>Resource {0} encontrado</value>
+  </data>
+  <data name="GetLocalizedStringNotFoundResource" xml:space="preserve">
+    <value>Resource {0} não encontrado</value>
   </data>
 </root>

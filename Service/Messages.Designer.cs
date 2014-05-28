@@ -151,6 +151,33 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Resource {0} encontrado.
+        /// </summary>
+        internal static string GetLocalizedStringFoundResource {
+            get {
+                return ResourceManager.GetString("GetLocalizedStringFoundResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resource {0} não encontrado.
+        /// </summary>
+        internal static string GetLocalizedStringNotFoundResource {
+            get {
+                return ResourceManager.GetString("GetLocalizedStringNotFoundResource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nome {0} com formato i18n incorreto..
+        /// </summary>
+        internal static string i18nError {
+            get {
+                return ResourceManager.GetString("i18nError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignorando arquivo {0} - não encontrado.
         /// </summary>
         internal static string IgnoringFile {
@@ -250,6 +277,15 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Addin {0} removido com sucesso.
+        /// </summary>
+        internal static string RemoveAddinSuccess {
+            get {
+                return ResourceManager.GetString("RemoveAddinSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reiniciando AddOne.
         /// </summary>
         internal static string Restarting {
@@ -273,6 +309,15 @@ namespace AddOne.Framework.Service {
         internal static string SaveAddInSuccess {
             get {
                 return ResourceManager.GetString("SaveAddInSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Licença salva com sucesso.
+        /// </summary>
+        internal static string SaveLicenseSuccess {
+            get {
+                return ResourceManager.GetString("SaveLicenseSuccess", resourceCulture);
             }
         }
         
