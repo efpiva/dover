@@ -16,6 +16,7 @@ namespace AddOne.Framework.Form
 
     public class SelectFileDialog
     {
+        private ManualResetEvent shutdownEvent = new ManualResetEvent(false);
         public string SelectedFile { get ; private set; }
         public string SelectedFolder { get ; private set; }
 
@@ -56,6 +57,7 @@ namespace AddOne.Framework.Form
                     SaveDialog(form);
                     break;
             }
+            shutdownEvent.Set();
         }
 
         private void FolderDialog(System.Windows.Forms.Form form)
@@ -113,7 +115,7 @@ namespace AddOne.Framework.Form
             Thread t = new Thread(new ThreadStart(this.InternalSelectFileDialog));
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
-            t.Join();
+            shutdownEvent.WaitOne();
         }
     }
 }
