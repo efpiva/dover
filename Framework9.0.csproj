@@ -117,6 +117,7 @@
     <Compile Include="Monad\StringExtension.cs" />
     <Compile Include="Monad\XML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\AddIni18n.cs" />
     <Compile Include="Service\AddinLoader.cs" />
     <Compile Include="Service\AppEventHandler.cs" />
     <Compile Include="Service\AssemblyLoader.cs" />
