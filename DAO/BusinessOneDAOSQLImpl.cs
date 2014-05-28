@@ -102,8 +102,6 @@ namespace AddOne.Framework.DAO
             browser.GetType().InvokeMember("ReadXml", BindingFlags.InvokeMethod | BindingFlags.Public,
                 null, browser, new object[] { xmlBom, i });
             int ret = (int)type.InvokeMember("Add", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
-            string xml = (string)type.InvokeMember("GetAsXml", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
-            File.WriteAllText("c:\\temp\\ige_framework.xml", xml);
             if (ret != 0)
             {
                 string err;
