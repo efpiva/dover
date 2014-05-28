@@ -10,6 +10,6 @@ namespace AddOne.Framework.Attribute
     public class AddInAttribute : System.Attribute
     {
         public string Description { get; set; }
-        public bool i18n = false;
+        public string i18n { get ; set; }
     }
 }
