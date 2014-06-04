@@ -92,8 +92,8 @@ namespace AddOne.Framework.DAO
             if (String.IsNullOrEmpty(asm.Code))
             {
                 asm.Code = b1DAO.GetNextCode("GA_AO_MODULES");
-                sql = String.Format(@"INSERT INTO [@GA_AO_MODULES] (Code, Name, U_Name, U_Description, U_FileName, U_ResourceName, U_Version, U_MD5, U_Date, U_Size, U_Type)
-                VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', {9}, '{10}')",
+                sql = String.Format(@"INSERT INTO [@GA_AO_MODULES] (Code, Name, U_Name, U_Description, U_FileName, U_ResourceName, U_Version, U_MD5, U_Date, U_Size, U_Type, U_Status)
+                VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', {9}, '{10}', 'A')",
                         asm.Code, asm.Code, asm.Name, asm.Description, asm.FileName, asm.ResourceName, asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length, asm.Type);
             }
             else
