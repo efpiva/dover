@@ -42,7 +42,7 @@ namespace AddOne.Framework.Service
     ConcurrencyMode = ConcurrencyMode.Multiple,
     InstanceContextMode = InstanceContextMode.Single
   )]
-    public class AddinLoader : InceptionServer
+    public class AddinManager : InceptionServer
     {
 
         public ILogger Logger { get; set; }
@@ -54,7 +54,7 @@ namespace AddOne.Framework.Service
         private List<AddInRunner> runningAddIns = new List<AddInRunner>();
         private ServiceHost host; // namedPipe server;
 
-        public AddinLoader(PermissionManager permissionManager, 
+        public AddinManager(PermissionManager permissionManager, 
             BusinessOneDAO b1DAO, BusinessOneUIDAO uiDAO,
             MenuEventHandler menuHandler)
         {

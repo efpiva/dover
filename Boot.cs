@@ -13,11 +13,11 @@ namespace AddOne.Framework
         public ILogger Logger { get; set; }
 
         private LicenseManager licenseManager;
-        private AddinLoader addinLoader;
+        private AddinManager addinLoader;
         private EventDispatcher dispatcher;
         private SAPbouiCOM.Framework.Application app;
 
-        public Boot(LicenseManager licenseValidation, AddinLoader addinLoader, EventDispatcher dispatcher,
+        public Boot(LicenseManager licenseValidation, AddinManager addinLoader, EventDispatcher dispatcher,
             SAPbouiCOM.Framework.Application app)
         {
             this.licenseManager = licenseValidation;

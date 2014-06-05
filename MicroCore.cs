@@ -17,13 +17,13 @@ namespace AddOne.Framework
         private SAPbobsCOM.Company company;
         private SAPbouiCOM.Framework.Application frameworkApp;
         private DatabaseConfiguration dbConf;
-        private AssemblyLoader assemblyLoader;
+        private AssemblyManager assemblyLoader;
         private MicroCoreEventDispatcher dispatcher;
         private MicroBoot microBoot;
 
         public ILogger Logger { get; set; }
 
-        public MicroCore(DatabaseConfiguration dbConf, SAPbobsCOM.Company company, AssemblyLoader assemblyLoader,
+        public MicroCore(DatabaseConfiguration dbConf, SAPbobsCOM.Company company, AssemblyManager assemblyLoader,
             MicroCoreEventDispatcher dispatcher, MicroBoot microBoot, SAPbouiCOM.Framework.Application frameworkApp)
         {
             this.microBoot = microBoot;

@@ -20,7 +20,7 @@ namespace AddOne.Framework.Service
         AddIn
     }
 
-    public class AssemblyLoader
+    public class AssemblyManager
     {
         private string[] addinsAssemblies = {
             "addInSetup.exe"
@@ -43,7 +43,7 @@ namespace AddOne.Framework.Service
         public ILogger Logger { get; set; }
 
 
-        public AssemblyLoader(AssemblyDAO asmDAO, LicenseManager licenseManager, AddIni18n addIni18n)
+        public AssemblyManager(AssemblyDAO asmDAO, LicenseManager licenseManager, AddIni18n addIni18n)
         {
             this.asmDAO = asmDAO;
             this.licenseManager = licenseManager;
