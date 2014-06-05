@@ -35,20 +35,6 @@
     </AdmInfo>
     <UserTablesMD>
       <row>
-        <TableName>GA_AO_MODULES_B1S</TableName>
-        <TableDescription>Resources do B1S</TableDescription>
-        <TableType>bott_NoObject</TableType>
-        <Archivable>tNO</Archivable>
-      </row>
-    </UserTablesMD>
-  </BO>
-  <BO>
-    <AdmInfo>
-      <Object>153</Object>
-      <Version>2</Version>
-    </AdmInfo>
-    <UserTablesMD>
-      <row>
         <TableName>GA_AO_LOGS</TableName>
         <TableDescription>Logs do AddOne</TableDescription>
         <TableType>bott_NoObject</TableType>

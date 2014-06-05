@@ -88,6 +88,7 @@
     <Compile Include="Factory\SAPServiceFactory.cs" />
     <Compile Include="B1Application.cs" />
     <Compile Include="Form\EventHandler.cs" />
+    <Compile Include="Form\FormBase.cs" />
     <Compile Include="Form\SelectFileDialog.cs" />
     <Compile Include="IPC\InceptionServer.cs" />
     <Compile Include="Log\SAPAppender.cs" />

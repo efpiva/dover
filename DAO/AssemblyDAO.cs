@@ -12,8 +12,6 @@ namespace AddOne.Framework.DAO
 
         byte[] GetAssembly(AssemblyInformation asm);
 
-        byte[] GetB1StudioResource(AssemblyInformation asm);
-
         AssemblyInformation GetCoreAssembly(string asmFile);
 
         void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes, byte[] b1SResource);

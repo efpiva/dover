@@ -7,48 +7,6 @@
     </AdmInfo>
     <UserFieldsMD>
       <row>
-        <Name>Code</Name>
-        <Type>db_Alpha</Type>
-        <Size>30</Size>
-        <Description>Code</Description>
-        <SubType>st_None</SubType>
-        <LinkedTable />
-        <DefaultValue />
-        <TableName>@GA_AO_MODULES_B1S</TableName>
-        <EditSize>30</EditSize>
-        <Mandatory>tNO</Mandatory>
-      </row>
-    </UserFieldsMD>
-    <ValidValuesMD></ValidValuesMD>
-  </BO>
-  <BO>
-    <AdmInfo>
-      <Object>152</Object>
-      <Version>2</Version>
-    </AdmInfo>
-    <UserFieldsMD>
-      <row>
-        <Name>Resource</Name>
-        <Type>db_Memo</Type>
-        <Size>4</Size>
-        <Description>Resource</Description>
-        <SubType>st_Link</SubType>
-        <LinkedTable />
-        <DefaultValue />
-        <TableName>@GA_AO_MODULES_B1S</TableName>
-        <EditSize>254</EditSize>
-        <Mandatory>tNO</Mandatory>
-      </row>
-    </UserFieldsMD>
-    <ValidValuesMD></ValidValuesMD>
-  </BO>
-  <BO>
-    <AdmInfo>
-      <Object>152</Object>
-      <Version>2</Version>
-    </AdmInfo>
-    <UserFieldsMD>
-      <row>
         <Name>Assembly</Name>
         <Type>db_Alpha</Type>
         <Size>200</Size>
@@ -389,27 +347,6 @@
         <Type>db_Alpha</Type>
         <Size>200</Size>
         <Description>FileName</Description>
-        <SubType>st_None</SubType>
-        <LinkedTable />
-        <DefaultValue />
-        <TableName>@GA_AO_MODULES</TableName>
-        <EditSize>200</EditSize>
-        <Mandatory>tNO</Mandatory>
-      </row>
-    </UserFieldsMD>
-    <ValidValuesMD></ValidValuesMD>
-  </BO>
-  <BO>
-    <AdmInfo>
-      <Object>152</Object>
-      <Version>2</Version>
-    </AdmInfo>
-    <UserFieldsMD>
-      <row>
-        <Name>ResourceName</Name>
-        <Type>db_Alpha</Type>
-        <Size>200</Size>
-        <Description>Name</Description>
         <SubType>st_None</SubType>
         <LinkedTable />
         <DefaultValue />

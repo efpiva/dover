@@ -97,40 +97,10 @@ namespace AddOne.Framework.Service
             foreach(var asm in asms)
             {
                 string fullPath = Path.Combine(appFolder, asm.FileName);
-                // TODO: checar md5sum de B1s
                 if (IsDifferent(asm, appFolder, fullPath))
                 {
                     UpdateAssembly(asm, fullPath);
-                    if (assemblyLocation == AssemblySource.AddIn)
-                        UpdateB1StudioResource(appFolder, asm);
                 }
-            }
-        }
-
-        private void UpdateB1StudioResource(string appFolder, AssemblyInformation asmMeta)
-        {
-            try
-            {
-                if (asmMeta.ResourceName == null)
-                {
-                    Logger.Debug(String.Format(Messages.B1SResourceMissing, asmMeta.Name));
-                    return;
-                }
-                string fullPath = Path.Combine(appFolder, asmMeta.ResourceName);
-                var b1resource = asmDAO.GetB1StudioResource(asmMeta);
-                if (b1resource != null)
-                {
-                    File.WriteAllBytes(fullPath, b1resource);
-                    Logger.Info(String.Format(Messages.FileUpdated, asmMeta.ResourceName, asmMeta.Version));
-                }
-                else
-                {
-                    Logger.Warn(String.Format(Messages.FileMissing, asmMeta.ResourceName, asmMeta.Version));
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(String.Format(Messages.FileError, asmMeta.ResourceName, asmMeta.Version), e);
             }
         }
 
