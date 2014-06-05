@@ -15,7 +15,6 @@ namespace AddOne.Framework
     public class MicroCore
     {
         private SAPbobsCOM.Company company;
-        private SAPbouiCOM.Framework.Application frameworkApp;
         private DatabaseConfiguration dbConf;
         private AssemblyManager assemblyLoader;
         private MicroCoreEventDispatcher dispatcher;
@@ -24,14 +23,13 @@ namespace AddOne.Framework
         public ILogger Logger { get; set; }
 
         public MicroCore(DatabaseConfiguration dbConf, SAPbobsCOM.Company company, AssemblyManager assemblyLoader,
-            MicroCoreEventDispatcher dispatcher, MicroBoot microBoot, SAPbouiCOM.Framework.Application frameworkApp)
+            MicroCoreEventDispatcher dispatcher, MicroBoot microBoot)
         {
             this.microBoot = microBoot;
             this.company = company;
             this.dbConf = dbConf;
             this.assemblyLoader = assemblyLoader;
             this.dispatcher = dispatcher;
-            this.frameworkApp = frameworkApp;
         }
 
         public void PrepareFramework()
@@ -57,7 +55,7 @@ namespace AddOne.Framework
                 microBoot.StartInception();
                 dispatcher.RegisterInception(microBoot.Inception);
                 microBoot.Boot();
-                frameworkApp.Run();
+                System.Windows.Forms.Application.Run();
             }
             catch (Exception e)
             {

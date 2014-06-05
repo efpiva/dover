@@ -126,6 +126,9 @@
   <data name="AllArgumentsMandatory" xml:space="preserve">
     <value>Todos os argumentos são obrigatórios.</value>
   </data>
+  <data name="ConnectionError" xml:space="preserve">
+    <value>Erro de conexão do AddOn: {0}</value>
+  </data>
   <data name="CreatedAppFolder" xml:space="preserve">
     <value>Criada AppFolder {0} - iniciando addins e core</value>
   </data>

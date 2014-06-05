@@ -88,6 +88,15 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erro de conexão do AddOn: {0}.
+        /// </summary>
+        internal static string ConnectionError {
+            get {
+                return ResourceManager.GetString("ConnectionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Criada AppFolder {0} - iniciando addins e core.
         /// </summary>
         internal static string CreatedAppFolder {

@@ -15,10 +15,8 @@ namespace AddOne.Framework.Factory
     {
         private static SAPbouiCOM.Application application;
         private static SAPbobsCOM.Company company;
-        private static SAPbouiCOM.Framework.Application frameworkApplication;
         private static object threadLock = new System.Object();
         private static bool b1Connected = false;
-        private static bool connString = true;
         internal static string connStringValue = string.Empty;
 
         public static ILogger Logger { get; set; }
@@ -26,9 +24,7 @@ namespace AddOne.Framework.Factory
         private static void B1Connect(String version)
         {
             company = (SAPbobsCOM.Company)AppDomain.CurrentDomain.GetData("SAPCompany");
-
-            frameworkApplication = FrameworkApplicationFactory();
-            application = SAPbouiCOM.Framework.Application.SBO_Application;
+            application = (SAPbouiCOM.Application)AppDomain.CurrentDomain.GetData("SAPApplication");
 
             // inception!
             if (application != null && company != null)
@@ -38,6 +34,7 @@ namespace AddOne.Framework.Factory
 
             try
             {
+                SetApplication();
                 company = (SAPbobsCOM.Company)application.Company.GetDICompany();
 
                 b1Connected = company.Connected;
@@ -46,28 +43,28 @@ namespace AddOne.Framework.Factory
             }
             catch (Exception er)
             {
-                Logger.Fatal(String.Format("Erro de conexão do AddOn: {0}", er.Message), er);
+                Logger.Fatal(String.Format(Messages.ConnectionError, er.Message), er);
             }
+        }
+
+        private static void SetApplication()
+        {
+            SboGuiApi sboGuiApi = (SboGuiApi)new SboGuiApiClass();
+            sboGuiApi.Connect(GetConnectionString());
+            application = sboGuiApi.GetApplication(-1);
         }
 
         private static string GetConnectionString()
         {
             string ret;
-            if (Environment.GetCommandLineArgs().Length > 1 && connString
-                && AppDomain.CurrentDomain.FriendlyName != "AddOne.AddIn"
-                && AppDomain.CurrentDomain.FriendlyName != "AddOne.Inception")
+            if (Environment.GetCommandLineArgs().Length > 1)
             {
                 ret = Environment.GetCommandLineArgs()[1];
-                connString = false;
                 connStringValue = ret;
             }
             else
             {
                 ret = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
-                if (connStringValue == string.Empty)
-                {
-                    connStringValue = ret; // debug only.
-                }
             }
 
             return ret;
@@ -99,16 +96,6 @@ namespace AddOne.Framework.Factory
             }
         }
 
-        public static SAPbouiCOM.Framework.Application FrameworkApplicationFactory()
-        {
-            lock (threadLock)
-            {
-                if (frameworkApplication == null)
-                    frameworkApplication = new SAPbouiCOM.Framework.Application(GetConnectionString());
-                return frameworkApplication;
-            }
-        }
-
         private static string GetVersion()
         {
             Version version = typeof(SAPServiceFactory).Assembly.GetName().Version;
@@ -127,6 +114,7 @@ namespace AddOne.Framework.Factory
                 if (application == null && company == null)
                     B1Connect(GetVersion());
                 inception.SetData("SAPCompany", company);
+                inception.SetData("SAPApplication", application);
                 inception.SetData("AddOnePIPE", pipeName);
             }
         }

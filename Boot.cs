@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using Castle.Core.Logging;
 using AddOne.Framework.Service;
+using System.Windows.Forms;
 
 namespace AddOne.Framework
 {
@@ -15,15 +16,12 @@ namespace AddOne.Framework
         private LicenseManager licenseManager;
         private AddinManager addinLoader;
         private EventDispatcher dispatcher;
-        private SAPbouiCOM.Framework.Application app;
 
-        public Boot(LicenseManager licenseValidation, AddinManager addinLoader, EventDispatcher dispatcher,
-            SAPbouiCOM.Framework.Application app)
+        public Boot(LicenseManager licenseValidation, AddinManager addinLoader, EventDispatcher dispatcher)
         {
             this.licenseManager = licenseValidation;
             this.addinLoader = addinLoader;
             this.dispatcher = dispatcher;
-            this.app = app;
         }
 
         public void StartUp()
@@ -35,7 +33,7 @@ namespace AddOne.Framework
                 addinLoader.LoadAddins(addins);
                 dispatcher.RegisterEvents();
                 addinLoader.CreateInceptionServer();
-                app.Run();
+                Application.Run();
             }
             catch (Exception e)
             {

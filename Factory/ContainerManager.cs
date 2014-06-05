@@ -38,7 +38,6 @@ namespace AddOne.Framework.Factory
             Container.Register(Component.For<LicenseDAO>().ImplementedBy<LicenseDAOSQLImpl>());
 
             Container.Register(Component.For<SAPbouiCOM.Application>().UsingFactoryMethod(SAPServiceFactory.ApplicationFactory));
-            Container.Register(Component.For<SAPbouiCOM.Framework.Application>().UsingFactoryMethod(SAPServiceFactory.FrameworkApplicationFactory));
 
             for(int i=0 ; i< companyFactory.Length ; i++)
                 Container.Register(Component.For<SAPbobsCOM.Company>().UsingFactoryMethod(companyFactory[i]).Named("company" + i));
