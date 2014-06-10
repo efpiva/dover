@@ -53,6 +53,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
@@ -90,6 +91,7 @@
     <Compile Include="Form\EventHandler.cs" />
     <Compile Include="Form\FormBase.cs" />
     <Compile Include="Form\SelectFileDialog.cs" />
+    <Compile Include="Form\UserFormBase.cs" />
     <Compile Include="IPC\InceptionServer.cs" />
     <Compile Include="Log\SAPAppender.cs" />
     <Compile Include="Messages.Designer.cs">
@@ -122,6 +124,8 @@
     <Compile Include="Service\AddinManager.cs" />
     <Compile Include="Service\AppEventHandler.cs" />
     <Compile Include="Service\AssemblyManager.cs" />
+    <Compile Include="Service\B1SResourceManager.cs" />
+    <Compile Include="Service\FormEventHandler.cs" />
     <Compile Include="Service\MicroCoreEventDispatcher.cs" />
     <Compile Include="Service\CryptoService.cs" />
     <Compile Include="Service\DatabaseConfiguration.cs" />
@@ -171,7 +175,6 @@
   <ItemGroup>
     <EmbeddedResource Include="DatabaseFields.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

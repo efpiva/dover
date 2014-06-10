@@ -121,7 +121,7 @@
     <value>Nenhum Assembly de nome {0} encontrado</value>
   </data>
   <data name="B1SResourceMissing" xml:space="preserve">
-    <value>B1S resource para {0} nao configurado</value>
+    <value>B1S resource para {0} nao encontrado</value>
   </data>
   <data name="CheckSum" xml:space="preserve">
     <value>Checando MD5Sum({0}) - para {1}</value>
@@ -221,5 +221,17 @@
   </data>
   <data name="GetLocalizedStringNotFoundResource" xml:space="preserve">
     <value>Resource {0} não encontrado</value>
+  </data>
+  <data name="ResourceNotFound" xml:space="preserve">
+    <value>Resource {1} not found for asm {0}</value>
+  </data>
+  <data name="B1SResourceKeyNotFound" xml:space="preserve">
+    <value>Tag para form {1} não encontrada no assembly {0}</value>
+  </data>
+  <data name="B1SResourceVSICreatedNotFound" xml:space="preserve">
+    <value>Tag VSICreated não encontrada no assembly {0}</value>
+  </data>
+  <data name="FormTypeNotUnique" xml:space="preserve">
+    <value>FormType {0} não é único. Não é possível registrar eventos UI.</value>
   </data>
 </root>

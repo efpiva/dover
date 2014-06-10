@@ -122,5 +122,12 @@ namespace AddOne.Framework.DAO
 
             return !(bool)ret;
         }
+
+        internal override IForm CreateUserForm(string xml, string type)
+        {
+            int formCount = application.Forms.Count;
+            application.LoadBatchActions(xml);
+            return application.Forms.Item(formCount);
+        }
     }
 }

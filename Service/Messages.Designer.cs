@@ -70,11 +70,29 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to B1S resource para {0} nao configurado.
+        ///   Looks up a localized string similar to Tag para form {1} não encontrada no assembly {0}.
+        /// </summary>
+        internal static string B1SResourceKeyNotFound {
+            get {
+                return ResourceManager.GetString("B1SResourceKeyNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B1S resource para {0} nao encontrado.
         /// </summary>
         internal static string B1SResourceMissing {
             get {
                 return ResourceManager.GetString("B1SResourceMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tag VSICreated não encontrada no assembly {0}.
+        /// </summary>
+        internal static string B1SResourceVSICreatedNotFound {
+            get {
+                return ResourceManager.GetString("B1SResourceVSICreatedNotFound", resourceCulture);
             }
         }
         
@@ -147,6 +165,15 @@ namespace AddOne.Framework.Service {
         internal static string FileUpdated {
             get {
                 return ResourceManager.GetString("FileUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FormType {0} não é único. Não é possível registrar eventos UI..
+        /// </summary>
+        internal static string FormTypeNotUnique {
+            get {
+                return ResourceManager.GetString("FormTypeNotUnique", resourceCulture);
             }
         }
         
@@ -282,6 +309,15 @@ namespace AddOne.Framework.Service {
         internal static string RemoveAddinSuccess {
             get {
                 return ResourceManager.GetString("RemoveAddinSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resource {1} not found for asm {0}.
+        /// </summary>
+        internal static string ResourceNotFound {
+            get {
+                return ResourceManager.GetString("ResourceNotFound", resourceCulture);
             }
         }
         

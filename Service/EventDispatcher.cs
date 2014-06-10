@@ -5,8 +5,8 @@ using System.Text;
 using SAPbouiCOM;
 using AddOne.Framework.Attribute;
 using AddOne.Framework.Factory;
-using SAPbouiCOM.Framework;
 using Castle.Core.Logging;
+using AddOne.Framework.Form;
 
 namespace AddOne.Framework.Service
 {
@@ -16,10 +16,10 @@ namespace AddOne.Framework.Service
     public class EventDispatcher
     {
         public ILogger Logger { get; set; }
-        private SAPbouiCOM.Application sapApp;
+        private Application sapApp;
         private MenuEventHandler menuHandler;
 
-        public EventDispatcher(SAPbouiCOM.Application sapApp, MenuEventHandler menuHandler)
+        public EventDispatcher(Application sapApp, MenuEventHandler menuHandler)
         {
             this.sapApp = sapApp;
             this.menuHandler = menuHandler;

@@ -7,6 +7,7 @@ using SAPbouiCOM;
 using AddOne.Framework.Attribute;
 using AddOne.Framework.Factory;
 using SAPbouiCOM.Framework;
+using AddOne.Framework.Form;
 
 namespace AddOne.Framework.Service
 {
@@ -46,13 +47,13 @@ namespace AddOne.Framework.Service
             try
             {
                 var obj = ContainerManager.Container.Resolve(type);
-                if (obj is FormBase)
+                if (obj is FormBase || obj is AddOneFormBase)
                 {
                     Logger.Debug(String.Format(Messages.MenuDispatchInfo, pVal.MenuUID, type));
                     var method = type.GetMethod("Show");
                     method.Invoke(obj, null);
                 }
-                else if (type.DeclaringMethod != null)
+                else if (type.IsGenericParameter && type.DeclaringMethod != null)
                 {
                     Logger.Debug(String.Format(Messages.MenuDispatchInfo, pVal.MenuUID, type));
                     type.DeclaringMethod.Invoke(obj, null);
@@ -82,7 +83,6 @@ namespace AddOne.Framework.Service
 
             if (!events.Contains(menuEventAttribute))
                 events.Add(menuEventAttribute);
-
         }
     }
 }

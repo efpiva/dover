@@ -16,12 +16,15 @@ namespace AddOne.Framework
         private LicenseManager licenseManager;
         private AddinManager addinLoader;
         private EventDispatcher dispatcher;
+        private FormEventHandler formEventHandler;
 
-        public Boot(LicenseManager licenseValidation, AddinManager addinLoader, EventDispatcher dispatcher)
+        public Boot(LicenseManager licenseValidation, AddinManager addinLoader, EventDispatcher dispatcher,
+            FormEventHandler formEventHandler)
         {
             this.licenseManager = licenseValidation;
             this.addinLoader = addinLoader;
             this.dispatcher = dispatcher;
+            this.formEventHandler = formEventHandler;
         }
 
         public void StartUp()
@@ -50,6 +53,7 @@ namespace AddOne.Framework
                 Logger.Info(String.Format(Messages.Starting, this.GetType().Assembly.GetName().Version));
                 addinLoader.StartThis();
                 dispatcher.RegisterEvents();
+                formEventHandler.RegisterForms();
             }
             catch (Exception e)
             {

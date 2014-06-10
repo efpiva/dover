@@ -50,13 +50,8 @@ namespace AddOne.Framework.Monad
             return (V)objSerializer.Deserialize(GenerateStreamFromString(xml));
         }
 
-        private static Stream GenerateStreamFromString(string s)
+        internal static Stream GenerateStreamFromString(string s)
         {
-            // wront UTF-16 return from SAP.
-            // TODO: testar tratamento utilizando no Serialize<T>.
-            //if (s.StartsWith("<?xml version=\"1.0\" encoding=\"UTF-16\"?>", StringComparison.InvariantCultureIgnoreCase))
-            //    s = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + s.Substring(39);
-
             MemoryStream stream = new MemoryStream();
             StreamWriter writer = new StreamWriter(stream, Encoding.Unicode);
             writer.Write(s);
