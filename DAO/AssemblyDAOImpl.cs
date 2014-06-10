@@ -65,15 +65,12 @@ namespace AddOne.Framework.DAO
             return shb.Value;
         }
 
-        public void SaveAssembly(AssemblyInformation asm, byte[] asmBytes, byte[] b1sbytes)
+        public void SaveAssembly(AssemblyInformation asm, byte[] asmBytes)
         {
             SoapHexBinary shb = new SoapHexBinary(asmBytes);
-            SoapHexBinary shbb1s = new SoapHexBinary(b1sbytes);
             string asmHex = null, b1SResource = null;
             if (asmBytes != null)
                 asmHex = shb.ToString();
-            if (b1sbytes != null)
-                b1SResource = shbb1s.ToString();
             string sql;
 
             if (String.IsNullOrEmpty(asm.Code))

@@ -14,7 +14,7 @@ namespace AddOne.Framework.DAO
 
         AssemblyInformation GetCoreAssembly(string asmFile);
 
-        void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes, byte[] b1SResource);
+        void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes);
 
         AssemblyInformation GetAddInAssembly(string p);
 

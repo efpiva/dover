@@ -180,16 +180,7 @@ namespace AddOne.Framework.Service
             if (existingAsm == null || newAsm.Version.CompareTo(existingAsm.Version) == 1
                 || (newAsm.Version == existingAsm.Version && newAsm.MD5 != existingAsm.MD5))
             {
-                var resourceName = asmFile.Substring(0, asmFile.Length-3) + "b1s";
-                var b1sPath = Path.Combine(path, resourceName);
-                byte[] resource = null;
-                if (File.Exists(b1sPath))
-                {
-                    resource = File.ReadAllBytes(b1sPath);
-                    newAsm.ResourceName = resourceName;
-                }
-
-                asmDAO.SaveAssembly(newAsm, asmBytes, resource);
+                asmDAO.SaveAssembly(newAsm, asmBytes);
                 return newAsm;
             }
             else
