@@ -13,7 +13,7 @@ namespace AddOne.Framework.Service
         private PermissionManager permissionManager;
         private B1SResourceManager resourceManager;
 
-        HashSet<string> formEvents = new HashSet<string>();
+        Dictionary<string, object> formEvents = new Dictionary<string, object>();
         Dictionary<string, AddOneFormBase> events = new Dictionary<string, AddOneFormBase>();
         Dictionary<string, List<AddOneFormBase>> pendingForms = new Dictionary<string, List<AddOneFormBase>>();
 
@@ -30,8 +30,8 @@ namespace AddOne.Framework.Service
             List<AddOneFormBase> pendingList; // forms that does not have UniqueID created by UI.
             if (!pendingForms.TryGetValue(type, out pendingList))
             {
-                    pendingList = new List<AddOneFormBase>();
-                    pendingForms = new Dictionary<string, List<AddOneFormBase>>();
+                pendingList = new List<AddOneFormBase>();
+                pendingForms.Add(type, pendingList);
             }
             pendingList.Add(form);
         }
@@ -39,7 +39,8 @@ namespace AddOne.Framework.Service
         internal void RegisterForms()
         {
             var formAttributes = (from asm in AppDomain.CurrentDomain.GetAssemblies()
-                                  from attribute in asm.GetCustomAttributes(true)
+                                  from type in asm.GetTypes()
+                                  from attribute in type.GetCustomAttributes(true)
                                   where permissionManager.AddInEnabled(asm.GetName().Name)
                                     && attribute is SAPbouiCOM.Framework.FormAttribute
                                   select new {FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute, Assembly = asm}).ToArray();
@@ -49,16 +50,15 @@ namespace AddOne.Framework.Service
                 RegisterFormEvent(attribute.FormAttribute.FormType);
                 resourceManager.ConfigureFormXML(attribute.Assembly.GetName().FullName,
                     attribute.FormAttribute.Resource, attribute.FormAttribute.FormType);
-            }
-            
+            }            
         }
 
         private void RegisterFormEvent(string formType)
         {
-            if (!formEvents.Contains(formType))
+            if (!formEvents.ContainsKey(formType))
             {
-                formEvents.Add(formType);
                 var eventForm = sapApp.Forms.GetEventForm(formType);
+                formEvents.Add(formType, eventForm);
                 eventForm.LoadBefore += new _IEventFormEvents_LoadBeforeEventHandler(this.OnFormLoadBefore);
                 eventForm.ActivateAfter += new _IEventFormEvents_ActivateAfterEventHandler(this.OnFormActivateAfter);
                 eventForm.ActivateBefore += new _IEventFormEvents_ActivateBeforeEventHandler(this.OnFormActivateBefore);
