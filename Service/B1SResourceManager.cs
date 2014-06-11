@@ -58,7 +58,7 @@ namespace AddOne.Framework.Service
 
         internal string GetFormXML(string assemblyName, string resourceKey)
         {
-            var attr = GerFormAttribute(assemblyName, resourceKey);
+            var attr = GetFormAttribute(assemblyName, resourceKey);
             if (attr != null)
             {
                 return attr.Value;
@@ -68,20 +68,24 @@ namespace AddOne.Framework.Service
 
         internal void ConfigureFormXML(string assemblyName, string resourceKey, string formType)
         {
-            XAttribute attribute = GerFormAttribute(assemblyName, resourceKey);
+            XAttribute attribute = GetFormAttribute(assemblyName, resourceKey);
             var doc = XDocument.Load(XMLClass.GenerateStreamFromString(attribute.Value));
             var formattedElement = (from app in doc.Elements("Application")
-                        from forms in app.Elements("forms")
-                        from action in forms.Elements("action")
-                        from form in action.Elements("form")
-                        where action.Attribute("type").Value == "add"
-                        select form).First();
+                                    from forms in app.Elements("forms")
+                                    from action in forms.Elements("action")
+                                    from form in action.Elements("form")
+                                    where action.Attribute("type").Value == "add"
+                                    select form);
 
-            formattedElement.Attribute("FormType").Value = formType;
-            attribute.Value = formattedElement.ToString();
+            if (formattedElement.Count() > 0) // system form and udo does not have add.
+            {
+                formattedElement.First().Attribute("FormType").Value = formType;
+                attribute.Value = doc.ToString();
+            }
+
         }
 
-        private XAttribute GerFormAttribute(string assemblyName, string resourceKey)
+        private XAttribute GetFormAttribute(string assemblyName, string resourceKey)
         {
             XDocument doc;
             assemblyB1SResource.TryGetValue(assemblyName, out doc);
