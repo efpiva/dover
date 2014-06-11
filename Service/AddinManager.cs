@@ -32,8 +32,8 @@ namespace AddOne.Framework.Service
             setup.ApplicationName = "AddOne.Inception";
             setup.ApplicationBase = Environment.CurrentDirectory;
             var domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
+            domain.SetData("shutdownEvent", shutdownEvent);
             domain.ExecuteAssembly(asm.Name + ".exe");
-            shutdownEvent.WaitOne(); // Wait until shutdown event is signaled.
             AppDomain.Unload(domain);
         }
     }

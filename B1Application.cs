@@ -14,6 +14,7 @@ using AddOne.Framework.Factory;
 using System.Reflection;
 using SAPbouiCOM.Framework;
 using AddOne.Framework.Monad;
+using System.Threading;
 
 namespace AddOne.Framework
 {
@@ -66,7 +67,8 @@ namespace AddOne.Framework
                 var container = ContainerManager.BuildContainer();
                 var loader = container.Resolve<Boot>();
                 loader.StartThis();
-                container.Dispose();
+                ManualResetEvent shutdownEvent = (ManualResetEvent)AppDomain.CurrentDomain.GetData("shutdownEvent");
+                shutdownEvent.WaitOne(); // Wait until shutdown event is signaled.
             } 
             else
             {
