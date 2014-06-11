@@ -67,6 +67,7 @@ namespace AddOne.Framework.Service
             {
                 try
                 {
+                    // TODO: check CustomAttributes
                     var fileName = Path.GetFileName(path);
                     var addInName = fileName.Substring(0, fileName.Length - 4);
                     var existingAsm = asmDAO.GetAddInAssembly(addInName);
