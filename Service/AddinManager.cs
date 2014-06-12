@@ -33,6 +33,7 @@ namespace AddOne.Framework.Service
             setup.ApplicationBase = Environment.CurrentDirectory;
             var domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
             domain.SetData("shutdownEvent", shutdownEvent);
+            SAPServiceFactory.PrepareForInception(domain);
             domain.ExecuteAssembly(asm.Name + ".exe");
             AppDomain.Unload(domain);
         }
