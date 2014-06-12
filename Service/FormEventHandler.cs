@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SAPbouiCOM;
 using AddOne.Framework.Form;
+using System.Reflection;
 
 namespace AddOne.Framework.Service
 {
@@ -38,12 +39,20 @@ namespace AddOne.Framework.Service
 
         internal void RegisterForms()
         {
-            var formAttributes = (from asm in AppDomain.CurrentDomain.GetAssemblies()
-                                  from type in asm.GetTypes()
+            Assembly currentAsm = Assembly.GetEntryAssembly();
+            var formAttributes = (from type in currentAsm.GetTypes()
                                   from attribute in type.GetCustomAttributes(true)
-                                  where permissionManager.AddInEnabled(asm.GetName().Name)
-                                    && attribute is SAPbouiCOM.Framework.FormAttribute
-                                  select new {FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute, Assembly = asm}).ToArray();
+                                  where attribute is SAPbouiCOM.Framework.FormAttribute
+                                  select new { FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute, Assembly = currentAsm }).ToList();
+
+            foreach (var asmName in currentAsm.GetReferencedAssemblies())
+            {
+                Assembly dependency = AppDomain.CurrentDomain.Load(asmName);
+                formAttributes.AddRange((from type in dependency.GetTypes()
+                                      from attribute in type.GetCustomAttributes(true)
+                                      where attribute is SAPbouiCOM.Framework.FormAttribute
+                                      select new { FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute, Assembly = currentAsm }).ToList() );
+            }
 
             foreach (var attribute in formAttributes)
             {
