@@ -91,6 +91,7 @@
     <Compile Include="Form\EventHandler.cs" />
     <Compile Include="Form\FormBase.cs" />
     <Compile Include="Form\SelectFileDialog.cs" />
+    <Compile Include="Form\SystemFormBase.cs" />
     <Compile Include="Form\UserFormBase.cs" />
     <Compile Include="IPC\InceptionServer.cs" />
     <Compile Include="Log\SAPAppender.cs" />
