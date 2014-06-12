@@ -53,6 +53,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
@@ -88,7 +89,10 @@
     <Compile Include="Factory\SAPServiceFactory.cs" />
     <Compile Include="B1Application.cs" />
     <Compile Include="Form\EventHandler.cs" />
+    <Compile Include="Form\FormBase.cs" />
     <Compile Include="Form\SelectFileDialog.cs" />
+    <Compile Include="Form\SystemFormBase.cs" />
+    <Compile Include="Form\UserFormBase.cs" />
     <Compile Include="IPC\InceptionServer.cs" />
     <Compile Include="Log\SAPAppender.cs" />
     <Compile Include="Messages.Designer.cs">
@@ -118,9 +122,11 @@
     <Compile Include="Monad\XML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\AddIni18n.cs" />
-    <Compile Include="Service\AddinLoader.cs" />
+    <Compile Include="Service\AddinManager.cs" />
     <Compile Include="Service\AppEventHandler.cs" />
-    <Compile Include="Service\AssemblyLoader.cs" />
+    <Compile Include="Service\AssemblyManager.cs" />
+    <Compile Include="Service\B1SResourceManager.cs" />
+    <Compile Include="Service\FormEventHandler.cs" />
     <Compile Include="Service\MicroCoreEventDispatcher.cs" />
     <Compile Include="Service\CryptoService.cs" />
     <Compile Include="Service\DatabaseConfiguration.cs" />
