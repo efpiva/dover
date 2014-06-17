@@ -121,6 +121,7 @@
     <Compile Include="Monad\StringExtension.cs" />
     <Compile Include="Monad\XML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Remoting\Sponsor.cs" />
     <Compile Include="Service\AddIni18n.cs" />
     <Compile Include="Service\AddinManager.cs" />
     <Compile Include="Service\AppEventHandler.cs" />
