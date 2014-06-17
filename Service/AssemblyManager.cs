@@ -23,7 +23,7 @@ namespace AddOne.Framework.Service
     public class AssemblyManager
     {
         private string[] addinsAssemblies = {
-            "addInSetup.exe"
+            "addInSetup.dll"
         };
 
         private string[] coreAssemblies = {
