@@ -1,19 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Castle.Windsor;
-using Castle.MicroKernel.Registration;
-using Castle.Facilities.Logging;
 using AddOne.Framework.Factory;
-using AddOne.Framework.Log;
-using Castle.Core.Logging;
-using AddOne.Framework.DAO;
-using AddOne.Framework.Service;
-using AddOne.Framework.Factory;
-using System.Reflection;
-using SAPbouiCOM.Framework;
-using AddOne.Framework.Monad;
 using System.Threading;
 
 namespace AddOne.Framework
