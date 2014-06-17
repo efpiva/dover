@@ -14,6 +14,57 @@ namespace AddOne.Framework.Form
 
         private static ILogger Logger = ContainerManager.Container.Resolve<ILogger>();
 
+        public static _IGridEvents_ComboSelectAfterEventHandler ExceptionHandler(this _IGridEvents_ComboSelectAfterEventHandler eventTrigger, AddOneFormBase form)
+        {
+            _IGridEvents_ComboSelectAfterEventHandler retFunction = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal) =>
+            {
+                try
+                {
+                    eventTrigger(sboObject, pVal);
+                }
+                catch (Exception e)
+                {
+                    if (form != null && form.UIAPIRawForm != null)
+                        form.UIAPIRawForm.Freeze(false); // force unfreeze in case of error.
+
+                    Assembly addinAssembly = eventTrigger.Method.DeclaringType.Assembly;
+                    Version objVersion = addinAssembly.GetName().Version;
+                    String addInName = addinAssembly.GetName().Name;
+                    String addInVersion = objVersion.Major.ToString() + "." + objVersion.Minor.ToString() + "." + objVersion.Build.ToString()
+                                + "." + objVersion.Revision;
+
+                    Logger.Error(String.Format(Messages.AddInError, addInName, addInVersion), e);
+                }
+            };
+            return retFunction;
+        }
+
+        public static _IGridEvents_ComboSelectBeforeEventHandler ExceptionHandler(this _IGridEvents_ComboSelectBeforeEventHandler eventTrigger, AddOneFormBase form)
+        {
+            _IGridEvents_ComboSelectBeforeEventHandler retFunction = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent) =>
+            {
+                BubbleEvent = true;
+                try
+                {
+                    eventTrigger(sboObject, pVal, out BubbleEvent);
+                }
+                catch (Exception e)
+                {
+                    if (form != null && form.UIAPIRawForm != null)
+                        form.UIAPIRawForm.Freeze(false); // force unfreeze in case of error.
+
+                    Assembly addinAssembly = eventTrigger.Method.DeclaringType.Assembly;
+                    Version objVersion = addinAssembly.GetName().Version;
+                    String addInName = addinAssembly.GetName().Name;
+                    String addInVersion = objVersion.Major.ToString() + "." + objVersion.Minor.ToString() + "." + objVersion.Build.ToString()
+                                + "." + objVersion.Revision;
+
+                    Logger.Error(String.Format(Messages.AddInError, addInName, addInVersion), e);
+                }
+            };
+            return retFunction;
+        }
+
         public static _IColumnEvents_ComboSelectBeforeEventHandler ExceptionHandler(this _IColumnEvents_ComboSelectBeforeEventHandler eventTrigger, AddOneFormBase form)
         {
             _IColumnEvents_ComboSelectBeforeEventHandler retFunction = (object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent) =>
