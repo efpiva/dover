@@ -304,11 +304,6 @@ namespace AddOne.Framework.Service
                     new NetNamedPipeBinding(NetNamedPipeSecurityMode.None),
                     "InceptionServer");
                 host.Open();
-
-                foreach (var serviceEndpoint in host.Description.Endpoints)
-                {
-                    Logger.Debug(serviceEndpoint.ListenUri.AbsoluteUri);
-                }
             }
             catch (Exception e)
             {
