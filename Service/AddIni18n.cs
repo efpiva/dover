@@ -24,7 +24,8 @@ namespace AddOne.Framework.Service
             string typeName = key.Substring(0, index);
             index++;
             string propertyName = key.Substring(index);
-            var assembly = (addin == null) ? Assembly.GetEntryAssembly() : addin;
+            var assembly = (addin == null) ? 
+                AppDomain.CurrentDomain.Load((string)AppDomain.CurrentDomain.GetData("assemblyName")) : addin;
 
             // TODO: cache e resourceCulture.
             var resource = new System.Resources.ResourceManager(typeName, assembly);

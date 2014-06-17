@@ -30,6 +30,8 @@ namespace AddOne.Framework.Factory
 
         internal static IWindsorContainer BuildContainer()
         {
+            string assemblyName;
+
             Func<SAPbobsCOM.Company>[] companyFactory =  (customCompanyFactory == null) 
                 ? new Func<SAPbobsCOM.Company>[] {SAPServiceFactory.CompanyFactory} : customCompanyFactory;
 
@@ -47,11 +49,15 @@ namespace AddOne.Framework.Factory
                     .DependsOn(Dependency.OnComponent(typeof(SAPbobsCOM.Company), "company" + i)).Named("b1dao" + i));
             Container.Register(Component.For<BusinessOneUIDAO>().ImplementedBy<BusinessOneUIDAOImpl>());
 
-            string runningFolder = Path.GetDirectoryName( Assembly.GetEntryAssembly().Location );
+            string runningFolder = Path.GetDirectoryName( AppDomain.CurrentDomain.BaseDirectory );
 
             Container.Register(Classes.FromThisAssembly().IncludeNonPublicTypes().Pick()
                 .WithService.DefaultInterfaces().LifestyleSingleton());
-            Container.AddFacility<LoggingFacility>(f => f.UseLog4Net(Assembly.GetEntryAssembly().GetName().Name + ".config"));
+
+            assemblyName = Assembly.GetEntryAssembly() == null ? (string)AppDomain.CurrentDomain.GetData("assemblyName") 
+                : Assembly.GetEntryAssembly().GetName().Name;
+
+            Container.AddFacility<LoggingFacility>(f => f.UseLog4Net(assemblyName + ".config"));
 
             var logger = Container.Resolve<ILogger>();
             logger.Debug(String.Format(Messages.StartupFolder, runningFolder));

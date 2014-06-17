@@ -8,6 +8,7 @@ using System.Reflection;
 using SAPbobsCOM;
 using Castle.Core.Logging;
 using AddOne.Framework.Monad;
+using AddOne.Framework.Remoting;
 
 namespace AddOne.Framework.Factory
 {
@@ -15,6 +16,8 @@ namespace AddOne.Framework.Factory
     {
         private static SAPbouiCOM.Application application;
         private static SAPbobsCOM.Company company;
+        private static Sponsor<SAPbouiCOM.Application> applicationSponsor;
+        private static Sponsor<SAPbobsCOM.Company> companySponsor;
         private static object threadLock = new System.Object();
         private static bool b1Connected = false;
         internal static string connStringValue = string.Empty;
@@ -29,6 +32,8 @@ namespace AddOne.Framework.Factory
             // inception!
             if (application != null && company != null)
             {
+                applicationSponsor = new Sponsor<SAPbouiCOM.Application>(application);
+                companySponsor = new Sponsor<SAPbobsCOM.Company>(company);
                 return;
             }
 

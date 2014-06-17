@@ -2,12 +2,12 @@
 using Castle.Windsor;
 using AddOne.Framework.Factory;
 using System.Threading;
+using AddOne.Framework.Remoting;
 
 namespace AddOne.Framework
 {
-    public class B1Application
+    public class B1Application : MarshalByRefObject
     {
-        private string appDomainFolder;
         private IWindsorContainer appContainer;
 
         public B1Application()
@@ -55,6 +55,7 @@ namespace AddOne.Framework
                 var loader = container.Resolve<Boot>();
                 loader.StartThis();
                 ManualResetEvent shutdownEvent = (ManualResetEvent)AppDomain.CurrentDomain.GetData("shutdownEvent");
+                Sponsor<ManualResetEvent> shutdownEventSponsor = new Sponsor<ManualResetEvent>(shutdownEvent);
                 shutdownEvent.WaitOne(); // Wait until shutdown event is signaled.
             } 
             else

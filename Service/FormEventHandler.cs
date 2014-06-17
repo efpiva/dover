@@ -39,7 +39,7 @@ namespace AddOne.Framework.Service
 
         internal void RegisterForms()
         {
-            Assembly currentAsm = Assembly.GetEntryAssembly();
+            Assembly currentAsm = AppDomain.CurrentDomain.Load((string)AppDomain.CurrentDomain.GetData("assemblyName"));
             var formAttributes = (from type in currentAsm.GetTypes()
                                   from attribute in type.GetCustomAttributes(true)
                                   where attribute is SAPbouiCOM.Framework.FormAttribute

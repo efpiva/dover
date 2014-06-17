@@ -13,7 +13,9 @@ using AddOne.Framework.Model;
 using System.IO;
 using System.Xml.Linq;
 using AddOne.Framework.IPC;
+using AddOne.Framework.Remoting;
 using System.ServiceModel;
+using System.Runtime.Remoting;
 
 namespace AddOne.Framework.Service
 {
@@ -33,10 +35,13 @@ namespace AddOne.Framework.Service
             setup.ApplicationBase = Environment.CurrentDirectory;
             var domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
             domain.SetData("shutdownEvent", shutdownEvent);
+            domain.SetData("assemblyName", asm.Name);
             SAPServiceFactory.PrepareForInception(domain);
-            domain.ExecuteAssembly(asm.Name + ".exe");
+            B1Application app = (B1Application)domain.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
+            Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
+            app.Run();
             AppDomain.Unload(domain);
-        }
+        } 
     }
 
      [ServiceBehavior(
@@ -215,13 +220,13 @@ namespace AddOne.Framework.Service
         {
             try
             {
-                Assembly thisAsm = Assembly.GetEntryAssembly();
+                string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
+                Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
                 RegisterObjects(thisAsm);
                 var addin = thisAsm.FullName;
                 Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
                 List<MenuAttribute> menus = new List<MenuAttribute>();
-                var assembly = Assembly.GetEntryAssembly();
-                var types = (from type in assembly.GetTypes()
+                var types = (from type in thisAsm.GetTypes()
                              where type.IsClass
                              select type);
 
