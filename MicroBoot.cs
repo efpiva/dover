@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AddOne.Framework.Factory;
 using System.Threading;
+using AddOne.Framework.Remoting;
 
 namespace AddOne.Framework
 {
@@ -31,7 +32,10 @@ namespace AddOne.Framework
 
         private void PrivateBoot()
         {
-            Inception.ExecuteAssembly("AddOne.exe", Environment.GetCommandLineArgs());
+            B1Application app = (B1Application)Inception.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
+            Inception.SetData("assemblyName", "AddOne"); // Used to get current AssemblyName for logging and reflection
+            Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
+            app.Run();
         }
     }
 }
