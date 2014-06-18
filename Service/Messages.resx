@@ -234,4 +234,7 @@
   <data name="FormTypeNotUnique" xml:space="preserve">
     <value>FormType {0} não é único. Não é possível registrar eventos UI.</value>
   </data>
+  <data name="LicenseAddInNotFound" xml:space="preserve">
+    <value>Addin {0} não encontrado durante carga de licença.</value>
+  </data>
 </root>

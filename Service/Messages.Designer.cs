@@ -232,6 +232,15 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Addin {0} não encontrado durante carga de licença..
+        /// </summary>
+        internal static string LicenseAddInNotFound {
+            get {
+                return ResourceManager.GetString("LicenseAddInNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Arquivo {0} não encontrado.
         /// </summary>
         internal static string LicenseFileMissing {
