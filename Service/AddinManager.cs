@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Reflection;
-using AddOne.Framework.Attribute;
-using Castle.Core.Logging;
-using AddOne.Framework.DAO;
-using AddOne.Framework.Model.SAP;
-using AddOne.Framework.Factory;
-using AddOne.Framework.Model;
 using System.IO;
-using System.Xml.Linq;
-using AddOne.Framework.IPC;
-using AddOne.Framework.Remoting;
+using System.Linq;
+using System.Reflection;
 using System.ServiceModel;
-using System.Runtime.Remoting;
+using System.Threading;
+using System.Xml.Linq;
+using AddOne.Framework.Attribute;
+using AddOne.Framework.DAO;
+using AddOne.Framework.Factory;
+using AddOne.Framework.IPC;
+using AddOne.Framework.Model;
+using AddOne.Framework.Model.SAP;
+using AddOne.Framework.Remoting;
+using Castle.Core.Logging;
 
 namespace AddOne.Framework.Service
 {
