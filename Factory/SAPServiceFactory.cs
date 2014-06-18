@@ -20,7 +20,6 @@ namespace AddOne.Framework.Factory
         private static Sponsor<SAPbobsCOM.Company> companySponsor;
         private static object threadLock = new System.Object();
         private static bool b1Connected = false;
-        internal static string connStringValue = string.Empty;
 
         public static ILogger Logger { get; set; }
 
@@ -65,12 +64,13 @@ namespace AddOne.Framework.Factory
             if (Environment.GetCommandLineArgs().Length > 1)
             {
                 ret = Environment.GetCommandLineArgs()[1];
-                connStringValue = ret;
             }
             else
             {
                 ret = "0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056";
             }
+
+            AppDomain.CurrentDomain.SetData("AddOnePIPE", "addOne" + ret);
 
             return ret;
         }
@@ -113,8 +113,7 @@ namespace AddOne.Framework.Factory
         {
             lock (threadLock)
             {
-                string pipeName = "addOne" + connStringValue;
-                AppDomain.CurrentDomain.SetData("AddOnePIPE", pipeName);
+                string pipeName = (string)AppDomain.CurrentDomain.GetData("AddOnePIPE");
 
                 if (application == null && company == null)
                     B1Connect(GetVersion());
