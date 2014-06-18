@@ -32,8 +32,8 @@ namespace AddOne.Framework.Service
             setup.ApplicationName = "AddOne.Inception";
             setup.ApplicationBase = Environment.CurrentDirectory;
             var domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
-            domain.SetData("shutdownEvent", shutdownEvent);
-            domain.SetData("assemblyName", asm.Name);
+            domain.SetData("shutdownEvent", shutdownEvent); // Thread synchronization
+            domain.SetData("assemblyName", asm.Name); // Used to get current AssemblyName for logging and reflection
             SAPServiceFactory.PrepareForInception(domain);
             B1Application app = (B1Application)domain.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
             Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
@@ -299,7 +299,6 @@ namespace AddOne.Framework.Service
             try
             {
                 string pipeName = (string)AppDomain.CurrentDomain.GetData("AddOnePIPE");
-
                 host = new ServiceHost(
                     this,
                     new Uri[] { new Uri("net.pipe://localhost/" + pipeName) });
