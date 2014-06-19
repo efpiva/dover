@@ -121,11 +121,43 @@ namespace AddOne.Framework.DAO
             return !(bool)ret;
         }
 
-        internal override IForm CreateUserForm(string xml, string type)
+        internal override void LoadBatchAction(string xml)
+        {
+            application.LoadBatchActions(xml);
+            ParseBatchResult(application.GetLastBatchResults());
+        }
+        internal override IForm LoadFormBatchAction(string xml)
         {
             int formCount = application.Forms.Count;
             application.LoadBatchActions(xml);
-            return application.Forms.Item(formCount);
+            // TODO parse return and show error.
+            if (application.Forms.Count == (formCount+1)) // a form was created from XMl
+                return application.Forms.Item(formCount);
+            return null;
+        }
+
+        internal override IForm GetFormByUID(string formUID)
+        {
+            return application.Forms.Item(formUID);
+        }
+
+        private void ParseBatchResult(string xml)
+        {
+            XDocument doc = XDocument.Parse(xml);
+            var errors = doc.Element("result").Element("errors").Elements("error");
+            foreach (var error in errors)
+            {
+                string code = error.Attribute("code").With(x => x.Value);
+                string msg = error.Attribute("descr").With(x => x.Value);
+                if (code == null && msg != null)
+                {
+                    Logger.Error(string.Format(Messages.UIAPIError, msg));
+                }
+                else if (code != null && msg != null)
+                {
+                    Logger.Error(string.Format(Messages.UIAPICodeAndError, code, msg));
+                }
+            }   
         }
     }
 }

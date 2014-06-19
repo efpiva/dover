@@ -225,6 +225,12 @@
   <data name="SuccessUpdatingDI" xml:space="preserve">
     <value>{0} {1} atualizado com sucesso</value>
   </data>
+  <data name="UIAPICodeAndError" xml:space="preserve">
+    <value>Erro {0} executando XML em UI API - {1}</value>
+  </data>
+  <data name="UIAPIError" xml:space="preserve">
+    <value>Erro executando XML em UI API - {0}</value>
+  </data>
   <data name="UpdateDINotNecessary" xml:space="preserve">
     <value>Atualização de {0} não necessária</value>
   </data>

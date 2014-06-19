@@ -385,6 +385,24 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erro {0} executando XML em UI API - {1}.
+        /// </summary>
+        internal static string UIAPICodeAndError {
+            get {
+                return ResourceManager.GetString("UIAPICodeAndError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erro executando XML em UI API - {0}.
+        /// </summary>
+        internal static string UIAPIError {
+            get {
+                return ResourceManager.GetString("UIAPIError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Atualização de {0} não necessária.
         /// </summary>
         internal static string UpdateDINotNecessary {
