@@ -205,7 +205,7 @@
     <value>Desligando AddIn {0}</value>
   </data>
   <data name="StartThisError" xml:space="preserve">
-    <value>Erro inicializando addin</value>
+    <value>Erro inicializando addin {0}</value>
   </data>
   <data name="UnhandledCrypto" xml:space="preserve">
     <value>Erro inesperado em CryptoService</value>

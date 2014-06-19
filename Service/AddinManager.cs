@@ -216,9 +216,9 @@ namespace AddOne.Framework.Service
 
         internal void StartThis()
         {
+            string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
             try
             {
-                string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
                 Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
                 RegisterObjects(thisAsm);
                 var addin = thisAsm.FullName;
@@ -241,7 +241,7 @@ namespace AddOne.Framework.Service
             }
             catch (Exception e)
             {
-                Logger.Error(Messages.StartThisError, e);
+                Logger.Error(string.Format(Messages.StartThisError, thisAsmName), e);
             }
         }
 

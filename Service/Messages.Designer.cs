@@ -385,7 +385,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro inicializando addin.
+        ///   Looks up a localized string similar to Erro inicializando addin {0}.
         /// </summary>
         internal static string StartThisError {
             get {
