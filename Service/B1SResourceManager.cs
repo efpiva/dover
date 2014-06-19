@@ -143,7 +143,14 @@ namespace AddOne.Framework.Service
                     Logger.Error(string.Format(Messages.B1SResourceKeyNotFound, assemblyName, resourceKey));
                     throw new ArgumentException(string.Format(Messages.B1SResourceKeyNotFound, assemblyName, resourceKey));
                 }
-                return content.First().Element("content").Attribute("desc");
+                if (content.Count() != 0)
+                {
+                    return content.First().Element("content").Attribute("desc");
+                }
+                else
+                {
+                    return null;
+                }
             }
             else
             {
