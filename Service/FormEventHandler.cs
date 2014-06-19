@@ -5,6 +5,7 @@ using System.Text;
 using SAPbouiCOM;
 using AddOne.Framework.Form;
 using System.Reflection;
+using AddOne.Framework.Factory;
 
 namespace AddOne.Framework.Service
 {
@@ -15,6 +16,7 @@ namespace AddOne.Framework.Service
         private B1SResourceManager resourceManager;
 
         Dictionary<string, object> formEvents = new Dictionary<string, object>();
+        Dictionary<string, Type> formImplementationType = new Dictionary<string, Type>();
         Dictionary<string, AddOneFormBase> events = new Dictionary<string, AddOneFormBase>();
         Dictionary<string, List<AddOneFormBase>> pendingForms = new Dictionary<string, List<AddOneFormBase>>();
 
@@ -43,7 +45,10 @@ namespace AddOne.Framework.Service
             var formAttributes = (from type in currentAsm.GetTypes()
                                   from attribute in type.GetCustomAttributes(true)
                                   where attribute is SAPbouiCOM.Framework.FormAttribute
-                                  select new { FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute, Assembly = currentAsm }).ToList();
+                                  select new { 
+                                            FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute, 
+                                            Assembly = currentAsm,
+                                            Type = type}).ToList();
 
             foreach (var asmName in currentAsm.GetReferencedAssemblies())
             {
@@ -51,21 +56,35 @@ namespace AddOne.Framework.Service
                 formAttributes.AddRange((from type in dependency.GetTypes()
                                       from attribute in type.GetCustomAttributes(true)
                                       where attribute is SAPbouiCOM.Framework.FormAttribute
-                                      select new { FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute, Assembly = currentAsm }).ToList() );
+                                        && type == typeof(AddOneUserFormBase) 
+                                        /* do not register systemForm from ReferencedAssemblies, they
+                                         * should be registered by the addin owner. Just UserForms can be reused
+                                         */
+                                      select new {
+                                            FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute,
+                                            Assembly = currentAsm,
+                                            Type = type}).ToList() );
             }
 
             foreach (var attribute in formAttributes)
             {
-                RegisterFormEvent(attribute.FormAttribute.FormType);
-                resourceManager.ConfigureFormXML(attribute.Assembly.GetName().FullName,
-                    attribute.FormAttribute.Resource, attribute.FormAttribute.FormType);
+                RegisterFormEvent(attribute.FormAttribute.FormType, attribute.Type);
+                if (!string.IsNullOrEmpty(attribute.FormAttribute.Resource)) // UDOs have their XML stored in the database.
+                {
+                    resourceManager.ConfigureFormXML(attribute.Assembly.GetName().FullName,
+                        attribute.FormAttribute.Resource, attribute.FormAttribute.FormType);
+                }
             }            
         }
 
-        private void RegisterFormEvent(string formType)
+        private void RegisterFormEvent(string formType, Type formImplType)
         {
-            if (!formEvents.ContainsKey(formType))
+            if (!formEvents.ContainsKey(formType) && !formImplementationType.ContainsKey(formType))
             {
+                if (typeof(AddOneSystemFormBase).IsAssignableFrom(formImplType) ||
+                        typeof(AddOneUDOFormBase).IsAssignableFrom(formImplType)) // we just need this for system and udo forms.
+                    formImplementationType.Add(formType, formImplType);
+
                 var eventForm = sapApp.Forms.GetEventForm(formType);
                 formEvents.Add(formType, eventForm);
                 eventForm.LoadBefore += new _IEventFormEvents_LoadBeforeEventHandler(this.OnFormLoadBefore);
@@ -125,6 +144,7 @@ namespace AddOne.Framework.Service
         private void OnFormLoadBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             List<AddOneFormBase> pendingList; // forms that does not have UniqueID.
+            Type implementationType;
             IForm form = sapApp.Forms.Item(pVal.FormUID);
             string key = form.TypeEx;
             BubbleEvent = true;
@@ -132,10 +152,17 @@ namespace AddOne.Framework.Service
             if (pendingForms.TryGetValue(key, out pendingList))
             {
                 pendingForms.Remove(key);
-                foreach(var addOneForm in pendingList)
+                foreach (var addOneForm in pendingList)
                 {
                     addOneForm.OnFormLoadBefore(pVal, out BubbleEvent);
                 }
+            }
+            else if (formImplementationType.TryGetValue(key, out implementationType))
+            // if no form was registered, it's a system or udo form.
+            {
+                AddOneFormBase addOneSysForm = (AddOneFormBase)ContainerManager.Container.Resolve(implementationType);
+                addOneSysForm.FormUID = pVal.FormUID;
+                RegisterForm(pVal.FormUID, addOneSysForm);
             }
         }
 
@@ -145,7 +172,6 @@ namespace AddOne.Framework.Service
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormLoadAfter(pVal);
-                events.Remove(pVal.FormUID);
             }
         }
 
@@ -450,6 +476,7 @@ namespace AddOne.Framework.Service
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormCloseAfter(pVal);
+                events.Remove(pVal.FormUID);
             }
         }
 

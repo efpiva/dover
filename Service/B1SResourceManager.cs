@@ -7,6 +7,7 @@ using AddOne.Framework.Attribute;
 using Castle.Core.Logging;
 using System.Reflection;
 using AddOne.Framework.Monad;
+using SAPbouiCOM;
 
 namespace AddOne.Framework.Service
 {
@@ -55,6 +56,38 @@ namespace AddOne.Framework.Service
             }
         }
 
+        internal string GetSystemFormXML(string assemblyName, string resourceKey, string formUID, IForm sysForm)
+        {
+            var attr = GetFormAttribute(assemblyName, resourceKey);
+            if (attr != null)
+            {
+                return ConfigureSystemForm(attr, formUID, sysForm);
+            }
+            return string.Empty;
+        }
+
+        private string ConfigureSystemForm(XAttribute attribute, string formUID, IForm sysForm)
+        {
+            var doc = XDocument.Load(XMLClass.GenerateStreamFromString(attribute.Value));
+            var formattedElement = (from app in doc.Elements("Application")
+                                    from forms in app.Elements("forms")
+                                    from action in forms.Elements("action")
+                                    from form in action.Elements("form")
+                                    where action.Attribute("type").Value == "update"
+                                    select form);
+
+            if (formattedElement.Count() > 0) // system form and udo does not have add.
+            {
+                XElement xmlForm = formattedElement.First();
+                xmlForm.RemoveAttributes(); // we do not want to update form geometry. Just form UID.
+                XAttribute uid = new XAttribute("uid", formUID);
+                xmlForm.Add(uid);
+
+                return doc.ToString();
+            }
+
+            return string.Empty;
+        }
 
         internal string GetFormXML(string assemblyName, string resourceKey)
         {
@@ -69,20 +102,22 @@ namespace AddOne.Framework.Service
         internal void ConfigureFormXML(string assemblyName, string resourceKey, string formType)
         {
             XAttribute attribute = GetFormAttribute(assemblyName, resourceKey);
-            var doc = XDocument.Load(XMLClass.GenerateStreamFromString(attribute.Value));
-            var formattedElement = (from app in doc.Elements("Application")
-                                    from forms in app.Elements("forms")
-                                    from action in forms.Elements("action")
-                                    from form in action.Elements("form")
-                                    where action.Attribute("type").Value == "add"
-                                    select form);
-
-            if (formattedElement.Count() > 0) // system form and udo does not have add.
+            if (attribute != null)
             {
-                formattedElement.First().Attribute("FormType").Value = formType;
-                attribute.Value = doc.ToString();
-            }
+                var doc = XDocument.Load(XMLClass.GenerateStreamFromString(attribute.Value));
+                var formattedElement = (from app in doc.Elements("Application")
+                                        from forms in app.Elements("forms")
+                                        from action in forms.Elements("action")
+                                        from form in action.Elements("form")
+                                        where action.Attribute("type").Value == "add"
+                                        select form);
 
+                if (formattedElement.Count() > 0) // system form and udo does not have add.
+                {
+                    formattedElement.First().Attribute("FormType").Value = formType;
+                    attribute.Value = doc.ToString();
+                }
+            }
         }
 
         private XAttribute GetFormAttribute(string assemblyName, string resourceKey)

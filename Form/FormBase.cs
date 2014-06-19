@@ -26,6 +26,8 @@ namespace AddOne.Framework.Form
             return this.UIAPIRawForm.Items.Item(key);
         }
 
+        internal virtual string FormUID { private get; set; }
+
         public IForm UIAPIRawForm { get; internal set; }
         public bool Alive { get; internal set; }
         public bool Initialized { get; internal set; }
