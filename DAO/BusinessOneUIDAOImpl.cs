@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using AddOne.Framework.Attribute;
+using AddOne.Framework.Factory;
 using AddOne.Framework.Model.SAP;
 using AddOne.Framework.Monad;
-using SAPbouiCOM;
-using Castle.Core.Logging;
-using AddOne.Framework.Factory;
-using System.Reflection;
-using System.IO;
 using AddOne.Framework.Service;
+using Castle.Core.Logging;
+using SAPbouiCOM;
+using System.Xml.Linq;
 
 namespace AddOne.Framework.DAO
 {
