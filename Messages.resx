@@ -133,7 +133,7 @@
     <value>Criada AppFolder {0} - iniciando addins e core</value>
   </data>
   <data name="ErrorStartup" xml:space="preserve">
-    <value>Erro iniciando addins</value>
+    <value>Erro iniciando addin {0}</value>
   </data>
   <data name="FileDialogTitle" xml:space="preserve">
     <value>Informe o nome do Arquivo</value>
@@ -148,7 +148,7 @@
     <value>Preparando Framework para inicialização</value>
   </data>
   <data name="Starting" xml:space="preserve">
-    <value>Iniciando Framework({0})</value>
+    <value>Iniciando {0}({1})</value>
   </data>
   <data name="StartupFolder" xml:space="preserve">
     <value>Iniciando assemblies na pasta {0}</value>

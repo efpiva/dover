@@ -29,9 +29,10 @@ namespace AddOne.Framework
 
         public void StartUp()
         {
+            string moduleName = this.GetType().Assembly.GetName().Name;
             try
             {
-                Logger.Info(String.Format(Messages.Starting, this.GetType().Assembly.GetName().Version));
+                Logger.Info(String.Format(Messages.Starting, moduleName, this.GetType().Assembly.GetName().Version));
                 var addins = licenseManager.ListAddins();
                 addinLoader.LoadAddins(addins);
                 dispatcher.RegisterEvents();
@@ -40,7 +41,7 @@ namespace AddOne.Framework
             }
             catch (Exception e)
             {
-                Logger.Fatal(Messages.ErrorStartup, e);
+                Logger.Fatal(string.Format(Messages.ErrorStartup, moduleName), e);
                 Environment.Exit(10);
             }
         }
@@ -48,16 +49,18 @@ namespace AddOne.Framework
 
         public void StartThis()
         {
+            string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
             try
             {
-                Logger.Info(String.Format(Messages.Starting, this.GetType().Assembly.GetName().Version));
+                Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
+                Logger.Info(String.Format(Messages.Starting, thisAsmName, thisAsm.GetName().Version));
                 addinLoader.StartThis();
                 dispatcher.RegisterEvents();
                 formEventHandler.RegisterForms();
             }
             catch (Exception e)
             {
-                Logger.Fatal(Messages.ErrorStartup, e);
+                Logger.Fatal(string.Format(Messages.ErrorStartup, thisAsmName), e);
                 Environment.Exit(10);
             }
         }

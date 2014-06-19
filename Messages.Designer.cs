@@ -106,7 +106,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro iniciando addins.
+        ///   Looks up a localized string similar to Erro iniciando addin {0}.
         /// </summary>
         internal static string ErrorStartup {
             get {
@@ -151,7 +151,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Iniciando Framework({0}).
+        ///   Looks up a localized string similar to Iniciando {0}({1}).
         /// </summary>
         internal static string Starting {
             get {
