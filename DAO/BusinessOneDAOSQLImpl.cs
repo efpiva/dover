@@ -13,6 +13,7 @@ using AddOne.Framework.Model.SAP;
 using AddOne.Framework.Model;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Xml.Linq;
+using AddOne.Framework.Log;
 
 namespace AddOne.Framework.DAO
 {
@@ -52,7 +53,7 @@ namespace AddOne.Framework.DAO
             company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
             company.XMLAsString = true;
 
-            Logger.Debug(String.Format(Messages.StartUpdateOrSave, bom.GetName()));
+            Logger.Debug(DebugString.Format(Messages.StartUpdateOrSave, bom.GetName()));
             int length = company.GetXMLelementCount(xmlBom);
             for (int i = 0; i < length; i++)
             {
@@ -90,7 +91,7 @@ namespace AddOne.Framework.DAO
                         System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
                 }
             }
-            Logger.Debug(String.Format(Messages.EndUpdateOrSave, bom.GetName()));
+            Logger.Debug(DebugString.Format(Messages.EndUpdateOrSave, bom.GetName()));
 
 
         }
@@ -145,7 +146,7 @@ namespace AddOne.Framework.DAO
             }
             else
             {
-                Logger.Debug(String.Format(Messages.UpdateDINotNecessary, name));
+                Logger.Debug(DebugString.Format(Messages.UpdateDINotNecessary, name));
             }
         }
 
@@ -176,7 +177,7 @@ namespace AddOne.Framework.DAO
         public override string GetNextCode(string udt)
         {
             SAPbobsCOM.Recordset objRecordSet = (SAPbobsCOM.Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
-            Logger.Debug(String.Format(Messages.GetNextCodeStart, udt));
+            Logger.Debug(DebugString.Format(Messages.GetNextCodeStart, udt));
             string id;
             try
             {
@@ -239,7 +240,7 @@ namespace AddOne.Framework.DAO
                 if (objRecordSet != null)
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(objRecordSet);
             }
-            Logger.Debug(String.Format(Messages.GetNextCodeEnd, udt));
+            Logger.Debug(DebugString.Format(Messages.GetNextCodeEnd, udt));
 
             return (id);
         }
@@ -252,7 +253,7 @@ namespace AddOne.Framework.DAO
         public override void ExecuteStatement(string sql)
         {
             var objRecordSet = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
-            Logger.Debug(String.Format(Messages.StartExecuteStatement, sql));
+            Logger.Debug(DebugString.Format(Messages.StartExecuteStatement, sql));
             try
             {
                 objRecordSet.DoQuery(sql);
@@ -267,7 +268,7 @@ namespace AddOne.Framework.DAO
                 if (objRecordSet != null)
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(objRecordSet);
             }
-            Logger.Debug(String.Format(Messages.EndExecuteStatement, sql));
+            Logger.Debug(DebugString.Format(Messages.EndExecuteStatement, sql));
         }
 
         public override T ExecuteSqlForObject<T>(string sql)
@@ -291,13 +292,13 @@ namespace AddOne.Framework.DAO
                             Logger.Error(errMsg);
                             throw new ArgumentException(errMsg);
                         }
-                        Logger.Debug(String.Format(Messages.ExecuteForObjectReturn, obj, sql));
+                        Logger.Debug(DebugString.Format(Messages.ExecuteForObjectReturn, obj, sql));
                         return (T)obj;
                     }
                     else
                     {
                         var ret = PrepareObject<T>(rs);
-                        Logger.Debug(String.Format(Messages.ExecuteForObjectReturn, ret, sql));
+                        Logger.Debug(DebugString.Format(Messages.ExecuteForObjectReturn, ret, sql));
                         return ret;
                     }
                 }
@@ -325,7 +326,7 @@ namespace AddOne.Framework.DAO
             var retValue = new List<T>();
             Type type = typeof(T);
             Recordset rs = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
-            Logger.Debug(String.Format(Messages.ExecuteForListCommand, sql));
+            Logger.Debug(DebugString.Format(Messages.ExecuteForListCommand, sql));
 
             try
             {
@@ -348,7 +349,7 @@ namespace AddOne.Framework.DAO
                         }
                         obj = (T)rs.Fields.Item(0).Value;
                     }
-                    Logger.Debug(String.Format(Messages.ExecuteForListReturn, obj));
+                    Logger.Debug(DebugString.Format(Messages.ExecuteForListReturn, obj));
                     retValue.Add(obj);
                     rs.MoveNext();
                 }
@@ -528,7 +529,7 @@ namespace AddOne.Framework.DAO
         {
             UserPermissionTree userPermissionTree = null;
 
-            Logger.Debug(string.Format(Messages.PermissionStart, permissionAttribute.PermissionID));
+            Logger.Debug(DebugString.Format(Messages.PermissionStart, permissionAttribute.PermissionID));
             try
             {
                 userPermissionTree = (UserPermissionTree)company.GetBusinessObject(BoObjectTypes.oUserPermissionTree);
@@ -551,7 +552,7 @@ namespace AddOne.Framework.DAO
                 if (userPermissionTree != null)
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(userPermissionTree);
             }
-            Logger.Debug(string.Format(Messages.PermissionEnd, permissionAttribute.PermissionID));
+            Logger.Debug(DebugString.Format(Messages.PermissionEnd, permissionAttribute.PermissionID));
 
         }
 

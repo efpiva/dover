@@ -60,7 +60,7 @@ namespace AddOne.Framework.Factory
             Container.AddFacility<LoggingFacility>(f => f.UseLog4Net(assemblyName + ".config"));
 
             var logger = Container.Resolve<ILogger>();
-            logger.Debug(String.Format(Messages.StartupFolder, runningFolder));
+            logger.Debug(DebugString.Format(Messages.StartupFolder, runningFolder));
             SAPServiceFactory.Logger = logger;
 
             var b1dao = Container.Resolve<BusinessOneDAO>();

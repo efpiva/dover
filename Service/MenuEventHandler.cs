@@ -8,6 +8,7 @@ using AddOne.Framework.Attribute;
 using AddOne.Framework.Factory;
 using SAPbouiCOM.Framework;
 using AddOne.Framework.Form;
+using AddOne.Framework.Log;
 
 namespace AddOne.Framework.Service
 {
@@ -49,18 +50,18 @@ namespace AddOne.Framework.Service
                 var obj = ContainerManager.Container.Resolve(type);
                 if (obj is FormBase || obj is AddOneFormBase)
                 {
-                    Logger.Debug(String.Format(Messages.MenuDispatchInfo, pVal.MenuUID, type));
+                    Logger.Debug(DebugString.Format(Messages.MenuDispatchInfo, pVal.MenuUID, type));
                     var method = type.GetMethod("Show");
                     method.Invoke(obj, null);
                 }
                 else if (type.IsGenericParameter && type.DeclaringMethod != null)
                 {
-                    Logger.Debug(String.Format(Messages.MenuDispatchInfo, pVal.MenuUID, type));
+                    Logger.Debug(DebugString.Format(Messages.MenuDispatchInfo, pVal.MenuUID, type));
                     type.DeclaringMethod.Invoke(obj, null);
                 }
                 else
                 {
-                    Logger.Debug(string.Format(Messages.FileMissing, type, "?"));
+                    Logger.Debug(DebugString.Format(Messages.FileMissing, type, "?"));
                 }
             }
             catch (Exception e)
@@ -73,7 +74,7 @@ namespace AddOne.Framework.Service
         internal void RegisterMenuEvent(MenuEventAttribute menuEventAttribute)
         {
             List<MenuEventAttribute> events;
-            Logger.Debug(String.Format(Messages.RegisteringMenuEvent, menuEventAttribute.UniqueUID, menuEventAttribute.OriginalType));
+            Logger.Debug(DebugString.Format(Messages.RegisteringMenuEvent, menuEventAttribute.UniqueUID, menuEventAttribute.OriginalType));
             menuEvents.TryGetValue(menuEventAttribute.UniqueUID, out events);
             if (events == null)
             {

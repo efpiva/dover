@@ -9,6 +9,7 @@ using AddOne.Framework.Service;
 using Castle.Core.Logging;
 using AddOne.Framework.Model;
 using AddOne.Framework.Factory;
+using AddOne.Framework.Log;
 
 namespace AddOne.Framework
 {
@@ -43,7 +44,7 @@ namespace AddOne.Framework
                     return;
 
                 string appFolder = CheckAppFolder();
-                Logger.Debug(String.Format(Messages.CreatedAppFolder, appFolder));
+                Logger.Debug(DebugString.Format(Messages.CreatedAppFolder, appFolder));
 
                 assemblyLoader.UpdateAssemblies(AssemblySource.Core, appFolder);
                 assemblyLoader.UpdateAssemblies(AssemblySource.AddIn, appFolder);

@@ -14,6 +14,7 @@ using AddOne.Framework.Model;
 using AddOne.Framework.Model.SAP;
 using AddOne.Framework.Remoting;
 using Castle.Core.Logging;
+using AddOne.Framework.Log;
 
 namespace AddOne.Framework.Service
 {
@@ -129,7 +130,7 @@ namespace AddOne.Framework.Service
                 var attrs = type.GetCustomAttributes(true);
                 foreach (var attr in attrs)
                 {
-                    Logger.Debug(String.Format(Messages.ProcessingAttribute, attr, type));
+                    Logger.Debug(DebugString.Format(Messages.ProcessingAttribute, attr, type));
                     if (attr is ResourceBOMAttribute)
                     {
                         ProcessAddInAttribute((ResourceBOMAttribute)attr, assembly);
@@ -263,7 +264,7 @@ namespace AddOne.Framework.Service
 
             foreach (var attr in attrs)
             {
-                Logger.Debug(String.Format(Messages.ProcessingAttribute, attr, type));
+                Logger.Debug(DebugString.Format(Messages.ProcessingAttribute, attr, type));
                 if (attr is MenuEventAttribute)
                 {
                     ((MenuEventAttribute)attr).OriginalType = type;

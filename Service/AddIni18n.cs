@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using AddOne.Framework.Monad;
 using Castle.Core.Logging;
+using AddOne.Framework.Log;
 
 namespace AddOne.Framework.Service
 {
@@ -32,11 +33,11 @@ namespace AddOne.Framework.Service
 
             if (resource != null)
             {
-                Logger.Debug(String.Format(Messages.GetLocalizedStringFoundResource, key));
+                Logger.Debug(DebugString.Format(Messages.GetLocalizedStringFoundResource, key));
             }
             else
             {
-                Logger.Debug(String.Format(Messages.GetLocalizedStringNotFoundResource, key));
+                Logger.Debug(DebugString.Format(Messages.GetLocalizedStringNotFoundResource, key));
             }
 
             return resource.GetString(propertyName);

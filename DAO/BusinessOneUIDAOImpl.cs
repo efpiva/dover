@@ -9,6 +9,7 @@ using AddOne.Framework.Service;
 using Castle.Core.Logging;
 using SAPbouiCOM;
 using System.Xml.Linq;
+using AddOne.Framework.Log;
 
 namespace AddOne.Framework.DAO
 {
@@ -70,7 +71,7 @@ namespace AddOne.Framework.DAO
                     }}}}};
 
             string xml = appCommand.Serialize();
-            Logger.Debug(String.Format(Messages.MenuStart, xml));
+            Logger.Debug(DebugString.Format(Messages.MenuStart, xml));
             try
             {
                 application.LoadBatchActions(ref xml);

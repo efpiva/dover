@@ -11,6 +11,7 @@ using Castle.Core.Logging;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Reflection;
 using AddOne.Framework.Attribute;
+using AddOne.Framework.Log;
 
 namespace AddOne.Framework.Service
 {
@@ -87,7 +88,7 @@ namespace AddOne.Framework.Service
         internal void UpdateAssemblies(AssemblySource assemblyLocation, string appFolder)
         {
             List<AssemblyInformation> asms;
-            Logger.Debug(String.Format(Messages.UpdatingAssembly, assemblyLocation));
+            Logger.Debug(DebugString.Format(Messages.UpdatingAssembly, assemblyLocation));
             if (assemblyLocation == AssemblySource.Core)
             {
                 asms = InitializeCoreAssemblies(appFolder);
@@ -266,14 +267,14 @@ namespace AddOne.Framework.Service
                     sb.Append(hash[i].ToString("X2"));
                 }
                 var md5sum = sb.ToString();
-                Logger.Debug(String.Format(Messages.MD5Sum, md5sum));
+                Logger.Debug(DebugString.Format(Messages.MD5Sum, md5sum));
                 return md5sum;
             }
         }
 
         private bool CheckSum(string asmHash, string filename)
         {
-            Logger.Debug(String.Format(Messages.CheckSum, asmHash, filename));
+            Logger.Debug(DebugString.Format(Messages.CheckSum, asmHash, filename));
             byte[] fileByte = File.ReadAllBytes(filename);
             return MD5Sum(fileByte) == asmHash;
         }

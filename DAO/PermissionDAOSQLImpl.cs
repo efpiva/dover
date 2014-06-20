@@ -5,6 +5,7 @@ using System.Text;
 using Castle.Core.Logging;
 using AddOne.Framework.Monad;
 using AddOne.Framework.Service;
+using AddOne.Framework.Log;
 
 namespace AddOne.Framework.DAO
 {
@@ -49,7 +50,7 @@ namespace AddOne.Framework.DAO
             foreach (var permission in addInPermission)
             {
                 addInHash.Add(permission.AddInName, permission.Permission);
-                Logger.Debug(String.Format(Messages.AddInPermission, permission.AddInName, permission.Permission));
+                Logger.Debug(DebugString.Format(Messages.AddInPermission, permission.AddInName, permission.Permission));
             }
             string currentUser = b1DAO.GetCurrentUser();
             addInPermission = b1DAO.ExecuteSqlForList<AddInPermission>(
@@ -64,7 +65,7 @@ namespace AddOne.Framework.DAO
             foreach (var permission in addInPermission)
             {
                 userAddInHash.Add(permission.AddInName, permission.Permission);
-                Logger.Debug(String.Format(Messages.AddInUserPermission, currentUser, permission.AddInName, permission.Permission));
+                Logger.Debug(DebugString.Format(Messages.AddInUserPermission, currentUser, permission.AddInName, permission.Permission));
             }
         }
 
