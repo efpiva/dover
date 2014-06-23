@@ -117,124 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddInNotFound" xml:space="preserve">
-    <value>No assembly named {0} found</value>
+  <data name="AddInError" xml:space="preserve">
+    <value>Erro no addin {0} versão {1}</value>
   </data>
-  <data name="B1SResourceMissing" xml:space="preserve">
-    <value>B1S resource for {0} not found</value>
+  <data name="AddInException" xml:space="preserve">
+    <value>Erro inesperado no AddOne: {0}\n {1}</value>
   </data>
-  <data name="CheckSum" xml:space="preserve">
-    <value>Checking MD5Sum({0}) - for {1}</value>
+  <data name="AllArgumentsMandatory" xml:space="preserve">
+    <value>Todos os argumentos são obrigatórios.</value>
   </data>
-  <data name="ConfiguringAddin" xml:space="preserve">
-    <value>Initializing AddIn configuration {0}</value>
+  <data name="ConnectionError" xml:space="preserve">
+    <value>Erro de conexão do AddOn: {0}</value>
   </data>
-  <data name="ErrorReboot" xml:space="preserve">
-    <value>Error restarting addin</value>
+  <data name="CreatedAppFolder" xml:space="preserve">
+    <value>Criada AppFolder {0} - iniciando addins e core</value>
   </data>
-  <data name="EventCompanyChangedError" xml:space="preserve">
-    <value>Error updating AddOne in company update event</value>
+  <data name="ErrorStartup" xml:space="preserve">
+    <value>Erro iniciando addin {0}</value>
   </data>
-  <data name="EventLanguageChangedError" xml:space="preserve">
-    <value>Error updating AddOne in language change event</value>
+  <data name="FileDialogTitle" xml:space="preserve">
+    <value>Informe o nome do Arquivo</value>
   </data>
-  <data name="FileError" xml:space="preserve">
-    <value>Error updating file {0} - Version {1}.</value>
+  <data name="FolderDialogTitle" xml:space="preserve">
+    <value>Informe a pasta</value>
   </data>
-  <data name="FileMissing" xml:space="preserve">
-    <value>File {0} - Version {1} - not found</value>
+  <data name="GeneralError" xml:space="preserve">
+    <value>Erro preparando Framework - {0}</value>
   </data>
-  <data name="FileUpdated" xml:space="preserve">
-    <value>Updating file {0} - Version {1}</value>
+  <data name="PreparingFramework" xml:space="preserve">
+    <value>Preparando Framework para inicialização</value>
   </data>
-  <data name="i18nError" xml:space="preserve">
-    <value>{0} name with incorrect i18n format.</value>
+  <data name="Starting" xml:space="preserve">
+    <value>Iniciando {0}({1})</value>
   </data>
-  <data name="IgnoringFile" xml:space="preserve">
-    <value>Ignoring file {0} - not found.</value>
-  </data>
-  <data name="InternalResourceMissing" xml:space="preserve">
-    <value>Resource {0} not found on assembly.</value>
-  </data>
-  <data name="InvalidLicense" xml:space="preserve">
-    <value>Invalid license.</value>
-  </data>
-  <data name="LicenseFileMissing" xml:space="preserve">
-    <value>File {0} not found</value>
-  </data>
-  <data name="MD5Sum" xml:space="preserve">
-    <value>MD5Sum: {0}</value>
-  </data>
-  <data name="MenuDispatchError" xml:space="preserve">
-    <value>Error processing event for menu {0} - {1}</value>
-  </data>
-  <data name="MenuDispatchInfo" xml:space="preserve">
-    <value>Processing event of type {0} for class/method {1}</value>
-  </data>
-  <data name="ProcessingAttribute" xml:space="preserve">
-    <value>Processing attribute {0} - class {1}</value>
-  </data>
-  <data name="RegisteredAssembly" xml:space="preserve">
-    <value>Assembly {0} registered in container</value>
-  </data>
-  <data name="RegisteringAssembly" xml:space="preserve">
-    <value>Registering assembly {0} on container</value>
-  </data>
-  <data name="RegisteringMenuEvent" xml:space="preserve">
-    <value>Registering menu {0} - for type {1}</value>
-  </data>
-  <data name="RemoveAddinSuccess" xml:space="preserve">
-    <value>Addin {0} successfully removed</value>
-  </data>
-  <data name="Restarting" xml:space="preserve">
-    <value>Restarting AddOne</value>
-  </data>
-  <data name="SaveAddInError" xml:space="preserve">
-    <value>Error saving addin {0}</value>
-  </data>
-  <data name="SaveAddInSuccess" xml:space="preserve">
-    <value>AddIn {0} successfully saved</value>
-  </data>
-  <data name="SaveLicenseSuccess" xml:space="preserve">
-    <value>License successfully saved</value>
-  </data>
-  <data name="Shutdown" xml:space="preserve">
-    <value>Shutting down AddOne</value>
-  </data>
-  <data name="ShutdownAddin" xml:space="preserve">
-    <value>Shutting down AddIn {0}</value>
-  </data>
-  <data name="StartThisError" xml:space="preserve">
-    <value>Error initializing addin {0}</value>
-  </data>
-  <data name="UnhandledCrypto" xml:space="preserve">
-    <value>Unexpected error in CryptoService</value>
-  </data>
-  <data name="UnhandledLicense" xml:space="preserve">
-    <value>Unexpected error initializing license service</value>
-  </data>
-  <data name="UpdatingAssembly" xml:space="preserve">
-    <value>Updating assemblies - {0}</value>
-  </data>
-  <data name="GetLocalizedStringFoundResource" xml:space="preserve">
-    <value>Resource {0} found</value>
-  </data>
-  <data name="GetLocalizedStringNotFoundResource" xml:space="preserve">
-    <value>Resource {0} not found</value>
-  </data>
-  <data name="ResourceNotFound" xml:space="preserve">
-    <value>Resource {1} not found for asm {0}</value>
-  </data>
-  <data name="B1SResourceKeyNotFound" xml:space="preserve">
-    <value>Tag for form {1} not found on assembly {0}</value>
-  </data>
-  <data name="B1SResourceVSICreatedNotFound" xml:space="preserve">
-    <value>Tag VSICreated not found on assembly {0}</value>
-  </data>
-  <data name="FormTypeNotUnique" xml:space="preserve">
-    <value>FormType {0} is not unique. It's not possible to register UI events.</value>
-  </data>
-  <data name="LicenseAddInNotFound" xml:space="preserve">
-    <value>Addin {0} not found during license load.</value>
+  <data name="StartupFolder" xml:space="preserve">
+    <value>Iniciando assemblies na pasta {0}</value>
   </data>
 </root>

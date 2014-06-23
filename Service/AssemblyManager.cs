@@ -40,11 +40,11 @@ namespace AddOne.Framework.Service
         };
         private AssemblyDAO asmDAO;
         private LicenseManager licenseManager;
-        private AddIni18n addIni18n;
+        private I18NService addIni18n;
         public ILogger Logger { get; set; }
 
 
-        public AssemblyManager(AssemblyDAO asmDAO, LicenseManager licenseManager, AddIni18n addIni18n)
+        public AssemblyManager(AssemblyDAO asmDAO, LicenseManager licenseManager, I18NService addIni18n)
         {
             this.asmDAO = asmDAO;
             this.licenseManager = licenseManager;

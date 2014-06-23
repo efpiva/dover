@@ -5,6 +5,7 @@ using System.Text;
 using AddOne.Framework.Factory;
 using System.Threading;
 using AddOne.Framework.Remoting;
+using AddOne.Framework.Service;
 
 namespace AddOne.Framework
 {
@@ -12,6 +13,12 @@ namespace AddOne.Framework
     {
         internal string AppFolder;
         internal AppDomain Inception;
+        private I18NService I18NService;
+
+        public MicroBoot(I18NService I18NService)
+        {
+            this.I18NService = I18NService;
+        }
 
         internal void StartInception()
         {
@@ -27,6 +34,7 @@ namespace AddOne.Framework
         {
             var thread = new Thread(new ThreadStart(this.PrivateBoot));
             thread.SetApartmentState(ApartmentState.STA);
+            I18NService.ConfigureThreadI18n(thread);
             thread.Start();
         }
 

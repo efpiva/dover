@@ -20,17 +20,21 @@ namespace AddOne.Framework
         private AssemblyManager assemblyLoader;
         private MicroCoreEventDispatcher dispatcher;
         private MicroBoot microBoot;
+        private I18NService i18nService;
 
         public ILogger Logger { get; set; }
 
         public MicroCore(DatabaseConfiguration dbConf, SAPbobsCOM.Company company, AssemblyManager assemblyLoader,
-            MicroCoreEventDispatcher dispatcher, MicroBoot microBoot)
+            MicroCoreEventDispatcher dispatcher, MicroBoot microBoot, I18NService i18nService)
         {
             this.microBoot = microBoot;
             this.company = company;
             this.dbConf = dbConf;
             this.assemblyLoader = assemblyLoader;
             this.dispatcher = dispatcher;
+            this.i18nService = i18nService;
+
+            i18nService.ConfigureThreadI18n(System.Threading.Thread.CurrentThread);
         }
 
         public void PrepareFramework()

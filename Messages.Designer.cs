@@ -61,7 +61,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro no addin {0} versão {1}.
+        ///   Looks up a localized string similar to Erro in addin {0} version {1}.
         /// </summary>
         internal static string AddInError {
             get {
@@ -70,7 +70,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro inesperado no AddOne: {0}\n {1}.
+        ///   Looks up a localized string similar to Unexpected error on AddOne: {0}\n {1}.
         /// </summary>
         internal static string AddInException {
             get {
@@ -79,7 +79,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Todos os argumentos são obrigatórios..
+        ///   Looks up a localized string similar to All arguments are mandatory.
         /// </summary>
         internal static string AllArgumentsMandatory {
             get {
@@ -88,7 +88,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro de conexão do AddOn: {0}.
+        ///   Looks up a localized string similar to Connection error on AddOn: {0}.
         /// </summary>
         internal static string ConnectionError {
             get {
@@ -97,7 +97,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Criada AppFolder {0} - iniciando addins e core.
+        ///   Looks up a localized string similar to Created AppFolder {0} - Initializing Core and Addins.
         /// </summary>
         internal static string CreatedAppFolder {
             get {
@@ -106,7 +106,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro iniciando addin {0}.
+        ///   Looks up a localized string similar to Error initializing addins {0}.
         /// </summary>
         internal static string ErrorStartup {
             get {
@@ -115,7 +115,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Informe o nome do Arquivo.
+        ///   Looks up a localized string similar to Please inform a file name.
         /// </summary>
         internal static string FileDialogTitle {
             get {
@@ -124,7 +124,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Informe a pasta.
+        ///   Looks up a localized string similar to Please select a folder.
         /// </summary>
         internal static string FolderDialogTitle {
             get {
@@ -133,7 +133,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro preparando Framework - {0}.
+        ///   Looks up a localized string similar to Error preparing Framework - {0}.
         /// </summary>
         internal static string GeneralError {
             get {
@@ -142,7 +142,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Preparando Framework para inicialização.
+        ///   Looks up a localized string similar to Preparing Framework for initialization.
         /// </summary>
         internal static string PreparingFramework {
             get {
@@ -151,7 +151,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Iniciando {0}({1}).
+        ///   Looks up a localized string similar to Initializing {0}({1}).
         /// </summary>
         internal static string Starting {
             get {
@@ -160,7 +160,7 @@ namespace AddOne.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Iniciando assemblies na pasta {0}.
+        ///   Looks up a localized string similar to Initializing assemblies on folder {0}.
         /// </summary>
         internal static string StartupFolder {
             get {

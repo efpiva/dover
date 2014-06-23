@@ -118,123 +118,123 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddInPermission" xml:space="preserve">
-    <value>Adicionando permissão para addin {0} - Valor: {1}</value>
+    <value>Added permission for addin {0} - Value: {1}</value>
   </data>
   <data name="AddInUserPermission" xml:space="preserve">
-    <value>Adicionando permissão para usuário {0} - addin {1} - Valor: {2}</value>
+    <value>Added permission for user {0} - addin {1} - Value: {2}</value>
   </data>
   <data name="AuthorizationMessage" xml:space="preserve">
-    <value>Retorno do metodo {1} de tipo {0} nao e booleano</value>
+    <value>Return type of method {1} of type {0} is not boolean</value>
   </data>
   <data name="DocumentObjectTypeInvalid" xml:space="preserve">
-    <value>Tipo Documents precisa ter boObjectType definido</value>
+    <value>Document type need to have boObjectType defined</value>
   </data>
   <data name="EndExecuteStatement" xml:space="preserve">
-    <value>Finalizando execução de SQL - {0}</value>
+    <value>SQL execution finished - {0}</value>
   </data>
   <data name="EndUpdateOrSave" xml:space="preserve">
-    <value>Finalizado UpdateOrSave para {0}</value>
+    <value>Executed UpdateOrSave for {0}</value>
   </data>
   <data name="ErrorAddingDI" xml:space="preserve">
-    <value>Erro adicionando {0} {1} - {2}</value>
+    <value>Added {0} {1} - {2}</value>
   </data>
   <data name="ErrorExecuteStatement" xml:space="preserve">
-    <value>Erro executando SQL {0} - {1}</value>
+    <value>SQL Statement error executing {0} - {1}</value>
   </data>
   <data name="ErrorUpdatingDI" xml:space="preserve">
-    <value>Erro atualizando {0} {1} - {2}</value>
+    <value>Error updating {0} {1} - {2}</value>
   </data>
   <data name="ExecuteForListCommand" xml:space="preserve">
-    <value>Executando SQL {0}</value>
+    <value>Executing SQL {0}</value>
   </data>
   <data name="ExecuteForListReturn" xml:space="preserve">
-    <value>Adicionado objeto {0} ao retorno em ExecuteSqlForList</value>
+    <value>Added object {0} for ExecuteSqlForList return list object</value>
   </data>
   <data name="ExecuteForObjectArgument" xml:space="preserve">
-    <value>Objeto do tipo {0}. Retorno da consulta no tipo {1}</value>
+    <value>Object of type {0}. SQL object type is {1}</value>
   </data>
   <data name="ExecuteForObjectError" xml:space="preserve">
-    <value>Erro executando SQL: {0}</value>
+    <value>SQL Select for Object error: {0}</value>
   </data>
   <data name="ExecuteForObjectReturn" xml:space="preserve">
-    <value>Retornando objeto {0} em para consulta {1}</value>
+    <value>Returning object {0} for select statement {1}</value>
   </data>
   <data name="GetBomFromXMLError" xml:space="preserve">
-    <value>Erro lendo BOM do XML - {0}</value>
+    <value>Error reading BOM for XML - {0}</value>
   </data>
   <data name="GetNextCodeEnd" xml:space="preserve">
-    <value>Finalizada execução de GetNextCode para {0}</value>
+    <value>Finished execution of GetNextCode for {0}</value>
   </data>
   <data name="GetNextCodeStart" xml:space="preserve">
-    <value>Iniciando execução de GetNextCode para {0}</value>
+    <value>Initializing executing of GetNextCode for {0}</value>
   </data>
   <data name="GetXMLBOMError" xml:space="preserve">
-    <value>Erro processando XML BOM - {0}</value>
+    <value>Error processing XML BOM - {0}</value>
   </data>
   <data name="MenuEnd" xml:space="preserve">
-    <value>Menu Processado</value>
+    <value>Menu processed</value>
   </data>
   <data name="MenuError" xml:space="preserve">
-    <value>Erro processando Menu - {0}</value>
+    <value>Erro processing Menu - {0}</value>
   </data>
   <data name="MenuProcess" xml:space="preserve">
-    <value>Processando Menu {0} - {1}</value>
+    <value>Processing Menu {0} - {1}</value>
   </data>
   <data name="MenuStart" xml:space="preserve">
-    <value>Processando XML de Menu.\n{0}</value>
+    <value>Processing Menu XML.\n{0}</value>
   </data>
   <data name="PermissionEnd" xml:space="preserve">
-    <value>Finalizado processamento da permissão {0}</value>
+    <value>Permission processing ended for {0}</value>
   </data>
   <data name="PermissionError" xml:space="preserve">
-    <value>Erro adicionando Permissão {0} - {1}</value>
+    <value>Error adding permission {0} - {1}</value>
   </data>
   <data name="PermissionStart" xml:space="preserve">
-    <value>Iniciando processamento da permissão {0}</value>
+    <value>Starting permission processing {0}</value>
   </data>
   <data name="PermissionSuccess" xml:space="preserve">
-    <value>Permissão {0} adicionada</value>
+    <value>Permission {0} added</value>
   </data>
   <data name="PermissionUpdateError" xml:space="preserve">
-    <value>Erro atualizando Permissão {0} - {1}</value>
+    <value>Error updating permission {0} - {1}</value>
   </data>
   <data name="PermissionUpdateSuccess" xml:space="preserve">
-    <value>Permissão {0} atualizada</value>
+    <value>Permission {0} updated</value>
   </data>
   <data name="PrepareObjectError" xml:space="preserve">
-    <value>Erro setando propriedade {0}</value>
+    <value>Error assigning property {0}</value>
   </data>
   <data name="PrepareObjectInvalidParameter" xml:space="preserve">
-    <value>Objeto {0} tem propriedade {1} do tipo {2}. Retorno da consulta no tipo {3}.</value>
+    <value>Object {0} has property {1} of type {2}. Statement object type is {3}.</value>
   </data>
   <data name="PrepareObjectMissingParameter" xml:space="preserve">
-    <value>Objeto {0} não tem tem propriedade {1}</value>
+    <value>Object {0} does not have property {1}</value>
   </data>
   <data name="ProcessTupleError" xml:space="preserve">
-    <value>Type {0} nao suportado</value>
+    <value>Type {0} not supported</value>
   </data>
   <data name="StartExecuteStatement" xml:space="preserve">
-    <value>Inicializando execução de SQL - {0}</value>
+    <value>Starting SQL statement - {0}</value>
   </data>
   <data name="StartUpdateOrSave" xml:space="preserve">
-    <value>Iniciando UpdateOrSave para {0}</value>
+    <value>Started UpdateOrSave for {0}</value>
   </data>
   <data name="SuccessAddindDI" xml:space="preserve">
-    <value>{0} {1} adicionado com sucesso</value>
+    <value>{0} {1} successfully added</value>
   </data>
   <data name="SuccessUpdatingDI" xml:space="preserve">
-    <value>{0} {1} atualizado com sucesso</value>
+    <value>{0} {1} successfully updated</value>
   </data>
   <data name="UIAPICodeAndError" xml:space="preserve">
-    <value>Erro {0} executando XML em UI API - {1}</value>
+    <value>Error {0} executing UI-API XML - {1}</value>
   </data>
   <data name="UIAPIError" xml:space="preserve">
-    <value>Erro executando XML em UI API - {0}</value>
+    <value>Error executing UI-API XML - {0}</value>
   </data>
   <data name="UpdateDINotNecessary" xml:space="preserve">
-    <value>Atualização de {0} não necessária</value>
+    <value>Update for {0} not necessary</value>
   </data>
   <data name="UpdateOrSavePermissionError" xml:space="preserve">
-    <value>Erro processando Permissões - {0}</value>
+    <value>Error processing permission - {0}</value>
   </data>
 </root>

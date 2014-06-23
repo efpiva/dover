@@ -124,12 +124,17 @@
     <Compile Include="Monad\XML.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Remoting\Sponsor.cs" />
-    <Compile Include="Service\AddIni18n.cs" />
+    <Compile Include="Service\I18NService.cs" />
     <Compile Include="Service\AddinManager.cs" />
     <Compile Include="Service\AppEventHandler.cs" />
     <Compile Include="Service\AssemblyManager.cs" />
     <Compile Include="Service\B1SResourceManager.cs" />
     <Compile Include="Service\FormEventHandler.cs" />
+    <Compile Include="Service\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Service\MicroCoreEventDispatcher.cs" />
     <Compile Include="Service\CryptoService.cs" />
     <Compile Include="Service\DatabaseConfiguration.cs" />
@@ -137,11 +142,6 @@
     <Compile Include="Service\LicenseManager.cs" />
     <Compile Include="Service\MachineInformation.cs" />
     <Compile Include="Service\MenuEventHandler.cs" />
-    <Compile Include="Service\Messages.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Messages.resx</DependentUpon>
-    </Compile>
     <Compile Include="Service\PermissionManager.cs" />
     <Compile Include="Monad\Maybe.cs" />
     <Compile Include="Service\RawPrinter.cs" />
@@ -158,6 +158,8 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DAO\Messages.pt-BR.resx" />
+    <EmbeddedResource Include="Messages.pt-BR.resx" />
     <EmbeddedResource Include="DAO\Messages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
@@ -171,6 +173,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Service\Messages.pt-BR.resx" />
     <EmbeddedResource Include="Service\Messages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>

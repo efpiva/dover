@@ -61,7 +61,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nenhum Assembly de nome {0} encontrado.
+        ///   Looks up a localized string similar to No assembly named {0} found.
         /// </summary>
         internal static string AddInNotFound {
             get {
@@ -70,7 +70,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tag para form {1} não encontrada no assembly {0}.
+        ///   Looks up a localized string similar to Tag for form {1} not found on assembly {0}.
         /// </summary>
         internal static string B1SResourceKeyNotFound {
             get {
@@ -79,7 +79,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to B1S resource para {0} nao encontrado.
+        ///   Looks up a localized string similar to B1S resource for {0} not found.
         /// </summary>
         internal static string B1SResourceMissing {
             get {
@@ -88,7 +88,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tag VSICreated não encontrada no assembly {0}.
+        ///   Looks up a localized string similar to Tag VSICreated not found on assembly {0}.
         /// </summary>
         internal static string B1SResourceVSICreatedNotFound {
             get {
@@ -97,7 +97,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Checando MD5Sum({0}) - para {1}.
+        ///   Looks up a localized string similar to Checking MD5Sum({0}) - for {1}.
         /// </summary>
         internal static string CheckSum {
             get {
@@ -106,7 +106,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Inicializando configuração do AddIn {0}.
+        ///   Looks up a localized string similar to Initializing AddIn configuration {0}.
         /// </summary>
         internal static string ConfiguringAddin {
             get {
@@ -115,7 +115,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro reiniciando addins.
+        ///   Looks up a localized string similar to Error restarting addin.
         /// </summary>
         internal static string ErrorReboot {
             get {
@@ -124,7 +124,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro atualizando AddOne, em troca de base de dados..
+        ///   Looks up a localized string similar to Error updating AddOne in company update event.
         /// </summary>
         internal static string EventCompanyChangedError {
             get {
@@ -133,7 +133,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro atualizando AddOne. Evento de troca de idioma..
+        ///   Looks up a localized string similar to Error updating AddOne in language change event.
         /// </summary>
         internal static string EventLanguageChangedError {
             get {
@@ -142,7 +142,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro atualizando arquivo {0} - Versao {1}..
+        ///   Looks up a localized string similar to Error updating file {0} - Version {1}..
         /// </summary>
         internal static string FileError {
             get {
@@ -151,7 +151,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Arquivo {0} - Versao {1} - não encontrado.
+        ///   Looks up a localized string similar to File {0} - Version {1} - not found.
         /// </summary>
         internal static string FileMissing {
             get {
@@ -160,7 +160,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Atualizado arquivo {0} - Versao {1}.
+        ///   Looks up a localized string similar to Updating file {0} - Version {1}.
         /// </summary>
         internal static string FileUpdated {
             get {
@@ -169,7 +169,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FormType {0} não é único. Não é possível registrar eventos UI..
+        ///   Looks up a localized string similar to FormType {0} is not unique. It&apos;s not possible to register UI events..
         /// </summary>
         internal static string FormTypeNotUnique {
             get {
@@ -178,7 +178,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Resource {0} encontrado.
+        ///   Looks up a localized string similar to Resource {0} found.
         /// </summary>
         internal static string GetLocalizedStringFoundResource {
             get {
@@ -187,7 +187,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Resource {0} não encontrado.
+        ///   Looks up a localized string similar to Resource {0} not found.
         /// </summary>
         internal static string GetLocalizedStringNotFoundResource {
             get {
@@ -196,7 +196,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nome {0} com formato i18n incorreto..
+        ///   Looks up a localized string similar to {0} name with incorrect i18n format..
         /// </summary>
         internal static string i18nError {
             get {
@@ -205,7 +205,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ignorando arquivo {0} - não encontrado.
+        ///   Looks up a localized string similar to Ignoring file {0} - not found..
         /// </summary>
         internal static string IgnoringFile {
             get {
@@ -214,7 +214,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recurso {0} não encontrado no assembly.
+        ///   Looks up a localized string similar to Resource {0} not found on assembly..
         /// </summary>
         internal static string InternalResourceMissing {
             get {
@@ -223,7 +223,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Licença inválida.
+        ///   Looks up a localized string similar to Invalid license..
         /// </summary>
         internal static string InvalidLicense {
             get {
@@ -232,7 +232,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Addin {0} não encontrado durante carga de licença..
+        ///   Looks up a localized string similar to Addin {0} not found during license load..
         /// </summary>
         internal static string LicenseAddInNotFound {
             get {
@@ -241,7 +241,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Arquivo {0} não encontrado.
+        ///   Looks up a localized string similar to File {0} not found.
         /// </summary>
         internal static string LicenseFileMissing {
             get {
@@ -259,7 +259,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro processando evento para menu {0} - {1}.
+        ///   Looks up a localized string similar to Error processing event for menu {0} - {1}.
         /// </summary>
         internal static string MenuDispatchError {
             get {
@@ -268,7 +268,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Processando evento do tipo {0} para classe/metodo {1}.
+        ///   Looks up a localized string similar to Processing event of type {0} for class/method {1}.
         /// </summary>
         internal static string MenuDispatchInfo {
             get {
@@ -277,7 +277,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Processando atributo {0} - classe {1}.
+        ///   Looks up a localized string similar to Processing attribute {0} - class {1}.
         /// </summary>
         internal static string ProcessingAttribute {
             get {
@@ -286,7 +286,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Assembly {0} registrado no container.
+        ///   Looks up a localized string similar to Assembly {0} registered in container.
         /// </summary>
         internal static string RegisteredAssembly {
             get {
@@ -295,7 +295,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Registrando assembly {0} no container.
+        ///   Looks up a localized string similar to Registering assembly {0} on container.
         /// </summary>
         internal static string RegisteringAssembly {
             get {
@@ -304,7 +304,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Registrando menu {0} - para tipo {1}.
+        ///   Looks up a localized string similar to Registering menu {0} - for type {1}.
         /// </summary>
         internal static string RegisteringMenuEvent {
             get {
@@ -313,7 +313,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Addin {0} removido com sucesso.
+        ///   Looks up a localized string similar to Addin {0} successfully removed.
         /// </summary>
         internal static string RemoveAddinSuccess {
             get {
@@ -331,7 +331,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reiniciando AddOne.
+        ///   Looks up a localized string similar to Restarting AddOne.
         /// </summary>
         internal static string Restarting {
             get {
@@ -340,7 +340,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro salvando addin {0}.
+        ///   Looks up a localized string similar to Error saving addin {0}.
         /// </summary>
         internal static string SaveAddInError {
             get {
@@ -349,7 +349,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AddIn {0} salvo com sucesso.
+        ///   Looks up a localized string similar to AddIn {0} successfully saved.
         /// </summary>
         internal static string SaveAddInSuccess {
             get {
@@ -358,7 +358,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Licença salva com sucesso.
+        ///   Looks up a localized string similar to License successfully saved.
         /// </summary>
         internal static string SaveLicenseSuccess {
             get {
@@ -367,7 +367,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Desligando AddOne.
+        ///   Looks up a localized string similar to Shutting down AddOne.
         /// </summary>
         internal static string Shutdown {
             get {
@@ -376,7 +376,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Desligando AddIn {0}.
+        ///   Looks up a localized string similar to Shutting down AddIn {0}.
         /// </summary>
         internal static string ShutdownAddin {
             get {
@@ -385,7 +385,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro inicializando addin {0}.
+        ///   Looks up a localized string similar to Error initializing addin {0}.
         /// </summary>
         internal static string StartThisError {
             get {
@@ -394,7 +394,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro inesperado em CryptoService.
+        ///   Looks up a localized string similar to Unexpected error in CryptoService.
         /// </summary>
         internal static string UnhandledCrypto {
             get {
@@ -403,7 +403,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro inesperado iniciando serviço de licença.
+        ///   Looks up a localized string similar to Unexpected error initializing license service.
         /// </summary>
         internal static string UnhandledLicense {
             get {
@@ -412,7 +412,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Iniciando atualização de assemblies - {0}.
+        ///   Looks up a localized string similar to Updating assemblies - {0}.
         /// </summary>
         internal static string UpdatingAssembly {
             get {

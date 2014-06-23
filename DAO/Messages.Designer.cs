@@ -61,7 +61,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adicionando permissão para addin {0} - Valor: {1}.
+        ///   Looks up a localized string similar to Added permission for addin {0} - Value: {1}.
         /// </summary>
         internal static string AddInPermission {
             get {
@@ -70,7 +70,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adicionando permissão para usuário {0} - addin {1} - Valor: {2}.
+        ///   Looks up a localized string similar to Added permission for user {0} - addin {1} - Value: {2}.
         /// </summary>
         internal static string AddInUserPermission {
             get {
@@ -79,7 +79,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Retorno do metodo {1} de tipo {0} nao e booleano.
+        ///   Looks up a localized string similar to Return type of method {1} of type {0} is not boolean.
         /// </summary>
         internal static string AuthorizationMessage {
             get {
@@ -88,7 +88,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tipo Documents precisa ter boObjectType definido.
+        ///   Looks up a localized string similar to Document type need to have boObjectType defined.
         /// </summary>
         internal static string DocumentObjectTypeInvalid {
             get {
@@ -97,7 +97,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Finalizando execução de SQL - {0}.
+        ///   Looks up a localized string similar to SQL execution finished - {0}.
         /// </summary>
         internal static string EndExecuteStatement {
             get {
@@ -106,7 +106,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Finalizado UpdateOrSave para {0}.
+        ///   Looks up a localized string similar to Executed UpdateOrSave for {0}.
         /// </summary>
         internal static string EndUpdateOrSave {
             get {
@@ -115,7 +115,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro adicionando {0} {1} - {2}.
+        ///   Looks up a localized string similar to Added {0} {1} - {2}.
         /// </summary>
         internal static string ErrorAddingDI {
             get {
@@ -124,7 +124,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro executando SQL {0} - {1}.
+        ///   Looks up a localized string similar to SQL Statement error executing {0} - {1}.
         /// </summary>
         internal static string ErrorExecuteStatement {
             get {
@@ -133,7 +133,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro atualizando {0} {1} - {2}.
+        ///   Looks up a localized string similar to Error updating {0} {1} - {2}.
         /// </summary>
         internal static string ErrorUpdatingDI {
             get {
@@ -142,7 +142,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Executando SQL {0}.
+        ///   Looks up a localized string similar to Executing SQL {0}.
         /// </summary>
         internal static string ExecuteForListCommand {
             get {
@@ -151,7 +151,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adicionado objeto {0} ao retorno em ExecuteSqlForList.
+        ///   Looks up a localized string similar to Added object {0} for ExecuteSqlForList return list object.
         /// </summary>
         internal static string ExecuteForListReturn {
             get {
@@ -160,7 +160,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Objeto do tipo {0}. Retorno da consulta no tipo {1}.
+        ///   Looks up a localized string similar to Object of type {0}. SQL object type is {1}.
         /// </summary>
         internal static string ExecuteForObjectArgument {
             get {
@@ -169,7 +169,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro executando SQL: {0}.
+        ///   Looks up a localized string similar to SQL Select for Object error: {0}.
         /// </summary>
         internal static string ExecuteForObjectError {
             get {
@@ -178,7 +178,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Retornando objeto {0} em para consulta {1}.
+        ///   Looks up a localized string similar to Returning object {0} for select statement {1}.
         /// </summary>
         internal static string ExecuteForObjectReturn {
             get {
@@ -187,7 +187,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro lendo BOM do XML - {0}.
+        ///   Looks up a localized string similar to Error reading BOM for XML - {0}.
         /// </summary>
         internal static string GetBomFromXMLError {
             get {
@@ -196,7 +196,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Finalizada execução de GetNextCode para {0}.
+        ///   Looks up a localized string similar to Finished execution of GetNextCode for {0}.
         /// </summary>
         internal static string GetNextCodeEnd {
             get {
@@ -205,7 +205,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Iniciando execução de GetNextCode para {0}.
+        ///   Looks up a localized string similar to Initializing executing of GetNextCode for {0}.
         /// </summary>
         internal static string GetNextCodeStart {
             get {
@@ -214,7 +214,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro processando XML BOM - {0}.
+        ///   Looks up a localized string similar to Error processing XML BOM - {0}.
         /// </summary>
         internal static string GetXMLBOMError {
             get {
@@ -223,7 +223,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Menu Processado.
+        ///   Looks up a localized string similar to Menu processed.
         /// </summary>
         internal static string MenuEnd {
             get {
@@ -232,7 +232,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro processando Menu - {0}.
+        ///   Looks up a localized string similar to Erro processing Menu - {0}.
         /// </summary>
         internal static string MenuError {
             get {
@@ -241,7 +241,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Processando Menu {0} - {1}.
+        ///   Looks up a localized string similar to Processing Menu {0} - {1}.
         /// </summary>
         internal static string MenuProcess {
             get {
@@ -250,7 +250,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Processando XML de Menu.\n{0}.
+        ///   Looks up a localized string similar to Processing Menu XML.\n{0}.
         /// </summary>
         internal static string MenuStart {
             get {
@@ -259,7 +259,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Finalizado processamento da permissão {0}.
+        ///   Looks up a localized string similar to Permission processing ended for {0}.
         /// </summary>
         internal static string PermissionEnd {
             get {
@@ -268,7 +268,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro adicionando Permissão {0} - {1}.
+        ///   Looks up a localized string similar to Error adding permission {0} - {1}.
         /// </summary>
         internal static string PermissionError {
             get {
@@ -277,7 +277,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Iniciando processamento da permissão {0}.
+        ///   Looks up a localized string similar to Starting permission processing {0}.
         /// </summary>
         internal static string PermissionStart {
             get {
@@ -286,7 +286,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Permissão {0} adicionada.
+        ///   Looks up a localized string similar to Permission {0} added.
         /// </summary>
         internal static string PermissionSuccess {
             get {
@@ -295,7 +295,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro atualizando Permissão {0} - {1}.
+        ///   Looks up a localized string similar to Error updating permission {0} - {1}.
         /// </summary>
         internal static string PermissionUpdateError {
             get {
@@ -304,7 +304,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Permissão {0} atualizada.
+        ///   Looks up a localized string similar to Permission {0} updated.
         /// </summary>
         internal static string PermissionUpdateSuccess {
             get {
@@ -313,7 +313,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro setando propriedade {0}.
+        ///   Looks up a localized string similar to Error assigning property {0}.
         /// </summary>
         internal static string PrepareObjectError {
             get {
@@ -322,7 +322,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Objeto {0} tem propriedade {1} do tipo {2}. Retorno da consulta no tipo {3}..
+        ///   Looks up a localized string similar to Object {0} has property {1} of type {2}. Statement object type is {3}..
         /// </summary>
         internal static string PrepareObjectInvalidParameter {
             get {
@@ -331,7 +331,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Objeto {0} não tem tem propriedade {1}.
+        ///   Looks up a localized string similar to Object {0} does not have property {1}.
         /// </summary>
         internal static string PrepareObjectMissingParameter {
             get {
@@ -340,7 +340,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Type {0} nao suportado.
+        ///   Looks up a localized string similar to Type {0} not supported.
         /// </summary>
         internal static string ProcessTupleError {
             get {
@@ -349,7 +349,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Inicializando execução de SQL - {0}.
+        ///   Looks up a localized string similar to Starting SQL statement - {0}.
         /// </summary>
         internal static string StartExecuteStatement {
             get {
@@ -358,7 +358,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Iniciando UpdateOrSave para {0}.
+        ///   Looks up a localized string similar to Started UpdateOrSave for {0}.
         /// </summary>
         internal static string StartUpdateOrSave {
             get {
@@ -367,7 +367,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {1} adicionado com sucesso.
+        ///   Looks up a localized string similar to {0} {1} successfully added.
         /// </summary>
         internal static string SuccessAddindDI {
             get {
@@ -376,7 +376,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} {1} atualizado com sucesso.
+        ///   Looks up a localized string similar to {0} {1} successfully updated.
         /// </summary>
         internal static string SuccessUpdatingDI {
             get {
@@ -385,7 +385,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro {0} executando XML em UI API - {1}.
+        ///   Looks up a localized string similar to Error {0} executing UI-API XML - {1}.
         /// </summary>
         internal static string UIAPICodeAndError {
             get {
@@ -394,7 +394,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro executando XML em UI API - {0}.
+        ///   Looks up a localized string similar to Error executing UI-API XML - {0}.
         /// </summary>
         internal static string UIAPIError {
             get {
@@ -403,7 +403,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Atualização de {0} não necessária.
+        ///   Looks up a localized string similar to Update for {0} not necessary.
         /// </summary>
         internal static string UpdateDINotNecessary {
             get {
@@ -412,7 +412,7 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro processando Permissões - {0}.
+        ///   Looks up a localized string similar to Error processing permission - {0}.
         /// </summary>
         internal static string UpdateOrSavePermissionError {
             get {

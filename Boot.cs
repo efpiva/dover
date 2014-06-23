@@ -19,12 +19,14 @@ namespace AddOne.Framework
         private FormEventHandler formEventHandler;
 
         public Boot(LicenseManager licenseValidation, AddinManager addinLoader, EventDispatcher dispatcher,
-            FormEventHandler formEventHandler)
+            FormEventHandler formEventHandler, I18NService i18nService)
         {
             this.licenseManager = licenseValidation;
             this.addinLoader = addinLoader;
             this.dispatcher = dispatcher;
             this.formEventHandler = formEventHandler;
+
+            i18nService.ConfigureThreadI18n(System.Threading.Thread.CurrentThread);
         }
 
         public void StartUp()

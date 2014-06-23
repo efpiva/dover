@@ -22,6 +22,7 @@ namespace AddOne.Framework.Service
     {
         internal AssemblyInformation asm;
         internal ManualResetEvent shutdownEvent = new ManualResetEvent(false);
+
         internal AddInRunner(AssemblyInformation asm)
         {
             this.asm = asm;
@@ -58,15 +59,17 @@ namespace AddOne.Framework.Service
         private MenuEventHandler menuHandler;
         private List<AddInRunner> runningAddIns = new List<AddInRunner>();
         private ServiceHost host; // namedPipe server;
+        private I18NService i18nService;
 
         public AddinManager(PermissionManager permissionManager, 
             BusinessOneDAO b1DAO, BusinessOneUIDAO uiDAO,
-            MenuEventHandler menuHandler)
+            MenuEventHandler menuHandler, I18NService i18nService)
         {
             this.permissionManager = permissionManager;
             this.b1DAO = b1DAO;
             this.uiDAO = uiDAO;
             this.menuHandler = menuHandler;
+            this.i18nService = i18nService;
         }
 
         internal void LoadAddins(List<AssemblyInformation> addins)
@@ -201,6 +204,7 @@ namespace AddOne.Framework.Service
             runningAddIns.Add(runner);
             var thread = new Thread(new ThreadStart(runner.Run));
             thread.SetApartmentState(ApartmentState.STA);
+            i18nService.ConfigureThreadI18n(thread);
             thread.Start();
         }
 

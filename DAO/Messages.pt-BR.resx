@@ -117,124 +117,124 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddInNotFound" xml:space="preserve">
-    <value>No assembly named {0} found</value>
+  <data name="AddInPermission" xml:space="preserve">
+    <value>Adicionando permissão para addin {0} - Valor: {1}</value>
   </data>
-  <data name="B1SResourceMissing" xml:space="preserve">
-    <value>B1S resource for {0} not found</value>
+  <data name="AddInUserPermission" xml:space="preserve">
+    <value>Adicionando permissão para usuário {0} - addin {1} - Valor: {2}</value>
   </data>
-  <data name="CheckSum" xml:space="preserve">
-    <value>Checking MD5Sum({0}) - for {1}</value>
+  <data name="AuthorizationMessage" xml:space="preserve">
+    <value>Retorno do metodo {1} de tipo {0} nao e booleano</value>
   </data>
-  <data name="ConfiguringAddin" xml:space="preserve">
-    <value>Initializing AddIn configuration {0}</value>
+  <data name="DocumentObjectTypeInvalid" xml:space="preserve">
+    <value>Tipo Documents precisa ter boObjectType definido</value>
   </data>
-  <data name="ErrorReboot" xml:space="preserve">
-    <value>Error restarting addin</value>
+  <data name="EndExecuteStatement" xml:space="preserve">
+    <value>Finalizando execução de SQL - {0}</value>
   </data>
-  <data name="EventCompanyChangedError" xml:space="preserve">
-    <value>Error updating AddOne in company update event</value>
+  <data name="EndUpdateOrSave" xml:space="preserve">
+    <value>Finalizado UpdateOrSave para {0}</value>
   </data>
-  <data name="EventLanguageChangedError" xml:space="preserve">
-    <value>Error updating AddOne in language change event</value>
+  <data name="ErrorAddingDI" xml:space="preserve">
+    <value>Erro adicionando {0} {1} - {2}</value>
   </data>
-  <data name="FileError" xml:space="preserve">
-    <value>Error updating file {0} - Version {1}.</value>
+  <data name="ErrorExecuteStatement" xml:space="preserve">
+    <value>Erro executando SQL {0} - {1}</value>
   </data>
-  <data name="FileMissing" xml:space="preserve">
-    <value>File {0} - Version {1} - not found</value>
+  <data name="ErrorUpdatingDI" xml:space="preserve">
+    <value>Erro atualizando {0} {1} - {2}</value>
   </data>
-  <data name="FileUpdated" xml:space="preserve">
-    <value>Updating file {0} - Version {1}</value>
+  <data name="ExecuteForListCommand" xml:space="preserve">
+    <value>Executando SQL {0}</value>
   </data>
-  <data name="i18nError" xml:space="preserve">
-    <value>{0} name with incorrect i18n format.</value>
+  <data name="ExecuteForListReturn" xml:space="preserve">
+    <value>Adicionado objeto {0} ao retorno em ExecuteSqlForList</value>
   </data>
-  <data name="IgnoringFile" xml:space="preserve">
-    <value>Ignoring file {0} - not found.</value>
+  <data name="ExecuteForObjectArgument" xml:space="preserve">
+    <value>Objeto do tipo {0}. Retorno da consulta no tipo {1}</value>
   </data>
-  <data name="InternalResourceMissing" xml:space="preserve">
-    <value>Resource {0} not found on assembly.</value>
+  <data name="ExecuteForObjectError" xml:space="preserve">
+    <value>Erro executando SQL: {0}</value>
   </data>
-  <data name="InvalidLicense" xml:space="preserve">
-    <value>Invalid license.</value>
+  <data name="ExecuteForObjectReturn" xml:space="preserve">
+    <value>Retornando objeto {0} em para consulta {1}</value>
   </data>
-  <data name="LicenseFileMissing" xml:space="preserve">
-    <value>File {0} not found</value>
+  <data name="GetBomFromXMLError" xml:space="preserve">
+    <value>Erro lendo BOM do XML - {0}</value>
   </data>
-  <data name="MD5Sum" xml:space="preserve">
-    <value>MD5Sum: {0}</value>
+  <data name="GetNextCodeEnd" xml:space="preserve">
+    <value>Finalizada execução de GetNextCode para {0}</value>
   </data>
-  <data name="MenuDispatchError" xml:space="preserve">
-    <value>Error processing event for menu {0} - {1}</value>
+  <data name="GetNextCodeStart" xml:space="preserve">
+    <value>Iniciando execução de GetNextCode para {0}</value>
   </data>
-  <data name="MenuDispatchInfo" xml:space="preserve">
-    <value>Processing event of type {0} for class/method {1}</value>
+  <data name="GetXMLBOMError" xml:space="preserve">
+    <value>Erro processando XML BOM - {0}</value>
   </data>
-  <data name="ProcessingAttribute" xml:space="preserve">
-    <value>Processing attribute {0} - class {1}</value>
+  <data name="MenuEnd" xml:space="preserve">
+    <value>Menu Processado</value>
   </data>
-  <data name="RegisteredAssembly" xml:space="preserve">
-    <value>Assembly {0} registered in container</value>
+  <data name="MenuError" xml:space="preserve">
+    <value>Erro processando Menu - {0}</value>
   </data>
-  <data name="RegisteringAssembly" xml:space="preserve">
-    <value>Registering assembly {0} on container</value>
+  <data name="MenuProcess" xml:space="preserve">
+    <value>Processando Menu {0} - {1}</value>
   </data>
-  <data name="RegisteringMenuEvent" xml:space="preserve">
-    <value>Registering menu {0} - for type {1}</value>
+  <data name="MenuStart" xml:space="preserve">
+    <value>Processando XML de Menu.\n{0}</value>
   </data>
-  <data name="RemoveAddinSuccess" xml:space="preserve">
-    <value>Addin {0} successfully removed</value>
+  <data name="PermissionEnd" xml:space="preserve">
+    <value>Finalizado processamento da permissão {0}</value>
   </data>
-  <data name="Restarting" xml:space="preserve">
-    <value>Restarting AddOne</value>
+  <data name="PermissionError" xml:space="preserve">
+    <value>Erro adicionando Permissão {0} - {1}</value>
   </data>
-  <data name="SaveAddInError" xml:space="preserve">
-    <value>Error saving addin {0}</value>
+  <data name="PermissionStart" xml:space="preserve">
+    <value>Iniciando processamento da permissão {0}</value>
   </data>
-  <data name="SaveAddInSuccess" xml:space="preserve">
-    <value>AddIn {0} successfully saved</value>
+  <data name="PermissionSuccess" xml:space="preserve">
+    <value>Permissão {0} adicionada</value>
   </data>
-  <data name="SaveLicenseSuccess" xml:space="preserve">
-    <value>License successfully saved</value>
+  <data name="PermissionUpdateError" xml:space="preserve">
+    <value>Erro atualizando Permissão {0} - {1}</value>
   </data>
-  <data name="Shutdown" xml:space="preserve">
-    <value>Shutting down AddOne</value>
+  <data name="PermissionUpdateSuccess" xml:space="preserve">
+    <value>Permissão {0} atualizada</value>
   </data>
-  <data name="ShutdownAddin" xml:space="preserve">
-    <value>Shutting down AddIn {0}</value>
+  <data name="PrepareObjectError" xml:space="preserve">
+    <value>Erro setando propriedade {0}</value>
   </data>
-  <data name="StartThisError" xml:space="preserve">
-    <value>Error initializing addin {0}</value>
+  <data name="PrepareObjectInvalidParameter" xml:space="preserve">
+    <value>Objeto {0} tem propriedade {1} do tipo {2}. Retorno da consulta no tipo {3}.</value>
   </data>
-  <data name="UnhandledCrypto" xml:space="preserve">
-    <value>Unexpected error in CryptoService</value>
+  <data name="PrepareObjectMissingParameter" xml:space="preserve">
+    <value>Objeto {0} não tem tem propriedade {1}</value>
   </data>
-  <data name="UnhandledLicense" xml:space="preserve">
-    <value>Unexpected error initializing license service</value>
+  <data name="ProcessTupleError" xml:space="preserve">
+    <value>Type {0} nao suportado</value>
   </data>
-  <data name="UpdatingAssembly" xml:space="preserve">
-    <value>Updating assemblies - {0}</value>
+  <data name="StartExecuteStatement" xml:space="preserve">
+    <value>Inicializando execução de SQL - {0}</value>
   </data>
-  <data name="GetLocalizedStringFoundResource" xml:space="preserve">
-    <value>Resource {0} found</value>
+  <data name="StartUpdateOrSave" xml:space="preserve">
+    <value>Iniciando UpdateOrSave para {0}</value>
   </data>
-  <data name="GetLocalizedStringNotFoundResource" xml:space="preserve">
-    <value>Resource {0} not found</value>
+  <data name="SuccessAddindDI" xml:space="preserve">
+    <value>{0} {1} adicionado com sucesso</value>
   </data>
-  <data name="ResourceNotFound" xml:space="preserve">
-    <value>Resource {1} not found for asm {0}</value>
+  <data name="SuccessUpdatingDI" xml:space="preserve">
+    <value>{0} {1} atualizado com sucesso</value>
   </data>
-  <data name="B1SResourceKeyNotFound" xml:space="preserve">
-    <value>Tag for form {1} not found on assembly {0}</value>
+  <data name="UIAPICodeAndError" xml:space="preserve">
+    <value>Erro {0} executando XML em UI API - {1}</value>
   </data>
-  <data name="B1SResourceVSICreatedNotFound" xml:space="preserve">
-    <value>Tag VSICreated not found on assembly {0}</value>
+  <data name="UIAPIError" xml:space="preserve">
+    <value>Erro executando XML em UI API - {0}</value>
   </data>
-  <data name="FormTypeNotUnique" xml:space="preserve">
-    <value>FormType {0} is not unique. It's not possible to register UI events.</value>
+  <data name="UpdateDINotNecessary" xml:space="preserve">
+    <value>Atualização de {0} não necessária</value>
   </data>
-  <data name="LicenseAddInNotFound" xml:space="preserve">
-    <value>Addin {0} not found during license load.</value>
+  <data name="UpdateOrSavePermissionError" xml:space="preserve">
+    <value>Erro processando Permissões - {0}</value>
   </data>
 </root>

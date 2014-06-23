@@ -118,123 +118,123 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddInNotFound" xml:space="preserve">
-    <value>No assembly named {0} found</value>
+    <value>Nenhum Assembly de nome {0} encontrado</value>
   </data>
   <data name="B1SResourceMissing" xml:space="preserve">
-    <value>B1S resource for {0} not found</value>
+    <value>B1S resource para {0} nao encontrado</value>
   </data>
   <data name="CheckSum" xml:space="preserve">
-    <value>Checking MD5Sum({0}) - for {1}</value>
+    <value>Checando MD5Sum({0}) - para {1}</value>
   </data>
   <data name="ConfiguringAddin" xml:space="preserve">
-    <value>Initializing AddIn configuration {0}</value>
+    <value>Inicializando configuração do AddIn {0}</value>
   </data>
   <data name="ErrorReboot" xml:space="preserve">
-    <value>Error restarting addin</value>
+    <value>Erro reiniciando addins</value>
   </data>
   <data name="EventCompanyChangedError" xml:space="preserve">
-    <value>Error updating AddOne in company update event</value>
+    <value>Erro atualizando AddOne, em troca de base de dados.</value>
   </data>
   <data name="EventLanguageChangedError" xml:space="preserve">
-    <value>Error updating AddOne in language change event</value>
+    <value>Erro atualizando AddOne. Evento de troca de idioma.</value>
   </data>
   <data name="FileError" xml:space="preserve">
-    <value>Error updating file {0} - Version {1}.</value>
+    <value>Erro atualizando arquivo {0} - Versao {1}.</value>
   </data>
   <data name="FileMissing" xml:space="preserve">
-    <value>File {0} - Version {1} - not found</value>
+    <value>Arquivo {0} - Versao {1} - não encontrado</value>
   </data>
   <data name="FileUpdated" xml:space="preserve">
-    <value>Updating file {0} - Version {1}</value>
+    <value>Atualizado arquivo {0} - Versao {1}</value>
   </data>
   <data name="i18nError" xml:space="preserve">
-    <value>{0} name with incorrect i18n format.</value>
+    <value>Nome {0} com formato i18n incorreto.</value>
   </data>
   <data name="IgnoringFile" xml:space="preserve">
-    <value>Ignoring file {0} - not found.</value>
+    <value>Ignorando arquivo {0} - não encontrado</value>
   </data>
   <data name="InternalResourceMissing" xml:space="preserve">
-    <value>Resource {0} not found on assembly.</value>
+    <value>Recurso {0} não encontrado no assembly</value>
   </data>
   <data name="InvalidLicense" xml:space="preserve">
-    <value>Invalid license.</value>
+    <value>Licença inválida</value>
   </data>
   <data name="LicenseFileMissing" xml:space="preserve">
-    <value>File {0} not found</value>
+    <value>Arquivo {0} não encontrado</value>
   </data>
   <data name="MD5Sum" xml:space="preserve">
     <value>MD5Sum: {0}</value>
   </data>
   <data name="MenuDispatchError" xml:space="preserve">
-    <value>Error processing event for menu {0} - {1}</value>
+    <value>Erro processando evento para menu {0} - {1}</value>
   </data>
   <data name="MenuDispatchInfo" xml:space="preserve">
-    <value>Processing event of type {0} for class/method {1}</value>
+    <value>Processando evento do tipo {0} para classe/metodo {1}</value>
   </data>
   <data name="ProcessingAttribute" xml:space="preserve">
-    <value>Processing attribute {0} - class {1}</value>
+    <value>Processando atributo {0} - classe {1}</value>
   </data>
   <data name="RegisteredAssembly" xml:space="preserve">
-    <value>Assembly {0} registered in container</value>
+    <value>Assembly {0} registrado no container</value>
   </data>
   <data name="RegisteringAssembly" xml:space="preserve">
-    <value>Registering assembly {0} on container</value>
+    <value>Registrando assembly {0} no container</value>
   </data>
   <data name="RegisteringMenuEvent" xml:space="preserve">
-    <value>Registering menu {0} - for type {1}</value>
+    <value>Registrando menu {0} - para tipo {1}</value>
   </data>
   <data name="RemoveAddinSuccess" xml:space="preserve">
-    <value>Addin {0} successfully removed</value>
+    <value>Addin {0} removido com sucesso</value>
   </data>
   <data name="Restarting" xml:space="preserve">
-    <value>Restarting AddOne</value>
+    <value>Reiniciando AddOne</value>
   </data>
   <data name="SaveAddInError" xml:space="preserve">
-    <value>Error saving addin {0}</value>
+    <value>Erro salvando addin {0}</value>
   </data>
   <data name="SaveAddInSuccess" xml:space="preserve">
-    <value>AddIn {0} successfully saved</value>
+    <value>AddIn {0} salvo com sucesso</value>
   </data>
   <data name="SaveLicenseSuccess" xml:space="preserve">
-    <value>License successfully saved</value>
+    <value>Licença salva com sucesso</value>
   </data>
   <data name="Shutdown" xml:space="preserve">
-    <value>Shutting down AddOne</value>
+    <value>Desligando AddOne</value>
   </data>
   <data name="ShutdownAddin" xml:space="preserve">
-    <value>Shutting down AddIn {0}</value>
+    <value>Desligando AddIn {0}</value>
   </data>
   <data name="StartThisError" xml:space="preserve">
-    <value>Error initializing addin {0}</value>
+    <value>Erro inicializando addin {0}</value>
   </data>
   <data name="UnhandledCrypto" xml:space="preserve">
-    <value>Unexpected error in CryptoService</value>
+    <value>Erro inesperado em CryptoService</value>
   </data>
   <data name="UnhandledLicense" xml:space="preserve">
-    <value>Unexpected error initializing license service</value>
+    <value>Erro inesperado iniciando serviço de licença</value>
   </data>
   <data name="UpdatingAssembly" xml:space="preserve">
-    <value>Updating assemblies - {0}</value>
+    <value>Iniciando atualização de assemblies - {0}</value>
   </data>
   <data name="GetLocalizedStringFoundResource" xml:space="preserve">
-    <value>Resource {0} found</value>
+    <value>Resource {0} encontrado</value>
   </data>
   <data name="GetLocalizedStringNotFoundResource" xml:space="preserve">
-    <value>Resource {0} not found</value>
+    <value>Resource {0} não encontrado</value>
   </data>
   <data name="ResourceNotFound" xml:space="preserve">
     <value>Resource {1} not found for asm {0}</value>
   </data>
   <data name="B1SResourceKeyNotFound" xml:space="preserve">
-    <value>Tag for form {1} not found on assembly {0}</value>
+    <value>Tag para form {1} não encontrada no assembly {0}</value>
   </data>
   <data name="B1SResourceVSICreatedNotFound" xml:space="preserve">
-    <value>Tag VSICreated not found on assembly {0}</value>
+    <value>Tag VSICreated não encontrada no assembly {0}</value>
   </data>
   <data name="FormTypeNotUnique" xml:space="preserve">
-    <value>FormType {0} is not unique. It's not possible to register UI events.</value>
+    <value>FormType {0} não é único. Não é possível registrar eventos UI.</value>
   </data>
   <data name="LicenseAddInNotFound" xml:space="preserve">
-    <value>Addin {0} not found during license load.</value>
+    <value>Addin {0} não encontrado durante carga de licença.</value>
   </data>
 </root>
