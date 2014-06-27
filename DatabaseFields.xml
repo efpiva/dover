@@ -217,6 +217,69 @@
     </AdmInfo>
     <UserFieldsMD>
       <row>
+        <Name>Code</Name>
+        <Type>db_Alpha</Type>
+        <Size>30</Size>
+        <Description>Code</Description>
+        <SubType>st_None</SubType>
+        <LinkedTable />
+        <DefaultValue />
+        <TableName>@GA_AO_MODULES_I18N</TableName>
+        <EditSize>30</EditSize>
+        <Mandatory>tNO</Mandatory>
+      </row>
+    </UserFieldsMD>
+    <ValidValuesMD></ValidValuesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
+        <Name>Asm</Name>
+        <Type>db_Memo</Type>
+        <Size>4</Size>
+        <Description>Asm</Description>
+        <SubType>st_Link</SubType>
+        <LinkedTable />
+        <DefaultValue />
+        <TableName>@GA_AO_MODULES_I18N</TableName>
+        <EditSize>254</EditSize>
+        <Mandatory>tNO</Mandatory>
+      </row>
+    </UserFieldsMD>
+    <ValidValuesMD></ValidValuesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
+        <Name>i18n</Name>
+        <Type>db_Alpha</Type>
+        <Size>30</Size>
+        <Description>i18n</Description>
+        <SubType>st_None</SubType>
+        <LinkedTable />
+        <DefaultValue />
+        <TableName>@GA_AO_MODULES_I18N</TableName>
+        <EditSize>30</EditSize>
+        <Mandatory>tNO</Mandatory>
+      </row>
+    </UserFieldsMD>
+    <ValidValuesMD></ValidValuesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
         <Name>Type</Name>
         <Type>db_Alpha</Type>
         <Size>2</Size>
@@ -405,6 +468,66 @@
       <row>
         <Value>I</Value>
         <Description>Inativo</Description>
+      </row>
+    </ValidValuesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
+        <Name>Installed</Name>
+        <Type>db_Alpha</Type>
+        <Size>200</Size>
+        <Description>Installed</Description>
+        <SubType>st_None</SubType>
+        <LinkedTable />
+        <DefaultValue>N</DefaultValue>
+        <TableName>@GA_AO_MODULES</TableName>
+        <EditSize>1</EditSize>
+        <Mandatory>tYES</Mandatory>
+      </row>
+    </UserFieldsMD>
+    <ValidValuesMD>
+      <row>
+        <Value>Y</Value>
+        <Description>Yes</Description>
+      </row>
+      <row>
+        <Value>N</Value>
+        <Description>No</Description>
+      </row>
+    </ValidValuesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
+        <Name>AutoUpdate</Name>
+        <Type>db_Alpha</Type>
+        <Size>200</Size>
+        <Description>AutoUpdate</Description>
+        <SubType>st_None</SubType>
+        <LinkedTable />
+        <DefaultValue>N</DefaultValue>
+        <TableName>@GA_AO_MODULES</TableName>
+        <EditSize>1</EditSize>
+        <Mandatory>tYES</Mandatory>
+      </row>
+    </UserFieldsMD>
+    <ValidValuesMD>
+      <row>
+        <Value>Y</Value>
+        <Description>Yes</Description>
+      </row>
+      <row>
+        <Value>N</Value>
+        <Description>No</Description>
       </row>
     </ValidValuesMD>
   </BO>

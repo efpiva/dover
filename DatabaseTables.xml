@@ -8,7 +8,7 @@
     <UserTablesMD>
       <row>
         <TableName>GA_AO_MODULES</TableName>
-        <TableDescription>Modulos do AddOne</TableDescription>
+        <TableDescription>AddOne Modules</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
       </row>
@@ -22,7 +22,21 @@
     <UserTablesMD>
       <row>
         <TableName>GA_AO_MODULES_BIN</TableName>
-        <TableDescription>Binarios dos modulos</TableDescription>
+        <TableDescription>Module main binary</TableDescription>
+        <TableType>bott_NoObject</TableType>
+        <Archivable>tNO</Archivable>
+      </row>
+    </UserTablesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>153</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserTablesMD>
+      <row>
+        <TableName>GA_AO_MODULES_I18N</TableName>
+        <TableDescription>Modules i18n Resources</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
       </row>
@@ -36,7 +50,7 @@
     <UserTablesMD>
       <row>
         <TableName>GA_AO_LOGS</TableName>
-        <TableDescription>Logs do AddOne</TableDescription>
+        <TableDescription>AddOne Logs</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
       </row>
@@ -50,7 +64,7 @@
     <UserTablesMD>
       <row>
         <TableName>GA_AO_MODULES_USER</TableName>
-        <TableDescription>Módulos por usuario</TableDescription>
+        <TableDescription>Per user module configuration</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
       </row>
@@ -64,7 +78,7 @@
     <UserTablesMD>
       <row>
         <TableName>GA_AO_LICENSE</TableName>
-        <TableDescription>Licença AddOne</TableDescription>
+        <TableDescription>AddOne License</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
       </row>
@@ -78,7 +92,7 @@
     <UserTablesMD>
       <row>
         <TableName>GA_AO_LICENSE_BIN</TableName>
-        <TableDescription>Licença AddOne</TableDescription>
+        <TableDescription>AddOne binary license file</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
       </row>
