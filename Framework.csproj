@@ -32,24 +32,34 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
-      <HintPath>external-references\Castle.Core.dll</HintPath>
+      <HintPath>Assemblies\Castle.Core.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Castle.Facilities.Logging">
-      <HintPath>external-references\Castle.Facilities.Logging.dll</HintPath>
+      <HintPath>Assemblies\Castle.Facilities.Logging.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Castle.Services.Logging.Log4netIntegration">
-      <HintPath>external-references\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
+      <HintPath>Assemblies\Castle.Services.Logging.Log4netIntegration.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Castle.Windsor">
-      <HintPath>external-references\Castle.Windsor.dll</HintPath>
+      <HintPath>Assemblies\Castle.Windsor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>Assemblies\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>external-references\log4net.dll</HintPath>
+      <HintPath>Assemblies\log4net.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SAPbouiCOM">
       <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\Extensions\SAP\Business One Studio\SAPbouiCOM.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -181,6 +191,20 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DatabaseFields.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assemblies\Castle.Core.dll" />
+    <EmbeddedResource Include="Assemblies\Castle.Facilities.Logging.dll" />
+    <EmbeddedResource Include="Assemblies\Castle.Services.Logging.Log4netIntegration.dll" />
+    <EmbeddedResource Include="Assemblies\Castle.Windsor.dll" />
+    <EmbeddedResource Include="Assemblies\ICSharpCode.SharpZipLib.dll" />
+    <EmbeddedResource Include="Assemblies\log4net.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assemblies\SAPbouiCOM.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assemblies\Interop.SAPbobsCOM.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

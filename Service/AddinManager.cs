@@ -36,8 +36,9 @@ namespace AddOne.Framework.Service
             var domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
             domain.SetData("shutdownEvent", shutdownEvent); // Thread synchronization
             domain.SetData("assemblyName", asm.Name); // Used to get current AssemblyName for logging and reflection
-            SAPServiceFactory.PrepareForInception(domain);
+            domain.SetData("addInCode", asm.Code);
             B1Application app = (B1Application)domain.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
+            SAPServiceFactory.PrepareForInception(domain);
             Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
             app.Run();
             AppDomain.Unload(domain);

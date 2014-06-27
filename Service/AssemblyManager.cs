@@ -28,14 +28,7 @@ namespace AddOne.Framework.Service
         };
 
         private string[] coreAssemblies = {
-            "SAPbouiCOM.dll",
-            "Interop.SAPbobsCOM.dll",
             "Framework.dll",
-            "log4net.dll",
-            "Castle.Core.dll",
-            "Castle.Facilities.Logging.dll",
-            "Castle.Services.Logging.Log4netIntegration.dll",
-            "Castle.Windsor.dll",
             "AddOne.exe"
         };
         private AssemblyDAO asmDAO;
