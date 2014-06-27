@@ -8,12 +8,14 @@ using Castle.Core.Logging;
 using System.Reflection;
 using AddOne.Framework.Monad;
 using SAPbouiCOM;
+using SAPbouiCOM.Framework;
 
 namespace AddOne.Framework.Service
 {
     public class B1SResourceManager
     {
-        Dictionary<string, XDocument> assemblyB1SResource = new Dictionary<string, XDocument>();
+        // assembly -> form Key. -> XML
+        Dictionary<string, Dictionary<string, XDocument>> formSRFResource = new Dictionary<string, Dictionary<string, XDocument>>();
 
         private ILogger Logger;
 
@@ -22,17 +24,65 @@ namespace AddOne.Framework.Service
             this.Logger = Logger;
 
             var asms = AppDomain.CurrentDomain.GetAssemblies();
-            List<Tuple<AddInAttribute, Assembly>> attributes = 
+            var addInAttributes = 
                     (from asm in asms
                                       from definedType in asm.GetTypes()
                                       from attribute in definedType.GetCustomAttributes(true)
                                       where attribute is AddInAttribute
-                                      select new Tuple<AddInAttribute, Assembly>((AddInAttribute)attribute, asm)
+                                      select new {Attribute=(AddInAttribute)attribute, Assembly=asm}
                                       ).ToList();
 
-            foreach(var tuple in attributes)
+            foreach (var tuple in addInAttributes)
             {
-                LoadAssemblyResources(tuple.Item2, tuple.Item1);
+                if (tuple.Attribute.B1SResource == null)
+                    continue; // ignore addins that use SRF.
+                LoadAssemblyResources(tuple.Assembly, tuple.Attribute);
+            }
+
+            var formAttributes =
+                    (from asm in asms
+                        from definedType in asm.GetTypes()
+                        from attribute in definedType.GetCustomAttributes(true)
+                        where attribute is FormAttribute
+                        select new { Attribute = (FormAttribute)attribute, Assembly = asm }
+                                        ).ToList();
+
+            foreach (var tuple in formAttributes)
+            {
+                LoadAssemblyFormResource(tuple.Assembly, tuple.Attribute);
+            }
+        }
+
+        private void LoadAssemblyFormResource(Assembly asm, FormAttribute addInAttribute)
+        {
+            if (string.IsNullOrWhiteSpace(addInAttribute.Resource))
+                return;
+
+            using (var resource = asm.GetManifestResourceStream(addInAttribute.Resource))
+            {
+                if (resource != null)
+                {
+                    var doc = XDocument.Load(resource);
+                    var key = asm.GetName().FullName;
+                    Dictionary<string, XDocument> formDictionary;
+                    if (!formSRFResource.ContainsKey(key))
+                    {
+                        formDictionary = new Dictionary<string, XDocument>();
+                        formSRFResource.Add(key, formDictionary);
+                    }
+                    else
+                    {
+                        formDictionary = formSRFResource[key];
+                    }
+                    if (!formDictionary.ContainsKey(addInAttribute.Resource))
+                    {
+                        formDictionary.Add(addInAttribute.Resource, doc);
+                    }
+                }
+                else
+                {
+                    Logger.Warn(string.Format(Messages.ResourceNotFound, asm.GetName().FullName, addInAttribute.Resource));
+                }
             }
         }
 
@@ -44,10 +94,19 @@ namespace AddOne.Framework.Service
                 {
                     var doc = XDocument.Load(resource);
                     var key = asm.GetName().FullName;
-                    if (!assemblyB1SResource.ContainsKey(key))
+
+                    Dictionary<string, XDocument> formDictionary;
+                    if (!formSRFResource.ContainsKey(key))
                     {
-                        assemblyB1SResource.Add(key, doc);
+                        formDictionary = new Dictionary<string, XDocument>();
+                        formSRFResource.Add(key, formDictionary);
                     }
+                    else
+                    {
+                        formDictionary = formSRFResource[key];
+                    }
+
+                    ParseB1SFormSRF(doc, addInAttribute, key, formDictionary);
                 }
                 else
                 {
@@ -56,19 +115,57 @@ namespace AddOne.Framework.Service
             }
         }
 
+        private void ParseB1SFormSRF(XDocument doc, AddInAttribute addInAttribute, string assemblyName,
+                                Dictionary<string, XDocument> formDictionary)
+        {
+            if (doc != null)
+            {
+                var vsicreated = (from elem in doc.Descendants()
+                                  where elem.Name == "project" &&
+                                      elem.Attribute("name").Value == "VSIcreated"
+                                  select elem);
+                if (vsicreated == null)
+                {
+                    Logger.Error(string.Format(Messages.B1SResourceVSICreatedNotFound, assemblyName));
+                    throw new ArgumentException(string.Format(Messages.B1SResourceVSICreatedNotFound, assemblyName));
+                }
+                var contents = (from elem in vsicreated.First().Elements()
+                               where elem.Name == "file"
+                               select elem).ToList();
+                if (contents == null)
+                {
+                    Logger.Error(string.Format(Messages.B1SResourceKeyNotFound, assemblyName, "*"));
+                    throw new ArgumentException(string.Format(Messages.B1SResourceKeyNotFound, assemblyName, "*"));
+                }
+
+                foreach (var content in contents)
+                {
+                    string name = content.Attribute("name").Value;
+                    if (!formDictionary.ContainsKey(name))
+                    {
+                        formDictionary.Add(name, XDocument.Parse(content.Element("content").Attribute("desc").Value));
+                    }
+                }
+            }
+            else
+            {
+                Logger.Error(string.Format(Messages.B1SResourceMissing, assemblyName));
+                throw new ArgumentException(string.Format(Messages.B1SResourceMissing, assemblyName));
+            }
+        }
+
         internal string GetSystemFormXML(string assemblyName, string resourceKey, string formUID, IForm sysForm)
         {
-            var attr = GetFormAttribute(assemblyName, resourceKey);
-            if (attr != null)
+            var doc = GetFormDocument(assemblyName, resourceKey);
+            if (doc != null)
             {
-                return ConfigureSystemForm(attr, formUID, sysForm);
+                return ConfigureSystemForm(doc, formUID, sysForm);
             }
             return string.Empty;
         }
 
-        private string ConfigureSystemForm(XAttribute attribute, string formUID, IForm sysForm)
+        private string ConfigureSystemForm(XDocument doc, string formUID, IForm sysForm)
         {
-            var doc = XDocument.Load(XMLClass.GenerateStreamFromString(attribute.Value));
             var formattedElement = (from app in doc.Elements("Application")
                                     from forms in app.Elements("forms")
                                     from action in forms.Elements("action")
@@ -91,20 +188,19 @@ namespace AddOne.Framework.Service
 
         internal string GetFormXML(string assemblyName, string resourceKey)
         {
-            var attr = GetFormAttribute(assemblyName, resourceKey);
-            if (attr != null)
+            var doc = GetFormDocument(assemblyName, resourceKey);
+            if (doc != null)
             {
-                return attr.Value;
+                return doc.ToString();
             }
             return string.Empty;
         }
 
         internal void ConfigureFormXML(string assemblyName, string resourceKey, string formType)
         {
-            XAttribute attribute = GetFormAttribute(assemblyName, resourceKey);
-            if (attribute != null)
+            XDocument doc = GetFormDocument(assemblyName, resourceKey);
+            if (doc != null)
             {
-                var doc = XDocument.Load(XMLClass.GenerateStreamFromString(attribute.Value));
                 var formattedElement = (from app in doc.Elements("Application")
                                         from forms in app.Elements("forms")
                                         from action in forms.Elements("action")
@@ -115,48 +211,22 @@ namespace AddOne.Framework.Service
                 if (formattedElement.Count() > 0) // system form and udo does not have add.
                 {
                     formattedElement.First().Attribute("FormType").Value = formType;
-                    attribute.Value = doc.ToString();
                 }
             }
         }
 
-        private XAttribute GetFormAttribute(string assemblyName, string resourceKey)
+        private XDocument GetFormDocument(string assemblyName, string resourceKey)
         {
             XDocument doc;
-            assemblyB1SResource.TryGetValue(assemblyName, out doc);
-            if (doc != null)
+            Dictionary<string, XDocument> assemblyForms;
+            if (formSRFResource.TryGetValue(assemblyName, out assemblyForms))
             {
-                var vsicreated = (from elem in doc.Descendants()
-                                  where elem.Name == "project" &&
-                                      elem.Attribute("name").Value == "VSIcreated"
-                                  select elem);
-                if (vsicreated == null)
+                if (assemblyForms.TryGetValue(resourceKey, out doc))
                 {
-                    Logger.Error(string.Format(Messages.B1SResourceVSICreatedNotFound, assemblyName));
-                    throw new ArgumentException(string.Format(Messages.B1SResourceVSICreatedNotFound, assemblyName));
-                }
-                var content = (from elem in vsicreated.First().Elements()
-                               where elem.Name == "file" && elem.Attribute("name").Value == resourceKey
-                               select elem);
-                if (content == null)
-                {
-                    Logger.Error(string.Format(Messages.B1SResourceKeyNotFound, assemblyName, resourceKey));
-                    throw new ArgumentException(string.Format(Messages.B1SResourceKeyNotFound, assemblyName, resourceKey));
-                }
-                if (content.Count() != 0)
-                {
-                    return content.First().Element("content").Attribute("desc");
-                }
-                else
-                {
-                    return null;
+                    return doc;
                 }
             }
-            else
-            {
-                Logger.Error(string.Format(Messages.B1SResourceMissing, assemblyName));
-                throw new ArgumentException(string.Format(Messages.B1SResourceMissing, assemblyName));
-            }
+            return null;
         }
     }
 }
