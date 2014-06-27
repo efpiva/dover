@@ -178,6 +178,15 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Formatted Search.
+        /// </summary>
+        internal static string FS {
+            get {
+                return ResourceManager.GetString("FS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resource {0} found.
         /// </summary>
         internal static string GetLocalizedStringFoundResource {
@@ -219,6 +228,15 @@ namespace AddOne.Framework.Service {
         internal static string InternalResourceMissing {
             get {
                 return ResourceManager.GetString("InternalResourceMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid addin extension.
+        /// </summary>
+        internal static string InvalidAddInExtension {
+            get {
+                return ResourceManager.GetString("InvalidAddInExtension", resourceCulture);
             }
         }
         
@@ -277,11 +295,38 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ZIP package contains more than one DLL.
+        /// </summary>
+        internal static string PackageContainsMoreThanOneDLL {
+            get {
+                return ResourceManager.GetString("PackageContainsMoreThanOneDLL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Permission.
+        /// </summary>
+        internal static string Permission {
+            get {
+                return ResourceManager.GetString("Permission", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Processing attribute {0} - class {1}.
         /// </summary>
         internal static string ProcessingAttribute {
             get {
                 return ResourceManager.GetString("ProcessingAttribute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query Category.
+        /// </summary>
+        internal static string QC {
+            get {
+                return ResourceManager.GetString("QC", resourceCulture);
             }
         }
         
@@ -394,6 +439,15 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UDO.
+        /// </summary>
+        internal static string UDO {
+            get {
+                return ResourceManager.GetString("UDO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unexpected error in CryptoService.
         /// </summary>
         internal static string UnhandledCrypto {
@@ -417,6 +471,33 @@ namespace AddOne.Framework.Service {
         internal static string UpdatingAssembly {
             get {
                 return ResourceManager.GetString("UpdatingAssembly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Query.
+        /// </summary>
+        internal static string UQ {
+            get {
+                return ResourceManager.GetString("UQ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Field.
+        /// </summary>
+        internal static string UserField {
+            get {
+                return ResourceManager.GetString("UserField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Table.
+        /// </summary>
+        internal static string UserTable {
+            get {
+                return ResourceManager.GetString("UserTable", resourceCulture);
             }
         }
     }

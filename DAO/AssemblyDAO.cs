@@ -8,18 +8,18 @@ namespace AddOne.Framework.DAO
 {
     public interface AssemblyDAO
     {
-        List<AssemblyInformation> GetAddinsAssemblies();
-
         byte[] GetAssembly(AssemblyInformation asm);
 
-        AssemblyInformation GetCoreAssembly(string asmFile);
+        List<AssemblyInformation> getAssembliesInformation(string type);
+
+        AssemblyInformation GetAssemblyInformation(string asmName, string type);
 
         void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes);
 
-        AssemblyInformation GetAddInAssembly(string p);
+        void RemoveAssembly(string moduleName);
 
-        List<AssemblyInformation> GetCoreAssemblies();
+        void SaveAssemblyI18N(string moduleCode, string i18n, byte[] i18nAsm);
 
-        void RemoveAsm(string moduleName);
+        bool AutoUpdateEnabled(AssemblyInformation asm);
     }
 }

@@ -36,7 +36,6 @@ namespace AddOne.Framework.Service
             var domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
             domain.SetData("shutdownEvent", shutdownEvent); // Thread synchronization
             domain.SetData("assemblyName", asm.Name); // Used to get current AssemblyName for logging and reflection
-            domain.SetData("addInCode", asm.Code);
             B1Application app = (B1Application)domain.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
             SAPServiceFactory.PrepareForInception(domain);
             Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
@@ -49,7 +48,7 @@ namespace AddOne.Framework.Service
     ConcurrencyMode = ConcurrencyMode.Multiple,
     InstanceContextMode = InstanceContextMode.Single
   )]
-    public class AddinManager : InceptionServer
+    public class AddinManager : MarshalByRefObject, InceptionServer
     {
 
         public ILogger Logger { get; set; }
@@ -79,11 +78,21 @@ namespace AddOne.Framework.Service
             foreach (var addin in authorizedAddins)
             {
                 var asm = Assembly.Load(addin.Name);
-                RegisterObjects(asm);
+                if (!IsInstalled(addin.Code))
+                {
+                    RegisterObjects(asm);
+                    MarkAsInstalled(addin.Code);
+                }
                 ConfigureAddin(addin);
                 RegisterAddin(addin);
                 ConfigureLog(addin);
             }
+        }
+
+        private void MarkAsInstalled(string addInCode)
+        {
+            b1DAO.ExecuteStatement(
+    string.Format("UPDATE [@GA_AO_MODULES] set U_Installed = 'Y' where Code = '{0}'", addInCode));
         }
 
         private void ConfigureLog(AssemblyInformation addin)
@@ -105,6 +114,126 @@ namespace AddOne.Framework.Service
                 }
 
                 doc.Save(destination);
+            }
+        }
+
+        internal bool CheckAddinConfiguration(string assemblyName, out string comments)
+        {
+            Assembly assembly = Assembly.Load(assemblyName);
+
+            bool isValid = false;
+            string tempComments = string.Empty;
+            comments = string.Empty;
+
+            var types = (from type in assembly.GetTypes()
+                         where type.IsClass
+                         select type);
+
+            foreach (var type in types)
+            {
+                var attrs = type.GetCustomAttributes(true);
+                foreach (var attr in attrs)
+                {
+                    Logger.Debug(DebugString.Format(Messages.ProcessingAttribute, attr, type));
+                    if (attr is ResourceBOMAttribute)
+                    {
+                        CheckAddInAttribute((ResourceBOMAttribute)attr, assembly, out tempComments);
+                        comments += tempComments + "\n";
+                    }
+                    else if (attr is PermissionAttribute)
+                    {
+                        CheckPermissionAttribute((PermissionAttribute)attr, out tempComments);
+                        comments += tempComments + "\n";
+                    }
+                    else if (attr is AddInAttribute && !string.IsNullOrWhiteSpace(((AddInAttribute)attr).Description))
+                    {
+                        isValid = true;
+                    }
+                }
+            }
+
+            return isValid;
+        }
+
+        private void CheckPermissionAttribute(PermissionAttribute permissionAttribute, out string comments)
+        {
+            comments = string.Empty;
+
+            if (!b1DAO.PermissionExists(permissionAttribute))
+            {
+                comments += string.Format("{0}: ", Messages.Permission);
+                comments += permissionAttribute.PermissionID;
+            }
+        }
+
+        private void CheckAddInAttribute(ResourceBOMAttribute resourceBOMAttribute, Assembly asm, out string comments)
+        {
+            comments = string.Empty;
+            try
+            {
+                using (var resourceStream = asm.GetManifestResourceStream(resourceBOMAttribute.ResourceName))
+                {
+                    if (resourceStream == null)
+                    {
+                        Logger.Error(string.Format(Messages.InternalResourceMissing, resourceBOMAttribute.ResourceName));
+                    }
+                    switch (resourceBOMAttribute.Type)
+                    {
+                        case ResourceType.UserField:
+                            var userFieldBOM = b1DAO.GetBOMFromXML<UserFieldBOM>(resourceStream);
+                            UpdateOutputValues(ref comments, userFieldBOM, Messages.UserField);
+                            break;
+                        case ResourceType.UserTable:
+                            var userTableBOM = b1DAO.GetBOMFromXML<UserTableBOM>(resourceStream);
+                            UpdateOutputValues(ref comments, userTableBOM, Messages.UserTable);
+                            break;
+                        case ResourceType.UDO:
+                            var udoBOM = b1DAO.GetBOMFromXML<UDOBOM>(resourceStream);
+                            UpdateOutputValues(ref comments, udoBOM, Messages.UDO);
+                            break;
+                        case ResourceType.FormattedSearch:
+                            var fsBOM = b1DAO.GetBOMFromXML<FormattedSearchBOM>(resourceStream);
+                            UpdateOutputValues(ref comments, fsBOM, Messages.FS);
+                            break;
+                        case ResourceType.QueryCategories:
+                            var qcBOM = b1DAO.GetBOMFromXML<QueryCategoriesBOM>(resourceStream);
+                            UpdateOutputValues(ref comments, qcBOM, Messages.QC);
+                            break;
+                        case ResourceType.UserQueries:
+                            var uqBOM = b1DAO.GetBOMFromXML<UserQueriesBOM>(resourceStream);
+                            UpdateOutputValues(ref comments, uqBOM, Messages.UQ);
+                            break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(String.Format("Não foi possível processar atributo {0} do Addin.", resourceBOMAttribute), e);
+            }
+        }
+
+        private void UpdateOutputValues(ref string comments, IBOM bom, string bomName)
+        {
+            List<object> keys = b1DAO.ListMissingBOMKeys(bom);
+
+            if (keys.Count > 0)
+            {
+                comments += string.Format("{0}: ", bomName);
+                bool first = true;
+                foreach (var key in keys)
+                {
+                    if (!first)
+                        comments += ", ";
+                    else
+                        first = false;
+
+                    comments += key;
+                }
+                comments += "\n";
+            }
+            else
+            {
+                comments = string.Empty;
             }
         }
 
@@ -227,12 +356,13 @@ namespace AddOne.Framework.Service
             {
                 Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
                 RegisterObjects(thisAsm);
-                var addin = thisAsm.FullName;
+
+                string  addin = thisAsm.GetName().Name;
                 Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
                 List<MenuAttribute> menus = new List<MenuAttribute>();
                 var types = (from type in thisAsm.GetTypes()
-                             where type.IsClass
-                             select type);
+                                where type.IsClass
+                                select type);
 
                 foreach (var type in types)
                 {
@@ -249,6 +379,13 @@ namespace AddOne.Framework.Service
             {
                 Logger.Error(string.Format(Messages.StartThisError, thisAsmName), e);
             }
+        }
+
+        private bool IsInstalled(string code)
+        {
+            string installedFlag = b1DAO.ExecuteSqlForObject<string>(
+                string.Format("SELECT ISNULL(U_Installed, 'N') from [@GA_AO_MODULES] where Code = '{0}'", code));
+            return !string.IsNullOrEmpty(installedFlag) && installedFlag == "Y";
         }
 
         private void RegisterObjects(Assembly thisAsm)

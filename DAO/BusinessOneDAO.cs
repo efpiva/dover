@@ -21,6 +21,8 @@ namespace AddOne.Framework.DAO
 
         public abstract void UpdateOrSaveBOMIfNotExists(IBOM udoBOM, INotifier notifier = null);
 
+        public abstract List<object> ListMissingBOMKeys(IBOM userFieldBOM);
+
         public abstract string GetNextCode(String udt);
 
         public abstract string GetCurrentUser();
@@ -41,8 +43,8 @@ namespace AddOne.Framework.DAO
 
         public abstract bool IsSuperUser();
 
-        public abstract bool HasPermission(string permissionID);
-
         public abstract void SaveBOM(IBOM doc, INotifier notifier = null);
+
+        public abstract bool PermissionExists(Attribute.PermissionAttribute permissionAttribute);
     }
 }

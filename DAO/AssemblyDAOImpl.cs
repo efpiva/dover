@@ -16,42 +16,24 @@ namespace AddOne.Framework.DAO
             this.b1DAO = b1DAO;
         }
 
-        public AssemblyInformation GetCoreAssembly(string asmFile)
+        public AssemblyInformation GetAssemblyInformation(string asmFile, string type)
         {
             String sql = string.Format(@"SELECT Code, U_Name Name, ISNULL(U_Description, U_Name) Description, U_FileName FileName, U_Version Version, U_MD5 MD5, U_Date Date, 
                                 U_Size Size, U_Type Type 
                             FROM [@GA_AO_MODULES]
-                                where U_Type = 'C' and U_Name = '{0}'", asmFile);
+                                where U_Type = '{1}' and U_Name = '{0}'", asmFile, type);
             return b1DAO.ExecuteSqlForObject<AssemblyInformation>(sql);
         }
 
-        public AssemblyInformation GetAddInAssembly(string asmFile)
+        public List<AssemblyInformation> getAssembliesInformation(string type)
         {
             String sql = string.Format(@"SELECT Code, U_Name Name, ISNULL(U_Description, U_Name) Description, U_FileName FileName, U_Version Version, U_MD5 MD5, U_Date Date, 
                                 U_Size Size, U_Type Type 
                             FROM [@GA_AO_MODULES]
-                                where U_Type = 'A' and U_Name = '{0}'", asmFile);
-            return b1DAO.ExecuteSqlForObject<AssemblyInformation>(sql);
-        }
-
-        public List<AssemblyInformation> GetAddinsAssemblies()
-        {
-            String sql = @"SELECT Code, U_Name Name, ISNULL(U_Description, U_Name) Description, U_FileName FileName, U_Version Version, U_MD5 MD5, U_Date Date, 
-                                U_Size Size, U_Type Type 
-                            FROM [@GA_AO_MODULES]
-                                where U_Type = 'A'";
+                                where U_Type = '{0}'", type);
             return b1DAO.ExecuteSqlForList<AssemblyInformation>(sql);
         }
 
-        public List<AssemblyInformation> GetCoreAssemblies()
-        {
-            String sql = @"SELECT Code, U_Name Name, ISNULL(U_Description, U_Name) Description, U_FileName FileName, U_Version Version, U_MD5 MD5, U_Date Date, 
-                                U_Size Size, U_Type Type 
-                            FROM [@GA_AO_MODULES]
-                                where U_Type = 'C'";
-            return b1DAO.ExecuteSqlForList<AssemblyInformation>(sql);
-        }
-        
         public byte[] GetAssembly(AssemblyInformation asm)
         {
             List<String> hexFile = b1DAO.ExecuteSqlForList<String>(
@@ -118,7 +100,7 @@ namespace AddOne.Framework.DAO
             }
         }
 
-        public void RemoveAsm(string moduleName)
+        public void RemoveAssembly(string moduleName)
         {
             string code = b1DAO.ExecuteSqlForObject<string>(
                 string.Format("SELECT Code FROM [@GA_AO_MODULES] WHERE U_Name = '{0}'", moduleName));
@@ -127,6 +109,46 @@ namespace AddOne.Framework.DAO
                 b1DAO.ExecuteStatement(String.Format("DELETE FROM [@GA_AO_MODULES] WHERE Code = '{0}'", code));
                 b1DAO.ExecuteStatement(String.Format("DELETE FROM [@GA_AO_MODULES_BIN] WHERE U_Code = '{0}'", code));
             }
+        }
+
+        public void SaveAssemblyI18N(string moduleCode, string i18n, byte[] i18nAsm)
+        {
+            string sql;
+            int maxtext = 256000;
+            int insertedText = 0;
+            string asmHex = null;
+           
+            b1DAO.ExecuteStatement(String.Format("DELETE FROM [@GA_AO_MODULES_I18N] WHERE U_Code = '{0}'", moduleCode));
+
+            SoapHexBinary shb = new SoapHexBinary(i18nAsm);
+            if (i18nAsm != null)
+            {
+                asmHex = shb.ToString();
+                for (int i = 0; i < asmHex.Length / maxtext; i++)
+                {
+                    string code = b1DAO.GetNextCode("GA_AO_MODULES_I18N");
+                    sql = String.Format("INSERT INTO [@GA_AO_MODULES_I18N] (Code, Name, U_Code, U_Asm, u_i18n) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')",
+                        code, code, moduleCode, asmHex.Substring(i * maxtext, maxtext), i18n);
+                    b1DAO.ExecuteStatement(sql);
+                    insertedText += maxtext;
+                }
+
+                if (insertedText < asmHex.Length)
+                {
+                    string code = b1DAO.GetNextCode("GA_AO_MODULES_I18N");
+                    sql = String.Format("INSERT INTO [@GA_AO_MODULES_I18N] (Code, Name, U_Code, U_Asm, u_i18n) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')",
+                        code, code, moduleCode, asmHex.Substring(insertedText), i18n);
+                    b1DAO.ExecuteStatement(sql);
+                }
+            }
+        }
+
+
+        public bool AutoUpdateEnabled(AssemblyInformation asm)
+        {
+            string autoUpdateFlag = b1DAO.ExecuteSqlForObject<string>(
+                string.Format("select isnull(U_AutoUpdate, 'N') from [@GA_AO_MODULES] where Code = '{0}'", asm.Code));
+            return !string.IsNullOrEmpty(autoUpdateFlag) && autoUpdateFlag == "Y";
         }
     }
 }

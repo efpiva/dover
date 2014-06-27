@@ -237,4 +237,31 @@
   <data name="LicenseAddInNotFound" xml:space="preserve">
     <value>Addin {0} not found during license load.</value>
   </data>
+  <data name="InvalidAddInExtension" xml:space="preserve">
+    <value>Invalid addin extension</value>
+  </data>
+  <data name="PackageContainsMoreThanOneDLL" xml:space="preserve">
+    <value>ZIP package contains more than one DLL</value>
+  </data>
+  <data name="FS" xml:space="preserve">
+    <value>Formatted Search</value>
+  </data>
+  <data name="QC" xml:space="preserve">
+    <value>Query Category</value>
+  </data>
+  <data name="UDO" xml:space="preserve">
+    <value>UDO</value>
+  </data>
+  <data name="UQ" xml:space="preserve">
+    <value>User Query</value>
+  </data>
+  <data name="UserField" xml:space="preserve">
+    <value>User Field</value>
+  </data>
+  <data name="UserTable" xml:space="preserve">
+    <value>User Table</value>
+  </data>
+  <data name="Permission" xml:space="preserve">
+    <value>Permission</value>
+  </data>
 </root>

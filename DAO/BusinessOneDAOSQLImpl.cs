@@ -92,8 +92,48 @@ namespace AddOne.Framework.DAO
                 }
             }
             Logger.Debug(DebugString.Format(Messages.EndUpdateOrSave, bom.GetName()));
+        }
 
 
+        public override List<object> ListMissingBOMKeys(IBOM bom)
+        {
+            object obj = null;
+            List<object> missingKeys = new List<object>();
+
+            Type type = bom.GetBOClassType();
+            string xmlBom = bom.Serialize();
+
+            company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
+            company.XMLAsString = true;
+
+            Logger.Debug(DebugString.Format(Messages.StartListMissingBOMKeys, bom.GetName()));
+            int length = company.GetXMLelementCount(xmlBom);
+            for (int i = 0; i < length; i++)
+            {
+                try
+                {
+                    obj = company.GetBusinessObject(bom.GetBOType());
+                    var browser = type.InvokeMember("Browser", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
+                    browser.GetType().InvokeMember("ReadXml", BindingFlags.InvokeMethod | BindingFlags.Public,
+                        null, browser, new object[] { xmlBom, i });
+                    string xml = (string)type.InvokeMember("GetAsXML", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
+                    var resourceXml = XDocument.Parse(xml);
+                    object[] keys = GetKeys(obj, bom.GetBOType(), bom.GetKey());
+                    bool found = (bool)type.InvokeMember("GetByKey", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, keys);
+                    if (!found)
+                    {
+                        missingKeys.AddRange(keys);
+                    }
+
+                }
+                finally
+                {
+                    if (obj != null)
+                        System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
+                }
+            }
+            Logger.Debug(DebugString.Format(Messages.EndListMissingBOMKeys, bom.GetName()));
+            return missingKeys;
         }
 
         private void AddDIObject<T>(T obj, string xmlBom, int i, string name, string formatName, INotifier notifier)
@@ -615,9 +655,34 @@ namespace AddOne.Framework.DAO
             return superUser.Return(x => x == "Y", false);
         }
 
-        public override bool HasPermission(string permissionID)
+        public override bool PermissionExists(Attribute.PermissionAttribute permissionAttribute)
         {
-            throw new NotImplementedException();
+            UserPermissionTree userPermissionTree = null;
+
+            Logger.Debug(DebugString.Format(Messages.PermissionStart, permissionAttribute.PermissionID));
+            try
+            {
+                userPermissionTree = (UserPermissionTree)company.GetBusinessObject(BoObjectTypes.oUserPermissionTree);
+                if (userPermissionTree.GetByKey(permissionAttribute.PermissionID))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(String.Format(Messages.UpdateOrSavePermissionError, e.Message), e);
+                throw e;
+            }
+            finally
+            {
+                if (userPermissionTree != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(userPermissionTree);
+            }
+            Logger.Debug(DebugString.Format(Messages.PermissionEnd, permissionAttribute.PermissionID));
         }
     }
 }

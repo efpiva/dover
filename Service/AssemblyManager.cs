@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
+using AddOne.Framework.Attribute;
 using AddOne.Framework.DAO;
+using AddOne.Framework.Log;
 using AddOne.Framework.Model;
 using AddOne.Framework.Monad;
-using System.Security.Cryptography;
-using System.IO;
 using Castle.Core.Logging;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using System.Reflection;
-using AddOne.Framework.Attribute;
-using AddOne.Framework.Log;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace AddOne.Framework.Service
 {
@@ -33,24 +34,148 @@ namespace AddOne.Framework.Service
         };
         private AssemblyDAO asmDAO;
         private LicenseManager licenseManager;
-        private I18NService addIni18n;
+        private I18NService i18nService;
         public ILogger Logger { get; set; }
 
 
-        public AssemblyManager(AssemblyDAO asmDAO, LicenseManager licenseManager, I18NService addIni18n)
+        public AssemblyManager(AssemblyDAO asmDAO, LicenseManager licenseManager, I18NService i18nService)
         {
             this.asmDAO = asmDAO;
             this.licenseManager = licenseManager;
-            this.addIni18n = addIni18n;
+            this.i18nService = i18nService;
         }
 
         public void RemoveAddIn(string moduleName)
         {
             // TODO: reload appDomain!
-            asmDAO.RemoveAsm(moduleName);
+            asmDAO.RemoveAssembly(moduleName);
             Logger.Info(string.Format(Messages.RemoveAddinSuccess, moduleName));
         }
 
+        /// <summary>
+        /// Return true if the addin is valid.
+        /// </summary>
+        /// <param name="path">Path name for the intended addin</param>
+        /// <param name="comments">Comments to be displayed to the end user, linke tabled that are going to be created.</param>
+        /// <returns>true if addin is valid</returns>
+        public bool AddInIsValid(string path, out string comments)
+        {
+            string extension = Path.GetExtension(path);
+            AppDomain testDomain = null;
+            string mainDll = string.Empty;
+            bool ret;
+
+            // check if it's a DLL or ZIP.
+            if (extension != null && extension == ".zip")
+            {
+                testDomain = CreateTestDomain();
+                mainDll = UnzipFile(path, testDomain.BaseDirectory);
+            }
+            else if (extension != null && extension == ".dll")
+            {
+                testDomain = CreateTestDomain();
+                string destination = Path.Combine(testDomain.BaseDirectory, Path.GetFileName(path));
+                File.Copy(path, destination);
+                mainDll = path;
+            }
+            else
+            {
+                throw new ArgumentException(Messages.InvalidAddInExtension);
+            }
+
+            B1Application testApp = (B1Application)testDomain.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
+            testApp.StartApp();
+            var addinManager = testApp.Resolve<AddinManager>();
+            ret = addinManager.CheckAddinConfiguration(mainDll.Substring(0, mainDll.Length - 4), out comments);
+            testApp.ShutDownApp();
+            AppDomain.Unload(testDomain);
+            return ret;
+        }
+
+        /// <summary>
+        /// Unzip a zip file in a specific path.
+        /// </summary>
+        /// <param name="path">path for the zip file</param>
+        /// <param name="destinationFolder">destination folder to unzip</param>
+        /// <returns>main DLL found on zip archive.</returns>
+        private string UnzipFile(string path, string destinationFolder)
+        {
+            string mainDll = null;
+            using (ZipInputStream s = new ZipInputStream(File.OpenRead(path)))
+            {
+
+                ZipEntry theEntry;
+                while ((theEntry = s.GetNextEntry()) != null)
+                {
+
+                    Console.WriteLine(theEntry.Name);
+
+                    string baseDirName = Path.GetDirectoryName(theEntry.Name);
+                    string directoryName = Path.Combine(destinationFolder,  baseDirName);
+                    string fileName = Path.GetFileName(theEntry.Name);
+
+                    // create directory
+                    if (baseDirName.Length > 0)
+                    {
+                        Directory.CreateDirectory(directoryName);
+                    }
+                    else if (fileName.EndsWith(".dll"))
+                    {
+                        if (mainDll != null)
+                        {
+                            throw new ArgumentException(Messages.PackageContainsMoreThanOneDLL);
+                        }
+                        mainDll = fileName; // root main DLL.
+                    }
+
+                    if (fileName != String.Empty)
+                    {
+                        using (FileStream streamWriter = File.Create(Path.Combine(destinationFolder, theEntry.Name)))
+                        {
+
+                            int size = 2048;
+                            byte[] data = new byte[2048];
+                            while (true)
+                            {
+                                size = s.Read(data, 0, data.Length);
+                                if (size > 0)
+                                {
+                                    streamWriter.Write(data, 0, size);
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return mainDll;
+        }
+
+        private AppDomain CreateTestDomain()
+        {
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+
+            AppDomainSetup setup = new AppDomainSetup();
+            setup.ApplicationName = "Addin.test";
+            setup.ApplicationBase = tempDirectory;
+
+            AppDomain testDomain = AppDomain.CreateDomain("Addin.test", null, setup);
+            UpdateAssemblies(AssemblySource.Core, tempDirectory);
+
+            return testDomain;
+        }
+
+        /// <summary>
+        /// Register a valid addin. WARNING: this method does not check if the addin is valid, it just
+        /// save it to the database with the correct data structure, such as version and MD5SUM. It's important
+        /// to call AddInIsValid if you're not sure on what is being passed as path, otherwise there will
+        /// be errors during addin startup.
+        /// </summary>
+        /// <param name="path">path for the file to be saved</param>
         public void SaveAddIn(string path)
         {
             if (path == null || path.Length < 4)
@@ -61,12 +186,33 @@ namespace AddOne.Framework.Service
             {
                 try
                 {
-                    // TODO: check CustomAttributes
-                    var fileName = Path.GetFileName(path);
-                    var addInName = fileName.Substring(0, fileName.Length - 4);
-                    var existingAsm = asmDAO.GetAddInAssembly(addInName);
-                    SaveIfNotExistsOrDifferent(existingAsm, addInName, fileName, 
-                        Path.GetDirectoryName(path), "A");
+                    string directory;
+                    string fileName = Path.GetFileName(path);
+                    string addInName = fileName.Substring(0, fileName.Length - 4);
+                    bool hasi18n = false;
+                    byte[] asmBytes;
+
+                    AssemblyInformation existingAsm = asmDAO.GetAssemblyInformation(addInName, "A");
+
+                    if (fileName.EndsWith(".zip"))
+                    {
+                        directory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                        Directory.CreateDirectory(directory);
+                        fileName = UnzipFile(path, directory);
+                        hasi18n = true;
+                    }
+                    else
+                    {
+                        directory = Path.GetDirectoryName(path);
+                    }
+
+                    AssemblyInformation newAsm = GetNewAsm(directory, fileName, addInName, "A", out asmBytes);
+                    AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(existingAsm, newAsm, asmBytes);
+                    if (hasi18n)
+                    {
+                        SaveAddinI18NResources(directory, addInName, savedAsm.Code);
+                    }
+
                     licenseManager.BootLicense(); // reload licenses to include added license.
                     Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
                 }
@@ -76,6 +222,21 @@ namespace AddOne.Framework.Service
                 }
             }
 
+        }
+
+        private void SaveAddinI18NResources(string directory, string addInName, string moduleCode)
+        {
+            string[] i18nDirectories = Directory.GetDirectories(directory);
+            foreach (string i18nPath in i18nDirectories)
+            {
+                string i18n = Path.GetFileName(i18nPath);
+                string resourceAsm = Path.Combine(directory, i18n, addInName + ".resources.dll");
+                
+                if (i18nService.IsValidi18NCode(i18n) && File.Exists(resourceAsm))
+                {
+                    asmDAO.SaveAssemblyI18N(moduleCode, i18n, File.ReadAllBytes(resourceAsm));
+                }
+            }
         }
 
         internal void UpdateAssemblies(AssemblySource assemblyLocation, string appFolder)
@@ -101,14 +262,14 @@ namespace AddOne.Framework.Service
 
         private List<AssemblyInformation> InitializeAddInAssemblies(string appFolder)
         {
-            List<AssemblyInformation> addinsAsms = asmDAO.GetAddinsAssemblies();
+            List<AssemblyInformation> addinsAsms = asmDAO.getAssembliesInformation("A");
 
             return GenericInitialize(addinsAsms, "A", addinsAssemblies);
         }
 
         private List<AssemblyInformation> InitializeCoreAssemblies(string appFolder)
         {
-            List<AssemblyInformation> coreAsms = asmDAO.GetCoreAssemblies();
+            List<AssemblyInformation> coreAsms = asmDAO.getAssembliesInformation("C");
 
             return GenericInitialize(coreAsms, "C", coreAssemblies);
         }
@@ -117,60 +278,60 @@ namespace AddOne.Framework.Service
             string[] defaultAsms)
         {
             List<AssemblyInformation> ret = new List<AssemblyInformation>();
-            // load databaseAddins.
-            if (asms.Count > 0 && defaultAsms.Length <= asms.Count)
-            {
+            HashSet<string> dbAsms = new HashSet<string>();
+            byte[] asmBytes;
 
-                foreach (var asm in asms)
+            foreach(var asm in asms)
+            {
+                if (asmDAO.AutoUpdateEnabled(asm))
                 {
                     try
                     {
-                        ret.Add(SaveIfNotExistsOrDifferent(asm, asm.Name, asm.FileName, Environment.CurrentDirectory, type));
+                        AssemblyInformation newAsm = GetNewAsm(Environment.CurrentDirectory, asm.FileName, asm.Name, type, out asmBytes);
+                        ret.Add(SaveIfNotExistsOrDifferent(asm, newAsm, asmBytes));
                     }
                     catch (FileNotFoundException)
                     {
-                        ret.Add(asm);
-                        Logger.Warn(String.Format(Messages.IgnoringFile, asm.FileName));
+                        // Ignore it, use DB version.
+                        Logger.Warn(string.Format(Messages.FileMissing, asm.Name, "?"));
                     }
                 }
+                dbAsms.Add(asm.Name);
             }
-            else
+            foreach (string asmFile in defaultAsms)
             {
-                foreach (var asmFile in defaultAsms)
+                string asmName = asmFile.Substring(0, asmFile.Length - 4);
+                if (!dbAsms.Contains(asmName)) // first upload, do not check if AutoUpdateEnabled and if filenotfound, force error (no try-catch).
                 {
-                    try
-                    {
-                        AssemblyInformation asm = (type == "A") ? asmDAO.GetAddInAssembly(asmFile.Substring(0, asmFile.Length - 4))
-                            : asmDAO.GetCoreAssembly(asmFile.Substring(0, asmFile.Length - 4));
-                        ret.Add(SaveIfNotExistsOrDifferent(asm, asmFile.Substring(0, asmFile.Length - 4), asmFile, Environment.CurrentDirectory, type));
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        Logger.Warn(String.Format(Messages.IgnoringFile, asmFile));
-                    }
+                    AssemblyInformation newAsm = GetNewAsm(Environment.CurrentDirectory, asmFile, asmName, type, out asmBytes);
+                    ret.Add(SaveIfNotExistsOrDifferent(null, newAsm, asmBytes)); 
                 }
-
             }
             return ret;
-
         }
 
-        private AssemblyInformation SaveIfNotExistsOrDifferent(AssemblyInformation existingAsm, 
-            string name, string asmFile, string path, string type)
+        private AssemblyInformation GetNewAsm(string directory, string filename, string name, string type,
+            out byte[] asmBytes)
         {
-
+            string path = Path.Combine(directory, filename);
             AssemblyInformation newAsm = new AssemblyInformation();
-            if (existingAsm != null)
-                newAsm.Code = existingAsm.Code; // Prepare for update.
-            var asmPath = Path.Combine(path, asmFile);
             newAsm.Name = name;
-            newAsm.FileName = asmFile;
-            byte[] asmBytes = File.ReadAllBytes(asmPath);
+            newAsm.FileName = filename;
+            asmBytes = File.ReadAllBytes(path);
             GetAssemblyInfoFromBin(asmBytes, newAsm);
             newAsm.MD5 = MD5Sum(asmBytes);
             newAsm.Size = asmBytes.Length;
             newAsm.Date = DateTime.Now;
             newAsm.Type = type;
+
+            return newAsm;
+        }
+
+        private AssemblyInformation SaveIfNotExistsOrDifferent(AssemblyInformation existingAsm,
+            AssemblyInformation newAsm, byte[] asmBytes)
+        {
+            if (existingAsm != null)
+                newAsm.Code = existingAsm.Code; // Prepare for update.
 
             if (existingAsm == null || newAsm.Version.CompareTo(existingAsm.Version) == 1
                 || (newAsm.Version == existingAsm.Version && newAsm.MD5 != existingAsm.MD5))
@@ -207,7 +368,7 @@ namespace AddOne.Framework.Service
                         var addInAttribute = ((AddInAttribute)attr);
                         if (!string.IsNullOrEmpty(addInAttribute.i18n))
                         {
-                            asmInfo.Description = addIni18n.GetLocalizedString(addInAttribute.i18n, asm);
+                            asmInfo.Description = i18nService.GetLocalizedString(addInAttribute.i18n, asm);
                         }
                         else
                         {

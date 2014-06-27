@@ -16,14 +16,14 @@ namespace AddOne.Framework.DAO
     public class BusinessOneUIDAOImpl : BusinessOneUIDAO
     {
         private Application application;
-        private AddIni18n addIni18n;
+        private I18NService i18NService;
 
         public ILogger Logger { get; set; }
 
-        public BusinessOneUIDAOImpl(Application application, AddIni18n addIni18n)
+        public BusinessOneUIDAOImpl(Application application, I18NService addIni18n)
         {
             this.application = application;
-            this.addIni18n = addIni18n;
+            this.i18NService = addIni18n;
         }
 
         public override void ProcessMenuAttribute(List<MenuAttribute> menus)
@@ -47,7 +47,7 @@ namespace AddOne.Framework.DAO
 
                 var actionMenu = new ApplicationMenusActionMenu();
                 if (!string.IsNullOrEmpty(menu.i18n))
-                    menu.String = addIni18n.GetLocalizedString(menu.i18n);
+                    menu.String = i18NService.GetLocalizedString(menu.i18n);
 
                 Logger.Info(String.Format(Messages.MenuProcess, menu.String, menu.UniqueID));
 

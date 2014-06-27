@@ -151,5 +151,39 @@ namespace AddOne.Framework.Service
             }
             return cultureName;
         }
+
+        internal bool IsValidi18NCode(string i18n)
+        {
+            if (i18n.Length > 2)
+                i18n = i18n.Substring(0, 2);
+            switch (i18n)
+            {
+                case "zh":
+                case "cs":
+                case "da":
+                case "nl":
+                case "en":
+                case "fi":
+                case "fr":
+                case "de":
+                case "el":
+                case "he":
+                case "hu":
+                case "it":
+                case "ja":
+                case "ko":
+                case "no":
+                case "pl":
+                case "pt":
+                case "ru":
+                case "sr":
+                case "sk":
+                case "es":
+                case "sv":
+                case "tr":
+                    return true;
+            }
+            return false;
+        }
     }
 }

@@ -106,6 +106,15 @@ namespace AddOne.Framework.DAO {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ended processing ListMissingBOMKeys.
+        /// </summary>
+        internal static string EndListMissingBOMKeys {
+            get {
+                return ResourceManager.GetString("EndListMissingBOMKeys", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Executed UpdateOrSave for {0}.
         /// </summary>
         internal static string EndUpdateOrSave {
@@ -354,6 +363,15 @@ namespace AddOne.Framework.DAO {
         internal static string StartExecuteStatement {
             get {
                 return ResourceManager.GetString("StartExecuteStatement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Started processing ListMissingBOMKeys.
+        /// </summary>
+        internal static string StartListMissingBOMKeys {
+            get {
+                return ResourceManager.GetString("StartListMissingBOMKeys", resourceCulture);
             }
         }
         

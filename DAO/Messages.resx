@@ -132,6 +132,9 @@
   <data name="EndExecuteStatement" xml:space="preserve">
     <value>SQL execution finished - {0}</value>
   </data>
+  <data name="EndListMissingBOMKeys" xml:space="preserve">
+    <value>Ended processing ListMissingBOMKeys</value>
+  </data>
   <data name="EndUpdateOrSave" xml:space="preserve">
     <value>Executed UpdateOrSave for {0}</value>
   </data>
@@ -215,6 +218,9 @@
   </data>
   <data name="StartExecuteStatement" xml:space="preserve">
     <value>Starting SQL statement - {0}</value>
+  </data>
+  <data name="StartListMissingBOMKeys" xml:space="preserve">
+    <value>Started processing ListMissingBOMKeys</value>
   </data>
   <data name="StartUpdateOrSave" xml:space="preserve">
     <value>Started UpdateOrSave for {0}</value>
