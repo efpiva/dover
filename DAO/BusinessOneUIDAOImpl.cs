@@ -127,14 +127,26 @@ namespace AddOne.Framework.DAO
             application.LoadBatchActions(xml);
             ParseBatchResult(application.GetLastBatchResults());
         }
-        internal override IForm LoadFormBatchAction(string xml)
+
+        internal override IForm LoadFormBatchAction(string xml, string formType)
         {
-            int formCount = application.Forms.Count;
+            int formCount = GetFormTypeCount(formType);
             application.LoadBatchActions(xml);
-            // TODO parse return and show error.
-            if (application.Forms.Count == (formCount+1)) // a form was created from XMl
-                return application.Forms.Item(formCount);
-            return null;
+            if (ParseBatchResult(application.GetLastBatchResults()))
+                return application.Forms.GetForm(formType, formCount);
+            else
+                return null;
+        }
+
+        private int GetFormTypeCount(string formType)
+        {
+            int count = 1;
+            for (int i = 0; i < application.Forms.Count; i++)
+            {
+                if (application.Forms.Item(i).TypeEx == formType)
+                    count++;
+            }
+            return count;
         }
 
         internal override IForm GetFormByUID(string formUID)
@@ -142,7 +154,7 @@ namespace AddOne.Framework.DAO
             return application.Forms.Item(formUID);
         }
 
-        private void ParseBatchResult(string xml)
+        private bool ParseBatchResult(string xml)
         {
             XDocument doc = XDocument.Parse(xml);
             var errors = doc.Element("result").Element("errors").Elements("error");
@@ -153,12 +165,15 @@ namespace AddOne.Framework.DAO
                 if (code == null && msg != null)
                 {
                     Logger.Error(string.Format(Messages.UIAPIError, msg));
+                    return false;
                 }
                 else if (code != null && msg != null)
                 {
                     Logger.Error(string.Format(Messages.UIAPICodeAndError, code, msg));
+                    return false;
                 }
-            }   
+            }
+            return true;
         }
     }
 }

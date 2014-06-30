@@ -27,9 +27,12 @@ namespace AddOne.Framework.Form
 
             formEventHandler.RegisterFormLoadBefore(formAttribute.FormType, this);
             string xml = resourceManager.GetFormXML(asmName, formAttribute.Resource);
-            this.UIAPIRawForm = b1UIDAO.LoadFormBatchAction(xml);
-            formEventHandler.RegisterForm(this.UIAPIRawForm.UniqueID, this);
-            this.OnInitializeComponent();
+            this.UIAPIRawForm = b1UIDAO.LoadFormBatchAction(xml, formAttribute.FormType);
+            if (this.UIAPIRawForm != null)
+            {
+                formEventHandler.RegisterForm(this.UIAPIRawForm.UniqueID, this);
+                this.OnInitializeComponent();
+            }
         }
 
     }

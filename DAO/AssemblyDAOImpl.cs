@@ -143,12 +143,30 @@ namespace AddOne.Framework.DAO
             }
         }
 
-
         public bool AutoUpdateEnabled(AssemblyInformation asm)
         {
             string autoUpdateFlag = b1DAO.ExecuteSqlForObject<string>(
                 string.Format("select isnull(U_AutoUpdate, 'N') from [@GA_AO_MODULES] where Code = '{0}'", asm.Code));
             return !string.IsNullOrEmpty(autoUpdateFlag) && autoUpdateFlag == "Y";
+        }
+
+
+        public List<string> GetSupportedI18N(AssemblyInformation asm)
+        {
+            return b1DAO.ExecuteSqlForList<string>(string.Format("select u_i18n from [@GA_AO_MODULES_I18N] WHERE U_Code = '{0}'", asm.Code));
+        }
+
+        public byte[] GetI18NAssembly(AssemblyInformation asm, string i18n)
+        {
+            List<String> hexFile = b1DAO.ExecuteSqlForList<String>(
+                String.Format("Select U_asm from [@GA_AO_MODULES_I18N] where U_Code = '{0}' and U_i18n = '{1}' ORDER BY Code", asm.Code, i18n));
+            StringBuilder sb = new StringBuilder();
+            foreach (var hex in hexFile)
+            {
+                sb.Append(hex);
+            }
+            SoapHexBinary shb = SoapHexBinary.Parse(sb.ToString());
+            return shb.Value;
         }
     }
 }

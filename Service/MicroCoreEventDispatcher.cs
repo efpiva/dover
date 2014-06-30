@@ -8,7 +8,6 @@ using AddOne.Framework.Factory;
 using SAPbouiCOM.Framework;
 using Castle.Core.Logging;
 using System.ServiceModel;
-using AddOne.Framework.IPC;
 
 namespace AddOne.Framework.Service
 {
@@ -19,7 +18,6 @@ namespace AddOne.Framework.Service
     {
         public ILogger Logger { get; set; }
         private SAPbouiCOM.Application sapApp;
-        private InceptionServer inceptionServer;
         private AppEventHandler appEventHandler;
 
         public MicroCoreEventDispatcher(SAPbouiCOM.Application sapApp, AppEventHandler appEventHandler)
@@ -31,11 +29,6 @@ namespace AddOne.Framework.Service
         internal void RegisterEvents()
         {
             sapApp.AppEvent += new _IApplicationEvents_AppEventEventHandler(appEventHandler.sapApp_AppEvent);
-        }
-
-        internal void RegisterInception(AppDomain inception)
-        {
-            appEventHandler.Inception = inception;
         }
     }
 }

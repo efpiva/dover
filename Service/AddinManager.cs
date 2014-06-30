@@ -9,7 +9,6 @@ using System.Xml.Linq;
 using AddOne.Framework.Attribute;
 using AddOne.Framework.DAO;
 using AddOne.Framework.Factory;
-using AddOne.Framework.IPC;
 using AddOne.Framework.Model;
 using AddOne.Framework.Model.SAP;
 using AddOne.Framework.Remoting;
@@ -18,10 +17,12 @@ using AddOne.Framework.Log;
 
 namespace AddOne.Framework.Service
 {
-    class AddInRunner
+    internal class AddInRunner
     {
         internal AssemblyInformation asm;
         internal ManualResetEvent shutdownEvent = new ManualResetEvent(false);
+        internal AddinManager addinInceptionManager;
+        internal Thread runnerThread;
 
         internal AddInRunner(AssemblyInformation asm)
         {
@@ -39,7 +40,8 @@ namespace AddOne.Framework.Service
             B1Application app = (B1Application)domain.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
             SAPServiceFactory.PrepareForInception(domain);
             Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
-            app.Run();
+            addinInceptionManager = app.Resolve<AddinManager>();
+            app.RunAddin();
             AppDomain.Unload(domain);
         } 
     }
@@ -48,7 +50,7 @@ namespace AddOne.Framework.Service
     ConcurrencyMode = ConcurrencyMode.Multiple,
     InstanceContextMode = InstanceContextMode.Single
   )]
-    public class AddinManager : MarshalByRefObject, InceptionServer
+    public class AddinManager : MarshalByRefObject
     {
 
         public ILogger Logger { get; set; }
@@ -335,6 +337,7 @@ namespace AddOne.Framework.Service
             var thread = new Thread(new ThreadStart(runner.Run));
             thread.SetApartmentState(ApartmentState.STA);
             i18nService.ConfigureThreadI18n(thread);
+            runner.runnerThread = thread;
             thread.Start();
         }
 
@@ -356,24 +359,8 @@ namespace AddOne.Framework.Service
             {
                 Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
                 RegisterObjects(thisAsm);
+                StartMenu(thisAsm);
 
-                string  addin = thisAsm.GetName().Name;
-                Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
-                List<MenuAttribute> menus = new List<MenuAttribute>();
-                var types = (from type in thisAsm.GetTypes()
-                                where type.IsClass
-                                select type);
-
-                foreach (var type in types)
-                {
-                    var attrs = type.GetCustomAttributes(true);
-                    ProcessAddInStartupAttribute(attrs, type);
-                    foreach (var method in type.GetMethods())
-                    {
-                        attrs = method.GetCustomAttributes(true);
-                        ProcessAddInStartupAttribute(attrs, type);
-                    }
-                }
             }
             catch (Exception e)
             {
@@ -381,7 +368,52 @@ namespace AddOne.Framework.Service
             }
         }
 
-        private bool IsInstalled(string code)
+        internal void ConfigureAddinsI18N()
+        {
+            i18nService.ConfigureThreadI18n(Thread.CurrentThread);
+            foreach (var addin in runningAddIns)
+            {
+                i18nService.ConfigureThreadI18n(addin.runnerThread);
+                addin.addinInceptionManager.StartMenu();
+            }
+        }
+
+        private void StartMenu()
+        {
+            string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
+            try
+            {
+                Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
+                StartMenu(thisAsm);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(string.Format(Messages.StartThisError, thisAsmName), e);
+            }
+        }
+
+        private void StartMenu(Assembly asm)
+        {
+            string addin = asm.GetName().Name;
+            Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
+            List<MenuAttribute> menus = new List<MenuAttribute>();
+            var types = (from type in asm.GetTypes()
+                         where type.IsClass
+                         select type);
+
+            foreach (var type in types)
+            {
+                var attrs = type.GetCustomAttributes(true);
+                ProcessAddInStartupAttribute(attrs, type);
+                foreach (var method in type.GetMethods())
+                {
+                    attrs = method.GetCustomAttributes(true);
+                    ProcessAddInStartupAttribute(attrs, type);
+                }
+            }
+        }
+
+         private bool IsInstalled(string code)
         {
             string installedFlag = b1DAO.ExecuteSqlForObject<string>(
                 string.Format("SELECT ISNULL(U_Installed, 'N') from [@GA_AO_MODULES] where Code = '{0}'", code));
@@ -435,25 +467,6 @@ namespace AddOne.Framework.Service
             }
             runningAddIns = new List<AddInRunner>(); // clean running AddIns.
             System.Windows.Forms.Application.Exit(); // free main Inception thread.
-        }
-
-        internal void CreateInceptionServer()
-        {
-            try
-            {
-                string pipeName = (string)AppDomain.CurrentDomain.GetData("AddOnePIPE");
-                host = new ServiceHost(
-                    this,
-                    new Uri[] { new Uri("net.pipe://localhost/" + pipeName) });
-                host.AddServiceEndpoint(typeof(InceptionServer),
-                    new NetNamedPipeBinding(NetNamedPipeSecurityMode.None),
-                    "InceptionServer");
-                host.Open();
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e.Message, e);
-            }
         }
     }
 }

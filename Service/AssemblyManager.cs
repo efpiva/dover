@@ -84,11 +84,10 @@ namespace AddOne.Framework.Service
             }
 
             B1Application testApp = (B1Application)testDomain.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
-            testApp.StartApp();
             var addinManager = testApp.Resolve<AddinManager>();
             ret = addinManager.CheckAddinConfiguration(mainDll.Substring(0, mainDll.Length - 4), out comments);
             testApp.ShutDownApp();
-            AppDomain.Unload(testDomain);
+            AppDomain.Unload(testDomain); // TODO: clean up temp directory.
             return ret;
         }
 
@@ -256,6 +255,7 @@ namespace AddOne.Framework.Service
                 if (IsDifferent(asm, appFolder, fullPath))
                 {
                     UpdateAssembly(asm, fullPath);
+                    UpdateI18NAssembly(asm, appFolder);
                 }
             }
         }
@@ -288,7 +288,10 @@ namespace AddOne.Framework.Service
                     try
                     {
                         AssemblyInformation newAsm = GetNewAsm(Environment.CurrentDirectory, asm.FileName, asm.Name, type, out asmBytes);
-                        ret.Add(SaveIfNotExistsOrDifferent(asm, newAsm, asmBytes));
+                        AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(asm, newAsm, asmBytes);
+                        ret.Add(savedAsm);
+                        if (savedAsm.MD5 != asm.MD5)
+                            SaveAddinI18NResources(Environment.CurrentDirectory, asm.Name, asm.Code);
                     }
                     catch (FileNotFoundException)
                     {
@@ -304,7 +307,9 @@ namespace AddOne.Framework.Service
                 if (!dbAsms.Contains(asmName)) // first upload, do not check if AutoUpdateEnabled and if filenotfound, force error (no try-catch).
                 {
                     AssemblyInformation newAsm = GetNewAsm(Environment.CurrentDirectory, asmFile, asmName, type, out asmBytes);
-                    ret.Add(SaveIfNotExistsOrDifferent(null, newAsm, asmBytes)); 
+                    AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(null, newAsm, asmBytes);
+                    ret.Add(savedAsm);
+                    SaveAddinI18NResources(Environment.CurrentDirectory, asmName, savedAsm.Code);
                 }
             }
             return ret;
@@ -388,10 +393,10 @@ namespace AddOne.Framework.Service
         {
             try
             {
-                byte[] asm = asmDAO.GetAssembly(asmMeta);
-                if (asm != null)
+                byte[] asmBytes = asmDAO.GetAssembly(asmMeta);
+                if (asmBytes != null)
                 {
-                    File.WriteAllBytes(fullPath, asm);
+                    File.WriteAllBytes(fullPath, asmBytes);
                     Logger.Info(String.Format(Messages.FileUpdated, asmMeta.Name, asmMeta.Version));
                 }
                 else
@@ -402,6 +407,33 @@ namespace AddOne.Framework.Service
             catch (Exception e)
             {
                 Logger.Error(String.Format(Messages.FileError, asmMeta.Name, asmMeta.Version), e);
+            }
+        }
+
+        private void UpdateI18NAssembly(AssemblyInformation asm, string appFolder)
+        {
+            List<string> supportedI18N = asmDAO.GetSupportedI18N(asm);
+            foreach (var i18n in supportedI18N)
+            {
+                Directory.CreateDirectory(Path.Combine(appFolder, i18n));
+                string asmName = asm.Name + ".resources.dll";
+                try
+                {
+                    byte[] asmBytes = asmDAO.GetI18NAssembly(asm, i18n);
+                    if (asmBytes != null)
+                    {
+                        File.WriteAllBytes(Path.Combine(appFolder, i18n, asmName), asmBytes);
+                        Logger.Info(String.Format(Messages.FileUpdated, asmName, asm.Version));
+                    }
+                    else
+                    {
+                        Logger.Warn(String.Format(Messages.FileMissing, asmName, asm.Version));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(String.Format(Messages.FileError, asmName, asm.Version), e);
+                }
             }
         }
 

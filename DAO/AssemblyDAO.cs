@@ -21,5 +21,9 @@ namespace AddOne.Framework.DAO
         void SaveAssemblyI18N(string moduleCode, string i18n, byte[] i18nAsm);
 
         bool AutoUpdateEnabled(AssemblyInformation asm);
+
+        List<string> GetSupportedI18N(AssemblyInformation asm);
+
+        byte[] GetI18NAssembly(AssemblyInformation asm, string i18n);
     }
 }

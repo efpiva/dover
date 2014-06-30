@@ -104,7 +104,6 @@
     <Compile Include="Form\SystemFormBase.cs" />
     <Compile Include="Form\UDOFormBase.cs" />
     <Compile Include="Form\UserFormBase.cs" />
-    <Compile Include="IPC\InceptionServer.cs" />
     <Compile Include="Log\DebugString.cs" />
     <Compile Include="Log\SAPAppender.cs" />
     <Compile Include="Messages.Designer.cs">

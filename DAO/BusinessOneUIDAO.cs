@@ -8,7 +8,7 @@ namespace AddOne.Framework.DAO
     {
         public abstract void ProcessMenuAttribute(List<MenuAttribute> menus);
 
-        internal abstract IForm LoadFormBatchAction(string xml);
+        internal abstract IForm LoadFormBatchAction(string xml, string formType);
 
         internal abstract void LoadBatchAction(string xml);
 

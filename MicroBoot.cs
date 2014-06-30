@@ -12,8 +12,10 @@ namespace AddOne.Framework
     public class MicroBoot
     {
         internal string AppFolder;
-        internal AppDomain Inception;
         private I18NService I18NService;
+
+        internal AppDomain Inception { get; set; }
+        internal AddinManager InceptionAddinManager { get; set; }
 
         public MicroBoot(I18NService I18NService)
         {
@@ -43,7 +45,8 @@ namespace AddOne.Framework
             SAPServiceFactory.PrepareForInception(Inception); // need to be after B1Application creation because of assembly resolving from embedded resources.
             Inception.SetData("assemblyName", "AddOne"); // Used to get current AssemblyName for logging and reflection
             Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
-            app.Run();
+            InceptionAddinManager = app.Resolve<AddinManager>();
+            app.RunInception();
         }
     }
 }

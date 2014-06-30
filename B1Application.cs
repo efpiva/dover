@@ -58,7 +58,9 @@ namespace AddOne.Framework
         public T[] ResolveAll<T>()
         {
             if (appContainer == null)
-                return null;
+            {
+                appContainer = ContainerManager.BuildContainer();
+            }
 
             return appContainer.ResolveAll<T>();
         }
@@ -66,41 +68,45 @@ namespace AddOne.Framework
         public T Resolve<T>()
         {
             if (appContainer == null)
-                return default(T);
+            {
+                appContainer = ContainerManager.BuildContainer();
+            }
 
             return appContainer.Resolve<T>();
         }
 
-        public void StartApp()
-        {
-            appContainer = ContainerManager.BuildContainer();
-        }
-
         public void Run()
         {
-            if (AppDomain.CurrentDomain.FriendlyName != "AddOne.AddIn"
-                && AppDomain.CurrentDomain.FriendlyName != "AddOne.Inception")
+            if (appContainer == null)
             {
-                var container = ContainerManager.BuildContainer();
-                var microCore = container.Resolve<MicroCore>();
-                microCore.PrepareFramework();
+                appContainer = ContainerManager.BuildContainer();
             }
-            else if (AppDomain.CurrentDomain.FriendlyName == "AddOne.AddIn")
+            var microCore = appContainer.Resolve<MicroCore>();
+            microCore.PrepareFramework();
+        }
+
+        public void RunAddin()
+        {
+            if (appContainer == null)
             {
-                var container = ContainerManager.BuildContainer();
-                var loader = container.Resolve<Boot>();
-                loader.StartThis();
-                ManualResetEvent shutdownEvent = (ManualResetEvent)AppDomain.CurrentDomain.GetData("shutdownEvent");
-                Sponsor<ManualResetEvent> shutdownEventSponsor = new Sponsor<ManualResetEvent>(shutdownEvent);
-                shutdownEvent.WaitOne(); // Wait until shutdown event is signaled.
-            } 
-            else
-            {
-                var container = ContainerManager.BuildContainer();
-                var boot = container.Resolve<Boot>();
-                boot.StartUp();
-                container.Dispose();
+                appContainer = ContainerManager.BuildContainer();
             }
+            var loader = appContainer.Resolve<Boot>();
+            loader.StartThis();
+            ManualResetEvent shutdownEvent = (ManualResetEvent)AppDomain.CurrentDomain.GetData("shutdownEvent");
+            Sponsor<ManualResetEvent> shutdownEventSponsor = new Sponsor<ManualResetEvent>(shutdownEvent);
+            shutdownEvent.WaitOne(); // Wait until shutdown event is signaled.
+        }
+
+        public void RunInception()
+        {
+            if (appContainer == null)
+            {
+                appContainer = ContainerManager.BuildContainer();
+            }
+            var boot = appContainer.Resolve<Boot>();
+            boot.StartUp();
+            appContainer.Dispose();
         }
     }
 }

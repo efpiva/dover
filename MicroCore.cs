@@ -58,7 +58,6 @@ namespace AddOne.Framework
 
                 microBoot.AppFolder = appFolder;
                 microBoot.StartInception();
-                dispatcher.RegisterInception(microBoot.Inception);
                 microBoot.Boot();
                 System.Windows.Forms.Application.Run();
             }
