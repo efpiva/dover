@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using SAPbouiCOM;
 using AddOne.Framework.Factory;
+using Castle.Core;
 
 namespace AddOne.Framework.Form
 {
+    [Interceptor("formProxy")]
     public class AddOneFormBase
     {
         protected SAPbouiCOM.Application app;

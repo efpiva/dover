@@ -12,6 +12,9 @@ using System.Reflection;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using System.IO;
 using AddOne.Framework.Service;
+using Castle.DynamicProxy;
+using AddOne.Framework.Proxy;
+using AddOne.Framework.Form;
 
 namespace AddOne.Framework.Factory
 {
@@ -23,7 +26,8 @@ namespace AddOne.Framework.Factory
 
         internal static void RegisterAssembly(Assembly addIn)
         {
-                Container.Register(Classes.FromAssembly(addIn)
+            Container.Register(Component.For<IInterceptor>().ImplementedBy<FormProxy>().Named("formProxy"));
+            Container.Register(Classes.FromAssembly(addIn)
                             .IncludeNonPublicTypes().Pick()
                             .WithService.DefaultInterfaces().LifestyleTransient());
         }

@@ -23,7 +23,7 @@ namespace AddOne.Framework.Form
             FormAttribute formAttribute = (FormAttribute)(from attribute in this.GetType().GetCustomAttributes(true)
                                                             where attribute is FormAttribute
                                                             select attribute).First();
-            var asmName = this.GetType().Assembly.GetName().FullName;
+            var asmName = this.GetType().BaseType.Assembly.GetName().FullName;
 
             formEventHandler.RegisterFormLoadBefore(formAttribute.FormType, this);
             string xml = resourceManager.GetFormXML(asmName, formAttribute.Resource);

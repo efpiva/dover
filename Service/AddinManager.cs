@@ -22,6 +22,9 @@ namespace AddOne.Framework.Service
         internal AssemblyInformation asm;
         internal ManualResetEvent shutdownEvent = new ManualResetEvent(false);
         internal AddinManager addinInceptionManager;
+        internal B1SResourceManager addinB1SResourceManager;
+        internal FormEventHandler addinFormEventHandler;
+
         internal Thread runnerThread;
 
         internal AddInRunner(AssemblyInformation asm)
@@ -39,8 +42,13 @@ namespace AddOne.Framework.Service
             domain.SetData("assemblyName", asm.Name); // Used to get current AssemblyName for logging and reflection
             B1Application app = (B1Application)domain.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
             SAPServiceFactory.PrepareForInception(domain);
-            Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
             addinInceptionManager = app.Resolve<AddinManager>();
+            addinB1SResourceManager = app.Resolve<B1SResourceManager>();
+            addinFormEventHandler = app.Resolve<FormEventHandler>();
+            Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
+            Sponsor<AddinManager> inceptionSponsor = new Sponsor<AddinManager>(addinInceptionManager);
+            Sponsor<B1SResourceManager> b1sSponsor = new Sponsor<B1SResourceManager>(addinB1SResourceManager);
+            Sponsor<FormEventHandler> formEventSponsor = new Sponsor<FormEventHandler>(addinFormEventHandler);
             app.RunAddin();
             AppDomain.Unload(domain);
         } 
@@ -375,6 +383,7 @@ namespace AddOne.Framework.Service
             {
                 i18nService.ConfigureThreadI18n(addin.runnerThread);
                 addin.addinInceptionManager.StartMenu();
+                addin.addinFormEventHandler.RegisterForms(false);
             }
         }
 

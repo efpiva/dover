@@ -9,7 +9,7 @@ using AddOne.Framework.Factory;
 
 namespace AddOne.Framework.Service
 {
-    public class FormEventHandler
+    public class FormEventHandler : MarshalByRefObject
     {
         private Application sapApp;
         private PermissionManager permissionManager;
@@ -39,8 +39,13 @@ namespace AddOne.Framework.Service
             pendingList.Add(form);
         }
 
-        internal void RegisterForms()
+        internal void RegisterForms(bool registerEvents = true)
         {
+            if (!registerEvents) // language change.
+            {
+                resourceManager.Reset();
+            }
+
             Assembly currentAsm = AppDomain.CurrentDomain.Load((string)AppDomain.CurrentDomain.GetData("assemblyName"));
             var formAttributes = (from type in currentAsm.GetTypes()
                                   from attribute in type.GetCustomAttributes(true)
@@ -68,10 +73,11 @@ namespace AddOne.Framework.Service
 
             foreach (var attribute in formAttributes)
             {
-                RegisterFormEvent(attribute.FormAttribute.FormType, attribute.Type);
+                if (registerEvents)
+                    RegisterFormEvent(attribute.FormAttribute.FormType, attribute.Type);
                 if (!string.IsNullOrEmpty(attribute.FormAttribute.Resource)) // UDOs have their XML stored in the database.
                 {
-                    resourceManager.ConfigureFormXML(attribute.Assembly.GetName().FullName,
+                    resourceManager.ConfigureFormXML(attribute.Assembly, attribute.Type,
                         attribute.FormAttribute.Resource, attribute.FormAttribute.FormType);
                 }
             }            

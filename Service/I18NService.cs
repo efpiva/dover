@@ -24,12 +24,14 @@ namespace AddOne.Framework.Service
 
         internal string GetLocalizedString(string key, Assembly addin = null)
         {
+            if (key == null)
+                return string.Empty;
 
-            var index = key.Return(x => x, String.Empty).LastIndexOf(".");
-            if (index < 0)
+            var index = key.LastIndexOf(".");
+            var spaceIndex = key.LastIndexOf(" ");
+            if (index < 0 || spaceIndex > 0)
             {
-                Logger.Error(String.Format(Messages.i18nError, key));
-                return key.Return(x => x, String.Empty);
+                return key;
             }
             string typeName = key.Substring(0, index);
             index++;
@@ -49,7 +51,17 @@ namespace AddOne.Framework.Service
                 Logger.Debug(DebugString.Format(Messages.GetLocalizedStringNotFoundResource, key));
             }
 
-            return resource.GetString(propertyName);
+            try
+            {
+                string value = resource.GetString(propertyName, System.Threading.Thread.CurrentThread.CurrentUICulture);
+                if (string.IsNullOrEmpty(value))
+                    return key;
+                return value;
+            }
+            catch (Exception)
+            {
+                return key;
+            }
         }
 
         internal void ConfigureThreadI18n(Thread thread)

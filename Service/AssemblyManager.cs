@@ -71,21 +71,23 @@ namespace AddOne.Framework.Service
                 testDomain = CreateTestDomain();
                 mainDll = UnzipFile(path, testDomain.BaseDirectory);
             }
-            else if (extension != null && extension == ".dll")
+            else if (extension != null && (extension == ".dll" || extension == ".exe"))
             {
                 testDomain = CreateTestDomain();
                 string destination = Path.Combine(testDomain.BaseDirectory, Path.GetFileName(path));
                 File.Copy(path, destination);
-                mainDll = path;
+                mainDll = Path.GetFileName(path);
             }
             else
             {
                 throw new ArgumentException(Messages.InvalidAddInExtension);
             }
 
+            mainDll = mainDll.Substring(0, mainDll.Length - 4);
+
             B1Application testApp = (B1Application)testDomain.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
             var addinManager = testApp.Resolve<AddinManager>();
-            ret = addinManager.CheckAddinConfiguration(mainDll.Substring(0, mainDll.Length - 4), out comments);
+            ret = addinManager.CheckAddinConfiguration(mainDll, out comments);
             testApp.ShutDownApp();
             AppDomain.Unload(testDomain); // TODO: clean up temp directory.
             return ret;
@@ -263,21 +265,21 @@ namespace AddOne.Framework.Service
         private List<AssemblyInformation> InitializeAddInAssemblies(string appFolder)
         {
             List<AssemblyInformation> addinsAsms = asmDAO.getAssembliesInformation("A");
-
-            return GenericInitialize(addinsAsms, "A", addinsAssemblies);
+            GenericInitialize(addinsAsms, "A", addinsAssemblies);
+            return addinsAsms;
         }
 
         private List<AssemblyInformation> InitializeCoreAssemblies(string appFolder)
         {
             List<AssemblyInformation> coreAsms = asmDAO.getAssembliesInformation("C");
-
-            return GenericInitialize(coreAsms, "C", coreAssemblies);
+            GenericInitialize(coreAsms, "C", coreAssemblies);
+            return coreAsms;
         }
 
-        private List<AssemblyInformation> GenericInitialize(List<AssemblyInformation> asms, string type,
+        private void GenericInitialize(List<AssemblyInformation> asms, string type,
             string[] defaultAsms)
         {
-            List<AssemblyInformation> ret = new List<AssemblyInformation>();
+            List<AssemblyInformation> retValue = new List<AssemblyInformation>();
             HashSet<string> dbAsms = new HashSet<string>();
             byte[] asmBytes;
 
@@ -289,9 +291,11 @@ namespace AddOne.Framework.Service
                     {
                         AssemblyInformation newAsm = GetNewAsm(Environment.CurrentDirectory, asm.FileName, asm.Name, type, out asmBytes);
                         AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(asm, newAsm, asmBytes);
-                        ret.Add(savedAsm);
                         if (savedAsm.MD5 != asm.MD5)
+                        {
                             SaveAddinI18NResources(Environment.CurrentDirectory, asm.Name, asm.Code);
+                            asm.MD5 = savedAsm.MD5; // update MD5Sum, so AppData is updated latter.
+                        }
                     }
                     catch (FileNotFoundException)
                     {
@@ -308,11 +312,10 @@ namespace AddOne.Framework.Service
                 {
                     AssemblyInformation newAsm = GetNewAsm(Environment.CurrentDirectory, asmFile, asmName, type, out asmBytes);
                     AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(null, newAsm, asmBytes);
-                    ret.Add(savedAsm);
                     SaveAddinI18NResources(Environment.CurrentDirectory, asmName, savedAsm.Code);
+                    retValue.Add(savedAsm); // do not need to check if is valid, it's default asm.
                 }
             }
-            return ret;
         }
 
         private AssemblyInformation GetNewAsm(string directory, string filename, string name, string type,

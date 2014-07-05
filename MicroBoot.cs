@@ -43,9 +43,10 @@ namespace AddOne.Framework
         {
             B1Application app = (B1Application)Inception.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
             SAPServiceFactory.PrepareForInception(Inception); // need to be after B1Application creation because of assembly resolving from embedded resources.
-            Inception.SetData("assemblyName", "AddOne"); // Used to get current AssemblyName for logging and reflection
-            Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
+            Inception.SetData("assemblyName", "AddOne"); // Used to get current AssemblyName for logging and reflection            
             InceptionAddinManager = app.Resolve<AddinManager>();
+            Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
+            Sponsor<AddinManager> addInManagerSponsor = new Sponsor<AddinManager>(InceptionAddinManager);
             app.RunInception();
         }
     }
