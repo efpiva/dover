@@ -20,7 +20,8 @@ namespace AddOne.Framework.Form
 
         public void Show()
         {
-            this.UIAPIRawForm.Visible = true;
+            if (this.UIAPIRawForm != null)
+                this.UIAPIRawForm.Visible = true;
         }
 
         protected Item GetItem(object key)
