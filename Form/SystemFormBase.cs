@@ -33,7 +33,7 @@ namespace AddOne.Framework.Form
                                                           select attribute).First();
             var asmName = this.GetType().BaseType.Assembly.GetName().FullName;
 
-            string xml = resourceManager.GetSystemFormXML(asmName, formAttribute.Resource, formUID, this.UIAPIRawForm);
+            string xml = resourceManager.GetSystemFormXML(asmName, formAttribute.Resource, formUID);
             b1UIDAO.LoadBatchAction(xml);
             formEventHandler.RegisterForm(formUID, this);
             this.OnInitializeComponent();

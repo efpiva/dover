@@ -120,10 +120,6 @@ namespace AddOne.Framework.Service
                         formDictionary[addInAttribute.Resource] = doc; // override b1s form. srf have higher priority.
                     }
                 }
-                else
-                {
-                    Logger.Warn(string.Format(Messages.ResourceNotFound, asm.GetName().FullName, addInAttribute.Resource));
-                }
             }
         }
 
@@ -148,51 +144,7 @@ namespace AddOne.Framework.Service
                     }
 
                     ParseB1SFormSRF(doc, addInAttribute, key, formDictionary);
-                    ParseB1SUDOFormSRF(doc, addInAttribute, key, formDictionary);
                 }
-                else
-                {
-                    Logger.Warn(string.Format(Messages.ResourceNotFound, asm.GetName().FullName, addInAttribute.B1SResource));
-                }
-            }
-        }
-
-        private void ParseB1SUDOFormSRF(XDocument doc, AddInAttribute addInAttribute, string assemblyName,
-                Dictionary<string, XDocument> formDictionary)
-        {
-            if (doc != null)
-            {
-                var addonfiles = (from elem in doc.Descendants()
-                                  where elem.Name == "project" &&
-                                      elem.Attribute("type").Value == "Add-on"
-                                  select elem);
-                if (addonfiles == null)
-                {
-                    Logger.Error(string.Format(Messages.B1SResourceVSICreatedNotFound, assemblyName));
-                    throw new ArgumentException(string.Format(Messages.B1SResourceVSICreatedNotFound, assemblyName));
-                }
-                var contents = (from elem in addonfiles.First().Elements()
-                                where elem.Name == "file"
-                                select elem);
-                if (contents == null)
-                {
-                    Logger.Error(string.Format(Messages.B1SResourceKeyNotFound, assemblyName, "*"));
-                    throw new ArgumentException(string.Format(Messages.B1SResourceKeyNotFound, assemblyName, "*"));
-                }
-
-                foreach (var content in contents)
-                {
-                    string name = content.Attribute("name").Value;
-                    if (!formDictionary.ContainsKey(name))
-                    {
-                        formDictionary.Add(name, XDocument.Parse(content.Element("content").Attribute("desc").Value));
-                    }
-                }
-            }
-            else
-            {
-                Logger.Error(string.Format(Messages.B1SResourceMissing, assemblyName));
-                throw new ArgumentException(string.Format(Messages.B1SResourceMissing, assemblyName));
             }
         }
 
@@ -235,31 +187,49 @@ namespace AddOne.Framework.Service
             }
         }
 
-        internal string GetSystemFormXML(string assemblyName, string resourceKey, string formUID, IForm sysForm)
+        internal XDocument GetSystemFormXDoc(string assemblyName, string resourceKey, string formUID)
         {
             var doc = GetFormDocument(assemblyName, resourceKey);
             if (doc != null)
             {
-                return ConfigureSystemForm(doc, formUID, sysForm);
+                ConfigureSystemForm(doc, formUID);
+            }
+            return doc;
+        }
+
+        internal string GetSystemFormXML(string assemblyName, string resourceKey, string formUID)
+        {
+            var doc = GetFormDocument(assemblyName, resourceKey);
+            if (doc != null)
+            {
+                return ConfigureSystemForm(doc, formUID);
             }
             return string.Empty;
         }
 
-        private string ConfigureSystemForm(XDocument doc, string formUID, IForm sysForm)
+        private string ConfigureSystemForm(XDocument origDoc, string formUID)
         {
+            XDocument doc = new XDocument(origDoc); // do not touch original form. Modify a copy.
             var formattedElement = (from app in doc.Elements("Application")
                                     from forms in app.Elements("forms")
                                     from action in forms.Elements("action")
                                     from form in action.Elements("form")
                                     where action.Attribute("type").Value == "update"
+                                            || action.Attribute("type").Value == "add"
                                     select form);
 
-            if (formattedElement.Count() > 0) // system form and udo does not have add.
+            if (formattedElement.Count() > 0)
             {
                 XElement xmlForm = formattedElement.First();
+                string title = xmlForm.Attribute("title").Return(x => x.Value, string.Empty);
+                int clientWidth = Int32.Parse(xmlForm.Attribute("client_width").Return(x => x.Value, "0"));
+                int clientHeight = Int32.Parse(xmlForm.Attribute("client_height").Return(x => x.Value, "0"));
+
                 xmlForm.RemoveAttributes(); // we do not want to update form geometry. Just form UID.
                 XAttribute uid = new XAttribute("uid", formUID);
+                XAttribute titleAttr = new XAttribute("title", title);
                 xmlForm.Add(uid);
+                xmlForm.Add(titleAttr);
 
                 return doc.ToString();
             }
@@ -294,160 +264,18 @@ namespace AddOne.Framework.Service
                     formattedElement.First().Attribute("FormType").Value = formType;
                 }
 
-                if (typeof(AddOneUDOFormBase).IsAssignableFrom(type))
-                {
-                    ConfigureUDOi18N(doc, addinAsm, resourceKey);
-                }
-                else
-                {
-                    ConfigureUserAndSystemi18N(doc, addinAsm);
-                }
+                ConfigureFormi18N(doc, addinAsm);
 
             }
         }
 
-        private void ConfigureUDOi18N(XDocument doc, Assembly addinAsm, string resourceKey)
-        {
-            List<XElement> translatedElements = new List<XElement>();
-            Dictionary<string, XElement> grids = new Dictionary<string,XElement>();
-
-            string i18nTitle = string.Empty;
-
-            var i18nElements = (from descendant in doc.Descendants()
-                                where descendant.Name.LocalName.ToUpper() == "FORM"
-                                    || descendant.Name.LocalName.ToUpper() == "SPECIFIC"
-                                    || descendant.Name.LocalName.ToUpper() == "GRIDCOLUMN"
-                                select descendant);
-
-            foreach (var element in i18nElements)
-            {
-                switch (element.Name.LocalName.ToUpper())
-                {
-                    case "FORM":
-                        i18nTitle = ProcessUDOForm(element, addinAsm);
-                        break;
-                    case "SPECIFIC":
-                        XElement specificElement = ProcessUDOItem(element, addinAsm);
-                        if (specificElement != null)
-                            translatedElements.Add(specificElement);
-                        break;
-                    case "GRIDCOLUMN":
-                        ProcessGridElement(grids, element, addinAsm);
-                        break;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(i18nTitle) || translatedElements.Count > 0 || grids.Count > 0)
-            {
-                formSRFResource[addinAsm.GetName().FullName][resourceKey] =
-                    CreateUDOXDocument(i18nTitle, translatedElements, grids);
-            }
-            else
-            {
-                formSRFResource[addinAsm.GetName().FullName].Remove(resourceKey);
-            }
-        }
-
-        private XDocument CreateUDOXDocument(string i18nTitle, List<XElement> translatedElements, Dictionary<string, XElement> grids)
-        {
-            XDocument doc = XDocument.Parse(formUpdateTemplate);
-            if (!string.IsNullOrEmpty(i18nTitle))
-            {
-                doc.Element("forms").Element("action").Element("form").SetAttributeValue("Title", i18nTitle);
-            }
-            XElement itemUpdate = doc.Element("Application").Element("forms").Element("action").Element("form").Element("items").Element("action");
-            foreach (var element in translatedElements)
-            {
-                itemUpdate.Add(element);
-            }
-            foreach (var key in grids.Keys)
-            {
-                itemUpdate.Add(grids[key]);
-            }
-            return doc;
-        }
-
-        private void ProcessGridElement(Dictionary<string, XElement> grids, XElement element, Assembly addinAsm)
-        {
-            XElement grid = element.With(x => x.Parent).With(x => x.Parent).With(x => x.Parent);
-            if (grid != null && grid.Attribute("uid") != null)
-            {
-                string title = element.Attribute("Title").Value;
-                string i18nTitle = i18nService.GetLocalizedString(title, addinAsm);
-                if (title != i18nTitle)
-                {
-                    XElement i18nGrid;
-                    string uid = grid.Attribute("uid").Value;
-                    if (!grids.TryGetValue(uid, out i18nGrid))
-                    {
-                        i18nGrid = CreateGridXElement(uid);
-                        grids.Add(uid, i18nGrid);
-                    }
-
-                    XElement gridColumns = i18nGrid.Element("specific").Element("GridColumns");
-                    XElement gridColumn = new XElement("GridColumn");
-                    gridColumn.SetAttributeValue("UniqueID", element.Attribute("UniqueID").Value);
-                    gridColumn.SetAttributeValue("Title", i18nTitle);
-                    gridColumn.Add(gridColumn);
-                }
-            }
-        }
-
-        private XElement CreateGridXElement(string uid)
-        {
-            XElement grid = new XElement("item");
-            grid.SetAttributeValue("uid", uid);
-            XElement specific = new XElement("specific");
-            XElement gridColumns = new XElement("GridColumns");
-            specific.Add(gridColumns);
-            grid.Add(specific);
-            return grid;
-        }
-
-        private XElement ProcessUDOItem(XElement captionElement,
-            Assembly addinAsm)
-        {
-            string name = (from attribute in captionElement.Attributes()
-                           where attribute.Name.LocalName.ToUpper() == "CAPTION"
-                           select attribute.Value).If(x => x.Count() > 0).Return(x => x.First(), string.Empty);
-
-            string i18nName = i18nService.GetLocalizedString(name, addinAsm);
-
-            if (name != i18nName && captionElement.Parent != null)
-            {
-                string uid = (from attribute in captionElement.Parent.Attributes()
-                               where attribute.Name.LocalName.ToUpper() == "UNIQUEID"
-                               select attribute.Value).If(x => x.Count() > 0).Return(x => x.First(), string.Empty);
-
-                if (!string.IsNullOrEmpty(uid)) 
-                {
-                    XElement returnValue = new XElement("item");
-                    returnValue.SetAttributeValue("uid", uid);
-                    XElement caption = new XElement("specific");
-                    caption.SetAttributeValue("caption", i18nName);
-                    returnValue.Add(caption);
-                    return returnValue;
-                }
-            }
-
-            return null;
-        }
-
-        private string ProcessUDOForm(XElement element, Assembly addinAsm)
-        {
-            string title = (from attribute in element.Attributes()
-                            where attribute.Name.LocalName.ToUpper() == "TITLE"
-                            select attribute.Value).First();
-            string i18nTitle = i18nService.GetLocalizedString(title, addinAsm);
-            return (title == i18nTitle) ? string.Empty : i18nTitle;
-        }
-
-        private void ConfigureUserAndSystemi18N(XDocument doc, Assembly addinAsm)
+        private void ConfigureFormi18N(XDocument doc, Assembly addinAsm)
         {
             var i18nElements = (from descendant in doc.Descendants()
                                 where descendant.Name.LocalName.ToUpper() == "FORM"
                                     || descendant.Name.LocalName.ToUpper() == "SPECIFIC"
                                     || descendant.Name.LocalName.ToUpper() == "GRIDCOLUMN"
+                                    || descendant.Name.LocalName.ToUpper() == "COLUMN"
                                 select descendant);
 
             foreach (var element in i18nElements)
@@ -462,6 +290,9 @@ namespace AddOne.Framework.Service
                         break;
                     case "GRIDCOLUMN":
                         element.Attribute("Title").Do(x => x.Value = i18nService.GetLocalizedString(element.Attribute("Title").Value, addinAsm));
+                        break;
+                    case "COLUMN":
+                        element.Attribute("title").Do(x => x.Value = i18nService.GetLocalizedString(element.Attribute("title").Value, addinAsm));
                         break;
                 }
             }

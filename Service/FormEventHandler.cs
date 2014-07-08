@@ -163,12 +163,13 @@ namespace AddOne.Framework.Service
                     addOneForm.OnFormLoadBefore(pVal, out BubbleEvent);
                 }
             }
-            else if (formImplementationType.TryGetValue(key, out implementationType))
+            else if (formImplementationType.TryGetValue(key, out implementationType) && !events.ContainsKey(pVal.FormUID))
             // if no form was registered, it's a system or udo form.
             {
                 AddOneFormBase addOneSysForm = (AddOneFormBase)ContainerManager.Container.Resolve(implementationType);
                 addOneSysForm.FormUID = pVal.FormUID;
                 RegisterForm(pVal.FormUID, addOneSysForm);
+                addOneSysForm.OnFormLoadBefore(pVal, out BubbleEvent);
             }
         }
 
