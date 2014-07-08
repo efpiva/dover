@@ -28,14 +28,13 @@ namespace AddOne.Framework.Service
                 return string.Empty;
 
             var index = key.LastIndexOf(".");
-            var spaceIndex = key.LastIndexOf(" ");
-            if (index < 0 || spaceIndex > 0)
+            if (index < 0)
             {
                 return key;
             }
             string typeName = key.Substring(0, index);
             index++;
-            string propertyName = key.Substring(index);
+            string propertyName = key.Substring(index).Trim();
             var assembly = (addin == null) ? 
                 AppDomain.CurrentDomain.Load((string)AppDomain.CurrentDomain.GetData("assemblyName")) : addin;
 
