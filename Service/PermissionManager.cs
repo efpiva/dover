@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.DAO;
-using AddOne.Framework.Monad;
+using Dover.Framework.DAO;
+using Dover.Framework.Monad;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
 
     public enum Permission

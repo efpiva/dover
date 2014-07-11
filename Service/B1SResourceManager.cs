@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using AddOne.Framework.Attribute;
+using Dover.Framework.Attribute;
 using Castle.Core.Logging;
 using System.Reflection;
-using AddOne.Framework.Monad;
+using Dover.Framework.Monad;
 using SAPbouiCOM;
 using SAPbouiCOM.Framework;
-using AddOne.Framework.Form;
+using Dover.Framework.Form;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     public class B1SResourceManager : MarshalByRefObject
     {

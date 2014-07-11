@@ -1,18 +1,18 @@
 ﻿using System.Linq;
-using AddOne.Framework.DAO;
-using AddOne.Framework.Service;
+using Dover.Framework.DAO;
+using Dover.Framework.Service;
 using SAPbouiCOM.Framework;
 
-namespace AddOne.Framework.Form
+namespace Dover.Framework.Form
 {
-    public class AddOneSystemFormBase : AddOneFormBase
+    public class DoverSystemFormBase : DoverOneFormBase
     {
         private string formUID;
         public B1SResourceManager resourceManager { get; set; }
         public BusinessOneUIDAO b1UIDAO { get; set; }
         public FormEventHandler formEventHandler { get; set; }
 
-        public AddOneSystemFormBase()
+        public DoverSystemFormBase()
         {
         }
 

@@ -117,31 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddInError" xml:space="preserve">
-    <value>Erro in addin {0} version {1}</value>
+  <data name="AllArgumentsMandatory" xml:space="preserve">
+    <value>All arguments are mandatory</value>
   </data>
-  <data name="AddInException" xml:space="preserve">
-    <value>Unexpected error on Dover: {0}\n {1}</value>
+  <data name="FileDialogTitle" xml:space="preserve">
+    <value>Please inform a file name</value>
   </data>
-  <data name="ConnectionError" xml:space="preserve">
-    <value>Connection error on AddOn: {0}</value>
-  </data>
-  <data name="CreatedAppFolder" xml:space="preserve">
-    <value>Created AppFolder {0} - Initializing Core and Addins</value>
-  </data>
-  <data name="ErrorStartup" xml:space="preserve">
-    <value>Error initializing addins {0}</value>
-  </data>
-  <data name="GeneralError" xml:space="preserve">
-    <value>Error preparing Framework - {0}</value>
-  </data>
-  <data name="PreparingFramework" xml:space="preserve">
-    <value>Preparing Framework for initialization</value>
-  </data>
-  <data name="Starting" xml:space="preserve">
-    <value>Initializing {0}({1})</value>
-  </data>
-  <data name="StartupFolder" xml:space="preserve">
-    <value>Initializing assemblies on folder {0}</value>
+  <data name="FolderDialogTitle" xml:space="preserve">
+    <value>Please select a folder</value>
   </data>
 </root>

@@ -8,14 +8,14 @@ using System.IO;
 using System.Xml;
 using Castle.Core.Logging;
 using System.Reflection;
-using AddOne.Framework.Monad;
-using AddOne.Framework.Model.SAP;
-using AddOne.Framework.Model;
+using Dover.Framework.Monad;
+using Dover.Framework.Model.SAP;
+using Dover.Framework.Model;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Xml.Linq;
-using AddOne.Framework.Log;
+using Dover.Framework.Log;
 
-namespace AddOne.Framework.DAO
+namespace Dover.Framework.DAO
 {
 
     public class BusinessOneDAOSQLImpl : BusinessOneDAO

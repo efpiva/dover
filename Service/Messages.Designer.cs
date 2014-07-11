@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AddOne.Framework.Service {
+namespace Dover.Framework.Service {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace AddOne.Framework.Service {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AddOne.Framework.Service.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Dover.Framework.Service.Messages", typeof(Messages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -124,7 +124,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error updating AddOne in company update event.
+        ///   Looks up a localized string similar to Error updating Dover in company update event.
         /// </summary>
         internal static string EventCompanyChangedError {
             get {
@@ -133,7 +133,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error updating AddOne in language change event.
+        ///   Looks up a localized string similar to Error updating Dover in language change event.
         /// </summary>
         internal static string EventLanguageChangedError {
             get {
@@ -376,7 +376,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Restarting AddOne.
+        ///   Looks up a localized string similar to Restarting Dover.
         /// </summary>
         internal static string Restarting {
             get {
@@ -412,7 +412,7 @@ namespace AddOne.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shutting down AddOne.
+        ///   Looks up a localized string similar to Shutting down Dover.
         /// </summary>
         internal static string Shutdown {
             get {

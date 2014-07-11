@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using AddOne.Framework.Attribute;
-using AddOne.Framework.Factory;
-using AddOne.Framework.Model.SAP;
-using AddOne.Framework.Monad;
-using AddOne.Framework.Service;
+using Dover.Framework.Attribute;
+using Dover.Framework.Factory;
+using Dover.Framework.Model.SAP;
+using Dover.Framework.Monad;
+using Dover.Framework.Service;
 using Castle.Core.Logging;
 using SAPbouiCOM;
 using System.Xml.Linq;
-using AddOne.Framework.Log;
+using Dover.Framework.Log;
 
-namespace AddOne.Framework.DAO
+namespace Dover.Framework.DAO
 {
     public class BusinessOneUIDAOImpl : BusinessOneUIDAO
     {
-        private Application application;
+        private SAPbouiCOM.Application application;
         private I18NService i18NService;
 
         public ILogger Logger { get; set; }
 
-        public BusinessOneUIDAOImpl(Application application, I18NService addIni18n)
+        public BusinessOneUIDAOImpl(SAPbouiCOM.Application application, I18NService addIni18n)
         {
             this.application = application;
             this.i18NService = addIni18n;

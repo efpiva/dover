@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SAPbouiCOM;
-using AddOne.Framework.Attribute;
-using AddOne.Framework.Factory;
+using Dover.Framework.Attribute;
+using Dover.Framework.Factory;
 using Castle.Core.Logging;
-using AddOne.Framework.Form;
+using Dover.Framework.Form;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     /// <summary>
     /// User just by Inception / addins. No App event.
@@ -16,10 +16,10 @@ namespace AddOne.Framework.Service
     public class EventDispatcher
     {
         public ILogger Logger { get; set; }
-        private Application sapApp;
+        private SAPbouiCOM.Application sapApp;
         private MenuEventHandler menuHandler;
 
-        public EventDispatcher(Application sapApp, MenuEventHandler menuHandler)
+        public EventDispatcher(SAPbouiCOM.Application sapApp, MenuEventHandler menuHandler)
         {
             this.sapApp = sapApp;
             this.menuHandler = menuHandler;

@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using Castle.Windsor;
 using Castle.MicroKernel.Registration;
-using AddOne.Framework.DAO;
+using Dover.Framework.DAO;
 using Castle.Facilities.Logging;
 using Castle.Core.Logging;
-using AddOne.Framework.Log;
+using Dover.Framework.Log;
 using System.Reflection;
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using System.IO;
-using AddOne.Framework.Service;
+using Dover.Framework.Service;
 using Castle.DynamicProxy;
-using AddOne.Framework.Proxy;
-using AddOne.Framework.Form;
+using Dover.Framework.Proxy;
+using Dover.Framework.Form;
 
-namespace AddOne.Framework.Factory
+namespace Dover.Framework.Factory
 {
 
     public class ContainerManager

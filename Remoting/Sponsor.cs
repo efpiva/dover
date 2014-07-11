@@ -3,7 +3,7 @@ using System.Runtime.Remoting;
 using System.Runtime.Remoting.Lifetime;
 using System.Security.Permissions;
 
-namespace AddOne.Framework.Remoting
+namespace Dover.Framework.Remoting
 {
     /// <summary>
     /// Wraps an instance of TInterface. If the instance is a 

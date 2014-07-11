@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Security.Principal;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     public class MachineInformation
     {

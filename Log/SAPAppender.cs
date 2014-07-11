@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using log4net.Appender;
-using AddOne.Framework.Factory;
+using Dover.Framework.Factory;
 using log4net.Core;
-using AddOne.Framework.Service;
+using Dover.Framework.Service;
 using SAPbobsCOM;
-using AddOne.Framework.DAO;
+using Dover.Framework.DAO;
 
-namespace AddOne.Framework.Log
+namespace Dover.Framework.Log
 {
     public class SAPAppender : AppenderSkeleton
     {
@@ -43,10 +43,10 @@ namespace AddOne.Framework.Log
         {
             try
             {
-                string sqlTemplate = @"INSERT INTO [@GA_AO_LOGS] (Code, Name, U_Date, U_Hour, U_User, U_MachineName, U_MacAddress, U_IP,
+                string sqlTemplate = @"INSERT INTO [@DOVER_LOGS] (Code, Name, U_Date, U_Hour, U_User, U_MachineName, U_MacAddress, U_IP,
                     U_Version, U_Assembly) Values ('{0}', '{1}', '{2}', {3}, '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')";
 
-                string code = B1DAO.GetNextCode("GA_AO_LOGS");
+                string code = B1DAO.GetNextCode("DOVER_LOGS");
                 DateTime date = DateTime.Now;
                 string b1User = B1DAO.GetCurrentUser();
 

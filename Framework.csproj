@@ -8,7 +8,7 @@
     <ProjectGuid>{8D3B3F25-C18D-4800-B258-2877AC831905}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AddOne.Framework</RootNamespace>
+    <RootNamespace>Dover.Framework</RootNamespace>
     <AssemblyName>Framework</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -97,9 +97,13 @@
     <Compile Include="DAO\PermissionDAOSQLImpl.cs" />
     <Compile Include="Factory\ContainerManager.cs" />
     <Compile Include="Factory\SAPServiceFactory.cs" />
-    <Compile Include="B1Application.cs" />
-    <Compile Include="Form\EventHandler.cs" />
+    <Compile Include="Application.cs" />
     <Compile Include="Form\FormBase.cs" />
+    <Compile Include="Form\Messages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Messages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Form\SelectFileDialog.cs" />
     <Compile Include="Form\SystemFormBase.cs" />
     <Compile Include="Form\UDOFormBase.cs" />
@@ -169,6 +173,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\Messages.pt-BR.resx" />
+    <EmbeddedResource Include="Form\Messages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Messages.pt-BR.resx" />
     <EmbeddedResource Include="DAO\Messages.resx">
       <Generator>ResXFileCodeGenerator</Generator>

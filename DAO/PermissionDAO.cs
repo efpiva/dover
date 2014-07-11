@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.Service;
+using Dover.Framework.Service;
 
-namespace AddOne.Framework.DAO
+namespace Dover.Framework.DAO
 {
     public interface PermissionDAO
     {

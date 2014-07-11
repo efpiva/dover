@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.Monad;
+using Dover.Framework.Monad;
 
-namespace AddOne.Framework.Model
+namespace Dover.Framework.Model
 {
     public class AssemblyInformation
     {

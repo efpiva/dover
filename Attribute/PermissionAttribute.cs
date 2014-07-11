@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using SAPbobsCOM;
 
-namespace AddOne.Framework.Attribute
+namespace Dover.Framework.Attribute
 {    
     
     [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]

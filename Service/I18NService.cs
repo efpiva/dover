@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using AddOne.Framework.Monad;
+using Dover.Framework.Monad;
 using Castle.Core.Logging;
-using AddOne.Framework.Log;
+using Dover.Framework.Log;
 using SAPbouiCOM;
 using System.Threading;
 using System.Globalization;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     public class I18NService
     {
         public ILogger Logger { get; set; }
-        private Application app;
+        private SAPbouiCOM.Application app;
 
-        public I18NService(Application app)
+        public I18NService(SAPbouiCOM.Application app)
         {
             this.app = app;
         }

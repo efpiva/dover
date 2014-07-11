@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SAPbouiCOM;
-using AddOne.Framework.Form;
+using Dover.Framework.Form;
 using System.Reflection;
-using AddOne.Framework.Factory;
+using Dover.Framework.Factory;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     public class FormEventHandler : MarshalByRefObject
     {
-        private Application sapApp;
+        private SAPbouiCOM.Application sapApp;
         private PermissionManager permissionManager;
         private B1SResourceManager resourceManager;
 
         Dictionary<string, object> formEvents = new Dictionary<string, object>();
         Dictionary<string, Type> formImplementationType = new Dictionary<string, Type>();
-        Dictionary<string, AddOneFormBase> events = new Dictionary<string, AddOneFormBase>();
-        Dictionary<string, List<AddOneFormBase>> pendingForms = new Dictionary<string, List<AddOneFormBase>>();
+        Dictionary<string, DoverOneFormBase> events = new Dictionary<string, DoverOneFormBase>();
+        Dictionary<string, List<DoverOneFormBase>> pendingForms = new Dictionary<string, List<DoverOneFormBase>>();
 
-        public FormEventHandler(Application sapApp, PermissionManager permissionManager,
+        public FormEventHandler(SAPbouiCOM.Application sapApp, PermissionManager permissionManager,
             B1SResourceManager resourceManager)
         {
             this.sapApp = sapApp;
@@ -28,12 +28,12 @@ namespace AddOne.Framework.Service
             this.resourceManager = resourceManager;
         }
 
-        internal void RegisterFormLoadBefore(string type, AddOneFormBase form)
+        internal void RegisterFormLoadBefore(string type, DoverOneFormBase form)
         {
-            List<AddOneFormBase> pendingList; // forms that does not have UniqueID created by UI.
+            List<DoverOneFormBase> pendingList; // forms that does not have UniqueID created by UI.
             if (!pendingForms.TryGetValue(type, out pendingList))
             {
-                pendingList = new List<AddOneFormBase>();
+                pendingList = new List<DoverOneFormBase>();
                 pendingForms.Add(type, pendingList);
             }
             pendingList.Add(form);
@@ -61,7 +61,7 @@ namespace AddOne.Framework.Service
                 formAttributes.AddRange((from type in dependency.GetTypes()
                                       from attribute in type.GetCustomAttributes(true)
                                       where attribute is SAPbouiCOM.Framework.FormAttribute
-                                        && type == typeof(AddOneUserFormBase) 
+                                        && type == typeof(DoverUserFormBase) 
                                         /* do not register systemForm from ReferencedAssemblies, they
                                          * should be registered by the addin owner. Just UserForms can be reused
                                          */
@@ -87,8 +87,8 @@ namespace AddOne.Framework.Service
         {
             if (!formEvents.ContainsKey(formType) && !formImplementationType.ContainsKey(formType))
             {
-                if (typeof(AddOneSystemFormBase).IsAssignableFrom(formImplType) ||
-                        typeof(AddOneUDOFormBase).IsAssignableFrom(formImplType)) // we just need this for system and udo forms.
+                if (typeof(DoverSystemFormBase).IsAssignableFrom(formImplType) ||
+                        typeof(DoverUDOFormBase).IsAssignableFrom(formImplType)) // we just need this for system and udo forms.
                     formImplementationType.Add(formType, formImplType);
 
                 var eventForm = sapApp.Forms.GetEventForm(formType);
@@ -138,7 +138,7 @@ namespace AddOne.Framework.Service
         /*
          * Register form so we can get FormUID when form is being created.
          */
-        internal void RegisterForm(string uniqueID, AddOneFormBase form)
+        internal void RegisterForm(string uniqueID, DoverOneFormBase form)
         {
             if (!events.ContainsKey(uniqueID)) // prevent duplicates. Shouldn't happen.
             {
@@ -149,7 +149,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormLoadBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
-            List<AddOneFormBase> pendingList; // forms that does not have UniqueID.
+            List<DoverOneFormBase> pendingList; // forms that does not have UniqueID.
             Type implementationType;
             IForm form = sapApp.Forms.Item(pVal.FormUID);
             string key = form.TypeEx;
@@ -166,7 +166,7 @@ namespace AddOne.Framework.Service
             else if (formImplementationType.TryGetValue(key, out implementationType) && !events.ContainsKey(pVal.FormUID))
             // if no form was registered, it's a system or udo form.
             {
-                AddOneFormBase addOneSysForm = (AddOneFormBase)ContainerManager.Container.Resolve(implementationType);
+                DoverOneFormBase addOneSysForm = (DoverOneFormBase)ContainerManager.Container.Resolve(implementationType);
                 addOneSysForm.FormUID = pVal.FormUID;
                 RegisterForm(pVal.FormUID, addOneSysForm);
                 addOneSysForm.OnFormLoadBefore(pVal, out BubbleEvent);
@@ -175,7 +175,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormLoadAfter(SBOItemEventArg pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormLoadAfter(pVal);
@@ -185,7 +185,7 @@ namespace AddOne.Framework.Service
         private void OnFormUnloadBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormUnloadBefore(pVal, out BubbleEvent);
@@ -194,7 +194,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormUnloadAfter(SBOItemEventArg pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormUnloadAfter(pVal);
@@ -204,7 +204,7 @@ namespace AddOne.Framework.Service
         private void OnFormActivateBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormActivateBefore(pVal, out BubbleEvent);
@@ -213,7 +213,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormActivateAfter(SBOItemEventArg pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormActivateAfter(pVal);
@@ -223,7 +223,7 @@ namespace AddOne.Framework.Service
         private void OnFormDeactivateBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormDeactivateBefore(pVal, out BubbleEvent);
@@ -232,7 +232,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormDeactivateAfter(SBOItemEventArg pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormDeactivateAfter(pVal);
@@ -242,7 +242,7 @@ namespace AddOne.Framework.Service
         private void OnFormResizeBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormResizeBefore(pVal, out BubbleEvent);
@@ -251,7 +251,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormResizeAfter(SBOItemEventArg pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormResizeAfter(pVal);
@@ -261,7 +261,7 @@ namespace AddOne.Framework.Service
         private void OnFormMenuHighlightBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormMenuHighlightBefore(pVal, out BubbleEvent);
@@ -270,7 +270,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormMenuHighlightAfter(SBOItemEventArg pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormMenuHighlightAfter(pVal);
@@ -280,7 +280,7 @@ namespace AddOne.Framework.Service
         private void OnFormDataAddBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormDataAddBefore(ref pVal, out BubbleEvent);
@@ -289,7 +289,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormDataAddAfter(ref BusinessObjectInfo pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormDataAddAfter(ref pVal);
@@ -299,7 +299,7 @@ namespace AddOne.Framework.Service
         private void OnFormDataUpdateBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormDataUpdateBefore(ref pVal, out BubbleEvent);
@@ -308,7 +308,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormDataUpdateAfter(ref BusinessObjectInfo pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormDataUpdateAfter(ref pVal);
@@ -318,7 +318,7 @@ namespace AddOne.Framework.Service
         private void OnFormDataDeleteBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormDataDeleteBefore(ref pVal, out BubbleEvent);
@@ -327,7 +327,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormDataDeleteAfter(ref BusinessObjectInfo pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormDataDeleteAfter(ref pVal);
@@ -337,7 +337,7 @@ namespace AddOne.Framework.Service
         private void OnFormDataLoadBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormDataLoadBefore(ref pVal, out BubbleEvent);
@@ -346,7 +346,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormDataLoadAfter(ref BusinessObjectInfo pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormDataLoadAfter(ref pVal);
@@ -356,7 +356,7 @@ namespace AddOne.Framework.Service
         private void OnFormKeyDownBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormKeyDownBefore(pVal, out BubbleEvent);
@@ -365,7 +365,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormKeyDownAfter(SBOItemEventArg pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormKeyDownAfter(pVal);
@@ -375,7 +375,7 @@ namespace AddOne.Framework.Service
         private void OnFormLayoutKeyBefore(ref LayoutKeyInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormLayoutKeyBefore(ref pVal, out BubbleEvent);
@@ -384,7 +384,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormLayoutKeyAfter(ref LayoutKeyInfo pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormLayoutKeyAfter(ref pVal);
@@ -394,7 +394,7 @@ namespace AddOne.Framework.Service
         private void OnFormPrintBefore(ref PrintEventInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormPrintBefore(ref pVal, out BubbleEvent);
@@ -403,7 +403,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormPrintAfter(ref PrintEventInfo pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormPrintAfter(ref pVal);
@@ -413,7 +413,7 @@ namespace AddOne.Framework.Service
         private void OnFormReportDataBefore(ref PrintEventInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormReportDataBefore(ref pVal, out BubbleEvent);
@@ -422,7 +422,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormReportDataAfter(ref PrintEventInfo pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormReportDataAfter(ref pVal);
@@ -432,7 +432,7 @@ namespace AddOne.Framework.Service
         private void OnFormClickBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormClickBefore(pVal, out BubbleEvent);
@@ -441,7 +441,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormClickAfter(SBOItemEventArg pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormClickAfter(pVal);
@@ -451,7 +451,7 @@ namespace AddOne.Framework.Service
         private void OnFormRightClickBefore(ref ContextMenuInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormRightClickBefore(ref pVal, out BubbleEvent);
@@ -460,7 +460,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormRightClickAfter(ref ContextMenuInfo pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormRightClickAfter(ref pVal);
@@ -470,7 +470,7 @@ namespace AddOne.Framework.Service
         private void OnFormCloseBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormCloseBefore(pVal, out BubbleEvent);
@@ -479,7 +479,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormCloseAfter(SBOItemEventArg pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormCloseAfter(pVal);
@@ -489,7 +489,7 @@ namespace AddOne.Framework.Service
 
         private void OnFormVisibleAfter(SBOItemEventArg pVal)
         {
-            AddOneFormBase addOneForm;
+            DoverOneFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormVisibleAfter(pVal);

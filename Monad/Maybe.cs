@@ -5,7 +5,7 @@ using System.Text;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace AddOne.Framework.Monad
+namespace Dover.Framework.Monad
 {
     // based on http://devtalk.net/csharp/chained-null-checks-and-the-maybe-monad/
     public static class MaybeClass

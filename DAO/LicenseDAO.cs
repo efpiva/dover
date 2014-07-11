@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AddOne.Framework.DAO
+namespace Dover.Framework.DAO
 {
     public abstract class LicenseDAO
     {

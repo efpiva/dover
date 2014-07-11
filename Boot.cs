@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using Castle.Core.Logging;
-using AddOne.Framework.Service;
-using System.Windows.Forms;
+using Dover.Framework.Service;
 
-namespace AddOne.Framework
+namespace Dover.Framework
 {
     public class Boot
     {
@@ -38,7 +37,7 @@ namespace AddOne.Framework
                 var addins = licenseManager.ListAddins();
                 addinLoader.LoadAddins(addins);
                 dispatcher.RegisterEvents();
-                Application.Run();
+                System.Windows.Forms.Application.Run();
             }
             catch (Exception e)
             {

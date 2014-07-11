@@ -7,10 +7,10 @@ using System.Windows.Forms;
 using System.Reflection;
 using SAPbobsCOM;
 using Castle.Core.Logging;
-using AddOne.Framework.Monad;
-using AddOne.Framework.Remoting;
+using Dover.Framework.Monad;
+using Dover.Framework.Remoting;
 
-namespace AddOne.Framework.Factory
+namespace Dover.Framework.Factory
 {
     public class SAPServiceFactory
     {
@@ -42,8 +42,6 @@ namespace AddOne.Framework.Factory
                 company = (SAPbobsCOM.Company)application.Company.GetDICompany();
 
                 b1Connected = company.Connected;
-                // Logger depende do b1Connected.
-                Logger.Info(String.Format("Iniciado o AddOne ({0}) com sucesso [UI-API / DI-API]", version));
             }
             catch (Exception er)
             {

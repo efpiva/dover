@@ -3,18 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.Factory;
-using AddOne.Framework.Service;
+using Dover.Framework.Factory;
+using Dover.Framework.Service;
 using SAPbouiCOM.Framework;
 using SAPbouiCOM;
-using AddOne.Framework.DAO;
+using Dover.Framework.DAO;
 
-namespace AddOne.Framework.Form
+namespace Dover.Framework.Form
 {
-    public class AddOneUserFormBase : AddOneFormBase
+    public class DoverUserFormBase : DoverOneFormBase
     {
 
-        public AddOneUserFormBase()
+        public DoverUserFormBase()
         {
             var resourceManager = ContainerManager.Container.Resolve<B1SResourceManager>();
             var b1UIDAO = ContainerManager.Container.Resolve<BusinessOneUIDAO>();

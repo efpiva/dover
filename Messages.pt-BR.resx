@@ -121,7 +121,7 @@
     <value>Erro no addin {0} versão {1}</value>
   </data>
   <data name="AddInException" xml:space="preserve">
-    <value>Erro inesperado no AddOne: {0}\n {1}</value>
+    <value>Erro inesperado no Dover: {0}\n {1}</value>
   </data>
   <data name="AllArgumentsMandatory" xml:space="preserve">
     <value>Todos os argumentos são obrigatórios.</value>

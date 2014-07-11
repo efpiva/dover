@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Castle.Core.Logging;
 using System.ServiceModel;
-using AddOne.Framework.Monad;
+using Dover.Framework.Monad;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     public class AppEventHandler
     {

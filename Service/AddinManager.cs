@@ -6,16 +6,16 @@ using System.Reflection;
 using System.ServiceModel;
 using System.Threading;
 using System.Xml.Linq;
-using AddOne.Framework.Attribute;
-using AddOne.Framework.DAO;
-using AddOne.Framework.Factory;
-using AddOne.Framework.Model;
-using AddOne.Framework.Model.SAP;
-using AddOne.Framework.Remoting;
+using Dover.Framework.Attribute;
+using Dover.Framework.DAO;
+using Dover.Framework.Factory;
+using Dover.Framework.Model;
+using Dover.Framework.Model.SAP;
+using Dover.Framework.Remoting;
 using Castle.Core.Logging;
-using AddOne.Framework.Log;
+using Dover.Framework.Log;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     internal class AddInRunner
     {
@@ -35,17 +35,17 @@ namespace AddOne.Framework.Service
         internal void Run()
         {
             var setup = new AppDomainSetup();
-            setup.ApplicationName = "AddOne.Inception";
+            setup.ApplicationName = "Dover.Inception";
             setup.ApplicationBase = Environment.CurrentDirectory;
-            var domain = AppDomain.CreateDomain("AddOne.AddIn", null, setup);
+            var domain = AppDomain.CreateDomain("Dover.AddIn", null, setup);
             domain.SetData("shutdownEvent", shutdownEvent); // Thread synchronization
             domain.SetData("assemblyName", asm.Name); // Used to get current AssemblyName for logging and reflection
-            B1Application app = (B1Application)domain.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
+            Application app = (Application)domain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
             SAPServiceFactory.PrepareForInception(domain);
             addinInceptionManager = app.Resolve<AddinManager>();
             addinB1SResourceManager = app.Resolve<B1SResourceManager>();
             addinFormEventHandler = app.Resolve<FormEventHandler>();
-            Sponsor<B1Application> appSponsor = new Sponsor<B1Application>(app);
+            Sponsor<Application> appSponsor = new Sponsor<Application>(app);
             Sponsor<AddinManager> inceptionSponsor = new Sponsor<AddinManager>(addinInceptionManager);
             Sponsor<B1SResourceManager> b1sSponsor = new Sponsor<B1SResourceManager>(addinB1SResourceManager);
             Sponsor<FormEventHandler> formEventSponsor = new Sponsor<FormEventHandler>(addinFormEventHandler);
@@ -102,12 +102,12 @@ namespace AddOne.Framework.Service
         private void MarkAsInstalled(string addInCode)
         {
             b1DAO.ExecuteStatement(
-    string.Format("UPDATE [@GA_AO_MODULES] set U_Installed = 'Y' where Code = '{0}'", addInCode));
+    string.Format("UPDATE [@DOVER_MODULES] set U_Installed = 'Y' where Code = '{0}'", addInCode));
         }
 
         private void ConfigureLog(AssemblyInformation addin)
         {
-            var source = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AddOneAddin.config");
+            var source = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DoverAddin.config");
             var destination = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, addin.Name + ".config");
 
             if (File.Exists(source) && !File.Exists(destination)) 
@@ -425,7 +425,7 @@ namespace AddOne.Framework.Service
          private bool IsInstalled(string code)
         {
             string installedFlag = b1DAO.ExecuteSqlForObject<string>(
-                string.Format("SELECT ISNULL(U_Installed, 'N') from [@GA_AO_MODULES] where Code = '{0}'", code));
+                string.Format("SELECT ISNULL(U_Installed, 'N') from [@DOVER_MODULES] where Code = '{0}'", code));
             return !string.IsNullOrEmpty(installedFlag) && installedFlag == "Y";
         }
 

@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.DAO;
-using AddOne.Framework.Model.SAP;
+using Dover.Framework.DAO;
+using Dover.Framework.Model.SAP;
 using System.Reflection;
 using System.Xml.Serialization;
 using SAPbobsCOM;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     public class DatabaseConfiguration
     {
         private BusinessOneDAO b1DAO;
-        private const string DBTABLES_XML = "AddOne.Framework.DatabaseTables.xml";
-        private const string DBFIELDS_XML = "AddOne.Framework.DatabaseFields.xml";
+        private const string DBTABLES_XML = "Dover.Framework.DatabaseTables.xml";
+        private const string DBFIELDS_XML = "Dover.Framework.DatabaseFields.xml";
 
         public DatabaseConfiguration(BusinessOneDAO b1DAO)
         {

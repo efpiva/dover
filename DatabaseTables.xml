@@ -7,8 +7,8 @@
     </AdmInfo>
     <UserTablesMD>
       <row>
-        <TableName>GA_AO_MODULES</TableName>
-        <TableDescription>AddOne Modules</TableDescription>
+        <TableName>DOVER_MODULES</TableName>
+        <TableDescription>Dover Modules</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
       </row>
@@ -21,7 +21,7 @@
     </AdmInfo>
     <UserTablesMD>
       <row>
-        <TableName>GA_AO_MODULES_BIN</TableName>
+        <TableName>DOVER_MODULES_BIN</TableName>
         <TableDescription>Module main binary</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
@@ -35,7 +35,7 @@
     </AdmInfo>
     <UserTablesMD>
       <row>
-        <TableName>GA_AO_MODULES_I18N</TableName>
+        <TableName>DOVER_MODULES_I18N</TableName>
         <TableDescription>Modules i18n Resources</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
@@ -49,8 +49,8 @@
     </AdmInfo>
     <UserTablesMD>
       <row>
-        <TableName>GA_AO_LOGS</TableName>
-        <TableDescription>AddOne Logs</TableDescription>
+        <TableName>DOVER_LOGS</TableName>
+        <TableDescription>Dover Logs</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
       </row>
@@ -63,7 +63,7 @@
     </AdmInfo>
     <UserTablesMD>
       <row>
-        <TableName>GA_AO_MODULES_USER</TableName>
+        <TableName>DOVER_MODULES_USER</TableName>
         <TableDescription>Per user module configuration</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
@@ -77,8 +77,8 @@
     </AdmInfo>
     <UserTablesMD>
       <row>
-        <TableName>GA_AO_LICENSE</TableName>
-        <TableDescription>AddOne License</TableDescription>
+        <TableName>DOVER_LICENSE</TableName>
+        <TableDescription>Dover License</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
       </row>
@@ -91,8 +91,8 @@
     </AdmInfo>
     <UserTablesMD>
       <row>
-        <TableName>GA_AO_LICENSE_BIN</TableName>
-        <TableDescription>AddOne binary license file</TableDescription>
+        <TableName>DOVER_LICENSE_BIN</TableName>
+        <TableDescription>Dover binary license file</TableDescription>
         <TableType>bott_NoObject</TableType>
         <Archivable>tNO</Archivable>
       </row>

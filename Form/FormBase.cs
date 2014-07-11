@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SAPbouiCOM;
-using AddOne.Framework.Factory;
+using Dover.Framework.Factory;
 using Castle.Core;
 
-namespace AddOne.Framework.Form
+namespace Dover.Framework.Form
 {
     [Interceptor("formProxy")]
-    public class AddOneFormBase
+    public class DoverOneFormBase
     {
         protected SAPbouiCOM.Application app;
 
-        internal AddOneFormBase()
+        internal DoverOneFormBase()
         {
             app = ContainerManager.Container.Resolve<SAPbouiCOM.Application>();
         }

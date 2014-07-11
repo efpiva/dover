@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace AddOne.Framework.Form
+namespace Dover.Framework.Form
 {
     public enum DialogType
     {

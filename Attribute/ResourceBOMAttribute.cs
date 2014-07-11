@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AddOne.Framework.Attribute
+namespace Dover.Framework.Attribute
 {
     public enum ResourceType
     {

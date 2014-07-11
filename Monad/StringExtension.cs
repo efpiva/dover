@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AddOne.Framework.Monad
+namespace Dover.Framework.Monad
 {
     public static class StringExtension
     {

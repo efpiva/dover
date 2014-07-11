@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using AddOne.Framework.Attribute;
+using Dover.Framework.Attribute;
 using SAPbouiCOM;
 
-namespace AddOne.Framework.DAO
+namespace Dover.Framework.DAO
 {
     public abstract class BusinessOneUIDAO
     {

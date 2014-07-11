@@ -133,10 +133,10 @@
     <value>Error restarting addin</value>
   </data>
   <data name="EventCompanyChangedError" xml:space="preserve">
-    <value>Error updating AddOne in company update event</value>
+    <value>Error updating Dover in company update event</value>
   </data>
   <data name="EventLanguageChangedError" xml:space="preserve">
-    <value>Error updating AddOne in language change event</value>
+    <value>Error updating Dover in language change event</value>
   </data>
   <data name="FileError" xml:space="preserve">
     <value>Error updating file {0} - Version {1}.</value>
@@ -187,7 +187,7 @@
     <value>Addin {0} successfully removed</value>
   </data>
   <data name="Restarting" xml:space="preserve">
-    <value>Restarting AddOne</value>
+    <value>Restarting Dover</value>
   </data>
   <data name="SaveAddInError" xml:space="preserve">
     <value>Error saving addin {0}</value>
@@ -199,7 +199,7 @@
     <value>License successfully saved</value>
   </data>
   <data name="Shutdown" xml:space="preserve">
-    <value>Shutting down AddOne</value>
+    <value>Shutting down Dover</value>
   </data>
   <data name="ShutdownAddin" xml:space="preserve">
     <value>Shutting down AddIn {0}</value>

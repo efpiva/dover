@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.Model;
+using Dover.Framework.Model;
 
-namespace AddOne.Framework.DAO
+namespace Dover.Framework.DAO
 {
     public interface AssemblyDAO
     {

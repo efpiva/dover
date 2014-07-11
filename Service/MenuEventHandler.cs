@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using Castle.Core.Logging;
 using SAPbouiCOM;
-using AddOne.Framework.Attribute;
-using AddOne.Framework.Factory;
+using Dover.Framework.Attribute;
+using Dover.Framework.Factory;
 using SAPbouiCOM.Framework;
-using AddOne.Framework.Form;
-using AddOne.Framework.Log;
+using Dover.Framework.Form;
+using Dover.Framework.Log;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     public class MenuEventHandler
     {
@@ -48,7 +48,7 @@ namespace AddOne.Framework.Service
             try
             {
                 var obj = ContainerManager.Container.Resolve(type);
-                if (obj is FormBase || obj is AddOneFormBase)
+                if (obj is FormBase || obj is DoverOneFormBase)
                 {
                     Logger.Debug(DebugString.Format(Messages.MenuDispatchInfo, pVal.MenuUID, type));
                     var method = type.GetMethod("Show");

@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using Castle.DynamicProxy;
 using Castle.Core.Logging;
-using AddOne.Framework.Service;
-using AddOne.Framework.Form;
+using Dover.Framework.Service;
+using Dover.Framework.Form;
 using SAPbouiCOM;
 using System.Reflection;
 
-namespace AddOne.Framework.Proxy
+namespace Dover.Framework.Proxy
 {
     /// <summary>
-    /// Implement Proxy for AddOneFormBase. This proxy is reponsible for handling i18n and exception handler in events.
+    /// Implement Proxy for DoverFormBase. This proxy is reponsible for handling i18n and exception handler in events.
     /// </summary>
     public class FormProxy : IInterceptor
     {
@@ -41,9 +41,9 @@ namespace AddOne.Framework.Proxy
             }
             catch (Exception e)
             {
-                if (invocation.InvocationTarget is AddOneFormBase)
+                if (invocation.InvocationTarget is DoverOneFormBase)
                 {
-                    IForm form = ((AddOneFormBase)invocation.InvocationTarget).UIAPIRawForm;
+                    IForm form = ((DoverOneFormBase)invocation.InvocationTarget).UIAPIRawForm;
                     if (form != null)
                         form.Freeze(false); // force unfreeze in case of error.
                 }

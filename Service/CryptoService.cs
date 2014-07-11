@@ -5,9 +5,9 @@ using System.Text;
 using System.Security.Cryptography;
 using System.IO;
 using Castle.Core.Logging;
-using AddOne.Framework.Monad;
+using Dover.Framework.Monad;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     public class CryptoService
     {

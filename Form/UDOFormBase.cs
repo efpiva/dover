@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.DAO;
+using Dover.Framework.DAO;
 using SAPbouiCOM;
 using SAPbouiCOM.Framework;
-using AddOne.Framework.Monad;
-using AddOne.Framework.Service;
-using AddOne.Framework.Factory;
+using Dover.Framework.Monad;
+using Dover.Framework.Service;
+using Dover.Framework.Factory;
 using System.Xml.Linq;
 
-namespace AddOne.Framework.Form
+namespace Dover.Framework.Form
 {
-    public class AddOneUDOFormBase : AddOneFormBase
+    public class DoverUDOFormBase : DoverOneFormBase
     {
         private bool initialized = false;
         private string formUID;
         public BusinessOneUIDAO b1UIDAO { get; set; }
         public B1SResourceManager resourceManager { get; set; }
 
-        public AddOneUDOFormBase()
+        public DoverUDOFormBase()
         {
         }
 

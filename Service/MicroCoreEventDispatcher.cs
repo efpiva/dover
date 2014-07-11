@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SAPbouiCOM;
-using AddOne.Framework.Attribute;
-using AddOne.Framework.Factory;
+using Dover.Framework.Attribute;
+using Dover.Framework.Factory;
 using SAPbouiCOM.Framework;
 using Castle.Core.Logging;
 using System.ServiceModel;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     /// <summary>
     /// User by MicroCore. Just AppEvent (reboot / reload addins).

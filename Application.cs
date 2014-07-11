@@ -1,30 +1,30 @@
 ﻿using System;
 using Castle.Windsor;
-using AddOne.Framework.Factory;
+using Dover.Framework.Factory;
 using System.Threading;
-using AddOne.Framework.Remoting;
+using Dover.Framework.Remoting;
 using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
 
-namespace AddOne.Framework
+namespace Dover.Framework
 {
-    public class B1Application : MarshalByRefObject
+    public class Application : MarshalByRefObject
     {
         private IWindsorContainer appContainer;
         private static Dictionary<string, Assembly> assemblyCacheResolver = new Dictionary<string, Assembly>();
         private string[] embeddedAssemblies = {
-            "AddOne.Framework.Assemblies.SAPbouiCOM.dll",
-            "AddOne.Framework.Assemblies.Interop.SAPbobsCOM.dll",
-            "AddOne.Framework.Assemblies.log4net.dll",
-            "AddOne.Framework.Assemblies.Castle.Core.dll",
-            "AddOne.Framework.Assemblies.Castle.Facilities.Logging.dll",
-            "AddOne.Framework.Assemblies.Castle.Services.Logging.Log4netIntegration.dll",
-            "AddOne.Framework.Assemblies.Castle.Windsor.dll",
-            "AddOne.Framework.Assemblies.ICSharpCode.SharpZipLib.dll"};
+            "Dover.Framework.Assemblies.SAPbouiCOM.dll",
+            "Dover.Framework.Assemblies.Interop.SAPbobsCOM.dll",
+            "Dover.Framework.Assemblies.log4net.dll",
+            "Dover.Framework.Assemblies.Castle.Core.dll",
+            "Dover.Framework.Assemblies.Castle.Facilities.Logging.dll",
+            "Dover.Framework.Assemblies.Castle.Services.Logging.Log4netIntegration.dll",
+            "Dover.Framework.Assemblies.Castle.Windsor.dll",
+            "Dover.Framework.Assemblies.ICSharpCode.SharpZipLib.dll"};
 
 
-        public B1Application()
+        public Application()
         {
             // load all embedded resource into memory;
             byte[] ba = null;

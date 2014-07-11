@@ -133,10 +133,10 @@
     <value>Erro reiniciando addins</value>
   </data>
   <data name="EventCompanyChangedError" xml:space="preserve">
-    <value>Erro atualizando AddOne, em troca de base de dados.</value>
+    <value>Erro atualizando Dover, em troca de base de dados.</value>
   </data>
   <data name="EventLanguageChangedError" xml:space="preserve">
-    <value>Erro atualizando AddOne. Evento de troca de idioma.</value>
+    <value>Erro atualizando Dover. Evento de troca de idioma.</value>
   </data>
   <data name="FileError" xml:space="preserve">
     <value>Erro atualizando arquivo {0} - Versao {1}.</value>
@@ -187,7 +187,7 @@
     <value>Addin {0} removido com sucesso</value>
   </data>
   <data name="Restarting" xml:space="preserve">
-    <value>Reiniciando AddOne</value>
+    <value>Reiniciando Dover</value>
   </data>
   <data name="SaveAddInError" xml:space="preserve">
     <value>Erro salvando addin {0}</value>
@@ -199,7 +199,7 @@
     <value>Licença salva com sucesso</value>
   </data>
   <data name="Shutdown" xml:space="preserve">
-    <value>Desligando AddOne</value>
+    <value>Desligando Dover</value>
   </data>
   <data name="ShutdownAddin" xml:space="preserve">
     <value>Desligando AddIn {0}</value>

@@ -5,7 +5,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System.IO;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     public class RawPrinter
     {
@@ -53,7 +53,7 @@ namespace AddOne.Framework.Service
             DOCINFOA di = new DOCINFOA();
             bool bSuccess = false; // Assume failure unless you specifically succeed.
 
-            di.pDocName = "AddOne RAW Document";
+            di.pDocName = "Dover RAW Document";
             di.pDataType = "RAW";
 
             // Open the printer.

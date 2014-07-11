@@ -5,13 +5,13 @@ using System.Text;
 using SAPbouiCOM;
 using SAPbobsCOM;
 using System.IO;
-using AddOne.Framework.Service;
+using Dover.Framework.Service;
 using Castle.Core.Logging;
-using AddOne.Framework.Model;
-using AddOne.Framework.Factory;
-using AddOne.Framework.Log;
+using Dover.Framework.Model;
+using Dover.Framework.Factory;
+using Dover.Framework.Log;
 
-namespace AddOne.Framework
+namespace Dover.Framework
 {
     public class MicroCore
     {
@@ -71,8 +71,8 @@ namespace AddOne.Framework
         private void CopyInstallResources(string appFolder, string sourceFolder)
         {
             string source, destination;
-            source = Path.Combine(sourceFolder, "AddOneInception.config");
-            destination = Path.Combine(appFolder, "AddOne.config");
+            source = Path.Combine(sourceFolder, "DoverInception.config");
+            destination = Path.Combine(appFolder, "Dover.config");
             if (!File.Exists(destination) && File.Exists(source))
             {
                 File.Copy(source, destination);
@@ -85,8 +85,8 @@ namespace AddOne.Framework
                 File.Copy(source, destination);
             }
 
-            source = Path.Combine(sourceFolder, "AddOneAddin.config");
-            destination = Path.Combine(appFolder, "AddOneAddin.config");
+            source = Path.Combine(sourceFolder, "DoverAddin.config");
+            destination = Path.Combine(appFolder, "DoverAddin.config");
             if (!File.Exists(destination) && File.Exists(source))
             {
                 File.Copy(source, destination);
@@ -96,7 +96,7 @@ namespace AddOne.Framework
 
         private string CheckAppFolder()
         {
-            string appFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\AddOne";
+            string appFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Dover";
             CreateIfNotExists(appFolder);
             appFolder = Path.Combine(appFolder, company.Server + "-" + company.CompanyDB);
             CreateIfNotExists(appFolder);
@@ -113,8 +113,8 @@ namespace AddOne.Framework
 
         private bool InsideInception()
         {
-            return AppDomain.CurrentDomain.FriendlyName == "AddOne.Inception"
-                || AppDomain.CurrentDomain.FriendlyName == "AddOne.AddIn";
+            return AppDomain.CurrentDomain.FriendlyName == "Dover.Inception"
+                || AppDomain.CurrentDomain.FriendlyName == "Dover.AddIn";
         }
     }
 }

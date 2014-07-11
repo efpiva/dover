@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using AddOne.Framework.Monad;
+using Dover.Framework.Monad;
 
-namespace AddOne.Framework.Model.SAP
+namespace Dover.Framework.Model.SAP
 {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]

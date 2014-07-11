@@ -6,15 +6,15 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using AddOne.Framework.Attribute;
-using AddOne.Framework.DAO;
-using AddOne.Framework.Log;
-using AddOne.Framework.Model;
-using AddOne.Framework.Monad;
+using Dover.Framework.Attribute;
+using Dover.Framework.DAO;
+using Dover.Framework.Log;
+using Dover.Framework.Model;
+using Dover.Framework.Monad;
 using Castle.Core.Logging;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace AddOne.Framework.Service
+namespace Dover.Framework.Service
 {
     internal enum AssemblySource
     {
@@ -30,7 +30,7 @@ namespace AddOne.Framework.Service
 
         private string[] coreAssemblies = {
             "Framework.dll",
-            "AddOne.exe"
+            "Dover.exe"
         };
         private AssemblyDAO asmDAO;
         private LicenseManager licenseManager;
@@ -85,7 +85,7 @@ namespace AddOne.Framework.Service
 
             mainDll = mainDll.Substring(0, mainDll.Length - 4);
 
-            B1Application testApp = (B1Application)testDomain.CreateInstanceAndUnwrap("Framework", "AddOne.Framework.B1Application");
+            Application testApp = (Application)testDomain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
             var addinManager = testApp.Resolve<AddinManager>();
             ret = addinManager.CheckAddinConfiguration(mainDll, out comments);
             testApp.ShutDownApp();

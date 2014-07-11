@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AddOne.Framework.Model;
-using AddOne.Framework.Model.SAP;
+using Dover.Framework.Model;
+using Dover.Framework.Model.SAP;
 using System.IO;
 using SAPbobsCOM;
 
-namespace AddOne.Framework.DAO
+namespace Dover.Framework.DAO
 {
     public interface INotifier
     {

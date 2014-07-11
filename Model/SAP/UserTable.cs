@@ -1,9 +1,9 @@
 ﻿using System.Xml.Serialization;
 using SAPbobsCOM;
 using System;
-using AddOne.Framework.Monad;
+using Dover.Framework.Monad;
 
-namespace AddOne.Framework.Model.SAP
+namespace Dover.Framework.Model.SAP
 {
 
     // 

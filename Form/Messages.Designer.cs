@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Dover.Framework {
+namespace Dover.Framework.Form {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Dover.Framework {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Dover.Framework.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Dover.Framework.Form.Messages", typeof(Messages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,83 +61,29 @@ namespace Dover.Framework {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erro in addin {0} version {1}.
+        ///   Looks up a localized string similar to All arguments are mandatory.
         /// </summary>
-        internal static string AddInError {
+        internal static string AllArgumentsMandatory {
             get {
-                return ResourceManager.GetString("AddInError", resourceCulture);
+                return ResourceManager.GetString("AllArgumentsMandatory", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unexpected error on Dover: {0}\n {1}.
+        ///   Looks up a localized string similar to Please inform a file name.
         /// </summary>
-        internal static string AddInException {
+        internal static string FileDialogTitle {
             get {
-                return ResourceManager.GetString("AddInException", resourceCulture);
+                return ResourceManager.GetString("FileDialogTitle", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Connection error on AddOn: {0}.
+        ///   Looks up a localized string similar to Please select a folder.
         /// </summary>
-        internal static string ConnectionError {
+        internal static string FolderDialogTitle {
             get {
-                return ResourceManager.GetString("ConnectionError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Created AppFolder {0} - Initializing Core and Addins.
-        /// </summary>
-        internal static string CreatedAppFolder {
-            get {
-                return ResourceManager.GetString("CreatedAppFolder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error initializing addins {0}.
-        /// </summary>
-        internal static string ErrorStartup {
-            get {
-                return ResourceManager.GetString("ErrorStartup", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Error preparing Framework - {0}.
-        /// </summary>
-        internal static string GeneralError {
-            get {
-                return ResourceManager.GetString("GeneralError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Preparing Framework for initialization.
-        /// </summary>
-        internal static string PreparingFramework {
-            get {
-                return ResourceManager.GetString("PreparingFramework", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Initializing {0}({1}).
-        /// </summary>
-        internal static string Starting {
-            get {
-                return ResourceManager.GetString("Starting", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Initializing assemblies on folder {0}.
-        /// </summary>
-        internal static string StartupFolder {
-            get {
-                return ResourceManager.GetString("StartupFolder", resourceCulture);
+                return ResourceManager.GetString("FolderDialogTitle", resourceCulture);
             }
         }
     }
