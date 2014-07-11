@@ -481,11 +481,17 @@ namespace AddOne.Framework.DAO
             return ret;
         }
 
-        private string GetXMLBom<T, V>(object[] keys, BoObjectTypes objType)
-            where T: class
+        /// <summary>
+        /// Return a BOM XML, containing various BO elements.
+        /// </summary>
+        /// <typeparam name="V">SAP Business One DI API object type</typeparam>
+        /// <param name="keys">keys to be fetched</param>
+        /// <param name="objType">SAP Business One DI API enum representing the object type</param>
+        /// <returns></returns>
+        public string GetXMLBom<V>(object[] keys, BoObjectTypes objType)
         {
+            XDocument bom = null;
             Type type = typeof(V);
-            T userFieldBOM = null, tmpBOM = null;
             V obj = default(V);
             company.XMLAsString = true;
             company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
@@ -500,18 +506,16 @@ namespace AddOne.Framework.DAO
                     if (found)
                     {
                         var xml = (string)type.InvokeMember("GetAsXML", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
-                        tmpBOM = xml.Deserialize<T>();
-                        if (userFieldBOM == null)
-                            userFieldBOM = tmpBOM;
+                        XDocument tempDoc = XDocument.Parse(xml);
+                        if (bom == null)
+                        {
+                            bom = tempDoc;
+                        }
                         else
                         {
-                            object[] ufBO = (object[])userFieldBOM.GetType().InvokeMember("BO", BindingFlags.GetField | BindingFlags.GetProperty
-                                | BindingFlags.Public, null, userFieldBOM, null);
-                            object[] tmpBO = (object[])tmpBOM.GetType().InvokeMember("BO", BindingFlags.GetField | BindingFlags.GetProperty
-                                | BindingFlags.Public, null, tmpBOM, null);
-
-                            userFieldBOM.GetType().InvokeMember("BO", BindingFlags.SetField | BindingFlags.SetField
-                                | BindingFlags.Public, null, userFieldBOM, tmpBO.Concat(ufBO).ToArray());
+                            XElement tempBO = tempDoc.Element("BO");
+                            if (tempBO != null)
+                                bom.Add(tempBO);
                         }
                     }
                 }
@@ -526,43 +530,7 @@ namespace AddOne.Framework.DAO
                         System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
                 }
             }
-            return userFieldBOM.Serialize();
-        }
-
-
-        public override string GetUserTableXMLBOMFromNames(string[] userTables)
-        {
-            Tuple<object>[] keys = new Tuple<object>[userTables.Length];
-            for (int i=0 ; i<userTables.Length; i++)
-            {
-                keys[i] = new Tuple<object>(userTables[i]);
-            }
-
-            return GetXMLBom<UserTableBOM, IUserTablesMD>(keys, BoObjectTypes.oUserTables);
-        }
-
-        public override string GetUserFieldXMLBOMFromNames(string[] userTables)
-        {
-            Recordset rs = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
-            List<Tuple<object, object>> keys = new List<Tuple<object, object>>();
-
-            try
-            {
-                foreach(var table in userTables)
-                {
-                    rs.DoQuery(String.Format("SELECT TableID, FieldID FROM CUFD where TableID = '{0}'", table));
-                    if (!rs.EoF)
-                    {
-                        keys.Add(new Tuple<object, object>(rs.Fields.Item(0).Value, rs.Fields.Item(1).Value));
-                    }
-                }
-            }
-            finally
-            {
-                if (rs != null)
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
-            }
-            return GetXMLBom<UserTableBOM, IUserTablesMD>(keys.ToArray(), BoObjectTypes.oUserTables);
+            return bom.ToString();
         }
 
         public override void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute)
@@ -681,8 +649,8 @@ namespace AddOne.Framework.DAO
             {
                 if (userPermissionTree != null)
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(userPermissionTree);
+                Logger.Debug(DebugString.Format(Messages.PermissionEnd, permissionAttribute.PermissionID));
             }
-            Logger.Debug(DebugString.Format(Messages.PermissionEnd, permissionAttribute.PermissionID));
         }
     }
 }

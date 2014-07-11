@@ -35,10 +35,6 @@ namespace AddOne.Framework.DAO
 
         public abstract T GetBOMFromXML<T>(Stream resourceStream);
 
-        public abstract string GetUserTableXMLBOMFromNames(string[] userTables);
-
-        public abstract string GetUserFieldXMLBOMFromNames(string[] userTables);
-
         public abstract void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute);
 
         public abstract bool IsSuperUser();
