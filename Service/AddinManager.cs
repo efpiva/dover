@@ -276,7 +276,7 @@ namespace Dover.Framework.Service
                     Logger.Debug(DebugString.Format(Messages.ProcessingAttribute, attr, type));
                     if (attr is ResourceBOMAttribute)
                     {
-                        ProcessAddInAttribute((ResourceBOMAttribute)attr, assembly);
+                        ProcessAddInResourceAttribute((ResourceBOMAttribute)attr, assembly);
                     }
                     else if (attr is PermissionAttribute)
                     {
@@ -291,7 +291,7 @@ namespace Dover.Framework.Service
             b1DAO.UpdateOrSavePermissionIfNotExists(permissionAttribute);
         }
 
-        private void ProcessAddInAttribute(ResourceBOMAttribute resourceBOMAttribute, Assembly asm)
+        private void ProcessAddInResourceAttribute(ResourceBOMAttribute resourceBOMAttribute, Assembly asm)
         {
             try
             {
@@ -457,6 +457,15 @@ namespace Dover.Framework.Service
                 {
                     ((MenuAttribute)attr).OriginalType = type;
                     menus.Add((MenuAttribute)attr);
+                }
+                else if (attr is AddInAttribute)
+                {
+                    string initMethod = ((AddInAttribute)attr).InitMethod;
+                    if (!string.IsNullOrWhiteSpace(initMethod))
+                    {
+                        object obj = ContainerManager.Container.Resolve(type);
+                        type.InvokeMember(initMethod, BindingFlags.InvokeMethod, null, obj, null);
+                    }
                 }
             }
 
