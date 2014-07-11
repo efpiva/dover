@@ -279,7 +279,6 @@ namespace Dover.Framework.Service
         private void GenericInitialize(List<AssemblyInformation> asms, string type,
             string[] defaultAsms)
         {
-            List<AssemblyInformation> retValue = new List<AssemblyInformation>();
             HashSet<string> dbAsms = new HashSet<string>();
             byte[] asmBytes;
 
@@ -313,7 +312,7 @@ namespace Dover.Framework.Service
                     AssemblyInformation newAsm = GetNewAsm(Environment.CurrentDirectory, asmFile, asmName, type, out asmBytes);
                     AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(null, newAsm, asmBytes);
                     SaveAddinI18NResources(Environment.CurrentDirectory, asmName, savedAsm.Code);
-                    retValue.Add(savedAsm); // do not need to check if is valid, it's default asm.
+                    asms.Add(savedAsm); // do not need to check if is valid, it's default asm.
                 }
             }
         }
