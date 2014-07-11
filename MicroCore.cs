@@ -78,13 +78,6 @@ namespace Dover.Framework
                 File.Copy(source, destination);
             }
 
-            source = Path.Combine(sourceFolder, "gweadded.jpg");
-            destination = Path.Combine(appFolder, "gweadded.jpg");
-            if (!File.Exists(destination) && File.Exists(source))
-            {
-                File.Copy(source, destination);
-            }
-
             source = Path.Combine(sourceFolder, "DoverAddin.config");
             destination = Path.Combine(appFolder, "DoverAddin.config");
             if (!File.Exists(destination) && File.Exists(source))
