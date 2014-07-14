@@ -70,6 +70,78 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string ExportDBInfoButtonCancel {
+            get {
+                return ResourceManager.GetString("ExportDBInfoButtonCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export.
+        /// </summary>
+        internal static string ExportDBInfoButtonOK {
+            get {
+                return ResourceManager.GetString("ExportDBInfoButtonOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code.
+        /// </summary>
+        internal static string ExportDBInfoCode {
+            get {
+                return ResourceManager.GetString("ExportDBInfoCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select object type.
+        /// </summary>
+        internal static string ExportDBInfoLabelSelectSource {
+            get {
+                return ResourceManager.GetString("ExportDBInfoLabelSelectSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export DB information.
+        /// </summary>
+        internal static string ExportDBInfoMenu {
+            get {
+                return ResourceManager.GetString("ExportDBInfoMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string ExportDBInfoName {
+            get {
+                return ResourceManager.GetString("ExportDBInfoName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export Database Information.
+        /// </summary>
+        internal static string ExportDBInfoTitle {
+            get {
+                return ResourceManager.GetString("ExportDBInfoTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Defined Object.
+        /// </summary>
+        internal static string ExportDBInfoUDO {
+            get {
+                return ResourceManager.GetString("ExportDBInfoUDO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please inform a file name.
         /// </summary>
         internal static string FileDialogTitle {

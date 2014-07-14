@@ -120,6 +120,30 @@
   <data name="AllArgumentsMandatory" xml:space="preserve">
     <value>All arguments are mandatory</value>
   </data>
+  <data name="ExportDBInfoButtonCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ExportDBInfoButtonOK" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="ExportDBInfoCode" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="ExportDBInfoLabelSelectSource" xml:space="preserve">
+    <value>Select object type</value>
+  </data>
+  <data name="ExportDBInfoMenu" xml:space="preserve">
+    <value>Export DB information</value>
+  </data>
+  <data name="ExportDBInfoName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="ExportDBInfoTitle" xml:space="preserve">
+    <value>Export Database Information</value>
+  </data>
+  <data name="ExportDBInfoUDO" xml:space="preserve">
+    <value>User Defined Object</value>
+  </data>
   <data name="FileDialogTitle" xml:space="preserve">
     <value>Please inform a file name</value>
   </data>

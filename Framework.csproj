@@ -16,7 +16,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -98,7 +98,9 @@
     <Compile Include="Factory\ContainerManager.cs" />
     <Compile Include="Factory\SAPServiceFactory.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="Form\ExportDBInfo.cs" />
     <Compile Include="Form\FormBase.cs" />
+    <Compile Include="Form\MenuConfiguration.cs" />
     <Compile Include="Form\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -213,6 +215,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assemblies\Interop.SAPbobsCOM.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\ExportDBInfo.srf">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
