@@ -401,7 +401,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void StartMenu(Assembly asm)
+        internal void StartMenu(Assembly asm)
         {
             string addin = asm.GetName().Name;
             Logger.Info(String.Format(Messages.ConfiguringAddin, addin));

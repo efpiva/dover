@@ -8,7 +8,7 @@ using Dover.Framework.Service;
 
 namespace Dover.Framework
 {
-    public class Boot
+    internal class Boot
     {
         public ILogger Logger { get; set; }
 
@@ -28,7 +28,7 @@ namespace Dover.Framework
             i18nService.ConfigureThreadI18n(System.Threading.Thread.CurrentThread);
         }
 
-        public void StartUp()
+        internal void StartUp()
         {
             string moduleName = this.GetType().Assembly.GetName().Name;
             try
@@ -37,6 +37,7 @@ namespace Dover.Framework
                 var addins = licenseManager.ListAddins();
                 addinLoader.LoadAddins(addins);
                 dispatcher.RegisterEvents();
+                StartFrameworkUI(); // load admin forms.
                 System.Windows.Forms.Application.Run();
             }
             catch (Exception e)
@@ -46,8 +47,13 @@ namespace Dover.Framework
             }
         }
 
+        private void StartFrameworkUI()
+        {
+            addinLoader.StartMenu(Assembly.GetExecutingAssembly());
+            formEventHandler.RegisterForms();
+        }
 
-        public void StartThis()
+        internal void StartThis()
         {
             string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
             try
