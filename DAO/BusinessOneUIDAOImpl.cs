@@ -37,6 +37,9 @@ namespace Dover.Framework.DAO
             foreach (var menu in menus) 
             {
 
+                if (!string.IsNullOrEmpty(menu.i18n))
+                    menu.String = i18NService.GetLocalizedString(menu.i18n);
+
                 if (application.Menus.Exists(menu.UniqueID)
                     && RemoveIfNotEqual(menu))
                     continue;
@@ -46,8 +49,6 @@ namespace Dover.Framework.DAO
                     continue;
 
                 var actionMenu = new ApplicationMenusActionMenu();
-                if (!string.IsNullOrEmpty(menu.i18n))
-                    menu.String = i18NService.GetLocalizedString(menu.i18n);
 
                 Logger.Info(String.Format(Messages.MenuProcess, menu.String, menu.UniqueID));
 
