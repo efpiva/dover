@@ -25,7 +25,6 @@ namespace Dover.Framework.Service
     public class AssemblyManager
     {
         private string[] addinsAssemblies = {
-            "addInSetup.dll"
         };
 
         private string[] coreAssemblies = {
