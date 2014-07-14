@@ -481,14 +481,7 @@ namespace Dover.Framework.DAO
             return ret;
         }
 
-        /// <summary>
-        /// Return a BOM XML, containing various BO elements.
-        /// </summary>
-        /// <typeparam name="V">SAP Business One DI API object type</typeparam>
-        /// <param name="keys">keys to be fetched</param>
-        /// <param name="objType">SAP Business One DI API enum representing the object type</param>
-        /// <returns></returns>
-        public string GetXMLBom<V>(object[] keys, BoObjectTypes objType)
+        public override string GetXMLBom<V>(object[] keys, BoObjectTypes objType)
         {
             XDocument bom = null;
             Type type = typeof(V);
@@ -513,9 +506,9 @@ namespace Dover.Framework.DAO
                         }
                         else
                         {
-                            XElement tempBO = tempDoc.Element("BO");
+                            XElement tempBO = tempDoc.Element("BOM").Element("BO");
                             if (tempBO != null)
-                                bom.Add(tempBO);
+                                bom.Element("BOM").Add(tempBO);
                         }
                     }
                 }

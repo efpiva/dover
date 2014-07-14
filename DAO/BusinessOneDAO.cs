@@ -21,6 +21,15 @@ namespace Dover.Framework.DAO
 
         public abstract void UpdateOrSaveBOMIfNotExists(IBOM udoBOM, INotifier notifier = null);
 
+        /// <summary>
+        /// Return a BOM XML, containing various BO elements.
+        /// </summary>
+        /// <typeparam name="V">SAP Business One DI API object type</typeparam>
+        /// <param name="keys">keys to be fetched</param>
+        /// <param name="objType">SAP Business One DI API enum representing the object type</param>
+        /// <returns></returns>
+        public abstract string GetXMLBom<V>(object[] keys, BoObjectTypes objType);
+
         public abstract List<object> ListMissingBOMKeys(IBOM userFieldBOM);
 
         public abstract string GetNextCode(String udt);
