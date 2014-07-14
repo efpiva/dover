@@ -60,8 +60,8 @@ namespace Dover.Framework.Service
                 AddInAttribute addInAttribute = (from definedType in addinAsm.GetTypes()
                                                  from attribute in definedType.GetCustomAttributes(true)
                                                  where attribute is AddInAttribute
-                                                 select (AddInAttribute)attribute).First();
-                if (!string.IsNullOrWhiteSpace(addInAttribute.B1SResource))
+                                                 select (AddInAttribute)attribute).If(x => x.Count() > 0).With(x => x.First());
+                if (addInAttribute != null && !string.IsNullOrWhiteSpace(addInAttribute.B1SResource))
                 {
                     LoadAssemblyResources(addinAsm, addInAttribute);
                 }
