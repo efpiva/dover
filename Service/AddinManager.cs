@@ -201,18 +201,6 @@ namespace Dover.Framework.Service
                             var udoBOM = b1DAO.GetBOMFromXML<UDOBOM>(resourceStream);
                             UpdateOutputValues(ref comments, udoBOM, Messages.UDO);
                             break;
-                        case ResourceType.FormattedSearch:
-                            var fsBOM = b1DAO.GetBOMFromXML<FormattedSearchBOM>(resourceStream);
-                            UpdateOutputValues(ref comments, fsBOM, Messages.FS);
-                            break;
-                        case ResourceType.QueryCategories:
-                            var qcBOM = b1DAO.GetBOMFromXML<QueryCategoriesBOM>(resourceStream);
-                            UpdateOutputValues(ref comments, qcBOM, Messages.QC);
-                            break;
-                        case ResourceType.UserQueries:
-                            var uqBOM = b1DAO.GetBOMFromXML<UserQueriesBOM>(resourceStream);
-                            UpdateOutputValues(ref comments, uqBOM, Messages.UQ);
-                            break;
                     }
                 }
             }
@@ -293,48 +281,28 @@ namespace Dover.Framework.Service
 
         private void ProcessAddInResourceAttribute(ResourceBOMAttribute resourceBOMAttribute, Assembly asm)
         {
-            try
+            using (var resourceStream = asm.GetManifestResourceStream(resourceBOMAttribute.ResourceName))
             {
-                using (var resourceStream = asm.GetManifestResourceStream(resourceBOMAttribute.ResourceName))
+                if (resourceStream == null)
                 {
-                    if (resourceStream == null)
-                    {
-                        Logger.Error(string.Format(Messages.InternalResourceMissing, resourceBOMAttribute.ResourceName));
-                        return;
-                    }
-                    switch (resourceBOMAttribute.Type)
-                    {
-                        case ResourceType.UserField:
-                            var userFieldBOM = b1DAO.GetBOMFromXML<UserFieldBOM>(resourceStream);
-                            b1DAO.SaveBOMIfNotExists(userFieldBOM);
-                            break;
-                        case ResourceType.UserTable:
-                            var userTableBOM = b1DAO.GetBOMFromXML<UserTableBOM>(resourceStream);
-                            b1DAO.SaveBOMIfNotExists(userTableBOM);
-                            break;
-                        case ResourceType.UDO:
-                            var udoBOM = b1DAO.GetBOMFromXML<UDOBOM>(resourceStream);
-                            b1DAO.UpdateOrSaveBOMIfNotExists(udoBOM);
-                            break;
-                        case ResourceType.FormattedSearch:
-                            var fsBOM = b1DAO.GetBOMFromXML<FormattedSearchBOM>(resourceStream);
-                            b1DAO.UpdateOrSaveBOMIfNotExists(fsBOM);
-                            break;
-                        case ResourceType.QueryCategories:
-                            var qcBOM = b1DAO.GetBOMFromXML<QueryCategoriesBOM>(resourceStream);
-                            b1DAO.UpdateOrSaveBOMIfNotExists(qcBOM);
-                            break;
-                        case ResourceType.UserQueries:
-                            var uqBOM = b1DAO.GetBOMFromXML<UserQueriesBOM>(resourceStream);
-                            b1DAO.UpdateOrSaveBOMIfNotExists(uqBOM);
-                            break;
-                    }
+                    Logger.Error(string.Format(Messages.InternalResourceMissing, resourceBOMAttribute.ResourceName));
+                    return;
                 }
-
-            }
-            catch (Exception e)
-            {
-                Logger.Error(String.Format("Não foi possível processar atributo {0} do Addin.", resourceBOMAttribute), e);
+                switch (resourceBOMAttribute.Type)
+                {
+                    case ResourceType.UserField:
+                        var userFieldBOM = b1DAO.GetBOMFromXML<UserFieldBOM>(resourceStream);
+                        b1DAO.SaveBOMIfNotExists(userFieldBOM);
+                        break;
+                    case ResourceType.UserTable:
+                        var userTableBOM = b1DAO.GetBOMFromXML<UserTableBOM>(resourceStream);
+                        b1DAO.SaveBOMIfNotExists(userTableBOM);
+                        break;
+                    case ResourceType.UDO:
+                        var udoBOM = b1DAO.GetBOMFromXML<UDOBOM>(resourceStream);
+                        b1DAO.UpdateOrSaveBOMIfNotExists(udoBOM);
+                        break;
+                }
             }
         }
 

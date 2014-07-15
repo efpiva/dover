@@ -9,10 +9,7 @@ namespace Dover.Framework.Attribute
     {
         UserField,
         UserTable,
-        UDO,
-        FormattedSearch,
-        UserQueries,
-        QueryCategories
+        UDO
     }
 
     [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]
