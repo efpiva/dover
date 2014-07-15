@@ -8,6 +8,7 @@ using log4net.Core;
 using Dover.Framework.Service;
 using SAPbobsCOM;
 using Dover.Framework.DAO;
+using Dover.Framework.Form;
 
 namespace Dover.Framework.Log
 {
@@ -84,8 +85,9 @@ namespace Dover.Framework.Log
 
             if (loggingEvent.ExceptionObject != null)
             {
-                app.MessageBox(String.Format("Error: {0}\nException: {1}\n{2}", msg, loggingEvent.ExceptionObject.Message,
-                    loggingEvent.ExceptionObject.StackTrace.ToString()));
+                var traceForm = ContainerManager.Container.Resolve<ExceptionTrace>();
+                traceForm.ex = loggingEvent.ExceptionObject;
+                traceForm.Show();
             }
         }
     }
