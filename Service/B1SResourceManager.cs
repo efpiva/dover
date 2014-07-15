@@ -16,26 +16,8 @@ namespace Dover.Framework.Service
     public class B1SResourceManager : MarshalByRefObject
     {
         // assembly -> form Key. -> XML
-        Dictionary<string, Dictionary<string, XDocument>> formSRFResource = new Dictionary<string, Dictionary<string, XDocument>>();
-        HashSet<string> assemblyLoaded = new HashSet<string>();
-
-        private string formUpdateTemplate = @"<?xml version=""1.0"" encoding=""UTF-16""?>
-<Application>
-  <forms>
-    <action type=""update"">
-      <form uid="""">
-        <datasources/>
-        <Menus />
-        <items>
-          <action type=""update"">
-          </action>
-        </items>
-        <ChooseFromListCollection/>
-      </form>
-    </action>
-  </forms>
-</Application>";
-
+        private Dictionary<string, Dictionary<string, XDocument>> formSRFResource = new Dictionary<string, Dictionary<string, XDocument>>();
+        private HashSet<string> assemblyLoaded = new HashSet<string>();
         private ILogger Logger;
         private I18NService i18nService;
 
