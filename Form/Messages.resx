@@ -117,6 +117,69 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AdminDatabaseChangeWarning" xml:space="preserve">
+    <value>Database structure will be modified</value>
+  </data>
+  <data name="AdminEmptyFile" xml:space="preserve">
+    <value>Empty file</value>
+  </data>
+  <data name="AdminInstall" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="AdminInstalled" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="AdminInstallUpdate" xml:space="preserve">
+    <value>Install/Update</value>
+  </data>
+  <data name="AdminManagement" xml:space="preserve">
+    <value>Module Management</value>
+  </data>
+  <data name="AdminMenu" xml:space="preserve">
+    <value>Module configuration and installation</value>
+  </data>
+  <data name="AdminModuleFile" xml:space="preserve">
+    <value>Addin File</value>
+  </data>
+  <data name="AdminModuleFilterPrefix" xml:space="preserve">
+    <value>Modules file</value>
+  </data>
+  <data name="AdminModuleHistory" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="AdminModuleName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="AdminModuleType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="AdminModuleVersion" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="AdminOK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="AdminRemove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="AdminRemoveFolder" xml:space="preserve">
+    <value>Remove modules</value>
+  </data>
+  <data name="AdminRemoveInstruction" xml:space="preserve">
+    <value>You can select multiple files and click remove, to remove on batch.</value>
+  </data>
+  <data name="AdminShutdown" xml:space="preserve">
+    <value>Shutdown</value>
+  </data>
+  <data name="AdminStart" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="AdminStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="AdminTitle" xml:space="preserve">
+    <value>Modules Management</value>
+  </data>
   <data name="AllArgumentsMandatory" xml:space="preserve">
     <value>All arguments are mandatory</value>
   </data>
@@ -129,6 +192,9 @@
   <data name="ExportDBInfoCode" xml:space="preserve">
     <value>Code</value>
   </data>
+  <data name="ExportDBInfoFileNotFound" xml:space="preserve">
+    <value>Could not create file</value>
+  </data>
   <data name="ExportDBInfoLabelSelectSource" xml:space="preserve">
     <value>Select object type</value>
   </data>
@@ -138,11 +204,20 @@
   <data name="ExportDBInfoName" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="ExportDBInfoSuccess" xml:space="preserve">
+    <value>File exported successfully</value>
+  </data>
   <data name="ExportDBInfoTitle" xml:space="preserve">
     <value>Export Database Information</value>
   </data>
+  <data name="ExportDBInfoUDF" xml:space="preserve">
+    <value>User Defined Field</value>
+  </data>
   <data name="ExportDBInfoUDO" xml:space="preserve">
     <value>User Defined Object</value>
+  </data>
+  <data name="ExportDBInfoUDT" xml:space="preserve">
+    <value>User Defined Table</value>
   </data>
   <data name="FileDialogTitle" xml:space="preserve">
     <value>Please inform a file name</value>

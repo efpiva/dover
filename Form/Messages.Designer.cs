@@ -61,6 +61,195 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Database structure will be modified.
+        /// </summary>
+        internal static string AdminDatabaseChangeWarning {
+            get {
+                return ResourceManager.GetString("AdminDatabaseChangeWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty file.
+        /// </summary>
+        internal static string AdminEmptyFile {
+            get {
+                return ResourceManager.GetString("AdminEmptyFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        internal static string AdminInstall {
+            get {
+                return ResourceManager.GetString("AdminInstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Installed.
+        /// </summary>
+        internal static string AdminInstalled {
+            get {
+                return ResourceManager.GetString("AdminInstalled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install/Update.
+        /// </summary>
+        internal static string AdminInstallUpdate {
+            get {
+                return ResourceManager.GetString("AdminInstallUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module Management.
+        /// </summary>
+        internal static string AdminManagement {
+            get {
+                return ResourceManager.GetString("AdminManagement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Module configuration and installation.
+        /// </summary>
+        internal static string AdminMenu {
+            get {
+                return ResourceManager.GetString("AdminMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Addin File.
+        /// </summary>
+        internal static string AdminModuleFile {
+            get {
+                return ResourceManager.GetString("AdminModuleFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modules file.
+        /// </summary>
+        internal static string AdminModuleFilterPrefix {
+            get {
+                return ResourceManager.GetString("AdminModuleFilterPrefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to History.
+        /// </summary>
+        internal static string AdminModuleHistory {
+            get {
+                return ResourceManager.GetString("AdminModuleHistory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string AdminModuleName {
+            get {
+                return ResourceManager.GetString("AdminModuleName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string AdminModuleType {
+            get {
+                return ResourceManager.GetString("AdminModuleType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        internal static string AdminModuleVersion {
+            get {
+                return ResourceManager.GetString("AdminModuleVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        internal static string AdminOK {
+            get {
+                return ResourceManager.GetString("AdminOK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        internal static string AdminRemove {
+            get {
+                return ResourceManager.GetString("AdminRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove modules.
+        /// </summary>
+        internal static string AdminRemoveFolder {
+            get {
+                return ResourceManager.GetString("AdminRemoveFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can select multiple files and click remove, to remove on batch..
+        /// </summary>
+        internal static string AdminRemoveInstruction {
+            get {
+                return ResourceManager.GetString("AdminRemoveInstruction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shutdown.
+        /// </summary>
+        internal static string AdminShutdown {
+            get {
+                return ResourceManager.GetString("AdminShutdown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        internal static string AdminStart {
+            get {
+                return ResourceManager.GetString("AdminStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        internal static string AdminStatus {
+            get {
+                return ResourceManager.GetString("AdminStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modules Management.
+        /// </summary>
+        internal static string AdminTitle {
+            get {
+                return ResourceManager.GetString("AdminTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All arguments are mandatory.
         /// </summary>
         internal static string AllArgumentsMandatory {
@@ -97,6 +286,15 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not create file.
+        /// </summary>
+        internal static string ExportDBInfoFileNotFound {
+            get {
+                return ResourceManager.GetString("ExportDBInfoFileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select object type.
         /// </summary>
         internal static string ExportDBInfoLabelSelectSource {
@@ -124,6 +322,15 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File exported successfully.
+        /// </summary>
+        internal static string ExportDBInfoSuccess {
+            get {
+                return ResourceManager.GetString("ExportDBInfoSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Export Database Information.
         /// </summary>
         internal static string ExportDBInfoTitle {
@@ -133,11 +340,29 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Defined Field.
+        /// </summary>
+        internal static string ExportDBInfoUDF {
+            get {
+                return ResourceManager.GetString("ExportDBInfoUDF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Defined Object.
         /// </summary>
         internal static string ExportDBInfoUDO {
             get {
                 return ResourceManager.GetString("ExportDBInfoUDO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Defined Table.
+        /// </summary>
+        internal static string ExportDBInfoUDT {
+            get {
+                return ResourceManager.GetString("ExportDBInfoUDT", resourceCulture);
             }
         }
         
