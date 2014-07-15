@@ -11,7 +11,7 @@ using Dover.Framework.DAO;
 
 namespace Dover.Framework.Form
 {
-    public class DoverUserFormBase : DoverOneFormBase
+    public class DoverUserFormBase : DoverFormBase
     {
 
         public DoverUserFormBase()

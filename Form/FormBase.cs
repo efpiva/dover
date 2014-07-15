@@ -9,11 +9,11 @@ using Castle.Core;
 namespace Dover.Framework.Form
 {
     [Interceptor("formProxy")]
-    public class DoverOneFormBase
+    public class DoverFormBase
     {
         protected SAPbouiCOM.Application app;
 
-        internal DoverOneFormBase()
+        internal DoverFormBase()
         {
             app = ContainerManager.Container.Resolve<SAPbouiCOM.Application>();
         }

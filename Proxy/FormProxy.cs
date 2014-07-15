@@ -41,9 +41,9 @@ namespace Dover.Framework.Proxy
             }
             catch (Exception e)
             {
-                if (invocation.InvocationTarget is DoverOneFormBase)
+                if (invocation.InvocationTarget is DoverFormBase)
                 {
-                    IForm form = ((DoverOneFormBase)invocation.InvocationTarget).UIAPIRawForm;
+                    IForm form = ((DoverFormBase)invocation.InvocationTarget).UIAPIRawForm;
                     if (form != null)
                         form.Freeze(false); // force unfreeze in case of error.
                 }

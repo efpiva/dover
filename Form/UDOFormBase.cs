@@ -12,7 +12,7 @@ using System.Xml.Linq;
 
 namespace Dover.Framework.Form
 {
-    public class DoverUDOFormBase : DoverOneFormBase
+    public class DoverUDOFormBase : DoverFormBase
     {
         private bool initialized = false;
         private string formUID;

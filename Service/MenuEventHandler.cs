@@ -48,7 +48,7 @@ namespace Dover.Framework.Service
             try
             {
                 var obj = ContainerManager.Container.Resolve(type);
-                if (obj is FormBase || obj is DoverOneFormBase)
+                if (obj is FormBase || obj is DoverFormBase)
                 {
                     Logger.Debug(DebugString.Format(Messages.MenuDispatchInfo, pVal.MenuUID, type));
                     var method = type.GetMethod("Show");

@@ -5,7 +5,7 @@ using SAPbouiCOM.Framework;
 
 namespace Dover.Framework.Form
 {
-    public class DoverSystemFormBase : DoverOneFormBase
+    public class DoverSystemFormBase : DoverFormBase
     {
         private string formUID;
         public B1SResourceManager resourceManager { get; set; }
