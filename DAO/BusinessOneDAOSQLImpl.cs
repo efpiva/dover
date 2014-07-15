@@ -162,7 +162,7 @@ namespace Dover.Framework.DAO
         private void UpdateDIObject<T>(T obj, XDocument resourceXml, string name, string formatName, INotifier notifier)
         {
             Type type = typeof(T);
-            string xml = (string)type.InvokeMember("GetAsXML", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
+            string xml = (string)type.InvokeMember("GetAsXML", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
             var currXml = XDocument.Parse(xml);
             if (!XDocument.DeepEquals(currXml, resourceXml))
             {
