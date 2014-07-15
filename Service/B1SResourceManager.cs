@@ -255,6 +255,7 @@ namespace Dover.Framework.Service
                                     || descendant.Name.LocalName.ToUpper() == "SPECIFIC"
                                     || descendant.Name.LocalName.ToUpper() == "GRIDCOLUMN"
                                     || descendant.Name.LocalName.ToUpper() == "COLUMN"
+                                    || descendant.Name.LocalName.ToUpper() == "VALIDVALUE"
                                 select descendant);
 
             foreach (var element in i18nElements)
@@ -272,6 +273,9 @@ namespace Dover.Framework.Service
                         break;
                     case "COLUMN":
                         element.Attribute("title").Do(x => x.Value = i18nService.GetLocalizedString(element.Attribute("title").Value, addinAsm));
+                        break;
+                    case "VALIDVALUE":
+                        element.Attribute("description").Do(x => x.Value = i18nService.GetLocalizedString(element.Attribute("description").Value, addinAsm));
                         break;
                 }
             }
