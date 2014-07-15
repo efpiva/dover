@@ -98,6 +98,7 @@
     <Compile Include="Factory\ContainerManager.cs" />
     <Compile Include="Factory\SAPServiceFactory.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="Form\AddInStartupManagement.cs" />
     <Compile Include="Form\Admin.cs" />
     <Compile Include="Form\ExportDBInfo.cs" />
     <Compile Include="Form\FormBase.cs" />
@@ -224,6 +225,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form\Admin.srf">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\AddInStartupManagement.srf">
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

@@ -383,5 +383,113 @@ namespace Dover.Framework.Form {
                 return ResourceManager.GetString("FolderDialogTitle", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        internal static string MngmntActive {
+            get {
+                return ResourceManager.GetString("MngmntActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Default.
+        /// </summary>
+        internal static string MngmntDefault {
+            get {
+                return ResourceManager.GetString("MngmntDefault", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string MngmntDescription {
+            get {
+                return ResourceManager.GetString("MngmntDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        internal static string MngmntGeneral {
+            get {
+                return ResourceManager.GetString("MngmntGeneral", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inactive.
+        /// </summary>
+        internal static string MngmntInactive {
+            get {
+                return ResourceManager.GetString("MngmntInactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Addin startup configuration.
+        /// </summary>
+        internal static string MngmntMenu {
+            get {
+                return ResourceManager.GetString("MngmntMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string MngmntName {
+            get {
+                return ResourceManager.GetString("MngmntName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Per User.
+        /// </summary>
+        internal static string MngmntPerUser {
+            get {
+                return ResourceManager.GetString("MngmntPerUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        internal static string MngmntStatus {
+            get {
+                return ResourceManager.GetString("MngmntStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Addin startup configuration.
+        /// </summary>
+        internal static string MngmntTitle {
+            get {
+                return ResourceManager.GetString("MngmntTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User.
+        /// </summary>
+        internal static string MngmntUser {
+            get {
+                return ResourceManager.GetString("MngmntUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version.
+        /// </summary>
+        internal static string MngmntVersion {
+            get {
+                return ResourceManager.GetString("MngmntVersion", resourceCulture);
+            }
+        }
     }
 }

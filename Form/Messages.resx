@@ -225,4 +225,40 @@
   <data name="FolderDialogTitle" xml:space="preserve">
     <value>Please select a folder</value>
   </data>
+  <data name="MngmntActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="MngmntDefault" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="MngmntDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="MngmntGeneral" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="MngmntInactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="MngmntName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="MngmntPerUser" xml:space="preserve">
+    <value>Per User</value>
+  </data>
+  <data name="MngmntStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="MngmntTitle" xml:space="preserve">
+    <value>Addin startup configuration</value>
+  </data>
+  <data name="MngmntUser" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="MngmntVersion" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="MngmntMenu" xml:space="preserve">
+    <value>Addin startup configuration</value>
+  </data>
 </root>
