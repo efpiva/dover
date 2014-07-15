@@ -90,13 +90,26 @@ namespace Dover.Framework.Service
                 var asm = Assembly.Load(addin.Name);
                 if (!IsInstalled(addin.Code))
                 {
-                    RegisterObjects(asm);
-                    MarkAsInstalled(addin.Code);
+                    try
+                    {
+                        ConfigureAddin(addin);
+                        MarkAsInstalled(addin.Code);
+                    }
+                    catch (Exception e)
+                    {
+                        MarkAsNotInstalled(addin.Code);
+                        throw e;
+                    }
                 }
-                ConfigureAddin(addin);
                 RegisterAddin(addin);
                 ConfigureLog(addin);
             }
+        }
+
+        private void MarkAsNotInstalled(string addInCode)
+        {
+            b1DAO.ExecuteStatement(
+    string.Format("UPDATE [@DOVER_MODULES] set U_Installed = 'N' where Code = '{0}'", addInCode));
         }
 
         private void MarkAsInstalled(string addInCode)
