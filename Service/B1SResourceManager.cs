@@ -174,9 +174,9 @@ namespace Dover.Framework.Service
             var doc = GetFormDocument(assemblyName, resourceKey);
             if (doc != null)
             {
-                ConfigureSystemForm(doc, formUID);
+                return ConfigureSystemForm(doc, formUID);
             }
-            return doc;
+            return null;
         }
 
         internal string GetSystemFormXML(string assemblyName, string resourceKey, string formUID)
@@ -184,12 +184,12 @@ namespace Dover.Framework.Service
             var doc = GetFormDocument(assemblyName, resourceKey);
             if (doc != null)
             {
-                return ConfigureSystemForm(doc, formUID);
+                return ConfigureSystemForm(doc, formUID).With(x => x.ToString());
             }
             return string.Empty;
         }
 
-        private string ConfigureSystemForm(XDocument origDoc, string formUID)
+        private XDocument ConfigureSystemForm(XDocument origDoc, string formUID)
         {
             XDocument doc = new XDocument(origDoc); // do not touch original form. Modify a copy.
             var formattedElement = (from app in doc.Elements("Application")
@@ -204,19 +204,16 @@ namespace Dover.Framework.Service
             {
                 XElement xmlForm = formattedElement.First();
                 string title = xmlForm.Attribute("title").Return(x => x.Value, string.Empty);
-                int clientWidth = Int32.Parse(xmlForm.Attribute("client_width").Return(x => x.Value, "0"));
-                int clientHeight = Int32.Parse(xmlForm.Attribute("client_height").Return(x => x.Value, "0"));
-
                 xmlForm.RemoveAttributes(); // we do not want to update form geometry. Just form UID.
                 XAttribute uid = new XAttribute("uid", formUID);
                 XAttribute titleAttr = new XAttribute("title", title);
                 xmlForm.Add(uid);
                 xmlForm.Add(titleAttr);
 
-                return doc.ToString();
+                return doc;
             }
 
-            return string.Empty;
+            return null;
         }
 
         internal string GetFormXML(string assemblyName, string resourceKey)
