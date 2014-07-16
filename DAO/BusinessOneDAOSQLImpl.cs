@@ -95,10 +95,10 @@ namespace Dover.Framework.DAO
         }
 
 
-        public override List<object> ListMissingBOMKeys(IBOM bom)
+        public override List<string> ListMissingBOMKeys(IBOM bom)
         {
             object obj = null;
-            List<object> missingKeys = new List<object>();
+            List<string> missingKeys = new List<string>();
 
             Type type = bom.GetBOClassType();
             string xmlBom = bom.Serialize();
@@ -122,7 +122,7 @@ namespace Dover.Framework.DAO
                     bool found = (bool)type.InvokeMember("GetByKey", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, keys);
                     if (!found)
                     {
-                        missingKeys.AddRange(keys);
+                        missingKeys.Add(bom.GetFormatName(i));
                     }
 
                 }
@@ -150,6 +150,7 @@ namespace Dover.Framework.DAO
                 string exceptionErr = String.Format(Messages.ErrorAddingDI, name, formatName, err);
                 Logger.Error(exceptionErr);
                 notifier.Do(x => x.OnError(xmlBom, ret, err));
+                throw new Exception(exceptionErr);
             }
             else
             {
@@ -177,6 +178,7 @@ namespace Dover.Framework.DAO
                     string exceptionErr = String.Format(Messages.ErrorUpdatingDI, name, formatName, err);
                     Logger.Error(exceptionErr);
                     notifier.Do(x => x.OnError(resourceXml.ToString(), ret, err));
+                    throw new Exception(exceptionErr);
                 }
                 else
                 {

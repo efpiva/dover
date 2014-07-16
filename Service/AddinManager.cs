@@ -161,12 +161,14 @@ namespace Dover.Framework.Service
                     if (attr is ResourceBOMAttribute)
                     {
                         CheckAddInAttribute((ResourceBOMAttribute)attr, assembly, out tempComments);
-                        comments += tempComments + "\n";
+                        if (!string.IsNullOrEmpty(tempComments))
+                            comments += tempComments + "\n";
                     }
                     else if (attr is PermissionAttribute)
                     {
                         CheckPermissionAttribute((PermissionAttribute)attr, out tempComments);
-                        comments += tempComments + "\n";
+                        if (!string.IsNullOrEmpty(tempComments))
+                            comments += tempComments + "\n";
                     }
                     else if (attr is AddInAttribute && !string.IsNullOrWhiteSpace(((AddInAttribute)attr).Description))
                     {
@@ -192,40 +194,33 @@ namespace Dover.Framework.Service
         private void CheckAddInAttribute(ResourceBOMAttribute resourceBOMAttribute, Assembly asm, out string comments)
         {
             comments = string.Empty;
-            try
+            using (var resourceStream = asm.GetManifestResourceStream(resourceBOMAttribute.ResourceName))
             {
-                using (var resourceStream = asm.GetManifestResourceStream(resourceBOMAttribute.ResourceName))
+                if (resourceStream == null)
                 {
-                    if (resourceStream == null)
-                    {
-                        Logger.Error(string.Format(Messages.InternalResourceMissing, resourceBOMAttribute.ResourceName));
-                    }
-                    switch (resourceBOMAttribute.Type)
-                    {
-                        case ResourceType.UserField:
-                            var userFieldBOM = b1DAO.GetBOMFromXML<UserFieldBOM>(resourceStream);
-                            UpdateOutputValues(ref comments, userFieldBOM, Messages.UserField);
-                            break;
-                        case ResourceType.UserTable:
-                            var userTableBOM = b1DAO.GetBOMFromXML<UserTableBOM>(resourceStream);
-                            UpdateOutputValues(ref comments, userTableBOM, Messages.UserTable);
-                            break;
-                        case ResourceType.UDO:
-                            var udoBOM = b1DAO.GetBOMFromXML<UDOBOM>(resourceStream);
-                            UpdateOutputValues(ref comments, udoBOM, Messages.UDO);
-                            break;
-                    }
+                    Logger.Error(string.Format(Messages.InternalResourceMissing, resourceBOMAttribute.ResourceName));
                 }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(String.Format("Não foi possível processar atributo {0} do Addin.", resourceBOMAttribute), e);
+                switch (resourceBOMAttribute.Type)
+                {
+                    case ResourceType.UserField:
+                        var userFieldBOM = b1DAO.GetBOMFromXML<UserFieldBOM>(resourceStream);
+                        UpdateOutputValues(ref comments, userFieldBOM, Messages.UserField);
+                        break;
+                    case ResourceType.UserTable:
+                        var userTableBOM = b1DAO.GetBOMFromXML<UserTableBOM>(resourceStream);
+                        UpdateOutputValues(ref comments, userTableBOM, Messages.UserTable);
+                        break;
+                    case ResourceType.UDO:
+                        var udoBOM = b1DAO.GetBOMFromXML<UDOBOM>(resourceStream);
+                        UpdateOutputValues(ref comments, udoBOM, Messages.UDO);
+                        break;
+                }
             }
         }
 
         private void UpdateOutputValues(ref string comments, IBOM bom, string bomName)
         {
-            List<object> keys = b1DAO.ListMissingBOMKeys(bom);
+            List<string> keys = b1DAO.ListMissingBOMKeys(bom);
 
             if (keys.Count > 0)
             {

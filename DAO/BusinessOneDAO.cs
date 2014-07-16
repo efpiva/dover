@@ -30,7 +30,7 @@ namespace Dover.Framework.DAO
         /// <returns></returns>
         public abstract string GetXMLBom<V>(object[] keys, BoObjectTypes objType);
 
-        public abstract List<object> ListMissingBOMKeys(IBOM userFieldBOM);
+        public abstract List<string> ListMissingBOMKeys(IBOM userFieldBOM);
 
         public abstract string GetNextCode(String udt);
 
