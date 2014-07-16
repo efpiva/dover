@@ -13,7 +13,7 @@ namespace Dover.Framework.Attribute
     }
 
     [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]
-    public class ResourceBOMAttribute : System.Attribute
+    public class ResourceBOMAttribute : System.Attribute, IComparable<ResourceBOMAttribute>
     {
         public String ResourceName;
         public ResourceType Type;
@@ -29,5 +29,18 @@ namespace Dover.Framework.Attribute
             return String.Format("[ResourceName={0} ; Type = {1}]", ResourceName, Type);
         }
 
+        int IComparable<ResourceBOMAttribute>.CompareTo(ResourceBOMAttribute other)
+        {
+            if (this.Type == other.Type)
+                return ResourceName.CompareTo(other.ResourceName);
+
+            if (this.Type == ResourceType.UserTable)
+                return -1;
+
+            if (this.Type == ResourceType.UserField && other.Type == ResourceType.UDO)
+                return -1;
+
+            return 1;
+        }
     }
 }

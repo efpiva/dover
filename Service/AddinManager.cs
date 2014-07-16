@@ -250,6 +250,7 @@ namespace Dover.Framework.Service
 
         private void ConfigureAddin(AssemblyInformation addin)
         {
+            List<ResourceBOMAttribute> resourceAttr = new List<ResourceBOMAttribute>();
             Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
             Assembly assembly;
 
@@ -277,13 +278,18 @@ namespace Dover.Framework.Service
                     Logger.Debug(DebugString.Format(Messages.ProcessingAttribute, attr, type));
                     if (attr is ResourceBOMAttribute)
                     {
-                        ProcessAddInResourceAttribute((ResourceBOMAttribute)attr, assembly);
+                        resourceAttr.Add((ResourceBOMAttribute)attr);
                     }
                     else if (attr is PermissionAttribute)
                     {
                         ProcessPermissionAttribute((PermissionAttribute)attr);
                     }
                 }
+            }
+            resourceAttr.Sort(); // need to order becase we need create tables, than fields and at the end UDOs.
+            foreach(var resource in resourceAttr)
+            {
+                ProcessAddInResourceAttribute(resource, assembly);
             }
         }
 
