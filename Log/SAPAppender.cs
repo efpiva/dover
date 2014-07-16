@@ -99,8 +99,17 @@ namespace Dover.Framework.Log
             if (loggingEvent.ExceptionObject != null)
             {
                 var traceForm = ContainerManager.Container.Resolve<ExceptionTrace>();
-                traceForm.ex = loggingEvent.ExceptionObject;
-                traceForm.Show();
+                if (traceForm.UIAPIRawForm != null)
+                // if it's an error on Dover Boot, B1SResourceManager may not have XML form on hand.
+                {
+                    traceForm.ex = loggingEvent.ExceptionObject;
+                    traceForm.Show();
+                }
+                else
+                {
+                    app.MessageBox(string.Format("{0}\n\n{1}", 
+                        loggingEvent.ExceptionObject.Message, loggingEvent.ExceptionObject.StackTrace));
+                }
             }
         }
     }
