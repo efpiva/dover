@@ -15,17 +15,26 @@ namespace Dover.Framework.Log
     public class SAPAppender : AppenderSkeleton
     {
         private static MachineInformation machineInformation = new MachineInformation();
-        public static BusinessOneDAO B1DAO { get; set; }
+        internal static BusinessOneDAO B1DAO { get; set; }
+        internal static bool SilentMode { get; set; }
 
         protected override void Append(log4net.Core.LoggingEvent loggingEvent)
         {
-            string asm, version;
-            var app = SAPServiceFactory.ApplicationFactory();
-            GetAsmName(loggingEvent.LocationInformation.ClassName, out asm, out version);
-            if (app != null)
-                UIAPILog(loggingEvent, app, asm);
-            if (B1DAO != null && loggingEvent.Level >= Level.Error)
-                DIAPILog(loggingEvent, asm, version);
+            try
+            {
+                string asm, version;
+                var app = SAPServiceFactory.ApplicationFactory();
+                GetAsmName(loggingEvent.LocationInformation.ClassName, out asm, out version);
+                if (app != null)
+                    UIAPILog(loggingEvent, app, asm);
+                if (B1DAO != null && loggingEvent.Level >= Level.Error)
+                    DIAPILog(loggingEvent, asm, version);
+            }
+            catch (Exception e)
+            {
+                System.Windows.Forms.MessageBox.Show(String.Format("{0}\n\n{1}", e.Message, e.StackTrace));
+                // Cannot log, can't do anything. Just prevent app crash.
+            }
         }
 
         private void GetAsmName(string className, out string asmName, out string version)
@@ -42,23 +51,16 @@ namespace Dover.Framework.Log
 
         private void DIAPILog(LoggingEvent loggingEvent, string asm, string version)
         {
-            try
-            {
-                string sqlTemplate = @"INSERT INTO [@DOVER_LOGS] (Code, Name, U_Date, U_Hour, U_User, U_MachineName, U_MacAddress, U_IP,
-                    U_Version, U_Assembly) Values ('{0}', '{1}', '{2}', {3}, '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')";
+            string sqlTemplate = @"INSERT INTO [@DOVER_LOGS] (Code, Name, U_Date, U_Hour, U_User, U_MachineName, U_MacAddress, U_IP,
+                U_Version, U_Assembly) Values ('{0}', '{1}', '{2}', {3}, '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')";
 
-                string code = B1DAO.GetNextCode("DOVER_LOGS");
-                DateTime date = DateTime.Now;
-                string b1User = B1DAO.GetCurrentUser();
+            string code = B1DAO.GetNextCode("DOVER_LOGS");
+            DateTime date = DateTime.Now;
+            string b1User = B1DAO.GetCurrentUser();
 
-                string sql = String.Format(sqlTemplate, code, code, FormatDate(date), FormatHour(date), b1User,
-                    machineInformation.MachineName, machineInformation.MacAddress, machineInformation.IP, version, asm);
-                B1DAO.ExecuteStatement(sql);
-            }
-            catch
-            {
-                // Cannot log, can't do anything.
-            }
+            string sql = String.Format(sqlTemplate, code, code, FormatDate(date), FormatHour(date), b1User,
+                machineInformation.MachineName, machineInformation.MacAddress, machineInformation.IP, version, asm);
+            B1DAO.ExecuteStatement(sql);
         }
 
         private string FormatHour(DateTime date)
@@ -75,13 +77,24 @@ namespace Dover.Framework.Log
         {
             string msg = String.Format("{0}: {1}", asm, loggingEvent.RenderedMessage);
             if (loggingEvent.Level == Level.Alert)
-                app.StatusBar.SetText(msg, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_None);
+            {
+                if (!SilentMode)
+                    app.StatusBar.SetText(msg, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_None);
+            }
             else if (loggingEvent.Level == Level.Info || loggingEvent.Level == Level.Debug)
-                app.StatusBar.SetText(msg, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+            {
+                if (!SilentMode)
+                    app.StatusBar.SetText(msg, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+            }
             else if (loggingEvent.Level == Level.Warn)
-                app.StatusBar.SetText(msg, SAPbouiCOM.BoMessageTime.bmt_Medium, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
+            {
+                if (!SilentMode)
+                    app.StatusBar.SetText(msg, SAPbouiCOM.BoMessageTime.bmt_Medium, SAPbouiCOM.BoStatusBarMessageType.smt_Warning);
+            }
             else
+            {
                 app.StatusBar.SetText(msg, SAPbouiCOM.BoMessageTime.bmt_Long, SAPbouiCOM.BoStatusBarMessageType.smt_Error);
+            }
 
             if (loggingEvent.ExceptionObject != null)
             {

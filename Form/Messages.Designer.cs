@@ -61,6 +61,15 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Uploading addin to separate AppDomain for validation.
+        /// </summary>
+        internal static string AdminCreatingAppDomain {
+            get {
+                return ResourceManager.GetString("AdminCreatingAppDomain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Database structure will be modified.
         /// </summary>
         internal static string AdminDatabaseChangeWarning {
@@ -237,6 +246,15 @@ namespace Dover.Framework.Form {
         internal static string AdminStatus {
             get {
                 return ResourceManager.GetString("AdminStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully installed addin.
+        /// </summary>
+        internal static string AdminSuccessInstall {
+            get {
+                return ResourceManager.GetString("AdminSuccessInstall", resourceCulture);
             }
         }
         

@@ -8,6 +8,7 @@ using Dover.Framework.Service;
 using Castle.Core.Logging;
 using SAPbouiCOM;
 using Dover.Framework.Form;
+using Dover.Framework.Log;
 
 namespace Dover.Framework.Form
 {
@@ -21,7 +22,7 @@ namespace Dover.Framework.Form
         private DataTable configTemp;
 
         private AssemblyManager asmLoader;
-        private ILogger logger;
+        private ILogger Logger;
         private LicenseManager licenseManager;
 
         // UI components
@@ -35,7 +36,7 @@ namespace Dover.Framework.Form
         public Admin(AssemblyManager asmLoader, LicenseManager licenseManager, ILogger logger)
         {
             this.asmLoader = asmLoader;
-            this.logger = logger;
+            this.Logger = logger;
             this.licenseManager = licenseManager;
         }
 
@@ -59,7 +60,6 @@ namespace Dover.Framework.Form
             removeDT = removeGrid.DataTable;
             installDT = moduleGrid.DataTable;
 
-            // Configure grid for i18n and readOnly.
             removeGrid.Columns.Item("#").Type = SAPbouiCOM.BoGridColumnType.gct_CheckBox;
             removeGrid.Columns.Item("#").Width = 25;
             removeGrid.Columns.Item("#").AffectsFormMode = false;
@@ -107,21 +107,31 @@ namespace Dover.Framework.Form
             BubbleEvent = true;
             if (string.IsNullOrEmpty(modulePath.Value))
             {
-                logger.Error(Messages.AdminEmptyFile);
+                Logger.Error(Messages.AdminEmptyFile);
             }
             else
             {
                 string confirmation;
-                if (asmLoader.AddInIsValid(modulePath.Value, out confirmation))
+                Logger.Info(Messages.AdminCreatingAppDomain);
+                try
                 {
-                    if ((!string.IsNullOrEmpty(confirmation)
-                        && app.MessageBox(string.Format("{0}\n{1}", Messages.AdminDatabaseChangeWarning, confirmation)) == 1)
-                        || string.IsNullOrEmpty(confirmation))
+                    SAPAppender.SilentMode = true; // Prevent messy log.
+                    if (asmLoader.AddInIsValid(modulePath.Value, out confirmation))
                     {
-                        asmLoader.SaveAddIn(modulePath.Value);
-                        UpdateInstallGrid();
-                        UpdateRemoveGrid();
+                        if ((!string.IsNullOrEmpty(confirmation)
+                            && app.MessageBox(string.Format("{0}\n{1}", Messages.AdminDatabaseChangeWarning, confirmation)) == 1)
+                            || string.IsNullOrEmpty(confirmation))
+                        {
+                            asmLoader.SaveAddIn(modulePath.Value);
+                            UpdateInstallGrid();
+                            UpdateRemoveGrid();
+                            Logger.Info(Messages.AdminSuccessInstall);
+                        }
                     }
+                }
+                finally
+                {
+                    SAPAppender.SilentMode = false;
                 }
             }
         }

@@ -261,4 +261,10 @@
   <data name="MngmntMenu" xml:space="preserve">
     <value>Addin startup configuration</value>
   </data>
+  <data name="AdminCreatingAppDomain" xml:space="preserve">
+    <value>Uploading addin to separate AppDomain for validation</value>
+  </data>
+  <data name="AdminSuccessInstall" xml:space="preserve">
+    <value>Successfully installed addin</value>
+  </data>
 </root>
