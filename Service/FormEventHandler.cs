@@ -61,13 +61,13 @@ namespace Dover.Framework.Service
                 formAttributes.AddRange((from type in dependency.GetTypes()
                                       from attribute in type.GetCustomAttributes(true)
                                       where attribute is SAPbouiCOM.Framework.FormAttribute
-                                        && type == typeof(DoverUserFormBase) 
+                                        && typeof(DoverUserFormBase).IsAssignableFrom(type)
                                         /* do not register systemForm from ReferencedAssemblies, they
                                          * should be registered by the addin owner. Just UserForms can be reused
                                          */
                                       select new {
                                             FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute,
-                                            Assembly = currentAsm,
+                                            Assembly = dependency,
                                             Type = type}).ToList() );
             }
 
