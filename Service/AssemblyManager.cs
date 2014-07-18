@@ -13,6 +13,7 @@ using Dover.Framework.Model;
 using Dover.Framework.Monad;
 using Castle.Core.Logging;
 using ICSharpCode.SharpZipLib.Zip;
+using Dover.Framework.Factory;
 
 namespace Dover.Framework.Service
 {
@@ -81,10 +82,10 @@ namespace Dover.Framework.Service
             {
                 throw new ArgumentException(Messages.InvalidAddInExtension);
             }
-
             mainDll = mainDll.Substring(0, mainDll.Length - 4);
-
+            testDomain.SetData("assemblyName", mainDll); // Used to get current AssemblyName for logging and reflection
             Application testApp = (Application)testDomain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
+            SAPServiceFactory.PrepareForInception(testDomain);
             var addinManager = testApp.Resolve<AddinManager>();
             ret = addinManager.CheckAddinConfiguration(mainDll, out comments);
             testApp.ShutDownApp();
