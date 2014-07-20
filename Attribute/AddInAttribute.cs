@@ -33,12 +33,5 @@ namespace Dover.Framework.Attribute
         public string B1SResource { get; set; }
         public string Description { get; set; }
         public string i18n { get ; set; }
-        public bool requireLicense { get; set; }
-
-        public AddInAttribute()
-        {
-            requireLicense = true;
-        }
-
     }
 }
