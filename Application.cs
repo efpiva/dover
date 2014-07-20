@@ -29,6 +29,17 @@ using System.Collections.Generic;
 
 namespace Dover.Framework
 {
+    /// <summary>
+    /// Main entry point for the Dover Framework. During Application creation all resources
+    /// are configured and assembly dependencies are registered in the AppDomain.
+    /// 
+    /// If you do not want to run it inside SAP Business One UI API, you can create an Application
+    /// object and resolve your business logic service class using the Resolve<> method.
+    /// 
+    /// Be aware that doing this, you need to register your custom SAP Business One DI API resolver in
+    /// Dover.Framework.Container.ContainerManager.
+    /// 
+    /// </summary>
     public class Application : MarshalByRefObject
     {
         private IWindsorContainer appContainer;
@@ -70,11 +81,19 @@ namespace Dover.Framework
             return null;
         }
 
+        /// <summary>
+        /// Release all resources.
+        /// </summary>
         public void ShutDownApp()
         {
             appContainer.Dispose();
         }
 
+        /// <summary>
+        /// Return an array of all implementations for an specific service.
+        /// </summary>
+        /// <typeparam name="T">Type of the service.</typeparam>
+        /// <returns>Array of all implementations for the specified service.</returns>
         public T[] ResolveAll<T>()
         {
             if (appContainer == null)
@@ -84,7 +103,12 @@ namespace Dover.Framework
 
             return appContainer.ResolveAll<T>();
         }
-        
+
+        /// <summary>
+        /// Return the default implementation for an specific service.
+        /// </summary>
+        /// <typeparam name="T">Type of service.</typeparam>
+        /// <returns>Object implementation registered on IoC container.</returns>
         public T Resolve<T>()
         {
             if (appContainer == null)
@@ -95,6 +119,9 @@ namespace Dover.Framework
             return appContainer.Resolve<T>();
         }
 
+        /// <summary>
+        /// Start point for Dover Addon.
+        /// </summary>
         public void Run()
         {
             if (appContainer == null)
@@ -105,7 +132,10 @@ namespace Dover.Framework
             microCore.PrepareFramework();
         }
 
-        public void RunAddin()
+        /// <summary>
+        /// Called for each addin that is started by Dover.
+        /// </summary>
+        internal void RunAddin()
         {
             if (appContainer == null)
             {
@@ -118,7 +148,11 @@ namespace Dover.Framework
             shutdownEvent.WaitOne(); // Wait until shutdown event is signaled.
         }
 
-        public void RunInception()
+        /// <summary>
+        /// Called before all resources are loaded on AppDomain. This is done so we can guarantee
+        /// that all code, including Framework code, is running using Database registered assembly Version.
+        /// </summary>
+        internal void RunInception()
         {
             if (appContainer == null)
             {

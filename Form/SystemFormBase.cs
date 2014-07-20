@@ -25,6 +25,15 @@ using SAPbouiCOM.Framework;
 
 namespace Dover.Framework.Form
 {
+    /// Base class for SystemForms.
+    /// 
+    /// It will read the formType from FormAttribute and it will intercept this
+    /// FormType creation bind all events to it.
+    /// 
+    /// It will read the resource name in FormAttribute and locate a form with
+    /// the specified name in the B1S embedded resource. If not found, it will look for
+    /// a srf XML file in the current solution and threat the specified resource name
+    /// as the Fully Qualified Name of the embedded resource file.
     public class DoverSystemFormBase : DoverFormBase
     {
         private string formUID;

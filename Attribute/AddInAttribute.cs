@@ -25,13 +25,32 @@ using System.Text;
 
 namespace Dover.Framework.Attribute
 {
-    
+    /// <summary>
+    /// AddIn general information and configuration.
+    /// </summary>
     [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false)]
     public class AddInAttribute : System.Attribute
     {
+        /// <summary>
+        /// If AddIn need to run code during startUp, place here one method name in the current class that should be called.
+        /// 
+        /// The need to have no parameter and return void.
+        /// </summary>
         public string InitMethod { get; set; }
+        /// <summary>
+        /// Fully Qualified Name of the embedded resource that has the b1s compiled XML output file.
+        /// 
+        /// Note that you should emebed the compiled XML, not the project file. If you're in doubt, check if the
+        /// XML has a project name called VSICreated. If yes, it's the compiled one.
+        /// </summary>
         public string B1SResource { get; set; }
+        /// <summary>
+        /// Description of the Addin
+        /// </summary>
         public string Description { get; set; }
+        /// <summary>
+        /// Fully Qualified Name of the i18n resource that has the Description internationalized.
+        /// </summary>
         public string i18n { get ; set; }
     }
 }

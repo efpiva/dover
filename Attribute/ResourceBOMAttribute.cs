@@ -32,12 +32,32 @@ namespace Dover.Framework.Attribute
         UDO
     }
 
+    /// <summary>
+    /// Include a resource on the AddInProject. All resources will be installed by Dover
+    /// on AddIn Install.
+    /// </summary>
     [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]
     public class ResourceBOMAttribute : System.Attribute, IComparable<ResourceBOMAttribute>
     {
+        /// <summary>
+        /// Fully Qualified Name of the embedded resource
+        /// </summary>
         public String ResourceName;
+        /// <summary>
+        /// Type of the resource
+        /// </summary>
         public ResourceType Type;
 
+        /// <summary>
+        /// Include a resource on the AddInProject. All resources will be installed by Dover
+        /// on AddIn Install.
+        /// </summary>
+        /// <param name="ResourceName">
+        /// Fully Qualified Name of the embedded resource
+        /// </param>
+        /// <param name="Type">
+        /// Type of the resource
+        /// </param>
         public ResourceBOMAttribute(String ResourceName, ResourceType Type)
         {
             this.ResourceName = ResourceName;

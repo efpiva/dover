@@ -28,6 +28,14 @@ using Castle.Core;
 
 namespace Dover.Framework.Form
 {
+    /// <summary>
+    /// Base class for all forms. It has the same signature of FormBase from SAP Business One
+    /// Business One Studio Framework.
+    /// 
+    /// It has a Proxy installed for all Forms (Dover.Framework.Proxy.FormProxy) that handle i18n
+    /// and unexpected exceptions. To use the exception handled stuff, install all UI events
+    /// declaring the method as protected virtual. All forms should be declared as Public.
+    /// </summary>
     [Interceptor("formProxy")]
     public class DoverFormBase
     {

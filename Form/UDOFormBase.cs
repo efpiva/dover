@@ -32,6 +32,19 @@ using System.Xml.Linq;
 
 namespace Dover.Framework.Form
 {
+    /// <summary>
+    /// Base class for UDO Forms.
+    /// 
+    /// It will read the formType from FormAttribute and it will intercept this
+    /// FormType creation bind all events to it. If form resource is not empty
+    /// it means it was i18n form. For this to work properly, it must have an empty form
+    /// created on the database and all forms elements are created by Dover at runtime.
+    /// 
+    /// It will read the resource name in FormAttribute and locate a form with
+    /// the specified name in the B1S embedded resource. If not found, it will look for
+    /// a srf XML file in the current solution and threat the specified resource name
+    /// as the Fully Qualified Name of the embedded resource file.
+    /// </summary>
     public class DoverUDOFormBase : DoverFormBase
     {
         private bool initialized = false;

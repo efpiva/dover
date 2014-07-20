@@ -30,6 +30,15 @@ using Dover.Framework.DAO;
 
 namespace Dover.Framework.Form
 {
+    /// <summary>
+    /// Base class for UserForms.
+    /// 
+    /// It will read the resource name in FormAttribute and locate a form with
+    /// the specified name in the B1S embedded resource. If not found, it will look for
+    /// a srf XML file in the current solution and threat the specified resource name
+    /// as the Fully Qualified Name of the embedded resource file.
+    /// 
+    /// </summary>
     public class DoverUserFormBase : DoverFormBase
     {
 

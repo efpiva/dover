@@ -25,9 +25,19 @@ using System.Text;
 
 namespace Dover.Framework.Attribute
 {
+    /// <summary>
+    /// Used to bind a form of method to a specific menu UID.
+    /// 
+    /// When presented in a class, the class must be of type DoverBaseForm.
+    /// 
+    /// When presented in a method, the method will be called from Menu event.
+    /// </summary>
     [System.AttributeUsage(System.AttributeTargets.Class | System.AttributeTargets.Method, AllowMultiple = false)]
     public class MenuEventAttribute : System.Attribute
     {
+        /// <summary>
+        /// MenuUID that will trigger the event.
+        /// </summary>
         public string UniqueUID { get; set; }
 
         internal System.Type OriginalType { get; set; }

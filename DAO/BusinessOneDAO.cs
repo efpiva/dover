@@ -37,9 +37,23 @@ namespace Dover.Framework.DAO
 
     public interface BusinessOneDAO
     {
+        /// <summary>
+        /// Save a BOM XML if not presented in the DataBase.
+        /// </summary>
+        /// <param name="bom">BOM, containing the XML that will be added.</param>
+        /// <param name="notifier">
+        ///  If present, for each attempt, a trigger event will happen. This is usefull
+        ///  when the calling need to knows the added ID, of to do some transaction related stuff
+        ///  OnError.
+        /// </param>
         void SaveBOMIfNotExists(IBOM bom, INotifier notifier = null);
 
-        void UpdateOrSaveBOMIfNotExists(IBOM udoBOM, INotifier notifier = null);
+        /// <summary>
+        /// Save a BOM if not exists and update it if exists.
+        /// </summary>
+        /// <param name="udoBOM"></param>
+        /// <param name="notifier"></param>
+        void UpdateOrSaveBOMIfNotExists(IBOM BOM, INotifier notifier = null);
 
         /// <summary>
         /// Return a BOM XML, containing various BO elements.
@@ -47,29 +61,90 @@ namespace Dover.Framework.DAO
         /// <typeparam name="V">SAP Business One DI API object type</typeparam>
         /// <param name="keys">keys to be fetched</param>
         /// <param name="objType">SAP Business One DI API enum representing the object type</param>
-        /// <returns></returns>
+        /// <returns>XML of SAP Business One object</returns>
         string GetXMLBom<V>(object[] keys, BoObjectTypes objType);
 
+        /// <summary>
+        /// List all keys that are not present on the database, from the specified BOM
+        /// </summary>
+        /// <param name="userFieldBOM">BOM with all Business One objects</param>
+        /// <returns>all keys that are missing, using user friendly display name.</returns>
         List<string> ListMissingBOMKeys(IBOM userFieldBOM);
 
+        /// <summary>
+        /// Return the next code for the specified user table. This method implements a code on the following format:
+        ///   XXXXXXXX, where X is an hex digit.;
+        /// </summary>
+        /// <param name="udt">User Defined Table</param>
+        /// <returns>next code on the default format.</returns>
         string GetNextCode(String udt);
 
+        /// <summary>
+        /// Return the current user code.
+        /// </summary>
+        /// <returns>Return the current user code.</returns>
         string GetCurrentUser();
 
+        /// <summary>
+        /// Execute an SQL statement with no return value (INSERT/UPDATE).
+        /// </summary>
+        /// <param name="sql">SQL Statement</param>
         void ExecuteStatement(string sql);
 
+        /// <summary>
+        /// Execute the SQL Statement and return the supplied object. For each statement selected value,
+        /// a corresponding property must exists on the specified object.
+        /// </summary>
+        /// <typeparam name="T">Return object type</typeparam>
+        /// <param name="sql">SQL statement</param>
+        /// <returns>instantiated object with all values returned on the SQL statement.</returns>
         T ExecuteSqlForObject<T>(string sql);
 
+        /// <summary>
+        /// Execute the SQL Statement and return a list of the supplied object type. For each statement selected value,
+        /// a corresponding property must exists on the specified object.
+        /// </summary>
+        /// <typeparam name="T">Object type to wrap into the list.</typeparam>
+        /// <param name="sql">SQL statement</param>
+        /// <returns>List with an object for each row, with all values returned on the SQL statement.</returns>
         List<T> ExecuteSqlForList<T>(string sql);
 
+        /// <summary>
+        /// Return a BOM object with the specified resourceStream.
+        /// </summary>
+        /// <typeparam name="T">BOM type</typeparam>
+        /// <param name="resourceStream">Stream containing XML data.</param>
+        /// <returns>BOM Object representing the returned value.</returns>
         T GetBOMFromXML<T>(Stream resourceStream);
 
+        /// <summary>
+        /// Update a permission attribute on the database if not exists.
+        /// </summary>
+        /// <param name="permissionAttribute">PermissionAttribute</param>
         void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute);
 
+        /// <summary>
+        /// Return true if current iser us SuperUser.
+        /// </summary>
+        /// <returns>bool value indicating the current user is SuperUser.</returns>
         bool IsSuperUser();
 
+        /// <summary>
+        /// Saves BOM, without checking if it exists.
+        /// </summary>
+        /// <param name="doc">BOM object representing the BusinessOne data to be saved.</param>
+        /// <param name="notifier">
+        ///  If present, for each attempt, a trigger event will happen. This is usefull
+        ///  when the calling need to knows the added ID, of to do some transaction related stuff
+        ///  OnError.
+        /// </param>
         void SaveBOM(IBOM doc, INotifier notifier = null);
 
+        /// <summary>
+        /// Check if the specified Permission exists.
+        /// </summary>
+        /// <param name="permissionAttribute">Permission attribute to check for</param>
+        /// <returns>true if exists</returns>
         bool PermissionExists(Attribute.PermissionAttribute permissionAttribute);
     }
 }

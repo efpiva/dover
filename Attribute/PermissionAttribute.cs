@@ -26,14 +26,31 @@ using SAPbobsCOM;
 
 namespace Dover.Framework.Attribute
 {    
-    
+    /// <summary>
+    /// Used to create custom Addin Permission attributes.
+    /// </summary>
     [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = true)]
     public class PermissionAttribute : System.Attribute
     {
+        /// <summary>
+        /// Unique ID of the permission
+        /// </summary>
         public String PermissionID { get; set; }
+        /// <summary>
+        /// Display name of the permission.
+        /// </summary>
         public String Name { get; set; }
+        /// <summary>
+        /// Parent ID of the permission.
+        /// </summary>
         public String ParentID { get; set; }        
+        /// <summary>
+        /// FormType that this permission will restrict. Leave empty if it's not related to any form
+        /// </summary>
         public String FormType { get; set; }
+        /// <summary>
+        /// Access options related to this Permission
+        /// </summary>
         public BoUPTOptions Options { get; set; }
 
         public PermissionAttribute(string PermissionID, string Name, string ParentID,
