@@ -45,7 +45,7 @@ namespace Dover.Framework.Service
             this.i18nService = i18nService;
         }
 
-        public void RemoveAddIn(string moduleName)
+        internal void RemoveAddIn(string moduleName)
         {
             // TODO: reload appDomain!
             asmDAO.RemoveAssembly(moduleName);
@@ -58,7 +58,7 @@ namespace Dover.Framework.Service
         /// <param name="path">Path name for the intended addin</param>
         /// <param name="comments">Comments to be displayed to the end user, linke tabled that are going to be created.</param>
         /// <returns>true if addin is valid</returns>
-        public bool AddInIsValid(string path, out string comments)
+        internal bool AddInIsValid(string path, out string comments)
         {
             string extension = Path.GetExtension(path);
             AppDomain testDomain = null;
@@ -177,7 +177,7 @@ namespace Dover.Framework.Service
         /// be errors during addin startup.
         /// </summary>
         /// <param name="path">path for the file to be saved</param>
-        public void SaveAddIn(string path)
+        internal void SaveAddIn(string path)
         {
             if (path == null || path.Length < 4)
             {

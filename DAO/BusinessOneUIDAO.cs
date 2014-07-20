@@ -6,7 +6,7 @@ namespace Dover.Framework.DAO
 {
     public abstract class BusinessOneUIDAO
     {
-        public abstract void ProcessMenuAttribute(List<MenuAttribute> menus);
+        internal abstract void ProcessMenuAttribute(List<MenuAttribute> menus);
 
         internal abstract IForm LoadFormBatchAction(string xml, string formType);
 

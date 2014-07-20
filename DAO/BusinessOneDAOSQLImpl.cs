@@ -29,17 +29,17 @@ namespace Dover.Framework.DAO
             this.company = company;
         }
 
-        public override void SaveBOM(IBOM bom, INotifier notifier = null)
+        public void SaveBOM(IBOM bom, INotifier notifier = null)
         {
             UpdateOrSaveBOMIfNotExists(bom, false, false, notifier);
         }
 
-        public override void SaveBOMIfNotExists(IBOM bom, INotifier notifier = null)
+        public void SaveBOMIfNotExists(IBOM bom, INotifier notifier = null)
         {
             UpdateOrSaveBOMIfNotExists(bom, false, true, notifier);
         }
 
-        public override void UpdateOrSaveBOMIfNotExists(IBOM bom, INotifier notifier = null)
+        public void UpdateOrSaveBOMIfNotExists(IBOM bom, INotifier notifier = null)
         {
             UpdateOrSaveBOMIfNotExists(bom, true, true, notifier);
         }
@@ -95,7 +95,7 @@ namespace Dover.Framework.DAO
         }
 
 
-        public override List<string> ListMissingBOMKeys(IBOM bom)
+        public List<string> ListMissingBOMKeys(IBOM bom)
         {
             object obj = null;
             List<string> missingKeys = new List<string>();
@@ -216,7 +216,7 @@ namespace Dover.Framework.DAO
             return ret;
         }
 
-        public override string GetNextCode(string udt)
+        public string GetNextCode(string udt)
         {
             SAPbobsCOM.Recordset objRecordSet = (SAPbobsCOM.Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
             Logger.Debug(DebugString.Format(Messages.GetNextCodeStart, udt));
@@ -287,12 +287,12 @@ namespace Dover.Framework.DAO
             return (id);
         }
 
-        public override string GetCurrentUser()
+        public string GetCurrentUser()
         {
             return company.UserName;
         }
 
-        public override void ExecuteStatement(string sql)
+        public void ExecuteStatement(string sql)
         {
             var objRecordSet = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
             Logger.Debug(DebugString.Format(Messages.StartExecuteStatement, sql));
@@ -313,7 +313,7 @@ namespace Dover.Framework.DAO
             Logger.Debug(DebugString.Format(Messages.EndExecuteStatement, sql));
         }
 
-        public override T ExecuteSqlForObject<T>(string sql)
+        public T ExecuteSqlForObject<T>(string sql)
         {
             Type type = typeof(T);
             Recordset rs = (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset);
@@ -363,7 +363,7 @@ namespace Dover.Framework.DAO
             return (type != typeof(object) && Type.GetTypeCode(type) == TypeCode.Object);
         }
 
-        public override List<T> ExecuteSqlForList<T>(string sql)
+        public List<T> ExecuteSqlForList<T>(string sql)
         {
             var retValue = new List<T>();
             Type type = typeof(T);
@@ -445,7 +445,7 @@ namespace Dover.Framework.DAO
             return obj;
         }
 
-        public override T GetBOMFromXML<T>(Stream stream)
+        public T GetBOMFromXML<T>(Stream stream)
         {
             try
             {
@@ -483,7 +483,7 @@ namespace Dover.Framework.DAO
             return ret;
         }
 
-        public override string GetXMLBom<V>(object[] keys, BoObjectTypes objType)
+        public string GetXMLBom<V>(object[] keys, BoObjectTypes objType)
         {
             XDocument bom = null;
             Type type = typeof(V);
@@ -528,7 +528,7 @@ namespace Dover.Framework.DAO
             return bom.ToString();
         }
 
-        public override void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute)
+        public void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute)
         {
             UserPermissionTree userPermissionTree = null;
 
@@ -610,7 +610,7 @@ namespace Dover.Framework.DAO
         }
 
 
-        public override bool IsSuperUser()
+        public bool IsSuperUser()
         {
             string superUser = ExecuteSqlForObject<string>(String.Format(
                 "Select T10.SuperUser From OUSR T10 Where T10.User_Code = '{0}'", company.UserName));
@@ -618,7 +618,7 @@ namespace Dover.Framework.DAO
             return superUser.Return(x => x == "Y", false);
         }
 
-        public override bool PermissionExists(Attribute.PermissionAttribute permissionAttribute)
+        public bool PermissionExists(Attribute.PermissionAttribute permissionAttribute)
         {
             UserPermissionTree userPermissionTree = null;
 

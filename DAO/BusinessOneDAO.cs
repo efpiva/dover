@@ -15,11 +15,11 @@ namespace Dover.Framework.DAO
         void OnError(string xml, int errCode, string errMessage);
     }
 
-    public abstract class BusinessOneDAO
+    public interface BusinessOneDAO
     {
-        public abstract void SaveBOMIfNotExists(IBOM bom, INotifier notifier = null);
+        void SaveBOMIfNotExists(IBOM bom, INotifier notifier = null);
 
-        public abstract void UpdateOrSaveBOMIfNotExists(IBOM udoBOM, INotifier notifier = null);
+        void UpdateOrSaveBOMIfNotExists(IBOM udoBOM, INotifier notifier = null);
 
         /// <summary>
         /// Return a BOM XML, containing various BO elements.
@@ -28,28 +28,28 @@ namespace Dover.Framework.DAO
         /// <param name="keys">keys to be fetched</param>
         /// <param name="objType">SAP Business One DI API enum representing the object type</param>
         /// <returns></returns>
-        public abstract string GetXMLBom<V>(object[] keys, BoObjectTypes objType);
+        string GetXMLBom<V>(object[] keys, BoObjectTypes objType);
 
-        public abstract List<string> ListMissingBOMKeys(IBOM userFieldBOM);
+        List<string> ListMissingBOMKeys(IBOM userFieldBOM);
 
-        public abstract string GetNextCode(String udt);
+        string GetNextCode(String udt);
 
-        public abstract string GetCurrentUser();
+        string GetCurrentUser();
 
-        public abstract void ExecuteStatement(string sql);
+        void ExecuteStatement(string sql);
 
-        public abstract T ExecuteSqlForObject<T>(string sql);
+        T ExecuteSqlForObject<T>(string sql);
 
-        public abstract List<T> ExecuteSqlForList<T>(string sql);
+        List<T> ExecuteSqlForList<T>(string sql);
 
-        public abstract T GetBOMFromXML<T>(Stream resourceStream);
+        T GetBOMFromXML<T>(Stream resourceStream);
 
-        public abstract void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute);
+        void UpdateOrSavePermissionIfNotExists(Attribute.PermissionAttribute permissionAttribute);
 
-        public abstract bool IsSuperUser();
+        bool IsSuperUser();
 
-        public abstract void SaveBOM(IBOM doc, INotifier notifier = null);
+        void SaveBOM(IBOM doc, INotifier notifier = null);
 
-        public abstract bool PermissionExists(Attribute.PermissionAttribute permissionAttribute);
+        bool PermissionExists(Attribute.PermissionAttribute permissionAttribute);
     }
 }

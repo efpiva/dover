@@ -26,7 +26,7 @@ namespace Dover.Framework.DAO
             this.i18NService = addIni18n;
         }
 
-        public override void ProcessMenuAttribute(List<MenuAttribute> menus)
+        internal override void ProcessMenuAttribute(List<MenuAttribute> menus)
         {
             UIApplication appCommand;
             List<ApplicationMenusActionMenu> actionMenus = new List<ApplicationMenusActionMenu>();

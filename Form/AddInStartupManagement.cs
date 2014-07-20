@@ -19,18 +19,13 @@ namespace Dover.Framework.Form
         private SAPbouiCOM.Grid gridCfg;
         private SAPbouiCOM.Grid generalGrid;
         private DataTable configTemp;
-        private PermissionManager permissionManager;
+        public PermissionManager PermissionManager;
 
         private string userConfigSQLTemplate = @"SELECT [@DOVER_MODULES].U_Description Description, 
                                         [@DOVER_MODULES].U_Version Version, COALESCE([@DOVER_MODULES_USER].U_Status,
                                         'D') Status, [@DOVER_MODULES].Code, [@DOVER_MODULES].U_Name Name
                         from [@DOVER_MODULES] LEFT JOIN [@DOVER_MODULES_USER] ON [@DOVER_MODULES].Code = [@DOVER_MODULES_USER].U_Code and [@DOVER_MODULES_USER].U_User = '{0}'
                         where [@DOVER_MODULES].U_Type = 'A' and ([@DOVER_MODULES_USER].U_User is null or [@DOVER_MODULES_USER].U_User = '{0}')";
-
-        public AddInStartupManagement(PermissionManager permissionManager)
-        {
-            this.permissionManager = permissionManager;
-        }
 
         /// <summary>
         /// Initialize components. Called by framework after form created.
@@ -117,8 +112,8 @@ namespace Dover.Framework.Form
                 var name = generalGrid.DataTable.Columns.Item("Name").Cells.Item(selectedRow).Value.ToString();
                 var status = generalGrid.DataTable.Columns.Item("Status").Cells.Item(selectedRow).Value.ToString();
 
-                Permission permission = permissionManager.ParsePermissionStr(status);
-                permissionManager.ConfigureAddIn(name, permission);
+                Permission permission = PermissionManager.ParsePermissionStr(status);
+                PermissionManager.ConfigureAddIn(name, permission);
 
                 if (this.UIAPIRawForm.Mode == BoFormMode.fm_UPDATE_MODE)
                     this.UIAPIRawForm.Mode = BoFormMode.fm_OK_MODE;
@@ -147,8 +142,8 @@ namespace Dover.Framework.Form
                 var name = gridCfg.DataTable.Columns.Item("Name").Cells.Item(selectedRow).Value.ToString();
                 var status = gridCfg.DataTable.Columns.Item("Status").Cells.Item(selectedRow).Value.ToString();
 
-                Permission permission = permissionManager.ParsePermissionStr(status);
-                permissionManager.ConfigureAddIn(name, username, permission);
+                Permission permission = PermissionManager.ParsePermissionStr(status);
+                PermissionManager.ConfigureAddIn(name, username, permission);
 
                 if (this.UIAPIRawForm.Mode == BoFormMode.fm_UPDATE_MODE)
                     this.UIAPIRawForm.Mode = BoFormMode.fm_OK_MODE;

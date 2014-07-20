@@ -13,7 +13,7 @@ using Dover.Framework.Log;
 
 namespace Dover.Framework
 {
-    public class MicroCore
+    class MicroCore
     {
         private SAPbobsCOM.Company company;
         private DatabaseConfiguration dbConf;
@@ -37,7 +37,7 @@ namespace Dover.Framework
             i18nService.ConfigureThreadI18n(System.Threading.Thread.CurrentThread);
         }
 
-        public void PrepareFramework()
+        internal void PrepareFramework()
         {
             try
             {

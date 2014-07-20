@@ -7,7 +7,7 @@ using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 namespace Dover.Framework.DAO
 {
-    public class AssemblyDAOImpl : AssemblyDAO
+    class AssemblyDAOImpl : AssemblyDAO
     {
         private BusinessOneDAO b1DAO;
 
@@ -16,7 +16,7 @@ namespace Dover.Framework.DAO
             this.b1DAO = b1DAO;
         }
 
-        public AssemblyInformation GetAssemblyInformation(string asmFile, string type)
+        internal override AssemblyInformation GetAssemblyInformation(string asmFile, string type)
         {
             String sql = string.Format(@"SELECT Code, U_Name Name, ISNULL(U_Description, U_Name) Description, U_FileName FileName, U_Version Version, U_MD5 MD5, U_Date Date, 
                                 U_Size Size, U_Type Type 
@@ -25,7 +25,7 @@ namespace Dover.Framework.DAO
             return b1DAO.ExecuteSqlForObject<AssemblyInformation>(sql);
         }
 
-        public List<AssemblyInformation> getAssembliesInformation(string type)
+        internal override List<AssemblyInformation> getAssembliesInformation(string type)
         {
             String sql = string.Format(@"SELECT Code, U_Name Name, ISNULL(U_Description, U_Name) Description, U_FileName FileName, U_Version Version, U_MD5 MD5, U_Date Date, 
                                 U_Size Size, U_Type Type 
@@ -34,7 +34,7 @@ namespace Dover.Framework.DAO
             return b1DAO.ExecuteSqlForList<AssemblyInformation>(sql);
         }
 
-        public byte[] GetAssembly(AssemblyInformation asm)
+        internal override byte[] GetAssembly(AssemblyInformation asm)
         {
             List<String> hexFile = b1DAO.ExecuteSqlForList<String>(
                 String.Format("Select U_asm from [@DOVER_MODULES_BIN] where U_Code = '{0}' ORDER BY Code", asm.Code));
@@ -47,10 +47,10 @@ namespace Dover.Framework.DAO
             return shb.Value;
         }
 
-        public void SaveAssembly(AssemblyInformation asm, byte[] asmBytes)
+        internal override void SaveAssembly(AssemblyInformation asm, byte[] asmBytes)
         {
             SoapHexBinary shb = new SoapHexBinary(asmBytes);
-            string asmHex = null, b1SResource = null;
+            string asmHex = null;
             if (asmBytes != null)
                 asmHex = shb.ToString();
             string sql;
@@ -100,7 +100,7 @@ namespace Dover.Framework.DAO
             }
         }
 
-        public void RemoveAssembly(string moduleName)
+        internal override void RemoveAssembly(string moduleName)
         {
             string code = b1DAO.ExecuteSqlForObject<string>(
                 string.Format("SELECT Code FROM [@DOVER_MODULES] WHERE U_Name = '{0}'", moduleName));
@@ -111,7 +111,7 @@ namespace Dover.Framework.DAO
             }
         }
 
-        public void SaveAssemblyI18N(string moduleCode, string i18n, byte[] i18nAsm)
+        internal override void SaveAssemblyI18N(string moduleCode, string i18n, byte[] i18nAsm)
         {
             string sql;
             int maxtext = 256000;
@@ -143,7 +143,7 @@ namespace Dover.Framework.DAO
             }
         }
 
-        public bool AutoUpdateEnabled(AssemblyInformation asm)
+        internal override bool AutoUpdateEnabled(AssemblyInformation asm)
         {
             string autoUpdateFlag = b1DAO.ExecuteSqlForObject<string>(
                 string.Format("select isnull(U_AutoUpdate, 'N') from [@DOVER_MODULES] where Code = '{0}'", asm.Code));
@@ -151,12 +151,12 @@ namespace Dover.Framework.DAO
         }
 
 
-        public List<string> GetSupportedI18N(AssemblyInformation asm)
+        internal override List<string> GetSupportedI18N(AssemblyInformation asm)
         {
             return b1DAO.ExecuteSqlForList<string>(string.Format("select u_i18n from [@DOVER_MODULES_I18N] WHERE U_Code = '{0}'", asm.Code));
         }
 
-        public byte[] GetI18NAssembly(AssemblyInformation asm, string i18n)
+        internal override byte[] GetI18NAssembly(AssemblyInformation asm, string i18n)
         {
             List<String> hexFile = b1DAO.ExecuteSqlForList<String>(
                 String.Format("Select U_asm from [@DOVER_MODULES_I18N] where U_Code = '{0}' and U_i18n = '{1}' ORDER BY Code", asm.Code, i18n));

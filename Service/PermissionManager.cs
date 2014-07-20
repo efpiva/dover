@@ -43,12 +43,12 @@ namespace Dover.Framework.Service
             return false;
         }
 
-        public void ConfigureAddIn(string addInName, Permission permission)
+        internal void ConfigureAddIn(string addInName, Permission permission)
         {
             permissionDAO.SaveAddInPermission(addInName, permission);
         }
 
-        public Permission ParsePermissionStr(string permissionStr)
+        internal Permission ParsePermissionStr(string permissionStr)
         {
             switch (permissionStr.Return(x => x, "A"))
             {
@@ -61,7 +61,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        public void ConfigureAddIn(string addInName, string userName, Permission permission)
+        internal void ConfigureAddIn(string addInName, string userName, Permission permission)
         {
             string userPermissionCode = permissionDAO.GetUserPermissionCode(addInName, userName);
             if (userPermissionCode == null)

@@ -21,9 +21,8 @@ namespace Dover.Framework.Form
         private DataTable installDT;
         private DataTable configTemp;
 
-        private AssemblyManager asmLoader;
-        private ILogger Logger;
-        private LicenseManager licenseManager;
+        public AssemblyManager AsmLoader { get; set; }
+        public ILogger Logger { get; set; }
 
         // UI components
         private SAPbouiCOM.EditText modulePath;
@@ -32,13 +31,6 @@ namespace Dover.Framework.Form
         private SAPbouiCOM.Grid moduleGrid;
         private SAPbouiCOM.Grid removeGrid;
         private SAPbouiCOM.Button removeButtom;
-
-        public Admin(AssemblyManager asmLoader, LicenseManager licenseManager, ILogger logger)
-        {
-            this.asmLoader = asmLoader;
-            this.Logger = logger;
-            this.licenseManager = licenseManager;
-        }
 
         /// <summary>
         /// Initialize components. Called by framework after form created.
@@ -75,7 +67,12 @@ namespace Dover.Framework.Form
         {
         }
 
-        private void UpdateRemoveGrid()
+        protected virtual void UpdateLicenseGrid()
+        {
+            // overrid on AddInSetup.
+        }
+
+        protected void UpdateRemoveGrid()
         {
             configTemp.ExecuteQuery(
                 "select 'N' #, U_Name Name, U_Version Version from [@DOVER_MODULES] WHERE U_Type = 'A'");
@@ -83,7 +80,7 @@ namespace Dover.Framework.Form
                 configTemp.SerializeAsXML(BoDataTableXmlSelect.dxs_DataOnly));
         }
 
-        private void UpdateInstallGrid()
+        protected void UpdateInstallGrid()
         {
             configTemp.ExecuteQuery(
                 "select U_Name Name, U_Version Version, case when U_Type = 'C' THEN 'Core' else 'AddIn' End Type, case when U_Installed = 'N' then 'Não' else 'Yes' end Installed, '' Status, '...' History from [@DOVER_MODULES]"
@@ -116,14 +113,15 @@ namespace Dover.Framework.Form
                 try
                 {
                     SAPAppender.SilentMode = true; // Prevent messy log.
-                    if (asmLoader.AddInIsValid(modulePath.Value, out confirmation))
+                    if (AsmLoader.AddInIsValid(modulePath.Value, out confirmation))
                     {
                         if ((!string.IsNullOrEmpty(confirmation)
                             && app.MessageBox(string.Format("{0}\n{1}", Messages.AdminDatabaseChangeWarning, confirmation)) == 1)
                             || string.IsNullOrEmpty(confirmation))
                         {
-                            asmLoader.SaveAddIn(modulePath.Value);
+                            AsmLoader.SaveAddIn(modulePath.Value);
                             UpdateInstallGrid();
+                            UpdateLicenseGrid();
                             UpdateRemoveGrid();
                             Logger.Info(Messages.AdminSuccessInstall);
                         }
@@ -146,10 +144,11 @@ namespace Dover.Framework.Form
 
                 if (val != null && !string.IsNullOrEmpty(moduleName) && val == "Y")
                 {
-                    asmLoader.RemoveAddIn(moduleName);
+                    AsmLoader.RemoveAddIn(moduleName);
                 }
             }
             UpdateInstallGrid();
+            UpdateLicenseGrid();
             UpdateRemoveGrid();
         }
     }

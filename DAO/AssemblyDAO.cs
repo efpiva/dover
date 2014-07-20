@@ -6,24 +6,24 @@ using Dover.Framework.Model;
 
 namespace Dover.Framework.DAO
 {
-    public interface AssemblyDAO
+    public abstract class AssemblyDAO
     {
-        byte[] GetAssembly(AssemblyInformation asm);
+        internal abstract byte[] GetAssembly(AssemblyInformation asm);
 
-        List<AssemblyInformation> getAssembliesInformation(string type);
+        internal abstract List<AssemblyInformation> getAssembliesInformation(string type);
 
-        AssemblyInformation GetAssemblyInformation(string asmName, string type);
+        internal abstract AssemblyInformation GetAssemblyInformation(string asmName, string type);
 
-        void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes);
+        internal abstract void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes);
 
-        void RemoveAssembly(string moduleName);
+        internal abstract void RemoveAssembly(string moduleName);
 
-        void SaveAssemblyI18N(string moduleCode, string i18n, byte[] i18nAsm);
+        internal abstract void SaveAssemblyI18N(string moduleCode, string i18n, byte[] i18nAsm);
 
-        bool AutoUpdateEnabled(AssemblyInformation asm);
+        internal abstract bool AutoUpdateEnabled(AssemblyInformation asm);
 
-        List<string> GetSupportedI18N(AssemblyInformation asm);
+        internal abstract List<string> GetSupportedI18N(AssemblyInformation asm);
 
-        byte[] GetI18NAssembly(AssemblyInformation asm, string i18n);
+        internal abstract byte[] GetI18NAssembly(AssemblyInformation asm, string i18n);
     }
 }

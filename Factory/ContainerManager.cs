@@ -68,15 +68,16 @@ namespace Dover.Framework.Factory
             for (int i = 0; i < companyFactory.Length; i++)
                 Container.Register(Component.For<BusinessOneDAO>().ImplementedBy<BusinessOneDAOSQLImpl>()
                     .DependsOn(Dependency.OnComponent(typeof(SAPbobsCOM.Company), "company" + i)).Named("b1dao" + i));
-            Container.Register(Component.For<BusinessOneUIDAO>().ImplementedBy<BusinessOneUIDAOImpl>());
 
             string runningFolder = Path.GetDirectoryName( AppDomain.CurrentDomain.BaseDirectory );
 
-            // Service and DAO registration, they are singleton.
+            // Service registration, they are singleton.
             Container.Register(Classes.FromThisAssembly().IncludeNonPublicTypes().InNamespace("Dover.Framework.Service")
                 .WithService.DefaultInterfaces().LifestyleSingleton());
-            Container.Register(Classes.FromThisAssembly().IncludeNonPublicTypes().InNamespace("Dover.Framework.DAO")
-                .WithService.DefaultInterfaces().LifestyleSingleton());
+            // DAO registration. Abstract classes, they're singleton.
+            Container.Register(Component.For<BusinessOneUIDAO>().ImplementedBy<BusinessOneUIDAOImpl>());
+            Container.Register(Component.For<AssemblyDAO>().ImplementedBy<AssemblyDAOImpl>());
+            Container.Register(Component.For<PermissionDAO>().ImplementedBy<PermissionDAOSQLImpl>());
 
             // Core and MicroCore
             Container.Register(Component.For<MicroCore>().LifestyleSingleton());

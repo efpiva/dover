@@ -69,14 +69,14 @@ namespace Dover.Framework.DAO
             }
         }
 
-        public Permission GetUserPermission(string addInName)
+        internal override Permission GetUserPermission(string addInName)
         {
             Permission value;
             userAddInHash.TryGetValue(addInName, out value);
             return value;
         }
 
-        public Permission GetAddInPermission(string addInName)
+        internal override Permission GetAddInPermission(string addInName)
         {
             Permission value;
             addInHash.TryGetValue(addInName, out value);
@@ -84,13 +84,13 @@ namespace Dover.Framework.DAO
         }
 
 
-        public void SaveAddInPermission(string addInName, Permission permission)
+        internal override void SaveAddInPermission(string addInName, Permission permission)
         {
             b1DAO.ExecuteStatement(string.Format(@"UPDATE [@DOVER_MODULES] Set U_Status = '{0}' WHERE U_Name = '{1}'",
                 GetPermissionStr(permission), addInName));
         }
 
-        public string GetUserPermissionCode(string addInName, string userName)
+        internal override string GetUserPermissionCode(string addInName, string userName)
         {
             var moduleCode = b1DAO.ExecuteSqlForObject<string>(string.Format(
                 "SELECT Code FROM [@DOVER_MODULES] WHERE U_Name = '{0}'", addInName));
@@ -98,7 +98,7 @@ namespace Dover.Framework.DAO
                 "SELECT Code from [@DOVER_MODULES_USER] where U_Code = '{0}' and U_User = '{1}'", moduleCode, userName));
         }
 
-        public void SaveAddInPermission(string addInName, string userName, Permission permission)
+        internal override void SaveAddInPermission(string addInName, string userName, Permission permission)
         {
             var moduleCode = b1DAO.ExecuteSqlForObject<string>(string.Format(
                 "SELECT Code FROM [@DOVER_MODULES] WHERE U_Name = '{0}'", addInName));
@@ -107,7 +107,7 @@ namespace Dover.Framework.DAO
                 VALUES ('{0}', '{0}', '{1}', '{2}', '{3}')", nextCode, moduleCode, GetPermissionStr(permission), userName));
         }
 
-        public void UpdateAddInPermission(string userPermissionCode, Permission permission)
+        internal override void UpdateAddInPermission(string userPermissionCode, Permission permission)
         {
             b1DAO.ExecuteStatement(string.Format(
                 "UPDATE [@DOVER_MODULES_USER] Set U_Status = '{0}' where Code = '{1}'", GetPermissionStr(permission), userPermissionCode));
