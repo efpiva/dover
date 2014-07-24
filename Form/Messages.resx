@@ -162,12 +162,6 @@
   <data name="AdminRemove" xml:space="preserve">
     <value>Remove</value>
   </data>
-  <data name="AdminRemoveFolder" xml:space="preserve">
-    <value>Remove modules</value>
-  </data>
-  <data name="AdminRemoveInstruction" xml:space="preserve">
-    <value>You can select multiple files and click remove, to remove on batch.</value>
-  </data>
   <data name="AdminShutdown" xml:space="preserve">
     <value>Shutdown</value>
   </data>
@@ -266,5 +260,11 @@
   </data>
   <data name="AdminSuccessInstall" xml:space="preserve">
     <value>Successfully installed addin</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
   </data>
 </root>

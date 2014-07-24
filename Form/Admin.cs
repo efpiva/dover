@@ -37,8 +37,7 @@ namespace Dover.Framework.Form
     [FormAttribute("dover.formAdmin", "Dover.Framework.Form.Admin.srf")]
     public class Admin : DoverUserFormBase
     {
-        private DataTable removeDT;
-        private DataTable installDT;
+        private DataTable moduleDT;
         private DataTable configTemp;
 
         public AssemblyManager AsmLoader { get; set; }
@@ -49,7 +48,6 @@ namespace Dover.Framework.Form
         private SAPbouiCOM.Button installUpdateModule;
         private SAPbouiCOM.Button fileSelector;
         private SAPbouiCOM.Grid moduleGrid;
-        private SAPbouiCOM.Grid removeGrid;
         private SAPbouiCOM.Button removeButtom;
 
         /// <summary>
@@ -63,21 +61,33 @@ namespace Dover.Framework.Form
             this.installUpdateModule = ((SAPbouiCOM.Button)(this.GetItem("btInst").Specific));
             this.installUpdateModule.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.InstallUpdateModule_ClickBefore);
             this.moduleGrid = ((SAPbouiCOM.Grid)(this.GetItem("gridArq").Specific));
-            this.removeGrid = ((SAPbouiCOM.Grid)(this.GetItem("gridMod").Specific));
             this.removeButtom = ((SAPbouiCOM.Button)(this.GetItem("btModu").Specific));
             this.removeButtom.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.RemoveButtom_ClickBefore);
             this.configTemp = this.UIAPIRawForm.DataSources.DataTables.Item("configTemp");
+            this.moduleGrid.ClickAfter += new _IGridEvents_ClickAfterEventHandler(moduleGrid_ClickAfter);
 
-            // DataTables
-            removeDT = removeGrid.DataTable;
-            installDT = moduleGrid.DataTable;
+            ((ComboBoxColumn)moduleGrid.Columns.Item("Installed")).ValidValues.Add("Y", Messages.Yes);
+            ((ComboBoxColumn)moduleGrid.Columns.Item("Installed")).ValidValues.Add("N", Messages.No);
+            ((ComboBoxColumn)moduleGrid.Columns.Item("Installed")).DisplayType = BoComboDisplayType.cdt_Description;
 
-            removeGrid.Columns.Item("#").Type = SAPbouiCOM.BoGridColumnType.gct_CheckBox;
-            removeGrid.Columns.Item("#").Width = 25;
-            removeGrid.Columns.Item("#").AffectsFormMode = false;
+            moduleDT = moduleGrid.DataTable;
 
             // click on first tab.
             this.UIAPIRawForm.DataSources.UserDataSources.Item("Folders").Value = "1";
+        }
+
+        protected virtual void moduleGrid_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            bool enableRemove = false;
+
+            for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
+            {
+                string type = (string)moduleDT.GetValue("Type", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_SelectionOrder));
+                if (type == "AddIn")
+                    enableRemove = true;
+            }
+
+            this.removeButtom.Item.Enabled = enableRemove;
         }
 
         /// <summary>
@@ -92,18 +102,10 @@ namespace Dover.Framework.Form
             // overrid on AddInSetup.
         }
 
-        protected void UpdateRemoveGrid()
-        {
-            configTemp.ExecuteQuery(
-                "select 'N' #, U_Name Name, U_Version Version from [@DOVER_MODULES] WHERE U_Type = 'A'");
-            removeGrid.DataTable.LoadSerializedXML(BoDataTableXmlSelect.dxs_DataOnly,
-                configTemp.SerializeAsXML(BoDataTableXmlSelect.dxs_DataOnly));
-        }
-
         protected void UpdateInstallGrid()
         {
             configTemp.ExecuteQuery(
-                "select U_Name Name, U_Version Version, case when U_Type = 'C' THEN 'Core' else 'AddIn' End Type, case when U_Installed = 'N' then 'Não' else 'Yes' end Installed, '' Status, '...' History from [@DOVER_MODULES]"
+                "select U_Name Name, U_Version Version, case when U_Type = 'C' THEN 'Core' else 'AddIn' End Type, U_Installed Installed, '' Status, '...' History from [@DOVER_MODULES]"
                 );
 
             moduleGrid.DataTable.LoadSerializedXML(BoDataTableXmlSelect.dxs_DataOnly,
@@ -142,7 +144,6 @@ namespace Dover.Framework.Form
                             AsmLoader.SaveAddIn(modulePath.Value);
                             UpdateInstallGrid();
                             UpdateLicenseGrid();
-                            UpdateRemoveGrid();
                             Logger.Info(Messages.AdminSuccessInstall);
                         }
                     }
@@ -157,19 +158,14 @@ namespace Dover.Framework.Form
         protected virtual void RemoveButtom_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
-            for (int i = 0; i < removeDT.Rows.Count; i++)
+            for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
             {
-                string val = (string)removeDT.Columns.Item("#").Cells.Item(i).Value;
-                string moduleName = (string)removeDT.Columns.Item("Name").Cells.Item(i).Value;
-
-                if (val != null && !string.IsNullOrEmpty(moduleName) && val == "Y")
-                {
-                    AsmLoader.RemoveAddIn(moduleName);
-                }
+                string moduleName = (string)moduleDT.GetValue("Name", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder));
+                AsmLoader.RemoveAddIn(moduleName);
             }
             UpdateInstallGrid();
             UpdateLicenseGrid();
-            UpdateRemoveGrid();
+            moduleGrid_ClickAfter(sboObject, pVal);
         }
     }
 }

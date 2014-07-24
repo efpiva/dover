@@ -205,24 +205,6 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove modules.
-        /// </summary>
-        internal static string AdminRemoveFolder {
-            get {
-                return ResourceManager.GetString("AdminRemoveFolder", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You can select multiple files and click remove, to remove on batch..
-        /// </summary>
-        internal static string AdminRemoveInstruction {
-            get {
-                return ResourceManager.GetString("AdminRemoveInstruction", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Shutdown.
         /// </summary>
         internal static string AdminShutdown {
@@ -507,6 +489,24 @@ namespace Dover.Framework.Form {
         internal static string MngmntVersion {
             get {
                 return ResourceManager.GetString("MngmntVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        internal static string No {
+            get {
+                return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        internal static string Yes {
+            get {
+                return ResourceManager.GetString("Yes", resourceCulture);
             }
         }
     }
