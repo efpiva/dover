@@ -88,7 +88,6 @@ namespace Dover.Framework.Service
         private BusinessOneUIDAO uiDAO;
         private MenuEventHandler menuHandler;
         private List<AddInRunner> runningAddIns = new List<AddInRunner>();
-        private ServiceHost host; // namedPipe server;
         private I18NService i18nService;
 
         public AddinManager(PermissionManager permissionManager, 
@@ -477,8 +476,7 @@ namespace Dover.Framework.Service
             }
         }
 
-
-        public void ShutdownAddins()
+        internal void ShutdownAddins()
         {
             foreach (var runner in runningAddIns)
             {
