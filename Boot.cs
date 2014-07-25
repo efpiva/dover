@@ -33,17 +33,19 @@ namespace Dover.Framework
         public ILogger Logger { get; set; }
 
         private LicenseManager licenseManager;
-        private AddinManager addinLoader;
+        private AddinLoader addinLoader;
+        private AddinManager addinManager;
         private EventDispatcher dispatcher;
         private FormEventHandler formEventHandler;
 
-        public Boot(LicenseManager licenseValidation, AddinManager addinLoader, EventDispatcher dispatcher,
-            FormEventHandler formEventHandler, I18NService i18nService)
+        public Boot(LicenseManager licenseValidation, AddinManager addinManager, AddinLoader addinLoader,
+            EventDispatcher dispatcher, FormEventHandler formEventHandler, I18NService i18nService)
         {
             this.licenseManager = licenseValidation;
-            this.addinLoader = addinLoader;
+            this.addinManager = addinManager;
             this.dispatcher = dispatcher;
             this.formEventHandler = formEventHandler;
+            this.addinLoader = addinLoader;
 
             i18nService.ConfigureThreadI18n(System.Threading.Thread.CurrentThread);
         }
@@ -55,7 +57,7 @@ namespace Dover.Framework
             {
                 Logger.Info(String.Format(Messages.Starting, moduleName, this.GetType().Assembly.GetName().Version));
                 var addins = licenseManager.ListAddins();
-                addinLoader.LoadAddins(addins);
+                addinManager.LoadAddins(addins);
                 dispatcher.RegisterEvents();
                 StartFrameworkUI(); // load admin forms.
                 System.Windows.Forms.Application.Run();
@@ -80,6 +82,7 @@ namespace Dover.Framework
             {
                 Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
                 Logger.Info(String.Format(Messages.Starting, thisAsmName, thisAsm.GetName().Version));
+
                 addinLoader.StartThis();
                 dispatcher.RegisterEvents();
                 formEventHandler.RegisterForms();

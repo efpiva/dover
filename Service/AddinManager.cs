@@ -37,19 +37,31 @@ using Dover.Framework.Log;
 
 namespace Dover.Framework.Service
 {
+    internal enum AddinStatus
+    {
+        Running,
+        Stopped
+    }
+
     internal class AddInRunner
     {
         internal AssemblyInformation asm;
         internal ManualResetEvent shutdownEvent = new ManualResetEvent(false);
-        internal AddinManager addinInceptionManager;
+        /// <summary>
+        /// This is the AddinManager of the Framework (creator of all Addins AppDomains)
+        /// </summary>
+        internal AddinManager frameworkAddinManager;
         internal B1SResourceManager addinB1SResourceManager;
         internal FormEventHandler addinFormEventHandler;
+        internal EventDispatcher eventDispatcher;
+        internal AddinLoader addinLoader;
 
         internal Thread runnerThread;
 
-        internal AddInRunner(AssemblyInformation asm)
+        internal AddInRunner(AssemblyInformation asm, AddinManager frameworkAddinManager)
         {
             this.asm = asm;
+            this.frameworkAddinManager = frameworkAddinManager;
         }
 
         internal void Run()
@@ -60,44 +72,40 @@ namespace Dover.Framework.Service
             var domain = AppDomain.CreateDomain("Dover.AddIn", null, setup);
             domain.SetData("shutdownEvent", shutdownEvent); // Thread synchronization
             domain.SetData("assemblyName", asm.Name); // Used to get current AssemblyName for logging and reflection
+            domain.SetData("frameworkManager", frameworkAddinManager); 
             Application app = (Application)domain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
             SAPServiceFactory.PrepareForInception(domain);
-            addinInceptionManager = app.Resolve<AddinManager>();
             addinB1SResourceManager = app.Resolve<B1SResourceManager>();
             addinFormEventHandler = app.Resolve<FormEventHandler>();
+            addinLoader = app.Resolve<AddinLoader>();
+            eventDispatcher = app.Resolve<EventDispatcher>();
             Sponsor<Application> appSponsor = new Sponsor<Application>(app);
-            Sponsor<AddinManager> inceptionSponsor = new Sponsor<AddinManager>(addinInceptionManager);
             Sponsor<B1SResourceManager> b1sSponsor = new Sponsor<B1SResourceManager>(addinB1SResourceManager);
             Sponsor<FormEventHandler> formEventSponsor = new Sponsor<FormEventHandler>(addinFormEventHandler);
+            Sponsor<AddinLoader> loaderSponsor = new Sponsor<AddinLoader>(addinLoader);
+            Sponsor<EventDispatcher> eventSponsor = new Sponsor<EventDispatcher>(eventDispatcher);
             app.RunAddin();
             AppDomain.Unload(domain);
         } 
     }
 
-     [ServiceBehavior(
-    ConcurrencyMode = ConcurrencyMode.Multiple,
-    InstanceContextMode = InstanceContextMode.Single
-  )]
     public class AddinManager : MarshalByRefObject
     {
-
         public ILogger Logger { get; set; }
-
         private PermissionManager permissionManager;
+        private AssemblyDAO assemblyDAO;
         private BusinessOneDAO b1DAO;
-        private BusinessOneUIDAO uiDAO;
-        private MenuEventHandler menuHandler;
         private List<AddInRunner> runningAddIns = new List<AddInRunner>();
+        private Dictionary<string, AddInRunner> runningAddinsHash = new Dictionary<string, AddInRunner>();
+         
         private I18NService i18nService;
 
-        public AddinManager(PermissionManager permissionManager, 
-            BusinessOneDAO b1DAO, BusinessOneUIDAO uiDAO,
-            MenuEventHandler menuHandler, I18NService i18nService)
+        public AddinManager(PermissionManager permissionManager,
+            BusinessOneDAO b1DAO, I18NService i18nService, AssemblyDAO assemblyDAO)
         {
             this.permissionManager = permissionManager;
+            this.assemblyDAO = assemblyDAO;
             this.b1DAO = b1DAO;
-            this.uiDAO = uiDAO;
-            this.menuHandler = menuHandler;
             this.i18nService = i18nService;
         }
 
@@ -106,23 +114,28 @@ namespace Dover.Framework.Service
             var authorizedAddins = FilterAuthorizedAddins(addins);
             foreach (var addin in authorizedAddins)
             {
-                var asm = Assembly.Load(addin.Name);
-                if (!IsInstalled(addin.Code))
-                {
-                    try
-                    {
-                        ConfigureAddin(addin);
-                        MarkAsInstalled(addin.Code);
-                    }
-                    catch (Exception e)
-                    {
-                        MarkAsNotInstalled(addin.Code);
-                        throw e;
-                    }
-                }
-                RegisterAddin(addin);
-                ConfigureLog(addin);
+                LoadAddin(addin);
             }
+        }
+
+        private void LoadAddin(AssemblyInformation addin)
+        {
+            var asm = Assembly.Load(addin.Name);
+            if (!IsInstalled(addin.Code))
+            {
+                try
+                {
+                    ConfigureAddin(addin);
+                    MarkAsInstalled(addin.Code);
+                }
+                catch (Exception e)
+                {
+                    MarkAsNotInstalled(addin.Code);
+                    throw e;
+                }
+            }
+            RegisterAddin(addin);
+            ConfigureLog(addin);
         }
 
         private void MarkAsNotInstalled(string addInCode)
@@ -341,8 +354,9 @@ namespace Dover.Framework.Service
 
         private void RegisterAddin(AssemblyInformation addin)
         {
-            AddInRunner runner = new AddInRunner(addin);
+            AddInRunner runner = new AddInRunner(addin, this);
             runningAddIns.Add(runner);
+            runningAddinsHash.Add(addin.Name, runner);
             var thread = new Thread(new ThreadStart(runner.Run));
             thread.SetApartmentState(ApartmentState.STA);
             i18nService.ConfigureThreadI18n(thread);
@@ -361,65 +375,14 @@ namespace Dover.Framework.Service
             return authorized;
         }
 
-        internal void StartThis()
-        {
-            string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
-            try
-            {
-                Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
-                RegisterObjects(thisAsm);
-                StartMenu(thisAsm);
-
-            }
-            catch (Exception e)
-            {
-                Logger.Error(string.Format(Messages.StartThisError, thisAsmName), e);
-            }
-        }
-
         internal void ConfigureAddinsI18N()
         {
             i18nService.ConfigureThreadI18n(Thread.CurrentThread);
             foreach (var addin in runningAddIns)
             {
                 i18nService.ConfigureThreadI18n(addin.runnerThread);
-                addin.addinInceptionManager.StartMenu();
+                addin.addinLoader.StartMenu();
                 addin.addinFormEventHandler.RegisterForms(false);
-            }
-        }
-
-        private void StartMenu()
-        {
-            string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
-            try
-            {
-                Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
-                StartMenu(thisAsm);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(string.Format(Messages.StartThisError, thisAsmName), e);
-            }
-        }
-
-        internal void StartMenu(Assembly asm)
-        {
-            string addin = asm.GetName().Name;
-            Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
-            List<MenuAttribute> menus = new List<MenuAttribute>();
-            var types = (from type in asm.GetTypes()
-                         where type.IsClass
-                         select type);
-
-            foreach (var type in types)
-            {
-                var attrs = type.GetCustomAttributes(true);
-                ProcessAddInStartupAttribute(attrs, type);
-                foreach (var method in type.GetMethods())
-                {
-                    attrs = method.GetCustomAttributes(true);
-                    ProcessAddInStartupAttribute(attrs, type);
-                }
             }
         }
 
@@ -430,61 +393,55 @@ namespace Dover.Framework.Service
             return !string.IsNullOrEmpty(installedFlag) && installedFlag == "Y";
         }
 
-        private void RegisterObjects(Assembly thisAsm)
-        {
-            ContainerManager.RegisterAssembly(thisAsm);
-            foreach (var asm in thisAsm.GetReferencedAssemblies())
-            {
-                if (permissionManager.AddInEnabled(asm.Name))
-                {
-                    ContainerManager.RegisterAssembly(Assembly.Load(asm));
-                }
-            }
-        }
-
-        private void ProcessAddInStartupAttribute(object[] attrs, Type type)
-        {
-            List<MenuAttribute> menus = new List<MenuAttribute>();
-
-            foreach (var attr in attrs)
-            {
-                Logger.Debug(DebugString.Format(Messages.ProcessingAttribute, attr, type));
-                if (attr is MenuEventAttribute)
-                {
-                    ((MenuEventAttribute)attr).OriginalType = type;
-                    menuHandler.RegisterMenuEvent((MenuEventAttribute)attr);
-                }
-                else if (attr is MenuAttribute)
-                {
-                    ((MenuAttribute)attr).OriginalType = type;
-                    menus.Add((MenuAttribute)attr);
-                }
-                else if (attr is AddInAttribute)
-                {
-                    string initMethod = ((AddInAttribute)attr).InitMethod;
-                    if (!string.IsNullOrWhiteSpace(initMethod))
-                    {
-                        object obj = ContainerManager.Container.Resolve(type);
-                        type.InvokeMember(initMethod, BindingFlags.InvokeMethod, null, obj, null);
-                    }
-                }
-            }
-
-            if (menus.Count > 0)
-            {
-                uiDAO.ProcessMenuAttribute(menus);
-            }
-        }
-
         internal void ShutdownAddins()
         {
             foreach (var runner in runningAddIns)
             {
                 Logger.Info(string.Format(Messages.ShutdownAddin, runner.asm.Name));
                 runner.shutdownEvent.Set();
+                runner.eventDispatcher.UnregisterEvents();
             }
             runningAddIns = new List<AddInRunner>(); // clean running AddIns.
+            runningAddinsHash = new Dictionary<string, AddInRunner>(); // clean-up.
             System.Windows.Forms.Application.Exit(); // free main Inception thread.
         }
+
+        internal AddinStatus GetAddinStatus(string name)
+        {
+            return (runningAddinsHash.ContainsKey(name)) ? AddinStatus.Running : AddinStatus.Stopped;
+        }
+
+        internal void ShutdownAddin(string name)
+        {
+            var runningBackup = runningAddIns;
+            var runningHashBackup = runningAddinsHash;
+            try
+            {
+                AddInRunner addin;
+                runningAddinsHash.TryGetValue(name, out addin);
+                if (addin != null)
+                {
+                    Logger.Info(string.Format(Messages.ShutdownAddin, addin.asm.Name));
+                    addin.shutdownEvent.Set();
+                    addin.eventDispatcher.UnregisterEvents();
+                    runningAddIns.Remove(addin);
+                    runningAddinsHash.Remove(name);
+                }
+            }
+            catch (Exception e)
+            {
+                // rollback memory state.
+                runningAddIns = runningBackup;
+                runningAddinsHash = runningHashBackup;
+                throw e;
+            }
+        }
+
+        internal void StartAddin(string name)
+        {
+            AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, "A");
+            LoadAddin(asmInfo);
+        }
+
     }
 }

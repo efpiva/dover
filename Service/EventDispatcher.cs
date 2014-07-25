@@ -33,7 +33,7 @@ namespace Dover.Framework.Service
     /// <summary>
     /// User just by Inception / addins. No App event.
     /// </summary>
-    public class EventDispatcher
+    public class EventDispatcher : MarshalByRefObject
     {
         public ILogger Logger { get; set; }
         private SAPbouiCOM.Application sapApp;
@@ -48,6 +48,11 @@ namespace Dover.Framework.Service
         internal void RegisterEvents()
         {
             sapApp.MenuEvent += new _IApplicationEvents_MenuEventEventHandler(menuHandler.sapApp_MenuEvent);
+        }
+
+        internal void UnregisterEvents()
+        {
+            sapApp.MenuEvent -= new _IApplicationEvents_MenuEventEventHandler(menuHandler.sapApp_MenuEvent);
         }
 
     }

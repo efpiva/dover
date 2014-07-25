@@ -35,6 +35,7 @@ using Dover.Framework.Service;
 using Castle.DynamicProxy;
 using Dover.Framework.Proxy;
 using Dover.Framework.Form;
+using Dover.Framework.Remoting;
 
 namespace Dover.Framework.Factory
 {
@@ -56,6 +57,7 @@ namespace Dover.Framework.Factory
         /// Use with caution.
         /// </summary>
         public static IWindsorContainer Container { get; private set; }
+        private static Sponsor<AddinManager> addinManagerSponsor;
 
         internal static void RegisterAssembly(Assembly addIn)
         {
@@ -90,6 +92,15 @@ namespace Dover.Framework.Factory
                     .DependsOn(Dependency.OnComponent(typeof(SAPbobsCOM.Company), "company" + i)).Named("b1dao" + i));
 
             string runningFolder = Path.GetDirectoryName( AppDomain.CurrentDomain.BaseDirectory );
+
+            // AddinManager registration. If I'm an AddIn, get addinManager from AppDomain, so
+            // both (addin AppDomain and inception AppDomain) references the same implementation.
+            AddinManager addinManager = (AddinManager)AppDomain.CurrentDomain.GetData("frameworkManager");
+            if (addinManager != null)
+            {
+                addinManagerSponsor = new Sponsor<AddinManager>(addinManager);
+                Container.Register(Component.For<AddinManager>().Instance(addinManager));
+            }
 
             // Service registration, they are singleton.
             Container.Register(Classes.FromThisAssembly().IncludeNonPublicTypes().InNamespace("Dover.Framework.Service")
