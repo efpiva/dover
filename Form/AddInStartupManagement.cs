@@ -39,7 +39,7 @@ namespace Dover.Framework.Form
         private SAPbouiCOM.Grid gridCfg;
         private SAPbouiCOM.Grid generalGrid;
         private DataTable configTemp;
-        public PermissionManager PermissionManager;
+        public PermissionManager PermissionManager { get; set; }
 
         private string userConfigSQLTemplate = @"SELECT [@DOVER_MODULES].U_Description Description, 
                                         [@DOVER_MODULES].U_Version Version, COALESCE([@DOVER_MODULES_USER].U_Status,
