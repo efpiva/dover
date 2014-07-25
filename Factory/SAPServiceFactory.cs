@@ -48,24 +48,25 @@ namespace Dover.Framework.Factory
             company = (SAPbobsCOM.Company)AppDomain.CurrentDomain.GetData("SAPCompany");
             application = (SAPbouiCOM.Application)AppDomain.CurrentDomain.GetData("SAPApplication");
 
-            // inception!
-            if (application != null && company != null)
-            {
-                applicationSponsor = new Sponsor<SAPbouiCOM.Application>(application);
-                companySponsor = new Sponsor<SAPbobsCOM.Company>(company);
-                return;
-            }
-
             try
             {
+                // inception!
+                if (application != null && company != null)
+                {
+                    applicationSponsor = new Sponsor<SAPbouiCOM.Application>(application);
+                    companySponsor = new Sponsor<SAPbobsCOM.Company>(company);
+                    return;
+                }
                 SetApplication();
                 company = (SAPbobsCOM.Company)application.Company.GetDICompany();
-
-                b1Connected = company.Connected;
             }
             catch (Exception er)
             {
                 Logger.Fatal(String.Format(Messages.ConnectionError, er.Message), er);
+            }
+            finally
+            {
+                b1Connected = company.Connected;
             }
         }
 
