@@ -41,6 +41,19 @@ namespace Dover.Framework.Form
         private DataTable configTemp;
 
         public AssemblyManager AsmLoader { get; set; }
+        private AddinManager _frameworkAddinManager;
+        public AddinManager FrameworkAddinManager
+        {
+            get
+            {
+                return _frameworkAddinManager;
+            }
+            set
+            {
+                this._frameworkAddinManager = value;
+                UpdateAddinStatus();
+            }
+        }
         public ILogger Logger { get; set; }
 
         // UI components
@@ -48,7 +61,10 @@ namespace Dover.Framework.Form
         private SAPbouiCOM.Button installUpdateModule;
         private SAPbouiCOM.Button fileSelector;
         private SAPbouiCOM.Grid moduleGrid;
-        private SAPbouiCOM.Button removeButtom;
+        private SAPbouiCOM.Button removeButton;
+        private SAPbouiCOM.Button startButton;
+        private SAPbouiCOM.Button shutdownButton;
+        private SAPbouiCOM.Button installButton;
 
         /// <summary>
         /// Initialize components. Called by framework after form created.
@@ -61,8 +77,14 @@ namespace Dover.Framework.Form
             this.installUpdateModule = ((SAPbouiCOM.Button)(this.GetItem("btInst").Specific));
             this.installUpdateModule.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.InstallUpdateModule_ClickBefore);
             this.moduleGrid = ((SAPbouiCOM.Grid)(this.GetItem("gridArq").Specific));
-            this.removeButtom = ((SAPbouiCOM.Button)(this.GetItem("btModu").Specific));
-            this.removeButtom.ClickBefore += new SAPbouiCOM._IButtonEvents_ClickBeforeEventHandler(this.RemoveButtom_ClickBefore);
+            this.removeButton = ((SAPbouiCOM.Button)(this.GetItem("btModu").Specific));
+            this.removeButton.ClickAfter += new SAPbouiCOM._IButtonEvents_ClickAfterEventHandler(this.RemoveButtom_ClickAfter);
+            this.startButton = ((SAPbouiCOM.Button)(this.GetItem("btStart").Specific));
+            this.startButton.ClickAfter += new _IButtonEvents_ClickAfterEventHandler(startButton_ClickAfter);
+            this.shutdownButton = ((SAPbouiCOM.Button)(this.GetItem("btStop").Specific));
+            this.shutdownButton.ClickAfter += new _IButtonEvents_ClickAfterEventHandler(shutdownButton_ClickAfter);
+            this.installButton = ((SAPbouiCOM.Button)(this.GetItem("btInstall").Specific));
+            this.installButton.ClickAfter += new _IButtonEvents_ClickAfterEventHandler(installButton_ClickAfter);
             this.configTemp = this.UIAPIRawForm.DataSources.DataTables.Item("configTemp");
             this.moduleGrid.ClickAfter += new _IGridEvents_ClickAfterEventHandler(moduleGrid_ClickAfter);
 
@@ -70,24 +92,94 @@ namespace Dover.Framework.Form
             ((ComboBoxColumn)moduleGrid.Columns.Item("Installed")).ValidValues.Add("N", Messages.No);
             ((ComboBoxColumn)moduleGrid.Columns.Item("Installed")).DisplayType = BoComboDisplayType.cdt_Description;
 
+            ((ComboBoxColumn)moduleGrid.Columns.Item("Status")).ValidValues.Add("R", Messages.AdminRunning);
+            ((ComboBoxColumn)moduleGrid.Columns.Item("Status")).ValidValues.Add("S", Messages.AdminStopped);
+            ((ComboBoxColumn)moduleGrid.Columns.Item("Status")).DisplayType = BoComboDisplayType.cdt_Description;
+
             moduleDT = moduleGrid.DataTable;
 
             // click on first tab.
             this.UIAPIRawForm.DataSources.UserDataSources.Item("Folders").Value = "1";
         }
 
-        protected virtual void moduleGrid_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        protected virtual void installButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-            bool enableRemove = false;
+            throw new NotImplementedException();
+        }
 
+        protected virtual void shutdownButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
             for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
             {
-                string type = (string)moduleDT.GetValue("Type", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_SelectionOrder));
-                if (type == "AddIn")
-                    enableRemove = true;
+                string moduleName = (string)moduleDT.GetValue("Name", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder));
+                FrameworkAddinManager.ShutdownAddin(moduleName);
             }
+            UpdateInstallGrid();
+            UpdateLicenseGrid();
+            moduleGrid_ClickAfter(sboObject, pVal);
+        }
 
-            this.removeButtom.Item.Enabled = enableRemove;
+        protected virtual void startButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
+            {
+                string moduleName = (string)moduleDT.GetValue("Name", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder));
+                FrameworkAddinManager.StartAddin(moduleName);
+            }
+            UpdateInstallGrid();
+            UpdateLicenseGrid();
+            moduleGrid_ClickAfter(sboObject, pVal);
+        }
+
+        private void UpdateAddinStatus()
+        {
+            for (int i = 0; i < moduleDT.Rows.Count; i++)
+            {
+                string name = (string)moduleDT.GetValue("Name", i);
+                string type = (string)moduleDT.GetValue("Type", i);
+                string status;
+                if (type == "AddIn")
+                {
+                    AddinStatus addinStatus = FrameworkAddinManager.GetAddinStatus(name);
+                    status = (addinStatus == AddinStatus.Running) ? "R" : "S";
+                }
+                else
+                {
+                    status = "R"; // mark framework as running.
+                }
+                moduleDT.SetValue("Status", i, status);
+            }
+        }
+
+        protected virtual void moduleGrid_ClickAfter(object sboObject, SBOItemEventArg pVal)
+        {
+            try
+            {
+                this.UIAPIRawForm.Freeze(true);
+                bool enableRemove = false, enableStart = false, enableStop = false, enableInstall = false, isAddin;
+
+                for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
+                {
+                    string type = (string)moduleDT.GetValue("Type", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_SelectionOrder));
+                    isAddin = (type == "AddIn");
+                    if (isAddin)
+                        enableRemove = true;
+                    string status = (string)moduleDT.GetValue("Status", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_SelectionOrder));
+                    string installed = (string)moduleDT.GetValue("Installed", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_SelectionOrder));
+                    enableInstall = (installed == "N");
+                    enableStart = (status == "S") && isAddin;
+                    enableStop = !enableStart && isAddin;
+                }
+
+                this.removeButton.Item.Enabled = enableRemove;
+                this.startButton.Item.Enabled = enableStart;
+                this.shutdownButton.Item.Enabled = enableStop;
+                this.installButton.Item.Enabled = enableInstall;
+            }
+            finally
+            {
+                this.UIAPIRawForm.Freeze(false);
+            }
         }
 
         /// <summary>
@@ -104,12 +196,21 @@ namespace Dover.Framework.Form
 
         protected void UpdateInstallGrid()
         {
-            configTemp.ExecuteQuery(
-                "select U_Name Name, U_Version Version, case when U_Type = 'C' THEN 'Core' else 'AddIn' End Type, U_Installed Installed, '' Status, '...' History from [@DOVER_MODULES]"
-                );
+            try
+            {
+                this.UIAPIRawForm.Freeze(true);
+                configTemp.ExecuteQuery(
+                    "select U_Name Name, U_Version Version, case when U_Type = 'C' THEN 'Core' else 'AddIn' End Type, U_Installed Installed, 'S' Status, '...' History from [@DOVER_MODULES]"
+                    );
 
-            moduleGrid.DataTable.LoadSerializedXML(BoDataTableXmlSelect.dxs_DataOnly,
-                configTemp.SerializeAsXML(BoDataTableXmlSelect.dxs_DataOnly));
+                moduleGrid.DataTable.LoadSerializedXML(BoDataTableXmlSelect.dxs_DataOnly,
+                    configTemp.SerializeAsXML(BoDataTableXmlSelect.dxs_DataOnly));
+                UpdateAddinStatus();
+            }
+            finally
+            {
+                this.UIAPIRawForm.Freeze(false);
+            }
         }
 
         protected virtual void FileButton_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
@@ -144,6 +245,7 @@ namespace Dover.Framework.Form
                             AsmLoader.SaveAddIn(modulePath.Value);
                             UpdateInstallGrid();
                             UpdateLicenseGrid();
+                            SAPAppender.SilentMode = false;
                             Logger.Info(Messages.AdminSuccessInstall);
                         }
                     }
@@ -155,12 +257,12 @@ namespace Dover.Framework.Form
             }
         }
 
-        protected virtual void RemoveButtom_ClickBefore(object sboObject, SAPbouiCOM.SBOItemEventArg pVal, out bool BubbleEvent)
+        protected virtual void RemoveButtom_ClickAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
         {
-            BubbleEvent = true;
             for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
             {
                 string moduleName = (string)moduleDT.GetValue("Name", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder));
+                FrameworkAddinManager.ShutdownAddin(moduleName);
                 AsmLoader.RemoveAddIn(moduleName);
             }
             UpdateInstallGrid();

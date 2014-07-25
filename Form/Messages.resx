@@ -267,4 +267,10 @@
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
+  <data name="AdminRunning" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="AdminStopped" xml:space="preserve">
+    <value>Stopped</value>
+  </data>
 </root>

@@ -205,6 +205,15 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Running.
+        /// </summary>
+        internal static string AdminRunning {
+            get {
+                return ResourceManager.GetString("AdminRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shutdown.
         /// </summary>
         internal static string AdminShutdown {
@@ -228,6 +237,15 @@ namespace Dover.Framework.Form {
         internal static string AdminStatus {
             get {
                 return ResourceManager.GetString("AdminStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stopped.
+        /// </summary>
+        internal static string AdminStopped {
+            get {
+                return ResourceManager.GetString("AdminStopped", resourceCulture);
             }
         }
         
