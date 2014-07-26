@@ -69,6 +69,7 @@ namespace Dover.Framework.DAO
 
         internal override void SaveAssembly(AssemblyInformation asm, byte[] asmBytes)
         {
+            string installed = (asm.Type == "C") ? "Y" : "N";
             SoapHexBinary shb = new SoapHexBinary(asmBytes);
             string asmHex = null;
             if (asmBytes != null)
@@ -78,9 +79,10 @@ namespace Dover.Framework.DAO
             if (String.IsNullOrEmpty(asm.Code))
             {
                 asm.Code = b1DAO.GetNextCode("DOVER_MODULES");
-                sql = String.Format(@"INSERT INTO [@DOVER_MODULES] (Code, Name, U_Name, U_Description, U_FileName, U_Version, U_MD5, U_Date, U_Size, U_Type, U_Status)
-                VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8}, '{9}', 'A')",
-                        asm.Code, asm.Code, asm.Name, asm.Description, asm.FileName, asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length, asm.Type);
+                sql = String.Format(@"INSERT INTO [@DOVER_MODULES] (Code, Name, U_Name, U_Description, U_FileName, U_Version, U_MD5, U_Date, U_Size, U_Type, U_Status, U_Installed)
+                VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', {8}, '{9}', 'A', '{10}')",
+                        asm.Code, asm.Code, asm.Name, asm.Description, asm.FileName, asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length, asm.Type,
+                        installed);
             }
             else
             {
