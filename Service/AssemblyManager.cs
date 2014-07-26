@@ -43,6 +43,48 @@ namespace Dover.Framework.Service
         AddIn
     }
 
+    /// <summary>
+    /// This is called from a temp AppDomain to load a Assembly and get it`s information.
+    /// 
+    /// It`s temp because after it`s call, the AppDomain will be Unload, unloading 
+    /// all information loaded during this class call.
+    /// </summary>
+    public class TempAssemblyLoader : MarshalByRefObject
+    {
+        public I18NService i18nService { get; set; }
+
+        internal void GetAssemblyInfoFromBin(byte[] asmBytes, AssemblyInformation asmInfo)
+        {
+            Assembly asm = AppDomain.CurrentDomain.Load(asmBytes);
+            var version = asm.GetName().Version;
+            asmInfo.Version = version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString()
+                    + "." + version.Revision;
+
+            var types = (from type in asm.GetTypes()
+                        where type.IsClass
+                        select type);
+
+            foreach (var type in types)
+            {
+                var attrs = type.GetCustomAttributes(typeof(AddInAttribute), true);
+                if (attrs != null && attrs.Length > 0)
+                {
+                    var attr = attrs[0];
+                    var addInAttribute = ((AddInAttribute)attr);
+                    if (!string.IsNullOrEmpty(addInAttribute.i18n))
+                    {
+                        asmInfo.Description = i18nService.GetLocalizedString(addInAttribute.i18n, asm);
+                    }
+                    else
+                    {
+                        asmInfo.Description = ((AddInAttribute)attr).Description;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
     public class AssemblyManager
     {
         private string[] addinsAssemblies = {
@@ -409,40 +451,24 @@ namespace Dover.Framework.Service
 
         private void GetAssemblyInfoFromBin(byte[] asmBytes, AssemblyInformation asmInfo)
         {
-            bool found = false;
-            Assembly asm = AppDomain.CurrentDomain.Load(asmBytes);
-            var version = asm.GetName().Version;
-            asmInfo.Version = version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString()
-                    + "." + version.Revision;
+            AppDomain tempDomain;
+            var setup = new AppDomainSetup();
+            setup.ApplicationName = "Dover.GetAssemblyInformation";
+            setup.ApplicationBase = Environment.CurrentDirectory;
+            tempDomain = AppDomain.CreateDomain("Dover.GetAssemblyInformation", null, setup);
 
-            var types = (from type in asm.GetTypes()
-                        where type.IsClass
-                        select type);
-
-            foreach (var type in types)
+            try
             {
-                var attrs = type.GetCustomAttributes(true);
-                foreach (var attr in attrs)
-                {
-                    if (attr is AddInAttribute)
-                    {
-                        var addInAttribute = ((AddInAttribute)attr);
-                        if (!string.IsNullOrEmpty(addInAttribute.i18n))
-                        {
-                            asmInfo.Description = i18nService.GetLocalizedString(addInAttribute.i18n, asm);
-                        }
-                        else
-                        {
-                            asmInfo.Description = ((AddInAttribute)attr).Description;
-                        }
-                        found = true;
-                        break;
-                    }
-                }
-                if (found)
-                    break;
+                Application app = (Application)tempDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
+                    "Dover.Framework.Application");
+                SAPServiceFactory.PrepareForInception(tempDomain);
+                TempAssemblyLoader asmLoader = app.Resolve<TempAssemblyLoader>();
+                asmLoader.GetAssemblyInfoFromBin(asmBytes, asmInfo);
             }
-
+            finally
+            {
+                AppDomain.Unload(tempDomain);
+            }
         }
 
         private void UpdateAssembly(AssemblyInformation asmMeta, string fullPath)
