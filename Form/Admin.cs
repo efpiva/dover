@@ -121,8 +121,11 @@ namespace Dover.Framework.Form
         {
             for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
             {
-                string moduleName = (string)moduleDT.GetValue("Name", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder));
-                FrameworkAddinManager.ShutdownAddin(moduleName);
+                int rowId = moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder);
+                string moduleName = (string)moduleDT.GetValue("Name", rowId);
+                string type = (string)moduleDT.GetValue("Type", rowId);
+                if (type == "AddIn")
+                    FrameworkAddinManager.ShutdownAddin(moduleName);
             }
             UpdateInstallGrid();
             UpdateLicenseGrid();
@@ -133,8 +136,11 @@ namespace Dover.Framework.Form
         {
             for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
             {
-                string moduleName = (string)moduleDT.GetValue("Name", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder));
-                FrameworkAddinManager.StartAddin(moduleName);
+                int rowId = moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder);
+                string moduleName = (string)moduleDT.GetValue("Name", rowId);
+                string type = (string)moduleDT.GetValue("Type", rowId);
+                if (type == "AddIn")
+                    FrameworkAddinManager.StartAddin(moduleName);
             }
             UpdateInstallGrid();
             UpdateLicenseGrid();
@@ -176,9 +182,9 @@ namespace Dover.Framework.Form
                         enableRemove = true;
                     string status = (string)moduleDT.GetValue("Status", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_SelectionOrder));
                     string installed = (string)moduleDT.GetValue("Installed", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_SelectionOrder));
-                    enableInstall = (installed == "N");
-                    enableStart = (status == "S") && isAddin;
-                    enableStop = !enableStart && isAddin;
+                    enableInstall = (installed == "N") || enableInstall;
+                    enableStart = ((status == "S") && isAddin) || enableStart;
+                    enableStop = (!enableStart && isAddin) || enableStop;
                 }
 
                 this.removeButton.Item.Enabled = enableRemove;
@@ -271,9 +277,14 @@ namespace Dover.Framework.Form
         {
             for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
             {
-                string moduleName = (string)moduleDT.GetValue("Name", moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder));
-                FrameworkAddinManager.ShutdownAddin(moduleName);
-                AsmLoader.RemoveAddIn(moduleName);
+                int rowId = moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder);
+                string moduleName = (string)moduleDT.GetValue("Name", rowId);
+                string type = (string)moduleDT.GetValue("Type", rowId);
+                if (type == "AddIn")
+                {
+                    FrameworkAddinManager.ShutdownAddin(moduleName);
+                    AsmLoader.RemoveAddIn(moduleName);
+                }
             }
             UpdateInstallGrid();
             UpdateLicenseGrid();
