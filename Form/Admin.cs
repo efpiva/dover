@@ -265,6 +265,11 @@ namespace Dover.Framework.Form
                             Logger.Info(Messages.AdminSuccessInstall);
                         }
                     }
+                    else
+                    {
+                        SAPAppender.SilentMode = false;
+                        Logger.Error(Messages.AdminInvalidAddin);
+                    }
                 }
                 finally
                 {

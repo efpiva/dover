@@ -115,6 +115,15 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid addin.
+        /// </summary>
+        internal static string AdminInvalidAddin {
+            get {
+                return ResourceManager.GetString("AdminInvalidAddin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Module Management.
         /// </summary>
         internal static string AdminManagement {

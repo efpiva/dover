@@ -273,4 +273,7 @@
   <data name="AdminStopped" xml:space="preserve">
     <value>Stopped</value>
   </data>
+  <data name="AdminInvalidAddin" xml:space="preserve">
+    <value>Invalid addin</value>
+  </data>
 </root>
