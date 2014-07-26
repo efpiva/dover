@@ -35,7 +35,7 @@ namespace Dover.Framework.Service
         private PermissionManager permissionManager;
         private B1SResourceManager resourceManager;
 
-        Dictionary<string, object> formEvents = new Dictionary<string, object>();
+        Dictionary<string, EventForm> formEvents = new Dictionary<string, EventForm>();
         Dictionary<string, Type> formImplementationType = new Dictionary<string, Type>();
         Dictionary<string, DoverFormBase> events = new Dictionary<string, DoverFormBase>();
         Dictionary<string, List<DoverFormBase>> pendingForms = new Dictionary<string, List<DoverFormBase>>();
@@ -57,6 +57,53 @@ namespace Dover.Framework.Service
                 pendingForms.Add(type, pendingList);
             }
             pendingList.Add(form);
+        }
+
+        internal void UnRegisterForms()
+        {
+            foreach (var formEvent in formEvents)
+            {
+                formEvent.Value.LoadBefore -= new _IEventFormEvents_LoadBeforeEventHandler(this.OnFormLoadBefore);
+                formEvent.Value.ActivateAfter -= new _IEventFormEvents_ActivateAfterEventHandler(this.OnFormActivateAfter);
+                formEvent.Value.ActivateBefore -= new _IEventFormEvents_ActivateBeforeEventHandler(this.OnFormActivateBefore);
+                formEvent.Value.ClickAfter -= new _IEventFormEvents_ClickAfterEventHandler(this.OnFormClickAfter);
+                formEvent.Value.ClickBefore -= new _IEventFormEvents_ClickBeforeEventHandler(this.OnFormClickBefore);
+                formEvent.Value.CloseAfter -= new _IEventFormEvents_CloseAfterEventHandler(this.OnFormCloseAfter);
+                formEvent.Value.CloseBefore -= new _IEventFormEvents_CloseBeforeEventHandler(this.OnFormCloseBefore);
+                formEvent.Value.DataAddAfter -= new _IEventFormEvents_DataAddAfterEventHandler(this.OnFormDataAddAfter);
+                formEvent.Value.DataAddBefore -= new _IEventFormEvents_DataAddBeforeEventHandler(this.OnFormDataAddBefore);
+                formEvent.Value.DataDeleteAfter -= new _IEventFormEvents_DataDeleteAfterEventHandler(this.OnFormDataDeleteAfter);
+                formEvent.Value.DataDeleteBefore -= new _IEventFormEvents_DataDeleteBeforeEventHandler(this.OnFormDataDeleteBefore);
+                formEvent.Value.DataLoadAfter -= new _IEventFormEvents_DataLoadAfterEventHandler(this.OnFormDataLoadAfter);
+                formEvent.Value.DataLoadBefore -= new _IEventFormEvents_DataLoadBeforeEventHandler(this.OnFormDataLoadBefore);
+                formEvent.Value.DataUpdateAfter -= new _IEventFormEvents_DataUpdateAfterEventHandler(this.OnFormDataUpdateAfter);
+                formEvent.Value.DataUpdateBefore -= new _IEventFormEvents_DataUpdateBeforeEventHandler(this.OnFormDataUpdateBefore);
+                formEvent.Value.DeactivateAfter -= new _IEventFormEvents_DeactivateAfterEventHandler(this.OnFormDeactivateAfter);
+                formEvent.Value.DeactivateBefore -= new _IEventFormEvents_DeactivateBeforeEventHandler(this.OnFormDeactivateBefore);
+                formEvent.Value.KeyDownAfter -= new _IEventFormEvents_KeyDownAfterEventHandler(this.OnFormKeyDownAfter);
+                formEvent.Value.KeyDownBefore -= new _IEventFormEvents_KeyDownBeforeEventHandler(this.OnFormKeyDownBefore);
+                formEvent.Value.LayoutKeyAfter -= new _IEventFormEvents_LayoutKeyAfterEventHandler(this.OnFormLayoutKeyAfter);
+                formEvent.Value.LayoutKeyBefore -= new _IEventFormEvents_LayoutKeyBeforeEventHandler(this.OnFormLayoutKeyBefore);
+                formEvent.Value.LoadAfter -= new _IEventFormEvents_LoadAfterEventHandler(this.OnFormLoadAfter);
+                formEvent.Value.MenuHighlightAfter -= new _IEventFormEvents_MenuHighlightAfterEventHandler(this.OnFormMenuHighlightAfter);
+                formEvent.Value.MenuHighlightBefore -= new _IEventFormEvents_MenuHighlightBeforeEventHandler(this.OnFormMenuHighlightBefore);
+                formEvent.Value.PrintAfter -= new _IEventFormEvents_PrintAfterEventHandler(this.OnFormPrintAfter);
+                formEvent.Value.PrintBefore -= new _IEventFormEvents_PrintBeforeEventHandler(this.OnFormPrintBefore);
+                formEvent.Value.ReportDataAfter -= new _IEventFormEvents_ReportDataAfterEventHandler(this.OnFormReportDataAfter);
+                formEvent.Value.ReportDataBefore -= new _IEventFormEvents_ReportDataBeforeEventHandler(this.OnFormReportDataBefore);
+                formEvent.Value.ResizeAfter -= new _IEventFormEvents_ResizeAfterEventHandler(this.OnFormResizeAfter);
+                formEvent.Value.ResizeBefore -= new _IEventFormEvents_ResizeBeforeEventHandler(this.OnFormResizeBefore);
+                formEvent.Value.RightClickAfter -= new _IEventFormEvents_RightClickAfterEventHandler(this.OnFormRightClickAfter);
+                formEvent.Value.RightClickBefore -= new _IEventFormEvents_RightClickBeforeEventHandler(this.OnFormRightClickBefore);
+                formEvent.Value.UnloadAfter -= new _IEventFormEvents_UnloadAfterEventHandler(this.OnFormUnloadAfter);
+                formEvent.Value.UnloadBefore -= new _IEventFormEvents_UnloadBeforeEventHandler(this.OnFormUnloadBefore);
+                formEvent.Value.VisibleAfter -= new _IEventFormEvents_VisibleAfterEventHandler(this.OnFormVisibleAfter);
+            }
+            // stop any event handling, GC will clean everything.
+            formEvents = new Dictionary<string, EventForm>(); 
+            formImplementationType = new Dictionary<string, Type>();
+            events = new Dictionary<string, DoverFormBase>();
+            pendingForms = new Dictionary<string, List<DoverFormBase>>();
         }
 
         internal void RegisterForms(bool registerEvents = true)
@@ -85,6 +132,7 @@ namespace Dover.Framework.Service
                                         /* do not register systemForm from ReferencedAssemblies, they
                                          * should be registered by the addin owner. Just UserForms can be reused
                                          */
+                                        && dependency != Assembly.GetExecutingAssembly()
                                       select new {
                                             FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute,
                                             Assembly = dependency,
@@ -515,7 +563,6 @@ namespace Dover.Framework.Service
                 addOneForm.OnFormVisibleAfter(pVal);
             }
         }
-
     }
 
 }

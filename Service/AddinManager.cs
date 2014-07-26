@@ -426,8 +426,9 @@ namespace Dover.Framework.Service
             foreach (var runner in runningAddIns)
             {
                 Logger.Info(string.Format(Messages.ShutdownAddin, runner.asm.Name));
-                runner.shutdownEvent.Set();
                 runner.eventDispatcher.UnregisterEvents();
+                runner.addinFormEventHandler.UnRegisterForms();
+                runner.shutdownEvent.Set();
             }
             runningAddIns = new List<AddInRunner>(); // clean running AddIns.
             runningAddinsHash = new Dictionary<string, AddInRunner>(); // clean-up.
@@ -450,8 +451,9 @@ namespace Dover.Framework.Service
                 if (addin != null)
                 {
                     Logger.Info(string.Format(Messages.ShutdownAddin, addin.asm.Name));
-                    addin.shutdownEvent.Set();
                     addin.eventDispatcher.UnregisterEvents();
+                    addin.addinFormEventHandler.UnRegisterForms();
+                    addin.shutdownEvent.Set();
                     runningAddIns.Remove(addin);
                     runningAddinsHash.Remove(name);
                 }
