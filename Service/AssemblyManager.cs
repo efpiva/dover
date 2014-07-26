@@ -85,31 +85,43 @@ namespace Dover.Framework.Service
             string mainDll = string.Empty;
             bool ret;
 
-            // check if it's a DLL or ZIP.
-            if (extension != null && extension == ".zip")
+            testDomain = CreateTestDomain();
+            try
             {
-                testDomain = CreateTestDomain();
-                mainDll = UnzipFile(path, testDomain.BaseDirectory);
+                // check if it's a DLL or ZIP.
+                if (extension != null && extension == ".zip")
+                {
+                    mainDll = UnzipFile(path, testDomain.BaseDirectory);
+                }
+                else if (extension != null && (extension == ".dll" || extension == ".exe"))
+                {
+                    string destination = Path.Combine(testDomain.BaseDirectory, Path.GetFileName(path));
+                    File.Copy(path, destination);
+                    mainDll = Path.GetFileName(path);
+                }
+                else
+                {
+                    throw new ArgumentException(Messages.InvalidAddInExtension);
+                }
+
+                if (mainDll == null)
+                {
+                    comments = string.Empty;
+                    return false;
+                }
+
+                mainDll = mainDll.Substring(0, mainDll.Length - 4);
+                testDomain.SetData("assemblyName", mainDll); // Used to get current AssemblyName for logging and reflection
+                Application testApp = (Application)testDomain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
+                SAPServiceFactory.PrepareForInception(testDomain);
+                var addinManager = testApp.Resolve<AddinManager>();
+                ret = addinManager.CheckAddinConfiguration(mainDll, out comments);
+                testApp.ShutDownApp();
             }
-            else if (extension != null && (extension == ".dll" || extension == ".exe"))
+            finally
             {
-                testDomain = CreateTestDomain();
-                string destination = Path.Combine(testDomain.BaseDirectory, Path.GetFileName(path));
-                File.Copy(path, destination);
-                mainDll = Path.GetFileName(path);
+                AppDomain.Unload(testDomain); // TODO: clean up temp directory.
             }
-            else
-            {
-                throw new ArgumentException(Messages.InvalidAddInExtension);
-            }
-            mainDll = mainDll.Substring(0, mainDll.Length - 4);
-            testDomain.SetData("assemblyName", mainDll); // Used to get current AssemblyName for logging and reflection
-            Application testApp = (Application)testDomain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
-            SAPServiceFactory.PrepareForInception(testDomain);
-            var addinManager = testApp.Resolve<AddinManager>();
-            ret = addinManager.CheckAddinConfiguration(mainDll, out comments);
-            testApp.ShutDownApp();
-            AppDomain.Unload(testDomain); // TODO: clean up temp directory.
             return ret;
         }
 
@@ -140,7 +152,7 @@ namespace Dover.Framework.Service
                     {
                         Directory.CreateDirectory(directoryName);
                     }
-                    else if (fileName.EndsWith(".dll"))
+                    else if (fileName.EndsWith(".dll") || fileName.EndsWith(".exe"))
                     {
                         if (mainDll != null)
                         {
