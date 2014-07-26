@@ -358,11 +358,28 @@ namespace Dover.Framework.Service
             out byte[] asmBytes)
         {
             string path = Path.Combine(directory, filename);
+            List<byte> allBytes = new List<byte>();
+            byte[] fileByte;
+
             AssemblyInformation newAsm = new AssemblyInformation();
             newAsm.Name = name;
             newAsm.FileName = filename;
-            asmBytes = File.ReadAllBytes(path);
-            GetAssemblyInfoFromBin(asmBytes, newAsm);
+            fileByte = File.ReadAllBytes(path);
+            allBytes.AddRange(fileByte);
+
+            string[] i18nDirectories = Directory.GetDirectories(directory);
+            foreach (string i18nPath in i18nDirectories)
+            {
+                string i18n = Path.GetFileName(i18nPath);
+                string resourceAsm = Path.Combine(directory, i18n, name + ".resources.dll");
+                if (i18nService.IsValidi18NCode(i18n) && File.Exists(resourceAsm))
+                {
+                    allBytes.AddRange(File.ReadAllBytes(resourceAsm));
+                }
+            }
+
+            asmBytes = allBytes.ToArray();
+            GetAssemblyInfoFromBin(fileByte, newAsm);
             newAsm.MD5 = MD5Sum(asmBytes);
             newAsm.Size = asmBytes.Length;
             newAsm.Date = DateTime.Now;
