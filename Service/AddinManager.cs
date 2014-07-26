@@ -94,19 +94,21 @@ namespace Dover.Framework.Service
         public ILogger Logger { get; set; }
         private PermissionManager permissionManager;
         private AssemblyDAO assemblyDAO;
+        private AssemblyManager assemblyManager;
         private BusinessOneDAO b1DAO;
         private List<AddInRunner> runningAddIns = new List<AddInRunner>();
         private Dictionary<string, AddInRunner> runningAddinsHash = new Dictionary<string, AddInRunner>();
          
         private I18NService i18nService;
 
-        public AddinManager(PermissionManager permissionManager,
+        public AddinManager(PermissionManager permissionManager, AssemblyManager assemblyManager,
             BusinessOneDAO b1DAO, I18NService i18nService, AssemblyDAO assemblyDAO)
         {
             this.permissionManager = permissionManager;
             this.assemblyDAO = assemblyDAO;
             this.b1DAO = b1DAO;
             this.i18nService = i18nService;
+            this.assemblyManager = assemblyManager;
         }
 
         internal void LoadAddins(List<AssemblyInformation> addins)
@@ -440,6 +442,7 @@ namespace Dover.Framework.Service
         internal void StartAddin(string name)
         {
             AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, "A");
+            assemblyManager.UpdateAppDataFolder(asmInfo, AppDomain.CurrentDomain.BaseDirectory);
             LoadAddin(asmInfo);
         }
 
