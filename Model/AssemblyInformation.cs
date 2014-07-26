@@ -26,7 +26,7 @@ using Dover.Framework.Monad;
 
 namespace Dover.Framework.Model
 {
-    public class AssemblyInformation
+    public class AssemblyInformation : MarshalByRefObject
     {
         public string Name { get; set; }
 

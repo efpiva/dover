@@ -43,6 +43,83 @@ namespace Dover.Framework.Service
         Stopped
     }
 
+    public class ConfigAddin : MarshalByRefObject
+    {
+
+        public ILogger Logger { get; set; }
+        public BusinessOneDAO b1DAO { get; set; }
+
+        internal void ConfigureAddin(AssemblyInformation addin)
+        {
+            List<ResourceBOMAttribute> resourceAttr = new List<ResourceBOMAttribute>();
+            Assembly assembly;
+
+            try
+            {
+                assembly = Assembly.Load(addin.Name);
+            }
+            catch (InvalidOperationException e)
+            {
+                Logger.Error(String.Format(Messages.AddInNotFound, addin), e);
+                return;
+            }
+
+            var types = (from type in assembly.GetTypes()
+                         where type.IsClass
+                         select type);
+
+            foreach (var type in types)
+            {
+                var attrs = type.GetCustomAttributes(true);
+                foreach (var attr in attrs)
+                {
+                    Logger.Debug(DebugString.Format(Messages.ProcessingAttribute, attr, type));
+                    if (attr is ResourceBOMAttribute)
+                    {
+                        resourceAttr.Add((ResourceBOMAttribute)attr);
+                    }
+                    else if (attr is PermissionAttribute)
+                    {
+                        b1DAO.UpdateOrSavePermissionIfNotExists((PermissionAttribute)attr);
+                    }
+                }
+            }
+            resourceAttr.Sort(); // need to order becase we need create tables, than fields and at the end UDOs.
+            foreach (var resource in resourceAttr)
+            {
+                ProcessAddInResourceAttribute(resource, assembly);
+            }
+        }
+        
+        private void ProcessAddInResourceAttribute(ResourceBOMAttribute resourceBOMAttribute, Assembly asm)
+        {
+            using (var resourceStream = asm.GetManifestResourceStream(resourceBOMAttribute.ResourceName))
+            {
+                if (resourceStream == null)
+                {
+                    Logger.Error(string.Format(Messages.InternalResourceMissing, resourceBOMAttribute.ResourceName));
+                    return;
+                }
+                switch (resourceBOMAttribute.Type)
+                {
+                    case ResourceType.UserField:
+                        var userFieldBOM = b1DAO.GetBOMFromXML<UserFieldBOM>(resourceStream);
+                        b1DAO.SaveBOMIfNotExists(userFieldBOM);
+                        break;
+                    case ResourceType.UserTable:
+                        var userTableBOM = b1DAO.GetBOMFromXML<UserTableBOM>(resourceStream);
+                        b1DAO.SaveBOMIfNotExists(userTableBOM);
+                        break;
+                    case ResourceType.UDO:
+                        var udoBOM = b1DAO.GetBOMFromXML<UDOBOM>(resourceStream);
+                        b1DAO.UpdateOrSaveBOMIfNotExists(udoBOM);
+                        break;
+                }
+            }
+        }
+
+    }
+
     internal class AddInRunner
     {
         internal AssemblyInformation asm;
@@ -284,78 +361,22 @@ namespace Dover.Framework.Service
 
         private void ConfigureAddin(AssemblyInformation addin)
         {
-            List<ResourceBOMAttribute> resourceAttr = new List<ResourceBOMAttribute>();
             Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
-            Assembly assembly;
-
+            var setup = new AppDomainSetup();
+            setup.ApplicationName = "Dover.ConfigureDomain";
+            setup.ApplicationBase = Environment.CurrentDirectory;
+            AppDomain configureDomain = AppDomain.CreateDomain("ConfigureDomain", null, setup);
             try
             {
-                assembly = (from asm in AppDomain.CurrentDomain.GetAssemblies()
-                                where asm.GetName().Name == addin.Name
-                                select asm).First();
+                Application app = (Application)configureDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
+                    "Dover.Framework.Application");
+                SAPServiceFactory.PrepareForInception(configureDomain);
+                ConfigAddin addinConfig = app.Resolve<ConfigAddin>();
+                addinConfig.ConfigureAddin(addin);
             }
-            catch (InvalidOperationException e)
+            finally
             {
-                Logger.Error(String.Format(Messages.AddInNotFound, addin), e);
-                return;
-            }
-
-            var types = (from type in assembly.GetTypes()
-                                 where type.IsClass
-                                 select type);
-
-            foreach (var type in types)
-            {
-                var attrs = type.GetCustomAttributes(true);
-                foreach (var attr in attrs)
-                {
-                    Logger.Debug(DebugString.Format(Messages.ProcessingAttribute, attr, type));
-                    if (attr is ResourceBOMAttribute)
-                    {
-                        resourceAttr.Add((ResourceBOMAttribute)attr);
-                    }
-                    else if (attr is PermissionAttribute)
-                    {
-                        ProcessPermissionAttribute((PermissionAttribute)attr);
-                    }
-                }
-            }
-            resourceAttr.Sort(); // need to order becase we need create tables, than fields and at the end UDOs.
-            foreach(var resource in resourceAttr)
-            {
-                ProcessAddInResourceAttribute(resource, assembly);
-            }
-        }
-
-        private void ProcessPermissionAttribute(PermissionAttribute permissionAttribute)
-        {
-            b1DAO.UpdateOrSavePermissionIfNotExists(permissionAttribute);
-        }
-
-        private void ProcessAddInResourceAttribute(ResourceBOMAttribute resourceBOMAttribute, Assembly asm)
-        {
-            using (var resourceStream = asm.GetManifestResourceStream(resourceBOMAttribute.ResourceName))
-            {
-                if (resourceStream == null)
-                {
-                    Logger.Error(string.Format(Messages.InternalResourceMissing, resourceBOMAttribute.ResourceName));
-                    return;
-                }
-                switch (resourceBOMAttribute.Type)
-                {
-                    case ResourceType.UserField:
-                        var userFieldBOM = b1DAO.GetBOMFromXML<UserFieldBOM>(resourceStream);
-                        b1DAO.SaveBOMIfNotExists(userFieldBOM);
-                        break;
-                    case ResourceType.UserTable:
-                        var userTableBOM = b1DAO.GetBOMFromXML<UserTableBOM>(resourceStream);
-                        b1DAO.SaveBOMIfNotExists(userTableBOM);
-                        break;
-                    case ResourceType.UDO:
-                        var udoBOM = b1DAO.GetBOMFromXML<UDOBOM>(resourceStream);
-                        b1DAO.UpdateOrSaveBOMIfNotExists(udoBOM);
-                        break;
-                }
+                AppDomain.Unload(configureDomain);
             }
         }
 
