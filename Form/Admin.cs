@@ -104,7 +104,17 @@ namespace Dover.Framework.Form
 
         protected virtual void installButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
-            throw new NotImplementedException();
+            for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
+            {
+                int rowId = moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder);
+                string moduleName = (string)moduleDT.GetValue("Name", rowId);
+                string type = (string)moduleDT.GetValue("Type", rowId);
+                if (type == "AddIn")
+                    FrameworkAddinManager.InstallAddin(moduleName);
+            }
+            UpdateInstallGrid();
+            UpdateLicenseGrid();
+            moduleGrid_ClickAfter(sboObject, pVal);
         }
 
         protected virtual void shutdownButton_ClickAfter(object sboObject, SBOItemEventArg pVal)
