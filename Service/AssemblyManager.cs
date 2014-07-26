@@ -273,12 +273,17 @@ namespace Dover.Framework.Service
 
             foreach(var asm in asms)
             {
-                string fullPath = Path.Combine(appFolder, asm.FileName);
-                if (IsDifferent(asm, appFolder, fullPath))
-                {
-                    UpdateAssembly(asm, fullPath);
-                    UpdateI18NAssembly(asm, appFolder);
-                }
+                UpdateAppDataFolder(asm, appFolder);
+            }
+        }
+
+        internal void UpdateAppDataFolder(AssemblyInformation asm, string appFolder)
+        {
+            string fullPath = Path.Combine(appFolder, asm.FileName);
+            if (IsDifferent(asm, fullPath))
+            {
+                UpdateAssembly(asm, fullPath);
+                UpdateI18NAssembly(asm, appFolder);
             }
         }
 
@@ -459,7 +464,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private bool IsDifferent(AssemblyInformation asm, string appFolder, string fullPath)
+        private bool IsDifferent(AssemblyInformation asm, string fullPath)
         {
             return !File.Exists(fullPath) || !CheckSum(asm.MD5, fullPath);
         }
