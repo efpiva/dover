@@ -122,22 +122,27 @@ namespace Dover.Framework.Service
 
         private void LoadAddin(AssemblyInformation addin)
         {
-            var asm = Assembly.Load(addin.Name);
             if (!IsInstalled(addin.Code))
             {
-                try
-                {
-                    ConfigureAddin(addin);
-                    MarkAsInstalled(addin.Code);
-                }
-                catch (Exception e)
-                {
-                    MarkAsNotInstalled(addin.Code);
-                    throw e;
-                }
+                InstallAddin(addin);
             }
             RegisterAddin(addin);
             ConfigureLog(addin);
+            
+        }
+
+        private void InstallAddin(AssemblyInformation addin)
+        {
+            try
+            {
+                ConfigureAddin(addin);
+                MarkAsInstalled(addin.Code);
+            }
+            catch (Exception e)
+            {
+                MarkAsNotInstalled(addin.Code);
+                throw e;
+            }
         }
 
         private void MarkAsNotInstalled(string addInCode)
@@ -446,5 +451,11 @@ namespace Dover.Framework.Service
             LoadAddin(asmInfo);
         }
 
+        internal void InstallAddin(string name)
+        {
+            AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, "A");
+            assemblyManager.UpdateAppDataFolder(asmInfo, AppDomain.CurrentDomain.BaseDirectory);
+            InstallAddin(asmInfo);
+        }
     }
 }
