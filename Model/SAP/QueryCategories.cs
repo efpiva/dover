@@ -33,11 +33,11 @@ namespace Dover.Framework.Model.SAP
     public partial class QueryCategoriesBOM : IBOM
     {
 
-        private QueryCategoriesBOMBO[] boField;
+        private IBO[] boField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("BO")]
-        public QueryCategoriesBOMBO[] BO
+        [System.Xml.Serialization.XmlElementAttribute("BO", Type=typeof(QueryCategoriesBOMBO))]
+        public IBO[] BO
         {
             get
             {
@@ -48,6 +48,21 @@ namespace Dover.Framework.Model.SAP
                 this.boField = value;
             }
         }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class QueryCategoriesBOMBO: IBO
+    {
+        private BOMBOAdmInfo admInfoField;
+
+        private BOMBOQueryParams queryParamsField;
+
+        private QueryCategoriesField[] queryCategoriesField;
 
         internal override string[] GetKey()
         {
@@ -69,29 +84,19 @@ namespace Dover.Framework.Model.SAP
             return Messages.QueryCategory;
         }
 
-        internal override string GetFormatName(int i)
+        internal override string GetFormattedKey()
         {
-            return "[" + boField.With(x => x[i])
-                .With(x => x.QueryCategories)
+            return "[" + QueryCategories
                 .With(x => x[0])
                 .Return(x => x.Name, string.Empty) + "]";
         }
-    }
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public partial class QueryCategoriesBOMBO
-    {
-
-        private BOMBOAdmInfo admInfoField;
-
-        private BOMBOQueryParams queryParamsField;
-
-        private QueryCategoriesField[] queryCategoriesField;
+        internal override string GetFormattedDescription()
+        {
+            return QueryCategories
+                .With(x => x[0])
+                .Return(x => x.Name, string.Empty);
+        }
 
         /// <remarks/>
         public BOMBOAdmInfo AdmInfo

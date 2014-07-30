@@ -35,11 +35,11 @@ namespace Dover.Framework.Model.SAP
     public class UserFieldBOM : IBOM
     {
 
-        private UserFieldBOMBO[] boField;
+        private IBO[] boField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("BO")]
-        public UserFieldBOMBO[] BO
+        [System.Xml.Serialization.XmlElementAttribute("BO", Type=typeof(UserFieldBOMBO))]
+        public IBO[] BO
         {
             get
             {
@@ -50,6 +50,23 @@ namespace Dover.Framework.Model.SAP
                 this.boField = value;
             }
         }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class UserFieldBOMBO : IBO, IComparable<UserFieldBOMBO> 
+    {
+        private BOMBOAdmInfo admInfoField;
+
+        private BOMBOQueryParams queryParamsField;
+
+        private UserField[] userFieldsMDField;
+
+        private ValidValues[] validValuesMDField;
 
         internal override string[] GetKey()
         {
@@ -71,36 +88,23 @@ namespace Dover.Framework.Model.SAP
             return Messages.UDF;
         }
 
-        internal override string GetFormatName(int i)
+        internal override string GetFormattedKey()
         {
-            return "[" + boField.With(x => x[i])
-                .With(x => x.UserFieldsMD)
+            return "[" + UserFieldsMD
                 .With(x => x[0])
                 .Return(x => x.TableName, string.Empty) + "].["
                 +
-                boField.With(x => x[i])
-                .With(x => x.UserFieldsMD)
+                UserFieldsMD
                 .With(x => x[0])
                 .Return(x => x.Name, string.Empty) + "]";
         }
-    }
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public partial class UserFieldBOMBO : IComparable<UserFieldBOMBO>
-    {
-
-        private BOMBOAdmInfo admInfoField;
-
-        private BOMBOQueryParams queryParamsField;
-
-        private UserField[] userFieldsMDField;
-
-        private ValidValues[] validValuesMDField;
+        internal override string GetFormattedDescription()
+        {
+            return UserFieldsMD
+                .With(x => x[0])
+                .Return(x => x.Description, string.Empty);
+        }
 
         /// <remarks/>
         public BOMBOAdmInfo AdmInfo

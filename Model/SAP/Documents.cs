@@ -35,11 +35,11 @@ namespace Dover.Framework.Model.SAP
     public partial class DocumentsBOM : IBOM
     {
 
-        private DocumentsBOMBO[] boField;
+        private IBO[] boField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("BO")]
-        public DocumentsBOMBO[] BO
+        [System.Xml.Serialization.XmlElementAttribute("BO", Type=typeof(DocumentsBOMBO))]
+        public IBO[] BO
         {
             get
             {
@@ -50,6 +50,37 @@ namespace Dover.Framework.Model.SAP
                 this.boField = value;
             }
         }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class DocumentsBOMBO : IBO
+    {
+        private BOMBOAdmInfo admInfoField;
+
+        private BOMBOQueryParams queryParamsField;
+
+        private DocumentHeader[] documentsField;
+
+        private DocumentApprovalRequestsField[] document_ApprovalRequestsField;
+
+        private DocumentLine[] document_LinesField;
+
+        private LineTaxJurisdictionsField[] lineTaxJurisdictionsField;
+
+        private SerialNumbersField[] serialNumbersField;
+
+        private BatchNumbersField[] batchNumbersField;
+
+        private DocumentLinesBinAllocationsField[] documentLinesBinAllocationsField;
+
+        private TaxExtensionField[] taxExtensionField;
+
+        private AddressExtensionField[] addressExtensionField;
 
         internal override string[] GetKey()
         {
@@ -105,45 +136,19 @@ namespace Dover.Framework.Model.SAP
             }
         }
 
-        internal override string GetFormatName(int i)
+        internal override string GetFormattedKey()
         {
-            return "[" + boField.With(x => x[i])
-                .With(x => x.Documents)
+            return "[" + Documents
                 .With(x => x[0])
                 .Return(x => x.DocEntry, 0) + "]";
         }
-    }
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public partial class DocumentsBOMBO
-    {
-
-        private BOMBOAdmInfo admInfoField;
-
-        private BOMBOQueryParams queryParamsField;
-
-        private DocumentHeader[] documentsField;
-
-        private DocumentApprovalRequestsField[] document_ApprovalRequestsField;
-
-        private DocumentLine[] document_LinesField;
-
-        private LineTaxJurisdictionsField[] lineTaxJurisdictionsField;
-
-        private SerialNumbersField[] serialNumbersField;
-
-        private BatchNumbersField[] batchNumbersField;
-
-        private DocumentLinesBinAllocationsField[] documentLinesBinAllocationsField;
-
-        private TaxExtensionField[] taxExtensionField;
-
-        private AddressExtensionField[] addressExtensionField;
+        internal override string GetFormattedDescription()
+        {
+            return "[" + Documents
+                .With(x => x[0])
+                .Return(x => x.DocEntry, 0) + "]";
+        }
 
         /// <remarks/>
         public BOMBOAdmInfo AdmInfo

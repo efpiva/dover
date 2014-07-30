@@ -65,11 +65,18 @@ namespace Dover.Framework.DAO
         string GetXMLBom<V>(object[] keys, BoObjectTypes objType);
 
         /// <summary>
-        /// List all keys that are not present on the database, from the specified BOM
+        /// List all elements that are not present on the database, from the specified BOM
         /// </summary>
-        /// <param name="userFieldBOM">BOM with all Business One objects</param>
-        /// <returns>all keys that are missing, using user friendly display name.</returns>
-        List<string> ListMissingBOMKeys(IBOM userFieldBOM);
+        /// <param name="bom">BOM with all Business One objects</param>
+        /// <returns>all index for the elements that are missing.</returns>
+        List<int> ListMissingBOMKeys(IBOM bom);
+
+        /// <summary>
+        /// List all elements that are not present or outdated on the database, from the specified BOM
+        /// </summary>
+        /// <param name="bom">BOM with all Business Obe objects</param>
+        /// <returns>all index for the elements that are missing or outdated.</returns>
+        List<int> ListOutdatedBOMKeys(IBOM bom);
 
         /// <summary>
         /// Return the next code for the specified user table. This method implements a code on the following format:

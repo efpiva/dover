@@ -256,13 +256,14 @@ namespace Dover.Framework.Service
             }
         }
 
-        internal bool CheckAddinConfiguration(string assemblyName, out string comments)
+        internal bool CheckAddinConfiguration(string assemblyName, out string xmlDataTable)
         {
             Assembly assembly = Assembly.Load(assemblyName);
+            XDocument dataTable = CreateDTXML();
 
             bool isValid = false;
             string tempComments = string.Empty;
-            comments = string.Empty;
+            xmlDataTable = string.Empty;
 
             var types = (from type in assembly.GetTypes()
                          where type.IsClass
@@ -276,15 +277,11 @@ namespace Dover.Framework.Service
                     Logger.Debug(DebugString.Format(Messages.ProcessingAttribute, attr, type));
                     if (attr is ResourceBOMAttribute)
                     {
-                        CheckAddInAttribute((ResourceBOMAttribute)attr, assembly, out tempComments);
-                        if (!string.IsNullOrEmpty(tempComments))
-                            comments += tempComments + "\n";
+                        CheckAddInAttribute((ResourceBOMAttribute)attr, assembly, dataTable);
                     }
                     else if (attr is PermissionAttribute)
                     {
-                        CheckPermissionAttribute((PermissionAttribute)attr, out tempComments);
-                        if (!string.IsNullOrEmpty(tempComments))
-                            comments += tempComments + "\n";
+                        CheckPermissionAttribute((PermissionAttribute)attr, dataTable);
                     }
                     else if (attr is AddInAttribute && !string.IsNullOrWhiteSpace(((AddInAttribute)attr).Description))
                     {
@@ -293,23 +290,34 @@ namespace Dover.Framework.Service
                 }
             }
 
+            if (dataTable.Element("DataTable").Element("Rows").Elements("Row").Count() > 0)
+                xmlDataTable = dataTable.ToString();
+
             return isValid;
         }
 
-        private void CheckPermissionAttribute(PermissionAttribute permissionAttribute, out string comments)
+        private XDocument CreateDTXML()
         {
-            comments = string.Empty;
+            XDocument dt = new XDocument();
+            var root = new XElement("DataTable");
+            root.SetAttributeValue("Uid", "dbchange");
+            dt.Add(root);
+            root.Add("Rows");
 
+            return dt;
+        }
+
+        private void CheckPermissionAttribute(PermissionAttribute permissionAttribute, XDocument dataTable)
+        {
             if (!b1DAO.PermissionExists(permissionAttribute))
             {
-                comments += string.Format("{0}: ", Messages.Permission);
-                comments += permissionAttribute.PermissionID;
+                var rows = dataTable.Element("DataTable").Element("Rows");
+                rows.Add(Messages.Permission, permissionAttribute.PermissionID, permissionAttribute.Name);
             }
         }
 
-        private void CheckAddInAttribute(ResourceBOMAttribute resourceBOMAttribute, Assembly asm, out string comments)
+        private void CheckAddInAttribute(ResourceBOMAttribute resourceBOMAttribute, Assembly asm, XDocument dataTable)
         {
-            comments = string.Empty;
             using (var resourceStream = asm.GetManifestResourceStream(resourceBOMAttribute.ResourceName))
             {
                 if (resourceStream == null)
@@ -320,43 +328,82 @@ namespace Dover.Framework.Service
                 {
                     case ResourceType.UserField:
                         var userFieldBOM = b1DAO.GetBOMFromXML<UserFieldBOM>(resourceStream);
-                        UpdateOutputValues(ref comments, userFieldBOM, Messages.UserField);
+                        UpdateDataTableMissingItems(dataTable, userFieldBOM, Messages.UserField);
                         break;
                     case ResourceType.UserTable:
                         var userTableBOM = b1DAO.GetBOMFromXML<UserTableBOM>(resourceStream);
-                        UpdateOutputValues(ref comments, userTableBOM, Messages.UserTable);
+                        UpdateDataTableMissingItems(dataTable, userTableBOM, Messages.UserTable);
                         break;
                     case ResourceType.UDO:
                         var udoBOM = b1DAO.GetBOMFromXML<UDOBOM>(resourceStream);
-                        UpdateOutputValues(ref comments, udoBOM, Messages.UDO);
+                        UpdateDataTableOutdatedItems(dataTable, udoBOM, Messages.UDO);
                         break;
                 }
             }
         }
 
-        private void UpdateOutputValues(ref string comments, IBOM bom, string bomName)
+        private void UpdateDataTableOutdatedItems(XDocument dataTable, UDOBOM bom, string bomName)
         {
-            List<string> keys = b1DAO.ListMissingBOMKeys(bom);
+            List<int> keys = b1DAO.ListOutdatedBOMKeys(bom);
+            UpdateDataTableFromKeys(bom, keys, dataTable, bomName);
+        }
 
-            if (keys.Count > 0)
-            {
-                comments += string.Format("{0}: ", bomName);
-                bool first = true;
-                foreach (var key in keys)
-                {
-                    if (!first)
-                        comments += ", ";
-                    else
-                        first = false;
+        private void UpdateDataTableMissingItems(XDocument dataTable, IBOM bom, string bomName)
+        {
+            List<int> keys = b1DAO.ListMissingBOMKeys(bom);
+            UpdateDataTableFromKeys(bom, keys, dataTable, bomName);
+        }
 
-                    comments += key;
-                }
-                comments += "\n";
-            }
-            else
+        private void UpdateDataTableFromKeys(IBOM bom, List<int> keys, XDocument dataTable, string bomName)
+        {
+            var rows = dataTable.Element("DataTable").Element("Rows");
+            if (rows == null)
             {
-                comments = string.Empty;
+                rows = new XElement("Rows");
+                dataTable.Element("DataTable").Add(rows);
             }
+
+            foreach (var key in keys)
+            {
+                rows.Add(CreateRow(bomName, bom.BO[key].GetFormattedKey(),
+                    bom.BO[key].GetFormattedDescription()));
+            }
+        }
+
+        private XElement CreateRow(string type, string value, string description)
+        {
+            XElement row = new XElement("Row");
+            XElement cells = new XElement("Cells");
+            XElement typeCell = new XElement("Cell");
+            XElement typeUID = new XElement("ColumnUid");
+            XElement typeValue = new XElement("Value");
+
+            row.Add(cells);
+            cells.Add(typeCell);
+            typeCell.Add(typeUID);
+            typeCell.Add(typeValue);
+            typeUID.Value = "type";
+            typeValue.Value = type;
+
+            typeCell = new XElement("Cell");
+            typeUID = new XElement("ColumnUid");
+            typeValue = new XElement("Value");
+            typeCell.Add(typeUID);
+            typeCell.Add(typeValue);
+            cells.Add(typeCell);
+            typeUID.Value = "key";
+            typeValue.Value = value;
+
+            typeCell = new XElement("Cell");
+            typeUID = new XElement("ColumnUid");
+            typeValue = new XElement("Value");
+            typeCell.Add(typeUID);
+            typeCell.Add(typeValue);
+            cells.Add(typeCell);
+            typeUID.Value = "description";
+            typeValue.Value = description;
+
+            return row;
         }
 
         private void ConfigureAddin(AssemblyInformation addin)

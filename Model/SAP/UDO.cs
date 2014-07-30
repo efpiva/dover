@@ -33,11 +33,11 @@ namespace Dover.Framework.Model.SAP
     public class UDOBOM : IBOM
     {
 
-        private UDOBOMBO[] boField;
+        private IBO[] boField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("BO")]
-        public UDOBOMBO[] BO
+        [System.Xml.Serialization.XmlElementAttribute("BO", Type=typeof(UDOBOMBO))]
+        public IBO[] BO
         {
             get
             {
@@ -48,6 +48,29 @@ namespace Dover.Framework.Model.SAP
                 this.boField = value;
             }
         }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class UDOBOMBO : IBO
+    {
+        private BOMBOAdmInfo admInfoField;
+
+        private BOMBOQueryParams queryParamsField;
+
+        private BOMBOField[] userObjectsMDField;
+
+        private BOMBOChildTablesField[] userObjectMD_ChildTablesField;
+
+        private BOMBOFindColumnsField[] userObjectMD_FindColumnsField;
+
+        private BOMBOFormColumnsField[] userObjectMD_FormColumnsField;
+
+        private BOMBOEnhancedFormColumnsField[] userObjectMD_EnhancedFormColumnsField;
 
         internal override string[] GetKey()
         {
@@ -69,37 +92,19 @@ namespace Dover.Framework.Model.SAP
             return Messages.UDO;
         }
 
-        internal override string GetFormatName(int i)
+        internal override string GetFormattedKey()
         {
-            return "[" + boField.With(x => x[i])
-                .With(x => x.UserObjectsMD)
+            return "[" + UserObjectsMD
                 .With(x => x[0])
-                .Return(x => x.Name, string.Empty) + "]";
+                .Return(x => x.Code, string.Empty) + "]";
         }
-    }
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public partial class UDOBOMBO
-    {
-
-        private BOMBOAdmInfo admInfoField;
-
-        private BOMBOQueryParams queryParamsField;
-
-        private BOMBOField[] userObjectsMDField;
-
-        private BOMBOChildTablesField[] userObjectMD_ChildTablesField;
-
-        private BOMBOFindColumnsField[] userObjectMD_FindColumnsField;
-
-        private BOMBOFormColumnsField[] userObjectMD_FormColumnsField;
-
-        private BOMBOEnhancedFormColumnsField[] userObjectMD_EnhancedFormColumnsField;
+        internal override string GetFormattedDescription()
+        {
+            return UserObjectsMD
+                .With(x => x[0])
+                .Return(x => x.Name, string.Empty);
+        }
 
         /// <remarks/>
         public BOMBOAdmInfo AdmInfo

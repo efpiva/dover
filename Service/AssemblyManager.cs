@@ -92,7 +92,6 @@ namespace Dover.Framework.Service
 
         private string[] coreAssemblies = {
             "Framework.dll",
-            "Dover.exe"
         };
         private AssemblyDAO asmDAO;
         private LicenseManager licenseManager;
@@ -118,9 +117,9 @@ namespace Dover.Framework.Service
         /// Return true if the addin is valid.
         /// </summary>
         /// <param name="path">Path name for the intended addin</param>
-        /// <param name="comments">Comments to be displayed to the end user, linke tabled that are going to be created.</param>
+        /// <param name="comments">DataTable serialized, to be displayed to the user with db change information.</param>
         /// <returns>true if addin is valid</returns>
-        internal bool AddInIsValid(string path, out string comments)
+        internal bool AddInIsValid(string path, out string datatable)
         {
             string extension = Path.GetExtension(path);
             AppDomain testDomain = null;
@@ -148,7 +147,7 @@ namespace Dover.Framework.Service
 
                 if (mainDll == null)
                 {
-                    comments = string.Empty;
+                    datatable = string.Empty;
                     return false;
                 }
 
@@ -157,12 +156,14 @@ namespace Dover.Framework.Service
                 Application testApp = (Application)testDomain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
                 SAPServiceFactory.PrepareForInception(testDomain);
                 var addinManager = testApp.Resolve<AddinManager>();
-                ret = addinManager.CheckAddinConfiguration(mainDll, out comments);
+                ret = addinManager.CheckAddinConfiguration(mainDll, out datatable);
                 testApp.ShutDownApp();
             }
             finally
             {
-                AppDomain.Unload(testDomain); // TODO: clean up temp directory.
+                string appDomainFolder = testDomain.BaseDirectory;
+                AppDomain.Unload(testDomain); 
+                Directory.Delete(appDomainFolder, true);
             }
             return ret;
         }

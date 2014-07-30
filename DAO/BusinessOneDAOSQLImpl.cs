@@ -67,19 +67,19 @@ namespace Dover.Framework.DAO
         private void UpdateOrSaveBOMIfNotExists(IBOM bom, bool Update = true, bool CheckExists = true, INotifier notifier = null)
         {            
             object obj = null;
-            Type type = bom.GetBOClassType();
             string xmlBom = bom.Serialize();
 
             company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
             company.XMLAsString = true;
 
-            Logger.Debug(DebugString.Format(Messages.StartUpdateOrSave, bom.GetName()));
             int length = company.GetXMLelementCount(xmlBom);
             for (int i = 0; i < length; i++)
             {
+                Logger.Debug(DebugString.Format(Messages.StartUpdateOrSave, bom.BO[i].GetName()));
+                Type type = bom.BO[i].GetBOClassType();
                 try
                 {
-                    obj = company.GetBusinessObject(bom.GetBOType());
+                    obj = company.GetBusinessObject(bom.BO[i].GetBOType());
                     if (CheckExists)
                     {
                         var browser = type.InvokeMember("Browser", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
@@ -87,21 +87,21 @@ namespace Dover.Framework.DAO
                             null, browser, new object[] { xmlBom, i });
                         string xml = (string)type.InvokeMember("GetAsXML", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
                         var resourceXml = XDocument.Parse(xml);
-                        object[] keys = GetKeys(obj, bom.GetBOType(), bom.GetKey());
+                        object[] keys = GetKeys(obj, bom.BO[i].GetBOType(), bom.BO[i].GetKey());
                         bool found = (bool)type.InvokeMember("GetByKey", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, keys);
                         if (found)
                         {
                             if (Update)
-                                UpdateDIObject(obj, resourceXml, bom.GetName(), bom.GetFormatName(i), notifier);
+                                UpdateDIObject(obj, resourceXml, bom.BO[i].GetName(), bom.BO[i].GetFormattedKey(), notifier);
                         }
                         else
                         {
-                            AddDIObject(obj, xmlBom, i, bom.GetName(), bom.GetFormatName(i), notifier);
+                            AddDIObject(obj, xmlBom, i, bom.BO[i].GetName(), bom.BO[i].GetFormattedKey(), notifier);
                         }
                     }
                     else
                     {
-                        AddDIObject(obj, xmlBom, i, bom.GetName(), bom.GetFormatName(i), notifier);
+                        AddDIObject(obj, xmlBom, i, bom.BO[i].GetName(), bom.BO[i].GetFormattedKey(), notifier);
                     }
                     
                 }
@@ -110,51 +110,69 @@ namespace Dover.Framework.DAO
                     if (obj != null)
                         System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
                 }
+                Logger.Debug(DebugString.Format(Messages.EndUpdateOrSave, bom.BO[i].GetName()));
             }
-            Logger.Debug(DebugString.Format(Messages.EndUpdateOrSave, bom.GetName()));
         }
 
+        public List<int> ListOutdatedBOMKeys(IBOM bom)
+        {
+            return ListMissingOrOutdatedKeysBOM(bom, true);
+        }
 
-        public List<string> ListMissingBOMKeys(IBOM bom)
+        public List<int> ListMissingBOMKeys(IBOM bom)
+        {
+            return ListMissingOrOutdatedKeysBOM(bom);
+        }
+
+        private List<int> ListMissingOrOutdatedKeysBOM(IBOM bom, bool update = false)
         {
             object obj = null;
-            List<string> missingKeys = new List<string>();
+            List<int> missingKeys = new List<int>();
 
-            Type type = bom.GetBOClassType();
             string xmlBom = bom.Serialize();
 
             company.XmlExportType = BoXmlExportTypes.xet_ExportImportMode;
             company.XMLAsString = true;
 
-            Logger.Debug(DebugString.Format(Messages.StartListMissingBOMKeys, bom.GetName()));
             int length = company.GetXMLelementCount(xmlBom);
             for (int i = 0; i < length; i++)
             {
+                Logger.Debug(DebugString.Format(Messages.StartListMissingBOMKeys, bom.BO[i].GetName()));
+                Type type = bom.BO[i].GetBOClassType();
                 try
                 {
-                    obj = company.GetBusinessObject(bom.GetBOType());
+                    obj = company.GetBusinessObject(bom.BO[i].GetBOType());
                     var browser = type.InvokeMember("Browser", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
                     browser.GetType().InvokeMember("ReadXml", BindingFlags.InvokeMethod | BindingFlags.Public,
                         null, browser, new object[] { xmlBom, i });
                     string xml = (string)type.InvokeMember("GetAsXML", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
                     var resourceXml = XDocument.Parse(xml);
-                    object[] keys = GetKeys(obj, bom.GetBOType(), bom.GetKey());
+                    object[] keys = GetKeys(obj, bom.BO[i].GetBOType(), bom.BO[i].GetKey());
                     bool found = (bool)type.InvokeMember("GetByKey", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, keys);
                     if (!found)
                     {
-                        missingKeys.Add(bom.GetFormatName(i));
+                        missingKeys.Add(i);
                     }
-
+                    else if (update)
+                    {
+                        xml = (string)type.InvokeMember("GetAsXML", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
+                        var currXml = XDocument.Parse(xml);
+                        if (!XDocument.DeepEquals(currXml, resourceXml))
+                        {
+                            missingKeys.Add(i);
+                        }
+                    }
                 }
                 finally
                 {
                     if (obj != null)
                         System.Runtime.InteropServices.Marshal.ReleaseComObject(obj);
                 }
+                Logger.Debug(DebugString.Format(Messages.EndListMissingBOMKeys, bom.BO[i].GetName()));
             }
-            Logger.Debug(DebugString.Format(Messages.EndListMissingBOMKeys, bom.GetName()));
             return missingKeys;
         }
+
 
         private void AddDIObject<T>(T obj, string xmlBom, int i, string name, string formatName, INotifier notifier)
         {

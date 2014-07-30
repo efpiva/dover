@@ -41,11 +41,11 @@ namespace Dover.Framework.Model.SAP
     public partial class UserTableBOM : IBOM
     {
 
-        private UserTableBOMBO[] boField;
+        private IBO[] boField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("BO")]
-        public UserTableBOMBO[] BO
+        [System.Xml.Serialization.XmlElementAttribute("BO", Type=typeof(UserTableBOMBO))]
+        public IBO[] BO
         {
             get
             {
@@ -56,6 +56,23 @@ namespace Dover.Framework.Model.SAP
                 this.boField = value;
             }
         }
+
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class UserTableBOMBO : IBO, IComparable<UserTableBOMBO>
+    {
+
+        private BOMBOAdmInfo admInfoField;
+
+        private BOMBOQueryParams queryParamsField;
+
+        private UserTable[] userTablesMDField;
 
         internal override string[] GetKey()
         {
@@ -77,29 +94,19 @@ namespace Dover.Framework.Model.SAP
             return Messages.UDT;
         }
 
-        internal override string GetFormatName(int i)
+        internal override string GetFormattedKey()
         {
-            return "[" + boField.With(x => x[i])
-                .With(x => x.UserTablesMD)
+            return "[" + UserTablesMD
                 .With(x => x[0])
                 .Return(x => x.TableName, string.Empty) + "]";
         }
-    }
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public partial class UserTableBOMBO : IComparable<UserTableBOMBO>
-    {
-
-        private BOMBOAdmInfo admInfoField;
-
-        private BOMBOQueryParams queryParamsField;
-
-        private UserTable[] userTablesMDField;
+        internal override string GetFormattedDescription()
+        {
+            return UserTablesMD
+                .With(x => x[0])
+                .Return(x => x.TableDescription, string.Empty);
+        }
 
         /// <remarks/>
         public BOMBOAdmInfo AdmInfo

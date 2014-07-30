@@ -123,12 +123,18 @@ namespace Dover.Framework.Model.SAP
         }
     }
 
-    public abstract class IBOM 
+    public interface IBOM
+    {
+        IBO[] BO { get; set; }
+    }
+
+    public abstract class IBO 
     {
         internal abstract string[] GetKey();
+        internal abstract string GetFormattedKey();
+        internal abstract string GetFormattedDescription();
+        internal abstract string GetName();
         internal abstract SAPbobsCOM.BoObjectTypes GetBOType();
         internal abstract Type GetBOClassType();
-        internal abstract string GetName();
-        internal abstract string GetFormatName(int i);
     }
 }

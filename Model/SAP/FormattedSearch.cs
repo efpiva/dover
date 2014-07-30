@@ -32,11 +32,11 @@ namespace Dover.Framework.Model.SAP
     [System.Xml.Serialization.XmlRootAttribute(ElementName = "BOM", Namespace = "", IsNullable = false)]
     public partial class FormattedSearchBOM : IBOM
     {
-        private FormattedSearchBOMBO[] boField;
+        private IBO[] boField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("BO")]
-        public FormattedSearchBOMBO[] BO
+        [System.Xml.Serialization.XmlElementAttribute("BO", Type=typeof(FormattedSearchBOMBO))]
+        public IBO[] BO
         {
             get
             {
@@ -47,6 +47,23 @@ namespace Dover.Framework.Model.SAP
                 this.boField = value;
             }
         }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class FormattedSearchBOMBO: IBO
+    {
+        private BOMBOAdmInfo admInfoField;
+
+        private BOMBOQueryParams queryParamsField;
+
+        private FormattedSearchField[] formattedSearchesField;
+
+        private FormattedSearchValidValues[] userValidValuesField;
 
         internal override string[] GetKey()
         {
@@ -68,37 +85,29 @@ namespace Dover.Framework.Model.SAP
             return typeof(SAPbobsCOM.IFormattedSearches);
         }
 
-        internal override string GetFormatName(int i)
+        internal override string GetFormattedKey()
         {
             return "[" +
-                boField.With(x => x[i])
-                    .With(x => x.FormattedSearches)
+                FormattedSearches
                     .With(x => x[0])
                     .Return(x => x.FormID, string.Empty)
                 + "].[" +
-                boField.With(x => x[i])
-                    .With(x => x.FormattedSearches)
+                FormattedSearches
                     .With(x => x[0])
                     .Return(x => x.ItemID, string.Empty);
         }
-    }
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public partial class FormattedSearchBOMBO
-    {
-
-        private BOMBOAdmInfo admInfoField;
-
-        private BOMBOQueryParams queryParamsField;
-
-        private FormattedSearchField[] formattedSearchesField;
-
-        private FormattedSearchValidValues[] userValidValuesField;
+        internal override string GetFormattedDescription()
+        {
+            return "[" +
+                FormattedSearches
+                    .With(x => x[0])
+                    .Return(x => x.FormID, string.Empty)
+                + "].[" +
+                FormattedSearches
+                    .With(x => x[0])
+                    .Return(x => x.ItemID, string.Empty);
+        }
 
         /// <remarks/>
         public BOMBOAdmInfo AdmInfo

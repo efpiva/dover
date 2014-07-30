@@ -33,11 +33,11 @@ namespace Dover.Framework.Model.SAP
     public partial class UserQueriesBOM : IBOM
     {
 
-        private UserQueriesBOMBO[] boField;
+        private IBO[] boField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("BO")]
-        public UserQueriesBOMBO[] BO
+        [System.Xml.Serialization.XmlElementAttribute("BO", Type=typeof(UserQueriesBOMBO))]
+        public IBO[] BO
         {
             get
             {
@@ -48,6 +48,22 @@ namespace Dover.Framework.Model.SAP
                 this.boField = value;
             }
         }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    public partial class UserQueriesBOMBO : IBO
+    {
+
+        private BOMBOAdmInfo admInfoField;
+
+        private BOMBOQueryParams queryParamsField;
+
+        private UserQueriesField[] userQueriesField;
 
         internal override string[] GetKey()
         {
@@ -69,29 +85,22 @@ namespace Dover.Framework.Model.SAP
             return Messages.UserQuery;
         }
 
-        internal override string GetFormatName(int i)
+        internal override string GetFormattedKey()
         {
-            return "[" + boField.With(x => x[i])
-                .With(x => x.UserQueries)
+            return "[" + UserQueries
                 .With(x => x[0])
                 .Return(x => x.QueryDescription, string.Empty) + "]";
         }
-    }
 
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.42")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public partial class UserQueriesBOMBO
-    {
+        internal override string GetFormattedDescription()
+        {
+            return UserQueries
+                .With(x => x[0])
+                .Return(x => x.QueryDescription, string.Empty) ;
 
-        private BOMBOAdmInfo admInfoField;
+        }
 
-        private BOMBOQueryParams queryParamsField;
-
-        private UserQueriesField[] userQueriesField;
+        
 
         /// <remarks/>
         public BOMBOAdmInfo AdmInfo
