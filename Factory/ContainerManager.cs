@@ -120,6 +120,10 @@ namespace Dover.Framework.Factory
 
             if (assemblyName == "Framework")
                 assemblyName = "Dover"; // Framework should be threated the same as Dover.
+
+            if (!File.Exists(assemblyName + ".config"))
+                assemblyName = "DoverTemp"; // Temp AppDomain logging.
+
             Container.AddFacility<LoggingFacility>(f => f.UseLog4Net(assemblyName + ".config"));
 
             var logger = Container.Resolve<ILogger>();

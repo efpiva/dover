@@ -30,6 +30,7 @@ using Castle.Core.Logging;
 using Dover.Framework.Model;
 using Dover.Framework.Factory;
 using Dover.Framework.Log;
+using System.Reflection;
 
 namespace Dover.Framework
 {
@@ -90,21 +91,35 @@ namespace Dover.Framework
 
         private void CopyInstallResources(string appFolder, string sourceFolder)
         {
-            string source, destination;
-            source = Path.Combine(sourceFolder, "DoverInception.config");
+            string destination;
             destination = Path.Combine(appFolder, "Dover.config");
-            if (!File.Exists(destination) && File.Exists(source))
-            {
-                File.Copy(source, destination);
-            }
-
-            source = Path.Combine(sourceFolder, "DoverAddin.config");
+            CopyResource(destination, "Dover.Framework.DoverInception.config");
+            
             destination = Path.Combine(appFolder, "DoverAddin.config");
-            if (!File.Exists(destination) && File.Exists(source))
-            {
-                File.Copy(source, destination);
-            }
+            CopyResource(destination, "Dover.Framework.DoverAddin.config");
 
+            destination = Path.Combine(appFolder, "DoverTemp.config");
+            CopyResource(destination, "Dover.Framework.DoverTemp.config");
+        }
+
+        private void CopyResource(string destination, string resource)
+        {
+            using (var doverConfig = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+            {
+                if (!File.Exists(destination) && doverConfig != null)
+                {
+                    using(var destinationStream = new FileStream(destination, FileMode.CreateNew))
+                    {
+                        byte[] buffer = new byte[1000];
+                        int buffLen;
+                        while ((buffLen = doverConfig.Read(buffer, 0, 1000)) > 0)
+                        {
+                            destinationStream.Write(buffer, 0, buffLen);
+                        }
+
+                    }
+                }
+            }
         }
 
         private string CheckAppFolder()

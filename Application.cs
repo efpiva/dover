@@ -54,6 +54,7 @@ namespace Dover.Framework
             "Dover.Framework.Assemblies.Castle.Windsor.dll",
             "Dover.Framework.Assemblies.ICSharpCode.SharpZipLib.dll"};
 
+        private string doverLogTemplate = "Dover.Framework.Dover.config";
 
         public Application()
         {
@@ -72,6 +73,28 @@ namespace Dover.Framework
             }
 
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+            CheckLogging();
+        }
+
+        private void CheckLogging()
+        {
+            string logging = Path.Combine(Environment.CurrentDirectory, "Dover.config");
+            if (!File.Exists(logging))
+            {
+                using (var doverConfig = Assembly.GetExecutingAssembly().GetManifestResourceStream(doverLogTemplate))
+                {
+                    using (var destinationStream = new FileStream(logging, FileMode.CreateNew))
+                    {
+                        byte[] buffer = new byte[1000];
+                        int buffLen;
+                        while ((buffLen = doverConfig.Read(buffer, 0, 1000)) > 0)
+                        {
+                            destinationStream.Write(buffer, 0, buffLen);
+                        }
+
+                    }
+                }
+            }
         }
 
         static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
