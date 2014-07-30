@@ -254,15 +254,13 @@ namespace Dover.Framework.Form
                     SAPAppender.SilentMode = true; // Prevent messy log.
                     if (AsmLoader.AddInIsValid(modulePath.Value, out confirmation))
                     {
-                        if ((!string.IsNullOrEmpty(confirmation)
-                            && app.MessageBox(string.Format("{0}\n{1}", Messages.AdminDatabaseChangeWarning, confirmation)) == 1)
-                            || string.IsNullOrEmpty(confirmation))
+                        if (string.IsNullOrEmpty(confirmation))
                         {
-                            AsmLoader.SaveAddIn(modulePath.Value);
-                            UpdateInstallGrid();
-                            UpdateLicenseGrid();
-                            SAPAppender.SilentMode = false;
-                            Logger.Info(Messages.AdminSuccessInstall);
+                            InstallAddin();
+                        }
+                        else
+                        {
+                            GetUserConfirmation(confirmation);
                         }
                     }
                     else
@@ -276,6 +274,23 @@ namespace Dover.Framework.Form
                     SAPAppender.SilentMode = false;
                 }
             }
+        }
+
+        private void GetUserConfirmation(string xml)
+        {
+            DBChange dbChangeForm = CreateForm<DBChange>();
+            dbChangeForm.BaseForm = this;
+            dbChangeForm.DBChangeDT.LoadSerializedXML(BoDataTableXmlSelect.dxs_DataOnly, xml);
+            dbChangeForm.Show();
+        }
+
+        internal void InstallAddin()
+        {
+            AsmLoader.SaveAddIn(modulePath.Value);
+            UpdateInstallGrid();
+            UpdateLicenseGrid();
+            SAPAppender.SilentMode = false;
+            Logger.Info(Messages.AdminSuccessInstall);
         }
 
         protected virtual void RemoveButtom_ClickAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)
