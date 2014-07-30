@@ -288,6 +288,69 @@ namespace Dover.Framework.Form {
         /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
+        internal static string DBChangeCancelBt {
+            get {
+                return ResourceManager.GetString("DBChangeCancelBt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string DBChangeDescription {
+            get {
+                return ResourceManager.GetString("DBChangeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Key.
+        /// </summary>
+        internal static string DBChangeKey {
+            get {
+                return ResourceManager.GetString("DBChangeKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database structure WARNING.
+        /// </summary>
+        internal static string DBChangeTitle {
+            get {
+                return ResourceManager.GetString("DBChangeTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        internal static string DBChangeType {
+            get {
+                return ResourceManager.GetString("DBChangeType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database will be updated. It&apos;s recomended to logoff all users from SAP Business One..
+        /// </summary>
+        internal static string DBChangeWarning {
+            get {
+                return ResourceManager.GetString("DBChangeWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        internal static string DBChangeWarningBt {
+            get {
+                return ResourceManager.GetString("DBChangeWarningBt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
         internal static string ExportDBInfoButtonCancel {
             get {
                 return ResourceManager.GetString("ExportDBInfoButtonCancel", resourceCulture);

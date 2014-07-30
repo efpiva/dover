@@ -276,4 +276,25 @@
   <data name="AdminInvalidAddin" xml:space="preserve">
     <value>Invalid addin</value>
   </data>
+  <data name="DBChangeCancelBt" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DBChangeDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DBChangeKey" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="DBChangeTitle" xml:space="preserve">
+    <value>Database structure WARNING</value>
+  </data>
+  <data name="DBChangeType" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="DBChangeWarning" xml:space="preserve">
+    <value>Database will be updated. It's recomended to logoff all users from SAP Business One.</value>
+  </data>
+  <data name="DBChangeWarningBt" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
 </root>
