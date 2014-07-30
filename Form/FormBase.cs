@@ -52,6 +52,12 @@ namespace Dover.Framework.Form
                 this.UIAPIRawForm.Visible = true;
         }
 
+        public T CreateForm<T>()
+            where T : DoverFormBase
+        {
+            return ContainerManager.Container.Resolve<T>();
+        }
+
         protected Item GetItem(object key)
         {
             return this.UIAPIRawForm.Items.Item(key);
