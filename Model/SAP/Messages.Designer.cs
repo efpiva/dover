@@ -61,7 +61,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Documento.
+        ///   Looks up a localized string similar to Document.
         /// </summary>
         internal static string DefaultDocument {
             get {
@@ -70,7 +70,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Consulta Formatada.
+        ///   Looks up a localized string similar to Formatted Search.
         /// </summary>
         internal static string FormattedSearch {
             get {
@@ -79,7 +79,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dev. Nota fiscal de saída.
+        ///   Looks up a localized string similar to Credit Note.
         /// </summary>
         internal static string oCreditNotes {
             get {
@@ -88,7 +88,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Entrega.
+        ///   Looks up a localized string similar to Delivery Note.
         /// </summary>
         internal static string oDeliveryNotes {
             get {
@@ -97,7 +97,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Entrada de mercadoria.
+        ///   Looks up a localized string similar to Inventory General Entry.
         /// </summary>
         internal static string oInventoryGenEntry {
             get {
@@ -106,7 +106,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Saída de mercadoria.
+        ///   Looks up a localized string similar to Inventory General Exit.
         /// </summary>
         internal static string oInventoryGenExit {
             get {
@@ -115,7 +115,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nota fiscal de saída.
+        ///   Looks up a localized string similar to Sales Invoice.
         /// </summary>
         internal static string oInvoices {
             get {
@@ -124,7 +124,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pedido de venda.
+        ///   Looks up a localized string similar to Sales Order.
         /// </summary>
         internal static string oOrders {
             get {
@@ -133,7 +133,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dev. Nota fiscal de entrada.
+        ///   Looks up a localized string similar to Purchase Credit Note.
         /// </summary>
         internal static string oPurchaseCreditNotes {
             get {
@@ -142,7 +142,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recebimento.
+        ///   Looks up a localized string similar to Purchase Delivery Note.
         /// </summary>
         internal static string oPurchaseDelivertNotes {
             get {
@@ -151,7 +151,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nota fiscal de entrada.
+        ///   Looks up a localized string similar to Purchase Invoice.
         /// </summary>
         internal static string oPurchaseInvoices {
             get {
@@ -160,7 +160,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pedido de compra.
+        ///   Looks up a localized string similar to Purchase Order.
         /// </summary>
         internal static string oPurchaseOrders {
             get {
@@ -169,7 +169,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Devolução compra.
+        ///   Looks up a localized string similar to Purchase Return.
         /// </summary>
         internal static string oPurchaseReturns {
             get {
@@ -178,7 +178,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cotação de compra.
+        ///   Looks up a localized string similar to Purchase Quotation.
         /// </summary>
         internal static string oQuotations {
             get {
@@ -187,7 +187,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Devolução venda.
+        ///   Looks up a localized string similar to Sales Return.
         /// </summary>
         internal static string oReturns {
             get {
@@ -196,7 +196,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Categoria de Consulta.
+        ///   Looks up a localized string similar to Query Category.
         /// </summary>
         internal static string QueryCategory {
             get {
@@ -205,7 +205,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Campo de usuário.
+        ///   Looks up a localized string similar to User Defined Field.
         /// </summary>
         internal static string UDF {
             get {
@@ -223,7 +223,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tabela de usuário.
+        ///   Looks up a localized string similar to User Defined Table.
         /// </summary>
         internal static string UDT {
             get {
@@ -232,7 +232,7 @@ namespace Dover.Framework.Model.SAP {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Consulta de usuário.
+        ///   Looks up a localized string similar to User Query.
         /// </summary>
         internal static string UserQuery {
             get {
