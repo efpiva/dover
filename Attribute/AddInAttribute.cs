@@ -52,5 +52,10 @@ namespace Dover.Framework.Attribute
         /// Fully Qualified Name of the i18n resource that has the Description internationalized.
         /// </summary>
         public string i18n { get ; set; }
+
+        /// <summary>
+        /// Fully Qualified Name of the resource that has the ChangeLog information
+        /// </summary>
+        public string ChangeLogResource { get; set; }
     }
 }

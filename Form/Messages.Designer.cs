@@ -475,6 +475,15 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ChangeLog.
+        /// </summary>
+        internal static string LogTitle {
+            get {
+                return ResourceManager.GetString("LogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Active.
         /// </summary>
         internal static string MngmntActive {

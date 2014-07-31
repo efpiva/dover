@@ -297,4 +297,7 @@
   <data name="DBChangeWarningBt" xml:space="preserve">
     <value>Confirm</value>
   </data>
+  <data name="LogTitle" xml:space="preserve">
+    <value>ChangeLog</value>
+  </data>
 </root>

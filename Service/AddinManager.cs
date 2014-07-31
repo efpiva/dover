@@ -43,6 +43,34 @@ namespace Dover.Framework.Service
         Stopped
     }
 
+    internal class AssemblyChangeLog : MarshalByRefObject
+    {
+        internal string GetAddinChangeLog(string addin)
+        {
+            Assembly asm = Assembly.Load(addin);
+            foreach (var type in asm.GetTypes())
+            {
+                object[] custAttr = type.GetCustomAttributes(typeof(AddInAttribute), true);
+                if (custAttr.Count() > 0)
+                {
+                    AddInAttribute attr = (AddInAttribute)custAttr[0];
+                    if (attr.ChangeLogResource != null)
+                    {
+                        using (var stream = asm.GetManifestResourceStream(attr.ChangeLogResource))
+                        {
+                            if (stream != null)
+                            {
+                                StreamReader sr = new StreamReader(stream);
+                                return sr.ReadToEnd();
+                            }
+                        }
+                    }
+                }
+            }
+            return string.Empty;
+        }
+    }
+
     public class ConfigAddin : MarshalByRefObject
     {
 
@@ -526,6 +554,26 @@ namespace Dover.Framework.Service
             AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, "A");
             assemblyManager.UpdateAppDataFolder(asmInfo, AppDomain.CurrentDomain.BaseDirectory);
             InstallAddin(asmInfo);
+        }
+        
+        internal string GetAddinChangeLog(string addin)
+        {
+            var setup = new AppDomainSetup();
+            setup.ApplicationName = "Dover.ConfigureDomain";
+            setup.ApplicationBase = Environment.CurrentDirectory;
+            AppDomain tempDomain = AppDomain.CreateDomain("ChangeLogDomain", null, setup);
+            try
+            {
+                Application app = (Application)tempDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
+                    "Dover.Framework.Application");  // config assembly resolver for dependencies.
+                AssemblyChangeLog asmCL = (AssemblyChangeLog)tempDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
+                    "Dover.Framework.Service.AssemblyChangeLog");
+                return asmCL.GetAddinChangeLog(addin);
+            }
+            finally
+            {
+                AppDomain.Unload(tempDomain);
+            }
         }
     }
 }

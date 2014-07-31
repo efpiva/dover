@@ -102,6 +102,7 @@
     <Compile Include="Form\ExceptionTrace.cs" />
     <Compile Include="Form\ExportDBInfo.cs" />
     <Compile Include="Form\FormBase.cs" />
+    <Compile Include="Form\ChangeLog.cs" />
     <Compile Include="Form\MenuConfiguration.cs" />
     <Compile Include="Form\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -263,6 +264,11 @@
     <EmbeddedResource Include="DoverTemp.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\ChangeLog.srf">
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

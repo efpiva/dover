@@ -191,6 +191,15 @@ namespace Dover.Framework.Form
                 this.startButton.Item.Enabled = enableStart;
                 this.shutdownButton.Item.Enabled = enableStop;
                 this.installButton.Item.Enabled = enableInstall;
+
+                // History column event.
+                if (pVal.ColUID == "History")
+                {
+                    string module = (string)moduleDT.GetValue("Name", pVal.Row);
+                    var logForm = CreateForm<ChangeLog>();
+                    logForm.LogMessage.Value = FrameworkAddinManager.GetAddinChangeLog(module);
+                    logForm.Show();
+                }
             }
             finally
             {
