@@ -252,11 +252,13 @@ namespace Dover.Framework.Service
         /// be errors during addin startup.
         /// </summary>
         /// <param name="path">path for the file to be saved</param>
-        internal void SaveAddIn(string path)
+        /// <returns>Name of saved addin</returns>
+        internal string SaveAddIn(string path)
         {
             if (path == null || path.Length < 4)
             {
                 Logger.Error(string.Format(Messages.SaveAddInError, path.Return( x => x, String.Empty)));
+                return string.Empty;
             }
             else
             {
@@ -291,10 +293,12 @@ namespace Dover.Framework.Service
 
                     licenseManager.BootLicense(); // reload licenses to include added license.
                     Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
+                    return addInName;
                 }
                 catch (Exception e)
                 {
                     Logger.Error(string.Format(Messages.SaveAddInError, path), e);
+                    return string.Empty;
                 }
             }
 

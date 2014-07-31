@@ -295,7 +295,13 @@ namespace Dover.Framework.Form
 
         internal void InstallAddin()
         {
-            AsmLoader.SaveAddIn(modulePath.Value);
+            string addinName = AsmLoader.SaveAddIn(modulePath.Value);
+            if (FrameworkAddinManager.GetAddinStatus(addinName) == AddinStatus.Running)
+            {
+                FrameworkAddinManager.ShutdownAddin(addinName);
+                FrameworkAddinManager.StartAddin(addinName);
+            }
+            
             UpdateInstallGrid();
             UpdateLicenseGrid();
             SAPAppender.SilentMode = false;
