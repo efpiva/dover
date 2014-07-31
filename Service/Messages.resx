@@ -264,4 +264,10 @@
   <data name="Permission" xml:space="preserve">
     <value>Permission</value>
   </data>
+  <data name="ServerTerminationError" xml:space="preserve">
+    <value>ServerTermination Error</value>
+  </data>
+  <data name="ShutdownError" xml:space="preserve">
+    <value>Shutdown Error</value>
+  </data>
 </root>

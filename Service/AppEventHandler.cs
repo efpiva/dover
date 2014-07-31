@@ -47,10 +47,14 @@ namespace Dover.Framework.Service
                 switch (EventType)
                 {
                     case SAPbouiCOM.BoAppEventTypes.aet_ServerTerminition:
-                        Logger.Info(Messages.Shutdown);
-                        microBoot.InceptionAddinManager.Do(x => x.ShutdownAddins());
-                        AppDomain.Unload(microBoot.Inception);
-                        System.Windows.Forms.Application.Exit();
+                        try
+                        {
+                            ShutDown();
+                        }
+                        catch (Exception er)
+                        {
+                            Logger.Error(Messages.ServerTerminationError, er);
+                        }
                         break;
                     case SAPbouiCOM.BoAppEventTypes.aet_LanguageChanged:
                         try
@@ -65,7 +69,7 @@ namespace Dover.Framework.Service
                     case SAPbouiCOM.BoAppEventTypes.aet_CompanyChanged:
                         try
                         {
-                            Reboot();
+                            ShutDown();
                         }
                         catch (Exception er)
                         {
@@ -73,10 +77,14 @@ namespace Dover.Framework.Service
                         }
                         break;
                     case SAPbouiCOM.BoAppEventTypes.aet_ShutDown:
-                        Logger.Info(Messages.Shutdown);
-                        microBoot.InceptionAddinManager.Do(x => x.ShutdownAddins());
-                        AppDomain.Unload(microBoot.Inception);
-                        System.Windows.Forms.Application.Exit();
+                        try
+                        {
+                            ShutDown();
+                        }
+                        catch (Exception er)
+                        {
+                            Logger.Error(Messages.ShutdownError, er);
+                        }
                         break;
                 }
             }
@@ -85,6 +93,14 @@ namespace Dover.Framework.Service
                 Logger.Error(e.Message, e);
                 Environment.Exit(20);
             }
+        }
+
+        private void ShutDown()
+        {
+            Logger.Info(Messages.Shutdown);
+            microBoot.InceptionAddinManager.Do(x => x.ShutdownAddins());
+            AppDomain.Unload(microBoot.Inception);
+            System.Windows.Forms.Application.Exit();
         }
 
         private void ConfigureI18N()

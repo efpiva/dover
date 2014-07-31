@@ -412,6 +412,15 @@ namespace Dover.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ServerTermination Error.
+        /// </summary>
+        internal static string ServerTerminationError {
+            get {
+                return ResourceManager.GetString("ServerTerminationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Shutting down Dover.
         /// </summary>
         internal static string Shutdown {
@@ -426,6 +435,15 @@ namespace Dover.Framework.Service {
         internal static string ShutdownAddin {
             get {
                 return ResourceManager.GetString("ShutdownAddin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shutdown Error.
+        /// </summary>
+        internal static string ShutdownError {
+            get {
+                return ResourceManager.GetString("ShutdownError", resourceCulture);
             }
         }
         
