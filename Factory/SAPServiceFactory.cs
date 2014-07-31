@@ -66,7 +66,8 @@ namespace Dover.Framework.Factory
             }
             finally
             {
-                b1Connected = company.Connected;
+                if (company != null)
+                    b1Connected = company.Connected;
             }
         }
 
