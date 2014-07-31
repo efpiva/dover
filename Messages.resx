@@ -132,6 +132,9 @@
   <data name="ErrorStartup" xml:space="preserve">
     <value>Error initializing addins {0}</value>
   </data>
+  <data name="FormDeclarationError" xml:space="preserve">
+    <value>Form event {0} on class {1} should be protected internal virtual, so it can be proxied.</value>
+  </data>
   <data name="FormEventError" xml:space="preserve">
     <value>Error in event {0}</value>
   </data>
@@ -149,5 +152,8 @@
   </data>
   <data name="StartupFolder" xml:space="preserve">
     <value>Initializing assemblies on folder {0}</value>
+  </data>
+  <data name="TransactionDeclarationError" xml:space="preserve">
+    <value>Transaction event {0} on class {1} should be protected internal virtual, so it can be proxied.</value>
   </data>
 </root>

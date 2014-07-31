@@ -67,6 +67,63 @@ namespace Dover.Framework.Factory
             Container.Register(Classes.FromAssembly(addIn)
                             .IncludeNonPublicTypes().Pick()
                             .WithService.DefaultInterfaces().LifestyleTransient());
+            CheckProxy(addIn);
+        }
+
+        private static void CheckProxy(Assembly addIn)
+        {
+            foreach (var type in addIn.GetTypes())
+            {
+                if (typeof(DoverFormBase).IsAssignableFrom(type))
+                {
+                    CheckFormType(type);
+                }
+                var interceptors = type.GetCustomAttributes(true);
+                foreach (var obj in interceptors)
+                {
+                    TransactionAttribute interceptor = obj as TransactionAttribute;
+                    if (interceptor != null)
+                    {
+                        CheckTransactionType(type);
+                    }
+                }
+            }
+        }
+
+        private static void CheckFormType(Type type)
+        {
+            foreach (var method in type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                if (IsEventMethod(method) && (method.IsPrivate || !method.IsVirtual))
+                    throw new ArgumentException(string.Format(Messages.FormDeclarationError, method.Name, type.Name));
+            }
+        }
+
+        private static bool IsEventMethod(MethodInfo method)
+        {
+            var parameters = method.GetParameters();
+            return parameters.Count() == 2
+                && parameters[0].ParameterType == typeof(Object)
+                && parameters[1].ParameterType == typeof(SBOItemEventArg);
+        }
+
+        private static void CheckTransactionType(Type type)
+        {
+            var transactionAttr = type.GetCustomAttributes(typeof(TransactionAttribute), true);
+            if (transactionAttr.Count() == 0)
+                return;
+
+            foreach (var method in type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                transactionAttr = method.GetCustomAttributes(typeof(TransactionAttribute), true);
+                if (transactionAttr.Count() == 0)
+                    continue;
+
+                if (method.IsPrivate || !method.IsVirtual)
+                {
+                    throw new ArgumentException(string.Format(Messages.TransactionDeclarationError, method.Name, type.Name));
+                }
+            }
         }
 
         internal static IWindsorContainer BuildContainer()
@@ -126,7 +183,10 @@ namespace Dover.Framework.Factory
                 : Assembly.GetEntryAssembly().GetName().Name;
 
             if (assemblyName == "Framework")
+            {
+                CheckProxy(Assembly.Load(assemblyName));
                 assemblyName = "Dover"; // Framework should be threated the same as Dover.
+            }
 
             if (!File.Exists(assemblyName + ".config"))
                 assemblyName = "DoverTemp"; // Temp AppDomain logging.

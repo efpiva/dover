@@ -106,6 +106,15 @@ namespace Dover.Framework {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Form event {0} on class {1} should be protected internal virtual, so it can be proxied..
+        /// </summary>
+        internal static string FormDeclarationError {
+            get {
+                return ResourceManager.GetString("FormDeclarationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error in event {0}.
         /// </summary>
         internal static string FormEventError {
@@ -156,6 +165,15 @@ namespace Dover.Framework {
         internal static string StartupFolder {
             get {
                 return ResourceManager.GetString("StartupFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transaction event {0} on class {1} should be protected internal virtual, so it can be proxied..
+        /// </summary>
+        internal static string TransactionDeclarationError {
+            get {
+                return ResourceManager.GetString("TransactionDeclarationError", resourceCulture);
             }
         }
     }
