@@ -142,5 +142,13 @@ namespace Dover.Framework.Factory
                 inception.SetData("AddOnePIPE", pipeName);
             }
         }
+
+        internal static void LogOff()
+        {
+            if (b1Connected)
+            {
+                company.Disconnect();
+            }
+        }
     }
 }

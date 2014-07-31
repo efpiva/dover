@@ -81,6 +81,8 @@ namespace Dover.Framework
                 microBoot.StartInception();
                 microBoot.Boot();
                 System.Windows.Forms.Application.Run();
+                ContainerManager.Container.Dispose();
+                SAPServiceFactory.LogOff();
             }
             catch (Exception e)
             {
