@@ -132,6 +132,9 @@
   <data name="ErrorStartup" xml:space="preserve">
     <value>Error initializing addins {0}</value>
   </data>
+  <data name="FormEventError" xml:space="preserve">
+    <value>Error in event {0}</value>
+  </data>
   <data name="GeneralError" xml:space="preserve">
     <value>Error preparing Framework - {0}</value>
   </data>

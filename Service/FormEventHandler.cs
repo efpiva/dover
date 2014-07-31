@@ -26,9 +26,11 @@ using SAPbouiCOM;
 using Dover.Framework.Form;
 using System.Reflection;
 using Dover.Framework.Factory;
+using Castle.Core;
 
 namespace Dover.Framework.Service
 {
+    [Interceptor("eventProxy")]
     public class FormEventHandler : MarshalByRefObject
     {
         private SAPbouiCOM.Application sapApp;
@@ -211,7 +213,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormLoadBefore(SBOItemEventArg pVal, out bool BubbleEvent)
+        protected virtual void OnFormLoadBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             List<DoverFormBase> pendingList; // forms that does not have UniqueID.
             Type implementationType;
@@ -237,7 +239,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormLoadAfter(SBOItemEventArg pVal)
+        protected virtual void OnFormLoadAfter(SBOItemEventArg pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -246,7 +248,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormUnloadBefore(SBOItemEventArg pVal, out bool BubbleEvent)
+        protected virtual void OnFormUnloadBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -256,7 +258,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormUnloadAfter(SBOItemEventArg pVal)
+        protected virtual void OnFormUnloadAfter(SBOItemEventArg pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -265,7 +267,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormActivateBefore(SBOItemEventArg pVal, out bool BubbleEvent)
+        protected virtual void OnFormActivateBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -275,7 +277,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormActivateAfter(SBOItemEventArg pVal)
+        protected virtual void OnFormActivateAfter(SBOItemEventArg pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -284,7 +286,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormDeactivateBefore(SBOItemEventArg pVal, out bool BubbleEvent)
+        protected virtual void OnFormDeactivateBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -294,7 +296,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormDeactivateAfter(SBOItemEventArg pVal)
+        protected virtual void OnFormDeactivateAfter(SBOItemEventArg pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -303,7 +305,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormResizeBefore(SBOItemEventArg pVal, out bool BubbleEvent)
+        protected virtual void OnFormResizeBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -313,7 +315,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormResizeAfter(SBOItemEventArg pVal)
+        protected virtual void OnFormResizeAfter(SBOItemEventArg pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -322,7 +324,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormMenuHighlightBefore(SBOItemEventArg pVal, out bool BubbleEvent)
+        protected virtual void OnFormMenuHighlightBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -332,7 +334,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormMenuHighlightAfter(SBOItemEventArg pVal)
+        protected virtual void OnFormMenuHighlightAfter(SBOItemEventArg pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -341,7 +343,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormDataAddBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
+        protected virtual void OnFormDataAddBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -351,7 +353,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormDataAddAfter(ref BusinessObjectInfo pVal)
+        protected virtual void OnFormDataAddAfter(ref BusinessObjectInfo pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -360,7 +362,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormDataUpdateBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
+        protected virtual void OnFormDataUpdateBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -370,7 +372,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormDataUpdateAfter(ref BusinessObjectInfo pVal)
+        protected virtual void OnFormDataUpdateAfter(ref BusinessObjectInfo pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -379,7 +381,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormDataDeleteBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
+        protected virtual void OnFormDataDeleteBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -389,7 +391,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormDataDeleteAfter(ref BusinessObjectInfo pVal)
+        protected virtual void OnFormDataDeleteAfter(ref BusinessObjectInfo pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -398,7 +400,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormDataLoadBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
+        protected virtual void OnFormDataLoadBefore(ref BusinessObjectInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -408,7 +410,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormDataLoadAfter(ref BusinessObjectInfo pVal)
+        protected virtual void OnFormDataLoadAfter(ref BusinessObjectInfo pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -417,7 +419,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormKeyDownBefore(SBOItemEventArg pVal, out bool BubbleEvent)
+        protected virtual void OnFormKeyDownBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -427,7 +429,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormKeyDownAfter(SBOItemEventArg pVal)
+        protected virtual void OnFormKeyDownAfter(SBOItemEventArg pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -436,7 +438,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormLayoutKeyBefore(ref LayoutKeyInfo pVal, out bool BubbleEvent)
+        protected virtual void OnFormLayoutKeyBefore(ref LayoutKeyInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -446,7 +448,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormLayoutKeyAfter(ref LayoutKeyInfo pVal)
+        protected virtual void OnFormLayoutKeyAfter(ref LayoutKeyInfo pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -455,7 +457,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormPrintBefore(ref PrintEventInfo pVal, out bool BubbleEvent)
+        protected virtual void OnFormPrintBefore(ref PrintEventInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -465,7 +467,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormPrintAfter(ref PrintEventInfo pVal)
+        protected virtual void OnFormPrintAfter(ref PrintEventInfo pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -474,7 +476,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormClickBefore(SBOItemEventArg pVal, out bool BubbleEvent)
+        protected virtual void OnFormClickBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -484,7 +486,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormClickAfter(SBOItemEventArg pVal)
+        protected virtual void OnFormClickAfter(SBOItemEventArg pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -493,7 +495,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormRightClickBefore(ref ContextMenuInfo pVal, out bool BubbleEvent)
+        protected virtual void OnFormRightClickBefore(ref ContextMenuInfo pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -503,7 +505,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormRightClickAfter(ref ContextMenuInfo pVal)
+        protected virtual void OnFormRightClickAfter(ref ContextMenuInfo pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -512,7 +514,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormCloseBefore(SBOItemEventArg pVal, out bool BubbleEvent)
+        protected virtual void OnFormCloseBefore(SBOItemEventArg pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
             DoverFormBase addOneForm;
@@ -522,7 +524,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormCloseAfter(SBOItemEventArg pVal)
+        protected virtual void OnFormCloseAfter(SBOItemEventArg pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
@@ -532,7 +534,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void OnFormVisibleAfter(SBOItemEventArg pVal)
+        protected virtual void OnFormVisibleAfter(SBOItemEventArg pVal)
         {
             DoverFormBase addOneForm;
             if (events.TryGetValue(pVal.FormUID, out addOneForm))

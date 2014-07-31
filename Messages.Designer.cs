@@ -106,6 +106,15 @@ namespace Dover.Framework {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error in event {0}.
+        /// </summary>
+        internal static string FormEventError {
+            get {
+                return ResourceManager.GetString("FormEventError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error preparing Framework - {0}.
         /// </summary>
         internal static string GeneralError {

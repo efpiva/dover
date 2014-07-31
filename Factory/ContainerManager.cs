@@ -36,6 +36,9 @@ using Castle.DynamicProxy;
 using Dover.Framework.Proxy;
 using Dover.Framework.Form;
 using Dover.Framework.Remoting;
+using Castle.Core;
+using Dover.Framework.Attribute;
+using SAPbouiCOM;
 
 namespace Dover.Framework.Factory
 {
@@ -77,6 +80,8 @@ namespace Dover.Framework.Factory
             Container.Kernel.Resolver.AddSubResolver(new ArrayResolver(Container.Kernel));
             // proxy for forms.
             Container.Register(Component.For<IInterceptor>().ImplementedBy<FormProxy>().Named("formProxy"));
+            // proxy for FormEvents
+            Container.Register(Component.For<IInterceptor>().ImplementedBy<EventProxy>().Named("eventProxy"));
             // forms are Transient.
             Container.Register(Classes.FromThisAssembly().IncludeNonPublicTypes().InNamespace("Dover.Framework.Form")
                 .WithService.DefaultInterfaces().LifestyleTransient());
