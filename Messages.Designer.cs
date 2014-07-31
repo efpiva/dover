@@ -133,6 +133,15 @@ namespace Dover.Framework {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rolling back transaction.
+        /// </summary>
+        internal static string RollBack {
+            get {
+                return ResourceManager.GetString("RollBack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initializing {0}({1}).
         /// </summary>
         internal static string Starting {

@@ -82,6 +82,8 @@ namespace Dover.Framework.Factory
             Container.Register(Component.For<IInterceptor>().ImplementedBy<FormProxy>().Named("formProxy"));
             // proxy for FormEvents
             Container.Register(Component.For<IInterceptor>().ImplementedBy<EventProxy>().Named("eventProxy"));
+            // proxy for Transactions
+            Container.Register(Component.For<IInterceptor>().ImplementedBy<TransactionProxy>().Named("transactionProxy"));
             // forms are Transient.
             Container.Register(Classes.FromThisAssembly().IncludeNonPublicTypes().InNamespace("Dover.Framework.Form")
                 .WithService.DefaultInterfaces().LifestyleTransient());
