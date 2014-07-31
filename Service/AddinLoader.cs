@@ -59,6 +59,7 @@ namespace Dover.Framework.Service
             catch (Exception e)
             {
                 Logger.Error(string.Format(Messages.StartThisError, thisAsmName), e);
+                throw e;
             }
         }
 
