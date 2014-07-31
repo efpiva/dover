@@ -194,6 +194,7 @@ namespace Dover.Framework.Service
         } 
     }
 
+    [Transaction]
     public class AddinManager : MarshalByRefObject
     {
         public ILogger Logger { get; set; }
@@ -216,7 +217,8 @@ namespace Dover.Framework.Service
             this.assemblyManager = assemblyManager;
         }
 
-        internal void LoadAddins(List<AssemblyInformation> addins)
+        [Transaction]
+        protected internal virtual void LoadAddins(List<AssemblyInformation> addins)
         {
             var authorizedAddins = FilterAuthorizedAddins(addins);
             foreach (var addin in authorizedAddins)
@@ -496,7 +498,8 @@ namespace Dover.Framework.Service
             return !string.IsNullOrEmpty(installedFlag) && installedFlag == "Y";
         }
 
-        internal void ShutdownAddins()
+        [Transaction]
+        protected internal virtual void ShutdownAddins()
         {
             foreach (var runner in runningAddIns)
             {
@@ -515,7 +518,8 @@ namespace Dover.Framework.Service
             return (runningAddinsHash.ContainsKey(name)) ? AddinStatus.Running : AddinStatus.Stopped;
         }
 
-        internal void ShutdownAddin(string name)
+        [Transaction]
+        protected internal virtual void ShutdownAddin(string name)
         {
             var runningBackup = runningAddIns;
             var runningHashBackup = runningAddinsHash;
@@ -542,14 +546,16 @@ namespace Dover.Framework.Service
             }
         }
 
-        internal void StartAddin(string name)
+        [Transaction]
+        protected internal virtual void StartAddin(string name)
         {
             AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, "A");
             assemblyManager.UpdateAppDataFolder(asmInfo, AppDomain.CurrentDomain.BaseDirectory);
             LoadAddin(asmInfo);
         }
 
-        internal void InstallAddin(string name)
+        [Transaction]
+        protected internal virtual void InstallAddin(string name)
         {
             AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, "A");
             assemblyManager.UpdateAppDataFolder(asmInfo, AppDomain.CurrentDomain.BaseDirectory);
