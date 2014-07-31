@@ -89,8 +89,6 @@ namespace Dover.Framework.Service
                 formEvent.Value.MenuHighlightBefore -= new _IEventFormEvents_MenuHighlightBeforeEventHandler(this.OnFormMenuHighlightBefore);
                 formEvent.Value.PrintAfter -= new _IEventFormEvents_PrintAfterEventHandler(this.OnFormPrintAfter);
                 formEvent.Value.PrintBefore -= new _IEventFormEvents_PrintBeforeEventHandler(this.OnFormPrintBefore);
-                formEvent.Value.ReportDataAfter -= new _IEventFormEvents_ReportDataAfterEventHandler(this.OnFormReportDataAfter);
-                formEvent.Value.ReportDataBefore -= new _IEventFormEvents_ReportDataBeforeEventHandler(this.OnFormReportDataBefore);
                 formEvent.Value.ResizeAfter -= new _IEventFormEvents_ResizeAfterEventHandler(this.OnFormResizeAfter);
                 formEvent.Value.ResizeBefore -= new _IEventFormEvents_ResizeBeforeEventHandler(this.OnFormResizeBefore);
                 formEvent.Value.RightClickAfter -= new _IEventFormEvents_RightClickAfterEventHandler(this.OnFormRightClickAfter);
@@ -187,8 +185,6 @@ namespace Dover.Framework.Service
                 eventForm.MenuHighlightBefore += new _IEventFormEvents_MenuHighlightBeforeEventHandler(this.OnFormMenuHighlightBefore);
                 eventForm.PrintAfter += new _IEventFormEvents_PrintAfterEventHandler(this.OnFormPrintAfter);
                 eventForm.PrintBefore += new _IEventFormEvents_PrintBeforeEventHandler(this.OnFormPrintBefore);
-                eventForm.ReportDataAfter += new _IEventFormEvents_ReportDataAfterEventHandler(this.OnFormReportDataAfter);
-                eventForm.ReportDataBefore += new _IEventFormEvents_ReportDataBeforeEventHandler(this.OnFormReportDataBefore);
                 eventForm.ResizeAfter += new _IEventFormEvents_ResizeAfterEventHandler(this.OnFormResizeAfter);
                 eventForm.ResizeBefore += new _IEventFormEvents_ResizeBeforeEventHandler(this.OnFormResizeBefore);
                 eventForm.RightClickAfter += new _IEventFormEvents_RightClickAfterEventHandler(this.OnFormRightClickAfter);
@@ -475,25 +471,6 @@ namespace Dover.Framework.Service
             if (events.TryGetValue(pVal.FormUID, out addOneForm))
             {
                 addOneForm.OnFormPrintAfter(ref pVal);
-            }
-        }
-
-        private void OnFormReportDataBefore(ref PrintEventInfo pVal, out bool BubbleEvent)
-        {
-            BubbleEvent = true;
-            DoverFormBase addOneForm;
-            if (events.TryGetValue(pVal.FormUID, out addOneForm))
-            {
-                addOneForm.OnFormReportDataBefore(ref pVal, out BubbleEvent);
-            }
-        }
-
-        private void OnFormReportDataAfter(ref PrintEventInfo pVal)
-        {
-            DoverFormBase addOneForm;
-            if (events.TryGetValue(pVal.FormUID, out addOneForm))
-            {
-                addOneForm.OnFormReportDataAfter(ref pVal);
             }
         }
 
