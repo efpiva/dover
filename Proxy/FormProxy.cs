@@ -61,11 +61,18 @@ namespace Dover.Framework.Proxy
             }
             catch (Exception e)
             {
-                if (invocation.InvocationTarget is DoverFormBase)
+                try
                 {
-                    IForm form = ((DoverFormBase)invocation.InvocationTarget).UIAPIRawForm;
-                    if (form != null)
-                        form.Freeze(false); // force unfreeze in case of error.
+                    if (invocation.InvocationTarget is DoverFormBase)
+                    {
+                        IForm form = ((DoverFormBase)invocation.InvocationTarget).UIAPIRawForm;
+                        if (form != null)
+                            form.Freeze(false); // force unfreeze in case of error.
+                    }
+                }
+                catch (Exception)
+                {
+                    // ignore error or addon will stop working.
                 }
 
                 Assembly addinAssembly = invocation.Method.DeclaringType.Assembly;
