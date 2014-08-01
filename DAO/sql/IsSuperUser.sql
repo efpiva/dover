@@ -1,0 +1,1 @@
+﻿Select T10.SuperUser From OUSR T10 Where T10.User_Code = '{0}'

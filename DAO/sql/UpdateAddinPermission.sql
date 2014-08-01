@@ -1,0 +1,1 @@
+﻿UPDATE [@DOVER_MODULES_USER] Set U_Status = '{0}' where Code = '{1}'

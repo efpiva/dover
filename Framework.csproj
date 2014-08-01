@@ -87,6 +87,7 @@
     <Compile Include="Boot.cs" />
     <Compile Include="DAO\BusinessOneUIDAO.cs" />
     <Compile Include="DAO\BusinessOneUIDAOImpl.cs" />
+    <Compile Include="DAO\DBResourceExtension.cs" />
     <Compile Include="DAO\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -273,6 +274,31 @@
     <EmbeddedResource Include="Form\ChangeLog.srf">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\CheckAutoUpdate.sql" />
+    <EmbeddedResource Include="DAO\sql\DeleteModule.sql" />
+    <EmbeddedResource Include="DAO\sql\DeleteModuleBIN.sql" />
+    <EmbeddedResource Include="DAO\sql\DeleteModuleI18N.sql" />
+    <EmbeddedResource Include="DAO\sql\GetAssembliesInformation.sql" />
+    <EmbeddedResource Include="DAO\sql\GetAssembly.sql" />
+    <EmbeddedResource Include="DAO\sql\GetAssemblyInformation.sql" />
+    <EmbeddedResource Include="DAO\sql\GetCUFDKey.sql" />
+    <EmbeddedResource Include="DAO\sql\GetI18N.sql" />
+    <EmbeddedResource Include="DAO\sql\GetModuleCode.sql" />
+    <EmbeddedResource Include="DAO\sql\GetModulePermission.sql" />
+    <EmbeddedResource Include="DAO\sql\GetNextCode.sql" />
+    <EmbeddedResource Include="DAO\sql\GetSupportedI18N.sql" />
+    <EmbeddedResource Include="DAO\sql\GetUserPermission.sql" />
+    <EmbeddedResource Include="DAO\sql\GetUserPermissionCode.sql" />
+    <EmbeddedResource Include="DAO\sql\InsertAsm.sql" />
+    <EmbeddedResource Include="DAO\sql\InsertI18N.sql" />
+    <EmbeddedResource Include="DAO\sql\IsSuperUser.sql" />
+    <EmbeddedResource Include="DAO\sql\SaveAddinPermission.sql" />
+    <EmbeddedResource Include="DAO\sql\SaveAddinUserPermission.sql" />
+    <EmbeddedResource Include="DAO\sql\SaveAssembly.sql" />
+    <EmbeddedResource Include="DAO\sql\UpdateAddinPermission.sql" />
+    <EmbeddedResource Include="DAO\sql\UpdateAssembly.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

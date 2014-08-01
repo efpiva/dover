@@ -1,0 +1,1 @@
+﻿INSERT INTO [@DOVER_MODULES_BIN] (Code, Name, U_Code, U_Asm) VALUES ('{0}', '{1}', '{2}', '{3}')

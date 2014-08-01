@@ -1,0 +1,1 @@
+﻿SELECT Code from [@DOVER_MODULES_USER] where U_Code = '{0}' and U_User = '{1}'

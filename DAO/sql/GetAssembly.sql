@@ -1,0 +1,1 @@
+﻿Select U_asm from [@DOVER_MODULES_BIN] where U_Code = '{0}' ORDER BY Code

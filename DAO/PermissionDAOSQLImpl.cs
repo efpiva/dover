@@ -65,8 +65,7 @@ namespace Dover.Framework.DAO
             this.Logger = Logger;
             this.b1DAO = b1DAO;
             List<AddInPermission> addInPermission = b1DAO.ExecuteSqlForList<AddInPermission>(
-                "SELECT U_Name AddInName, U_Status PermissionStr from [@DOVER_MODULES] where U_Type = 'A'"
-                );
+                this.GetSQL("GetModulePermission.sql"));
             foreach (var permission in addInPermission)
             {
                 addInHash.Add(permission.AddInName, permission.Permission);
@@ -74,13 +73,7 @@ namespace Dover.Framework.DAO
             }
             string currentUser = b1DAO.GetCurrentUser();
             addInPermission = b1DAO.ExecuteSqlForList<AddInPermission>(
-                String.Format(@"SELECT [@DOVER_MODULES].U_Name AddInName, 
-                            case ISNULL([@DOVER_MODULES_USER].U_Status, [@DOVER_MODULES].U_Status) when 'D' then [@DOVER_MODULES].U_Status
-                                    else ISNULL([@DOVER_MODULES_USER].U_Status, [@DOVER_MODULES].U_Status) end PermissionStr
-                     from [@DOVER_MODULES]
-                                            LEFT JOIN [@DOVER_MODULES_USER] ON [@DOVER_MODULES].Code = [@DOVER_MODULES_USER].U_Code and [@DOVER_MODULES_USER].U_User = '{0}'
-                                where [@DOVER_MODULES].U_Type = 'A' 
-                    and ([@DOVER_MODULES_USER].U_User is null or [@DOVER_MODULES_USER].U_User = '{0}')", currentUser)
+                String.Format(this.GetSQL("GetUserPermission.sql"), currentUser)
                 );
             foreach (var permission in addInPermission)
             {
@@ -106,31 +99,30 @@ namespace Dover.Framework.DAO
 
         internal override void SaveAddInPermission(string addInName, Permission permission)
         {
-            b1DAO.ExecuteStatement(string.Format(@"UPDATE [@DOVER_MODULES] Set U_Status = '{0}' WHERE U_Name = '{1}'",
+            b1DAO.ExecuteStatement(string.Format(this.GetSQL("SaveAddinPermission.sql"),
                 GetPermissionStr(permission), addInName));
         }
 
         internal override string GetUserPermissionCode(string addInName, string userName)
         {
             var moduleCode = b1DAO.ExecuteSqlForObject<string>(string.Format(
-                "SELECT Code FROM [@DOVER_MODULES] WHERE U_Name = '{0}'", addInName));
+                this.GetSQL("GetModuleCode.sql"), addInName));
             return  b1DAO.ExecuteSqlForObject<string>(string.Format(
-                "SELECT Code from [@DOVER_MODULES_USER] where U_Code = '{0}' and U_User = '{1}'", moduleCode, userName));
+                this.GetSQL("GetUserPermissionCode.sql"), moduleCode, userName));
         }
 
         internal override void SaveAddInPermission(string addInName, string userName, Permission permission)
         {
             var moduleCode = b1DAO.ExecuteSqlForObject<string>(string.Format(
-                "SELECT Code FROM [@DOVER_MODULES] WHERE U_Name = '{0}'", addInName));
+                this.GetSQL("GetModuleCode.sql"), addInName));
             var nextCode = b1DAO.GetNextCode("DOVER_MODULES_USER");
-            b1DAO.ExecuteStatement(string.Format(@"INSERT INTO [@DOVER_MODULES_USER] (Code, Name, U_Code, U_Status, U_User)
-                VALUES ('{0}', '{0}', '{1}', '{2}', '{3}')", nextCode, moduleCode, GetPermissionStr(permission), userName));
+            b1DAO.ExecuteStatement(string.Format(this.GetSQL("SaveAddinUserPermission.sql"), nextCode, moduleCode, GetPermissionStr(permission), userName));
         }
 
         internal override void UpdateAddInPermission(string userPermissionCode, Permission permission)
         {
             b1DAO.ExecuteStatement(string.Format(
-                "UPDATE [@DOVER_MODULES_USER] Set U_Status = '{0}' where Code = '{1}'", GetPermissionStr(permission), userPermissionCode));
+                this.GetSQL("UpdateAddinPermission.sql"), GetPermissionStr(permission), userPermissionCode));
         }
 
         private string GetPermissionStr(Permission permission)

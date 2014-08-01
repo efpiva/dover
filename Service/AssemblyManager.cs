@@ -348,14 +348,14 @@ namespace Dover.Framework.Service
 
         private List<AssemblyInformation> InitializeAddInAssemblies(string appFolder)
         {
-            List<AssemblyInformation> addinsAsms = asmDAO.getAssembliesInformation("A");
+            List<AssemblyInformation> addinsAsms = asmDAO.GetAssembliesInformation("A");
             GenericInitialize(addinsAsms, "A", addinsAssemblies);
             return addinsAsms;
         }
 
         private List<AssemblyInformation> InitializeCoreAssemblies(string appFolder)
         {
-            List<AssemblyInformation> coreAsms = asmDAO.getAssembliesInformation("C");
+            List<AssemblyInformation> coreAsms = asmDAO.GetAssembliesInformation("C");
             GenericInitialize(coreAsms, "C", coreAssemblies);
             return coreAsms;
         }

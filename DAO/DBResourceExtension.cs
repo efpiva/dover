@@ -22,28 +22,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Dover.Framework.Model;
+using Dover.Framework.Factory;
+using System.IO;
 
 namespace Dover.Framework.DAO
 {
-    public abstract class AssemblyDAO
+    public static class DBResourceExtension
     {
-        internal abstract byte[] GetAssembly(AssemblyInformation asm);
+        private static string dbType = null;
 
-        internal abstract List<AssemblyInformation> GetAssembliesInformation(string type);
+        public static string GetSQL(this Object o, string resource)
+        {
+            string ns = o.GetType().Namespace;
+            if (dbType == null)
+                dbType = (SAPServiceFactory.CompanyFactory().DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB) ? "hana" : "sql";
 
-        internal abstract AssemblyInformation GetAssemblyInformation(string asmName, string type);
+            using (var stream = o.GetType().Assembly.GetManifestResourceStream(ns + "." + dbType + "." + resource))
+            {
+                if (stream != null)
+                {
+                    using (var streamReader = new StreamReader(stream))
+                    {
+                        return streamReader.ReadToEnd();
+                    }
+                }
+            }
+            return string.Empty;
+        }
 
-        internal abstract void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes);
-
-        internal abstract void RemoveAssembly(string moduleName);
-
-        internal abstract void SaveAssemblyI18N(string moduleCode, string i18n, byte[] i18nAsm);
-
-        internal abstract bool AutoUpdateEnabled(AssemblyInformation asm);
-
-        internal abstract List<string> GetSupportedI18N(AssemblyInformation asm);
-
-        internal abstract byte[] GetI18NAssembly(AssemblyInformation asm, string i18n);
     }
 }

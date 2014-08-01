@@ -1,0 +1,1 @@
+﻿SELECT cast(FieldId as nvarchar) FROM CUFD WHERE TableId = '{0}' and AliasId = '{1}'

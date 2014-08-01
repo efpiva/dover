@@ -246,7 +246,7 @@ namespace Dover.Framework.DAO
             {
 
                 ret[1] = ExecuteSqlForObject<string>(
-                    String.Format("SELECT cast(FieldId as nvarchar) FROM CUFD WHERE TableId = '{0}' and AliasId = '{1}'", ret[0], ret[1]));
+                    String.Format(this.GetSQL("GetCUFDKey.sql"), ret[0], ret[1]));
                 if (ret[1] == null)
                     ret[1] = "-1";
             }
@@ -261,7 +261,7 @@ namespace Dover.Framework.DAO
             string id;
             try
             {
-                String query = String.Format(" Select Max(Code) From [@{0}] ", udt);
+                String query = String.Format(this.GetSQL("GetNextCode.sql"), udt);
                 objRecordSet.DoQuery(query);
 
                 if (objRecordSet.Fields.Item(0).Value.ToString() == "")
@@ -651,7 +651,7 @@ namespace Dover.Framework.DAO
         public bool IsSuperUser()
         {
             string superUser = ExecuteSqlForObject<string>(String.Format(
-                "Select T10.SuperUser From OUSR T10 Where T10.User_Code = '{0}'", company.UserName));
+                this.GetSQL("IsSuperUser.sql"), company.UserName));
 
             return superUser.Return(x => x == "Y", false);
         }

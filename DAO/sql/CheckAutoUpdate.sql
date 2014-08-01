@@ -1,0 +1,1 @@
+﻿select isnull(U_AutoUpdate, 'N') from [@DOVER_MODULES] where Code = '{0}'

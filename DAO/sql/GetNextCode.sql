@@ -1,0 +1,1 @@
+﻿Select Max(Code) From [@{0}] 
