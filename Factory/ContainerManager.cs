@@ -67,10 +67,9 @@ namespace Dover.Framework.Factory
             Container.Register(Classes.FromAssembly(addIn)
                             .IncludeNonPublicTypes().Pick()
                             .WithService.DefaultInterfaces().LifestyleTransient());
-            CheckProxy(addIn);
         }
 
-        private static void CheckProxy(Assembly addIn)
+        internal static void CheckProxy(Assembly addIn)
         {
             foreach (var type in addIn.GetTypes())
             {
@@ -184,7 +183,9 @@ namespace Dover.Framework.Factory
 
             if (assemblyName == "Framework")
             {
-                CheckProxy(Assembly.Load(assemblyName));
+                #if DEBUG
+                CheckProxy(Assembly.Load(assemblyName)); // if passed on debug tests, we do not need this on production.
+                #endif
                 assemblyName = "Dover"; // Framework should be threated the same as Dover.
             }
 

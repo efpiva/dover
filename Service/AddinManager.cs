@@ -91,6 +91,7 @@ namespace Dover.Framework.Service
                 Logger.Error(String.Format(Messages.AddInNotFound, addin), e);
                 return;
             }
+            ContainerManager.CheckProxy(assembly);
 
             var types = (from type in assembly.GetTypes()
                          where type.IsClass
