@@ -301,6 +301,12 @@
     <EmbeddedResource Include="DAO\sql\UpdateAssembly.sql" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Log\sql\InsertLog.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Log\hana\InsertLog.sql" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Form\sql\addInStartupManagementdtCfg.sql" />
     <EmbeddedResource Include="Form\sql\addInStartupManagementdtGeral.sql" />
     <EmbeddedResource Include="Form\sql\addInStartupManagementdtUser.sql" />
