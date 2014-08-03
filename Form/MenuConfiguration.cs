@@ -25,24 +25,39 @@ using System.Text;
 using Dover.Framework.Attribute;
 using SAPbouiCOM;
 using Dover.Framework.DAO;
+using Dover.Framework.Service;
 
 namespace Dover.Framework.Form
 {
     [Menu(FatherUID = "43523", i18n = "Dover.Framework.Form.Messages.AdminMenu", Type = BoMenuType.mt_STRING, UniqueID = "doverAdmin", ValidateMethod = "IsSuperUser", Position = 3)]
     [Menu(FatherUID = "43523", i18n = "Dover.Framework.Form.Messages.MngmntMenu", Type = BoMenuType.mt_STRING, UniqueID = "doverMngmnt", ValidateMethod = "IsSuperUser", Position = 4)]
     [Menu(FatherUID = "43523", i18n = "Dover.Framework.Form.Messages.ExportDBInfoMenu", Type = BoMenuType.mt_STRING, UniqueID = "doverExport", ValidateMethod = "IsSuperUser", Position = 5)]
+    [Menu(FatherUID = "43523", i18n = "Dover.Framework.Form.Messages.ShutdownMenu", Type = BoMenuType.mt_STRING, UniqueID = "doverShutdown", ValidateMethod = "IsDebug", Position = 6)]
     internal class MenuConfiguration
     {
         private BusinessOneDAO b1DAO;
+        private AppEventHandler appEvent;
 
-        public MenuConfiguration(BusinessOneDAO b1DAO)
+        public MenuConfiguration(BusinessOneDAO b1DAO, AppEventHandler appEvent)
         {
             this.b1DAO = b1DAO;
+            this.appEvent = appEvent;
+        }
+
+        [MenuEvent(UniqueUID="doverShutdown")]
+        public void ShutdownEvent()
+        {
+            appEvent.ShutDown();
         }
 
         public bool IsSuperUser()
         {
             return b1DAO.IsSuperUser();
+        }
+
+        public bool IsDebug()
+        {
+            return System.Diagnostics.Debugger.IsAttached;
         }
 
     }

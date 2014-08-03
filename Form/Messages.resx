@@ -300,4 +300,7 @@
   <data name="LogTitle" xml:space="preserve">
     <value>ChangeLog</value>
   </data>
+  <data name="ShutdownMenu" xml:space="preserve">
+    <value>Shutdown Dover</value>
+  </data>
 </root>

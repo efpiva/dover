@@ -601,6 +601,15 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shutdown Dover.
+        /// </summary>
+        internal static string ShutdownMenu {
+            get {
+                return ResourceManager.GetString("ShutdownMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Yes.
         /// </summary>
         internal static string Yes {
