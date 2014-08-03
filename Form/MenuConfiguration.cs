@@ -28,9 +28,9 @@ using Dover.Framework.DAO;
 
 namespace Dover.Framework.Form
 {
-    [Menu(FatherUID = "43523", i18n = "Dover.Framework.Form.Messages.AdminMenu", Type = BoMenuType.mt_STRING, UniqueID = "doverAdmin", ValidateMethod = "IsSuperUser", Position = 1)]
-    [Menu(FatherUID = "43523", i18n = "Dover.Framework.Form.Messages.MngmntMenu", Type = BoMenuType.mt_STRING, UniqueID = "doverMngmnt", ValidateMethod = "IsSuperUser", Position = 1)]
-    [Menu(FatherUID = "43523", i18n = "Dover.Framework.Form.Messages.ExportDBInfoMenu", Type = BoMenuType.mt_STRING, UniqueID = "doverExport", ValidateMethod = "IsSuperUser", Position = 1)]
+    [Menu(FatherUID = "43523", i18n = "Dover.Framework.Form.Messages.AdminMenu", Type = BoMenuType.mt_STRING, UniqueID = "doverAdmin", ValidateMethod = "IsSuperUser", Position = 3)]
+    [Menu(FatherUID = "43523", i18n = "Dover.Framework.Form.Messages.MngmntMenu", Type = BoMenuType.mt_STRING, UniqueID = "doverMngmnt", ValidateMethod = "IsSuperUser", Position = 4)]
+    [Menu(FatherUID = "43523", i18n = "Dover.Framework.Form.Messages.ExportDBInfoMenu", Type = BoMenuType.mt_STRING, UniqueID = "doverExport", ValidateMethod = "IsSuperUser", Position = 5)]
     internal class MenuConfiguration
     {
         private BusinessOneDAO b1DAO;
