@@ -70,6 +70,7 @@ namespace Dover.Framework
                 Sponsor<Application> appSponsor = new Sponsor<Application>(app);
                 Sponsor<AddinManager> addInManagerSponsor = new Sponsor<AddinManager>(InceptionAddinManager);
                 app.RunInception();
+                AppDomain.Unload(Inception); // release AppDomain on shutdown.
             }
             catch (Exception e)
             {
