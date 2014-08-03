@@ -29,6 +29,7 @@ using SAPbobsCOM;
 using Castle.Core.Logging;
 using Dover.Framework.Monad;
 using Dover.Framework.Remoting;
+using Dover.Framework.Service;
 
 namespace Dover.Framework.Factory
 {
@@ -140,6 +141,8 @@ namespace Dover.Framework.Factory
                 inception.SetData("SAPCompany", company);
                 inception.SetData("SAPApplication", application);
                 inception.SetData("AddOnePIPE", pipeName);
+                // app instances in all AppDomains references this singleton from this AppDomain.
+                inception.SetData("appHandler", ContainerManager.Container.Resolve<AppEventHandler>());
             }
         }
 
