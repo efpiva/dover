@@ -30,6 +30,7 @@ using Dover.Framework.Monad;
 using SAPbouiCOM;
 using SAPbouiCOM.Framework;
 using Dover.Framework.Form;
+using Dover.Framework.DAO;
 
 namespace Dover.Framework.Service
 {
@@ -264,7 +265,25 @@ namespace Dover.Framework.Service
                 }
 
                 ConfigureFormi18N(doc, addinAsm);
+                ConfigureFormDataTableSQL(doc, addinAsm, type);
+            }
+        }
 
+        private void ConfigureFormDataTableSQL(XDocument doc, Assembly addinAsm, Type type)
+        {
+            var sqlElements = (from descendant in doc.Descendants()
+                                where descendant.Name.LocalName.ToUpper() == "QUERY"
+                                   select descendant);
+
+            foreach (var element in sqlElements)
+            {
+                string resource = element.Value.Trim();
+                if (resource.IndexOf(" ") == -1)
+                {
+                    string sql = type.GetSQL(element.Value.Trim());
+                    if (!string.IsNullOrEmpty(sql))
+                        element.Value = sql;
+                }
             }
         }
 
