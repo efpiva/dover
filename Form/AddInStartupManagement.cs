@@ -93,7 +93,6 @@ namespace Dover.Framework.Form
             // config
             gridCfg.ComboSelectBefore += new _IGridEvents_ComboSelectBeforeEventHandler(StatusChangeBefore);
             gridCfg.ComboSelectAfter += new _IGridEvents_ComboSelectAfterEventHandler(UserConfigStatusChange);
-            gridCfg.CommonSetting.SetCellEditable(1, 3, false); // addIn Setup allways on.
 
             ((ComboBoxColumn)gridCfg.Columns.Item("Status")).ValidValues.Add("A", Messages.MngmntActive);
             ((ComboBoxColumn)gridCfg.Columns.Item("Status")).ValidValues.Add("I", Messages.MngmntInactive);
@@ -113,11 +112,14 @@ namespace Dover.Framework.Form
                 var username = gridUser.DataTable.Columns.Item("UserName").Cells.Item(index).Value.ToString();
                 configTemp.ExecuteQuery(string.Format(userConfigSQLTemplate, username));
 
-                gridCfg.DataTable.LoadSerializedXML(BoDataTableXmlSelect.dxs_DataOnly,
-                    configTemp.SerializeAsXML(BoDataTableXmlSelect.dxs_DataOnly));
+                if (!(configTemp.Rows.Count == 1 && string.IsNullOrEmpty(configTemp.GetValue("Code", 0).ToString())))
+                {
+                    gridCfg.DataTable.LoadSerializedXML(BoDataTableXmlSelect.dxs_DataOnly,
+                        configTemp.SerializeAsXML(BoDataTableXmlSelect.dxs_DataOnly));
 
-                gridCfg.ComboSelectBefore += new _IGridEvents_ComboSelectBeforeEventHandler(StatusChangeBefore);
-                gridCfg.ComboSelectAfter += new _IGridEvents_ComboSelectAfterEventHandler(UserConfigStatusChange);
+                    gridCfg.ComboSelectBefore += new _IGridEvents_ComboSelectBeforeEventHandler(StatusChangeBefore);
+                    gridCfg.ComboSelectAfter += new _IGridEvents_ComboSelectAfterEventHandler(UserConfigStatusChange);
+                }
             }
         }
 

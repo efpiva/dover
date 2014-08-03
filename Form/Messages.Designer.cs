@@ -124,7 +124,7 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Module Management.
+        ///   Looks up a localized string similar to Addin Management.
         /// </summary>
         internal static string AdminManagement {
             get {
@@ -133,7 +133,7 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Module configuration and installation.
+        ///   Looks up a localized string similar to Addin configuration and installation.
         /// </summary>
         internal static string AdminMenu {
             get {
@@ -151,7 +151,7 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Modules file.
+        ///   Looks up a localized string similar to Addin file.
         /// </summary>
         internal static string AdminModuleFilterPrefix {
             get {
@@ -597,6 +597,15 @@ namespace Dover.Framework.Form {
         internal static string No {
             get {
                 return ResourceManager.GetString("No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shutdown Dover.
+        /// </summary>
+        internal static string ShutdownMenu {
+            get {
+                return ResourceManager.GetString("ShutdownMenu", resourceCulture);
             }
         }
         

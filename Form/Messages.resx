@@ -133,16 +133,16 @@
     <value>Install/Update</value>
   </data>
   <data name="AdminManagement" xml:space="preserve">
-    <value>Module Management</value>
+    <value>Addin Management</value>
   </data>
   <data name="AdminMenu" xml:space="preserve">
-    <value>Module configuration and installation</value>
+    <value>Addin configuration and installation</value>
   </data>
   <data name="AdminModuleFile" xml:space="preserve">
     <value>Addin File</value>
   </data>
   <data name="AdminModuleFilterPrefix" xml:space="preserve">
-    <value>Modules file</value>
+    <value>Addin file</value>
   </data>
   <data name="AdminModuleHistory" xml:space="preserve">
     <value>History</value>
@@ -299,5 +299,8 @@
   </data>
   <data name="LogTitle" xml:space="preserve">
     <value>ChangeLog</value>
+  </data>
+  <data name="ShutdownMenu" xml:space="preserve">
+    <value>Shutdown Dover</value>
   </data>
 </root>

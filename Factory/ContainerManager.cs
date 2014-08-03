@@ -61,6 +61,7 @@ namespace Dover.Framework.Factory
         /// </summary>
         public static IWindsorContainer Container { get; private set; }
         private static Sponsor<AddinManager> addinManagerSponsor;
+        private static Sponsor<AppEventHandler> appEventHandlerSponsor;
 
         internal static void RegisterAssembly(Assembly addIn)
         {
@@ -163,6 +164,13 @@ namespace Dover.Framework.Factory
             {
                 addinManagerSponsor = new Sponsor<AddinManager>(addinManager);
                 Container.Register(Component.For<AddinManager>().Instance(addinManager));
+            }
+
+            AppEventHandler appEventHandler = (AppEventHandler)AppDomain.CurrentDomain.GetData("appHandler");
+            if (appEventHandler != null)
+            {
+                appEventHandlerSponsor = new Sponsor<AppEventHandler>(appEventHandler);
+                Container.Register(Component.For<AppEventHandler>().Instance(appEventHandler));
             }
 
             // Service registration, they are singleton.

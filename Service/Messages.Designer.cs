@@ -106,6 +106,24 @@ namespace Dover.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Successfully configured addin {0}.
+        /// </summary>
+        internal static string ConfiguredAddin {
+            get {
+                return ResourceManager.GetString("ConfiguredAddin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuring Menu for {0}.
+        /// </summary>
+        internal static string ConfigureMenu {
+            get {
+                return ResourceManager.GetString("ConfigureMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initializing AddIn configuration {0}.
         /// </summary>
         internal static string ConfiguringAddin {

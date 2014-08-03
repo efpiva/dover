@@ -224,7 +224,14 @@ namespace Dover.Framework.Service
             var authorizedAddins = FilterAuthorizedAddins(addins);
             foreach (var addin in authorizedAddins)
             {
-                LoadAddin(addin);
+                try
+                {
+                    LoadAddin(addin);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(string.Format(Messages.StartThisError, addin), e);
+                }
             }
         }
 
@@ -232,7 +239,9 @@ namespace Dover.Framework.Service
         {
             if (!IsInstalled(addin.Code))
             {
+                Logger.Info(string.Format(Messages.ConfiguringAddin, addin.Name));
                 InstallAddin(addin);
+                Logger.Info(string.Format(Messages.ConfiguredAddin, addin.Name));
             }
             RegisterAddin(addin);
             ConfigureLog(addin);

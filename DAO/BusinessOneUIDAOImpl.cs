@@ -70,7 +70,7 @@ namespace Dover.Framework.DAO
 
                 var actionMenu = new ApplicationMenusActionMenu();
 
-                Logger.Info(String.Format(Messages.MenuProcess, menu.String, menu.UniqueID));
+                Logger.Debug(String.Format(Messages.MenuProcess, menu.String, menu.UniqueID));
 
                 actionMenu.Checked = menu.Return(x => x.Checked, "0");
                 actionMenu.Enabled = menu.Return(x => x.Enabled, "1");
@@ -80,6 +80,8 @@ namespace Dover.Framework.DAO
                 actionMenu.String = menu.String;
                 actionMenu.Type = ((int)menu.Type).ToString();
                 actionMenu.UniqueID = menu.UniqueID;
+                if (menu.Position > 0)
+                    actionMenu.Position = menu.Position.ToString();
                 actionMenus.Add(actionMenu);
             }
             appCommand = new UIApplication() {

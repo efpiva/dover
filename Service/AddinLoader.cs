@@ -54,7 +54,6 @@ namespace Dover.Framework.Service
                 Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
                 RegisterObjects(thisAsm);
                 StartMenu(thisAsm);
-
             }
             catch (Exception e)
             {
@@ -66,7 +65,7 @@ namespace Dover.Framework.Service
         internal void StartMenu(Assembly asm)
         {
             string addin = asm.GetName().Name;
-            Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
+            Logger.Debug(String.Format(Messages.ConfigureMenu, addin));
             List<MenuAttribute> menus = new List<MenuAttribute>();
             var types = (from type in asm.GetTypes()
                          where type.IsClass
@@ -79,7 +78,7 @@ namespace Dover.Framework.Service
                 foreach (var method in type.GetMethods())
                 {
                     attrs = method.GetCustomAttributes(true);
-                    ProcessAddInStartupAttribute(attrs, type);
+                    ProcessAddInStartupAttribute(attrs, type, method);
                 }
             }
         }
@@ -98,7 +97,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void ProcessAddInStartupAttribute(object[] attrs, Type type)
+        private void ProcessAddInStartupAttribute(object[] attrs, Type type, MethodInfo method = null)
         {
             List<MenuAttribute> menus = new List<MenuAttribute>();
 
@@ -108,6 +107,7 @@ namespace Dover.Framework.Service
                 if (attr is MenuEventAttribute)
                 {
                     ((MenuEventAttribute)attr).OriginalType = type;
+                    ((MenuEventAttribute)attr).OriginalMethod = method;
                     menuHandler.RegisterMenuEvent((MenuEventAttribute)attr);
                 }
                 else if (attr is MenuAttribute)

@@ -52,12 +52,12 @@ namespace Dover.Framework.Service
             {
                 foreach (var e in events)
                 {
-                    DispatchForm(e.OriginalType, ref pVal, out BubbleEvent);
+                    DispatchForm(e, ref pVal, out BubbleEvent);
                 }
             }
         }
 
-        private void DispatchForm(Type type, ref MenuEvent pVal, out bool BubbleEvent)
+        private void DispatchForm(MenuEventAttribute menuEvent, ref MenuEvent pVal, out bool BubbleEvent)
         {
             BubbleEvent = true;
 
@@ -67,21 +67,22 @@ namespace Dover.Framework.Service
 
             try
             {
-                var obj = ContainerManager.Container.Resolve(type);
+                var obj = ContainerManager.Container.Resolve(menuEvent.OriginalType);
                 if (obj is FormBase || obj is DoverFormBase)
                 {
-                    Logger.Debug(DebugString.Format(Messages.MenuDispatchInfo, pVal.MenuUID, type));
-                    var method = type.GetMethod("Show");
+                    Logger.Debug(DebugString.Format(Messages.MenuDispatchInfo, pVal.MenuUID, menuEvent.OriginalType));
+                    var method = menuEvent.OriginalType.GetMethod("Show");
                     method.Invoke(obj, null);
                 }
-                else if (type.IsGenericParameter && type.DeclaringMethod != null)
+                else if (menuEvent.OriginalMethod != null
+                    && menuEvent.OriginalMethod.GetGenericArguments().Count() == 0)
                 {
-                    Logger.Debug(DebugString.Format(Messages.MenuDispatchInfo, pVal.MenuUID, type));
-                    type.DeclaringMethod.Invoke(obj, null);
+                    Logger.Debug(DebugString.Format(Messages.MenuDispatchInfo, pVal.MenuUID, menuEvent.OriginalMethod));
+                    menuEvent.OriginalMethod.Invoke(obj, null);
                 }
                 else
                 {
-                    Logger.Debug(DebugString.Format(Messages.FileMissing, type, "?"));
+                    Logger.Debug(DebugString.Format(Messages.FileMissing, menuEvent.OriginalType, "?"));
                 }
             }
             catch (Exception e)
