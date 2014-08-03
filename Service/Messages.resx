@@ -270,4 +270,10 @@
   <data name="ShutdownError" xml:space="preserve">
     <value>Shutdown Error</value>
   </data>
+  <data name="ConfiguredAddin" xml:space="preserve">
+    <value>Successfully configured addin {0}</value>
+  </data>
+  <data name="ConfigureMenu" xml:space="preserve">
+    <value>Configuring Menu for {0}</value>
+  </data>
 </root>

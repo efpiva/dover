@@ -239,7 +239,9 @@ namespace Dover.Framework.Service
         {
             if (!IsInstalled(addin.Code))
             {
+                Logger.Info(string.Format(Messages.ConfiguringAddin, addin.Name));
                 InstallAddin(addin);
+                Logger.Info(string.Format(Messages.ConfiguredAddin, addin.Name));
             }
             RegisterAddin(addin);
             ConfigureLog(addin);

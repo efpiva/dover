@@ -55,11 +55,14 @@ namespace Dover.Framework
             string moduleName = this.GetType().Assembly.GetName().Name;
             try
             {
+                if (moduleName == "Framework")
+                    moduleName = "Dover Framework";
                 Logger.Info(String.Format(Messages.Starting, moduleName, this.GetType().Assembly.GetName().Version));
                 var addins = licenseManager.ListAddins();
                 dispatcher.RegisterEvents();
                 StartFrameworkUI(); // load admin forms.
                 addinManager.LoadAddins(addins);
+                Logger.Info(String.Format(Messages.Started, moduleName, this.GetType().Assembly.GetName().Version));
                 System.Windows.Forms.Application.Run();
             }
             catch (Exception e)
@@ -82,10 +85,10 @@ namespace Dover.Framework
             {
                 Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
                 Logger.Info(String.Format(Messages.Starting, thisAsmName, thisAsm.GetName().Version));
-
                 addinLoader.StartThis();
                 dispatcher.RegisterEvents();
                 formEventHandler.RegisterForms();
+                Logger.Info(String.Format(Messages.Started, thisAsmName, thisAsm.GetName().Version));
                 return true;
             }
             catch (Exception e)
