@@ -80,6 +80,8 @@ namespace Dover.Framework.DAO
                 actionMenu.String = menu.String;
                 actionMenu.Type = ((int)menu.Type).ToString();
                 actionMenu.UniqueID = menu.UniqueID;
+                if (menu.Position > 0)
+                    actionMenu.Position = menu.Position.ToString();
                 actionMenus.Add(actionMenu);
             }
             appCommand = new UIApplication() {
