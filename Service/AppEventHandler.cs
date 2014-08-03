@@ -28,7 +28,7 @@ using Dover.Framework.Monad;
 
 namespace Dover.Framework.Service
 {
-    public class AppEventHandler
+    public class AppEventHandler : MarshalByRefObject
     {
         private MicroBoot microBoot;
         private I18NService i18nManager;
@@ -95,11 +95,11 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void ShutDown()
+        internal void ShutDown()
         {
             Logger.Info(Messages.Shutdown);
             microBoot.InceptionAddinManager.Do(x => x.ShutdownAddins());
-            AppDomain.Unload(microBoot.Inception);
+            // AppDomain.Unload(microBoot.Inception);
             System.Windows.Forms.Application.Exit();
         }
 
