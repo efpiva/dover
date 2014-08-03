@@ -43,6 +43,7 @@ namespace Dover.Framework.Proxy
                     if (company.InTransaction)
                         company.EndTransaction(BoWfTransOpt.wf_RollBack);
                     Logger.Debug(Messages.RollBack);
+                    transactionNestedLevel = 0;
                     throw e;
                 }
             }
