@@ -1,0 +1,2 @@
+﻿SELECT T0.USER_CODE AS "UserName" 
+FROM OUSR T0

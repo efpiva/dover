@@ -1,0 +1,1 @@
+﻿Select T0.User_Code UserName From OUSR T0

@@ -1,0 +1,1 @@
+﻿select TableName Id1, '' Id2, TableName Code, Descr Name from OUTB

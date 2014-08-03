@@ -300,6 +300,50 @@
     <EmbeddedResource Include="DAO\sql\UpdateAddinPermission.sql" />
     <EmbeddedResource Include="DAO\sql\UpdateAssembly.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\sql\addInStartupManagementdtCfg.sql" />
+    <EmbeddedResource Include="Form\sql\addInStartupManagementdtGeral.sql" />
+    <EmbeddedResource Include="Form\sql\addInStartupManagementdtUser.sql" />
+    <EmbeddedResource Include="Form\sql\addInStartupManagementSQLTemplate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\hana\addInStartupManagementdtCfg.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\hana\addInStartupManagementSQLTemplate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\hana\addInStartupManagementdtGeral.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\hana\addInStartupManagementdtUser.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\DeleteAssembly.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\DeleteAssembly.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\sql\adminModDT.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\hana\adminModDT.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\sql\exportDBInfoUDF.sql" />
+    <EmbeddedResource Include="Form\sql\exportDBInfoUDO.sql" />
+    <EmbeddedResource Include="Form\sql\exportDBInfoUDT.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\hana\exportDBInfoUDF.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\hana\exportDBInfoUDT.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\hana\exportDBInfoUDO.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

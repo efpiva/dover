@@ -1,0 +1,1 @@
+﻿SELECT Code Id1, '' Id2, Code, Name FROM OUDO

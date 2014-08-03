@@ -29,6 +29,7 @@ using Castle.Core.Logging;
 using SAPbouiCOM;
 using Dover.Framework.Form;
 using Dover.Framework.Log;
+using Dover.Framework.DAO;
 
 namespace Dover.Framework.Form
 {
@@ -224,9 +225,7 @@ namespace Dover.Framework.Form
             try
             {
                 this.UIAPIRawForm.Freeze(true);
-                configTemp.ExecuteQuery(
-                    "select U_Name Name, U_Version Version, case when U_Type = 'C' THEN 'Core' else 'AddIn' End Type, U_Installed Installed, 'S' Status, '...' History from [@DOVER_MODULES]"
-                    );
+                configTemp.ExecuteQuery(this.GetSQL("adminModDT.sql"));
 
                 moduleGrid.DataTable.LoadSerializedXML(BoDataTableXmlSelect.dxs_DataOnly,
                     configTemp.SerializeAsXML(BoDataTableXmlSelect.dxs_DataOnly));
