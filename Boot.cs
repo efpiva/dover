@@ -57,9 +57,9 @@ namespace Dover.Framework
             {
                 Logger.Info(String.Format(Messages.Starting, moduleName, this.GetType().Assembly.GetName().Version));
                 var addins = licenseManager.ListAddins();
-                addinManager.LoadAddins(addins);
                 dispatcher.RegisterEvents();
                 StartFrameworkUI(); // load admin forms.
+                addinManager.LoadAddins(addins);
                 System.Windows.Forms.Application.Run();
             }
             catch (Exception e)
@@ -75,7 +75,7 @@ namespace Dover.Framework
             formEventHandler.RegisterForms();
         }
 
-        internal void StartThis()
+        internal bool StartThis()
         {
             string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
             try
@@ -86,11 +86,12 @@ namespace Dover.Framework
                 addinLoader.StartThis();
                 dispatcher.RegisterEvents();
                 formEventHandler.RegisterForms();
+                return true;
             }
             catch (Exception e)
             {
                 Logger.Fatal(string.Format(Messages.ErrorStartup, thisAsmName), e);
-                Environment.Exit(10);
+                return false;
             }
         }
     }

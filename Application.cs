@@ -165,10 +165,12 @@ namespace Dover.Framework
                 appContainer = ContainerManager.BuildContainer();
             }
             var loader = appContainer.Resolve<Boot>();
-            loader.StartThis();
-            ManualResetEvent shutdownEvent = (ManualResetEvent)AppDomain.CurrentDomain.GetData("shutdownEvent");
-            Sponsor<ManualResetEvent> shutdownEventSponsor = new Sponsor<ManualResetEvent>(shutdownEvent);
-            shutdownEvent.WaitOne(); // Wait until shutdown event is signaled.
+            if (loader.StartThis()) // in case of error, stop addin but do not close Dover.
+            {
+                ManualResetEvent shutdownEvent = (ManualResetEvent)AppDomain.CurrentDomain.GetData("shutdownEvent");
+                Sponsor<ManualResetEvent> shutdownEventSponsor = new Sponsor<ManualResetEvent>(shutdownEvent);
+                shutdownEvent.WaitOne(); // Wait until shutdown event is signaled.
+            }
         }
 
         /// <summary>
