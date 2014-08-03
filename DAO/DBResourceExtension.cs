@@ -33,11 +33,15 @@ namespace Dover.Framework.DAO
 
         public static string GetSQL(this Object o, string resource)
         {
-            string ns = o.GetType().Namespace;
             if (dbType == null)
                 dbType = (SAPServiceFactory.CompanyFactory().DbServerType == SAPbobsCOM.BoDataServerTypes.dst_HANADB) ? "hana" : "sql";
+            Type baseType = (typeof(Type).IsAssignableFrom(o.GetType())) ? (Type)o : o.GetType();
+            if (baseType.Assembly.IsDynamic)
+                baseType = baseType.BaseType;
 
-            using (var stream = o.GetType().Assembly.GetManifestResourceStream(ns + "." + dbType + "." + resource))
+            string ns = baseType.Namespace;
+
+            using (var stream = baseType.Assembly.GetManifestResourceStream(ns + "." + dbType + "." + resource))
             {
                 if (stream != null)
                 {
