@@ -304,6 +304,75 @@
     <EmbeddedResource Include="Log\sql\InsertLog.sql" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\CheckAutoUpdate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\UpdateAssembly.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\DeleteModule.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\DeleteModuleBIN.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\DeleteModuleI18N.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetAssembliesInformation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetAssembly.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetAssemblyInformation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetCUFDKey.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetI18N.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetModuleCode.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetModulePermission.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetNextCode.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetSupportedI18N.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetUserPermission.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetUserPermissionCode.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\InsertAsm.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\InsertI18N.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\IsSuperUser.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\SaveAddinPermission.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\SaveAddinUserPermission.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\SaveAssembly.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\UpdateAddinPermission.sql" />
+  </ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="Log\hana\InsertLog.sql" />
   </ItemGroup>
   <ItemGroup>

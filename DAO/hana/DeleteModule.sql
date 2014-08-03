@@ -1,0 +1,2 @@
+﻿DELETE FROM "@DOVER_MODULES" 
+WHERE "Code" = '{0}'

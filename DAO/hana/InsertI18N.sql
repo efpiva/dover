@@ -1,0 +1,1 @@
+﻿INSERT INTO "@DOVER_MODULES_I18N" ("Code", "Name", "U_Code", "U_Asm", "U_i18n") VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')
