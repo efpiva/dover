@@ -151,6 +151,15 @@ namespace Dover.Framework {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Successfully started {0}({1}).
+        /// </summary>
+        internal static string Started {
+            get {
+                return ResourceManager.GetString("Started", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Initializing {0}({1}).
         /// </summary>
         internal static string Starting {

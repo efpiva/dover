@@ -54,7 +54,6 @@ namespace Dover.Framework.Service
                 Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
                 RegisterObjects(thisAsm);
                 StartMenu(thisAsm);
-
             }
             catch (Exception e)
             {
@@ -66,7 +65,7 @@ namespace Dover.Framework.Service
         internal void StartMenu(Assembly asm)
         {
             string addin = asm.GetName().Name;
-            Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
+            Logger.Debug(String.Format(Messages.ConfigureMenu, addin));
             List<MenuAttribute> menus = new List<MenuAttribute>();
             var types = (from type in asm.GetTypes()
                          where type.IsClass

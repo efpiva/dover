@@ -147,6 +147,9 @@
   <data name="RollBack" xml:space="preserve">
     <value>Rolling back transaction</value>
   </data>
+  <data name="Started" xml:space="preserve">
+    <value>Successfully started {0}({1})</value>
+  </data>
   <data name="Starting" xml:space="preserve">
     <value>Initializing {0}({1})</value>
   </data>
