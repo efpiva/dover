@@ -96,7 +96,6 @@ namespace Dover.Framework.Form
             // config
             gridCfg.ComboSelectBefore += new _IGridEvents_ComboSelectBeforeEventHandler(StatusChangeBefore);
             gridCfg.ComboSelectAfter += new _IGridEvents_ComboSelectAfterEventHandler(UserConfigStatusChange);
-            gridCfg.CommonSetting.SetCellEditable(1, 3, false); // addIn Setup allways on.
 
             ((ComboBoxColumn)gridCfg.Columns.Item("Status")).ValidValues.Add("A", Messages.MngmntActive);
             ((ComboBoxColumn)gridCfg.Columns.Item("Status")).ValidValues.Add("I", Messages.MngmntInactive);
