@@ -256,13 +256,13 @@ namespace Dover.Framework.Service
         private void MarkAsNotInstalled(string addInCode)
         {
             b1DAO.ExecuteStatement(
-    string.Format("UPDATE [@DOVER_MODULES] set U_Installed = 'N' where Code = '{0}'", addInCode));
+    string.Format(this.GetSQL("MarkAsNotInstalled.sql"), addInCode));
         }
 
         private void MarkAsInstalled(string addInCode)
         {
             b1DAO.ExecuteStatement(
-    string.Format("UPDATE [@DOVER_MODULES] set U_Installed = 'Y' where Code = '{0}'", addInCode));
+    string.Format(this.GetSQL("MarkAsInstalled.sql"), addInCode));
         }
 
         private void ConfigureLog(AssemblyInformation addin)
@@ -495,7 +495,7 @@ namespace Dover.Framework.Service
          private bool IsInstalled(string code)
         {
             string installedFlag = b1DAO.ExecuteSqlForObject<string>(
-                string.Format("SELECT ISNULL(U_Installed, 'N') from [@DOVER_MODULES] where Code = '{0}'", code));
+                string.Format(this.GetSQL("IsInstalled.sql"), code));
             return !string.IsNullOrEmpty(installedFlag) && installedFlag == "Y";
         }
 

@@ -350,6 +350,14 @@
   <ItemGroup>
     <EmbeddedResource Include="Form\hana\exportDBInfoUDO.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Service\hana\IsInstalled.sql" />
+    <EmbeddedResource Include="Service\hana\MarkAsInstalled.sql" />
+    <EmbeddedResource Include="Service\hana\MarkAsNotInstalled.sql" />
+    <EmbeddedResource Include="Service\sql\IsInstalled.sql" />
+    <EmbeddedResource Include="Service\sql\MarkAsInstalled.sql" />
+    <EmbeddedResource Include="Service\sql\MarkAsNotInstalled.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

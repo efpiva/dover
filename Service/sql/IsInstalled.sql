@@ -1,0 +1,1 @@
+﻿SELECT ISNULL(U_Installed, 'N') from [@DOVER_MODULES] where Code = '{0}'

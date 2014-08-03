@@ -1,0 +1,1 @@
+﻿UPDATE [@DOVER_MODULES] set U_Installed = 'N' where Code = '{0}'
