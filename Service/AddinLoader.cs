@@ -78,7 +78,7 @@ namespace Dover.Framework.Service
                 foreach (var method in type.GetMethods())
                 {
                     attrs = method.GetCustomAttributes(true);
-                    ProcessAddInStartupAttribute(attrs, type);
+                    ProcessAddInStartupAttribute(attrs, type, method);
                 }
             }
         }
@@ -97,7 +97,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void ProcessAddInStartupAttribute(object[] attrs, Type type)
+        private void ProcessAddInStartupAttribute(object[] attrs, Type type, MethodInfo method = null)
         {
             List<MenuAttribute> menus = new List<MenuAttribute>();
 
@@ -107,6 +107,7 @@ namespace Dover.Framework.Service
                 if (attr is MenuEventAttribute)
                 {
                     ((MenuEventAttribute)attr).OriginalType = type;
+                    ((MenuEventAttribute)attr).OriginalMethod = method;
                     menuHandler.RegisterMenuEvent((MenuEventAttribute)attr);
                 }
                 else if (attr is MenuAttribute)

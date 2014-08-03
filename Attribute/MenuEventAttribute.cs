@@ -41,5 +41,7 @@ namespace Dover.Framework.Attribute
         public string UniqueUID { get; set; }
 
         internal System.Type OriginalType { get; set; }
+
+        internal System.Reflection.MethodInfo OriginalMethod { get; set; }
     }
 }
