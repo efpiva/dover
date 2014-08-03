@@ -128,7 +128,11 @@ namespace Dover.Framework
         {
             string appFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Dover";
             CreateIfNotExists(appFolder);
-            appFolder = Path.Combine(appFolder, company.Server + "-" + company.CompanyDB);
+            string server = company.Server;
+            int port = server.LastIndexOf(":");
+            if (port > 0)
+                server = server.Substring(0, port); // Hana servers have :
+            appFolder = Path.Combine(appFolder, server + "-" + company.CompanyDB);
             CreateIfNotExists(appFolder);
             return appFolder;
         }
