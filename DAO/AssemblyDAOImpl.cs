@@ -80,7 +80,7 @@ namespace Dover.Framework.DAO
             else
             {
                 sql = String.Format(this.GetSQL("UpdateAssembly.sql"), asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length, asm.Code, asm.Description);
-                b1DAO.ExecuteStatement(String.Format("DELETE FROM [@DOVER_MODULES_BIN] WHERE U_Code = '{0}'", asm.Code));
+                b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteAssembly.sql"), asm.Code));
             }
 
             b1DAO.ExecuteStatement(sql);
