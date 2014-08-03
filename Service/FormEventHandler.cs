@@ -130,9 +130,13 @@ namespace Dover.Framework.Service
                                       where attribute is SAPbouiCOM.Framework.FormAttribute
                                         && typeof(DoverUserFormBase).IsAssignableFrom(type)
                                         /* do not register systemForm from ReferencedAssemblies, they
-                                         * should be registered by the addin owner. Just UserForms can be reused
+                                         * should be registered by the addin owner.
+                                         * Just ExceptionTrace UserForm can be reused
                                          */
-                                        && dependency != Assembly.GetExecutingAssembly()
+                                        && (dependency != Assembly.GetExecutingAssembly()
+                                         || (dependency == Assembly.GetExecutingAssembly()
+                                               && (((SAPbouiCOM.Framework.FormAttribute)attribute).Resource 
+                                                        == "Dover.Framework.Form.ExceptionTrace.srf")))
                                       select new {
                                             FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute,
                                             Assembly = dependency,
