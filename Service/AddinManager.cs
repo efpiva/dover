@@ -163,6 +163,8 @@ namespace Dover.Framework.Service
         internal AddinLoader addinLoader;
 
         internal Thread runnerThread;
+        internal List<AddInRunner> runningAddins;
+        internal Dictionary<string, AddInRunner> runningAddinsHash;
 
         internal AddInRunner(AssemblyInformation asm, AddinManager frameworkAddinManager)
         {
@@ -192,6 +194,8 @@ namespace Dover.Framework.Service
             Sponsor<EventDispatcher> eventSponsor = new Sponsor<EventDispatcher>(eventDispatcher);
             app.RunAddin();
             AppDomain.Unload(domain);
+            runningAddins.Remove(this);
+            runningAddinsHash.Remove(asm.Name);
         } 
     }
 
@@ -476,6 +480,8 @@ namespace Dover.Framework.Service
             thread.SetApartmentState(ApartmentState.STA);
             i18nService.ConfigureThreadI18n(thread);
             runner.runnerThread = thread;
+            runner.runningAddins = runningAddIns;
+            runner.runningAddinsHash = runningAddinsHash;
             thread.Start();
         }
 
@@ -543,8 +549,6 @@ namespace Dover.Framework.Service
                     addin.eventDispatcher.UnregisterEvents();
                     addin.addinFormEventHandler.UnRegisterForms();
                     addin.shutdownEvent.Set();
-                    runningAddIns.Remove(addin);
-                    runningAddinsHash.Remove(name);
                 }
             }
             catch (Exception e)
