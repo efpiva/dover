@@ -327,14 +327,18 @@ namespace Dover.Framework.Service
                     {
                         CheckPermissionAttribute((PermissionAttribute)attr, dataTable);
                     }
-                    else if (attr is AddInAttribute && !string.IsNullOrWhiteSpace(((AddInAttribute)attr).Description))
+                    else if (attr is AddInAttribute &&
+                        (!string.IsNullOrWhiteSpace(((AddInAttribute)attr).Description)
+                         || !string.IsNullOrWhiteSpace(((AddInAttribute)attr).i18n)))
                     {
                         isValid = true;
                     }
                 }
             }
 
-            if (dataTable.Element("DataTable").Element("Rows").Elements("Row").Count() > 0)
+            var rows = dataTable.Element("DataTable").Element("Rows").Elements("Row");
+            
+            if (rows != null && rows.Count() > 0)
                 xmlDataTable = dataTable.ToString();
 
             return isValid;
@@ -346,7 +350,7 @@ namespace Dover.Framework.Service
             var root = new XElement("DataTable");
             root.SetAttributeValue("Uid", "dbchange");
             dt.Add(root);
-            root.Add("Rows");
+            root.Add(new XElement("Rows"));
 
             return dt;
         }
