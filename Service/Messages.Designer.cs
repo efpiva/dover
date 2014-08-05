@@ -178,11 +178,20 @@ namespace Dover.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Updating file {0} - Version {1}.
+        ///   Looks up a localized string similar to Updated file {0} - Version {1}.
         /// </summary>
         internal static string FileUpdated {
             get {
                 return ResourceManager.GetString("FileUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Updating file {0} - Version {1}.
+        /// </summary>
+        internal static string FileUpdating {
+            get {
+                return ResourceManager.GetString("FileUpdating", resourceCulture);
             }
         }
         

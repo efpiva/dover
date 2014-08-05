@@ -145,7 +145,7 @@
     <value>File {0} - Version {1} - not found</value>
   </data>
   <data name="FileUpdated" xml:space="preserve">
-    <value>Updating file {0} - Version {1}</value>
+    <value>Updated file {0} - Version {1}</value>
   </data>
   <data name="i18nError" xml:space="preserve">
     <value>{0} name with incorrect i18n format.</value>
@@ -278,5 +278,8 @@
   </data>
   <data name="Reboot" xml:space="preserve">
     <value>Rebooting Dover Framework.</value>
+  </data>
+  <data name="FileUpdating" xml:space="preserve">
+    <value>Updating file {0} - Version {1}</value>
   </data>
 </root>
