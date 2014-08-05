@@ -50,7 +50,7 @@ namespace Dover.Framework
         private static Dictionary<string, Assembly> assemblyCacheResolver = new Dictionary<string, Assembly>();
         private string[] embeddedAssemblies = {
             "Dover.Framework.Assemblies.SAPbouiCOM.dll",
-            "Dover.Framework.Assemblies.SAPBusinessOneSDK.dll",
+            "Dover.Framework.Assemblies.Interop.SAPbobsCOM.dll",
             "Dover.Framework.Assemblies.log4net.dll",
             "Dover.Framework.Assemblies.Castle.Core.dll",
             "Dover.Framework.Assemblies.Castle.Facilities.Logging.dll",
