@@ -97,6 +97,15 @@ namespace Dover.Framework {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dover Framework.
+        /// </summary>
+        internal static string DoverName {
+            get {
+                return ResourceManager.GetString("DoverName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error initializing addins {0}.
         /// </summary>
         internal static string ErrorStartup {

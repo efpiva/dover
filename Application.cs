@@ -26,6 +26,7 @@ using Dover.Framework.Remoting;
 using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
+using Dover.Framework.Attribute;
 
 namespace Dover.Framework
 {
@@ -40,6 +41,9 @@ namespace Dover.Framework
     /// Dover.Framework.Container.ContainerManager.
     /// 
     /// </summary>
+    [AddIn(i18n="Dover.Framework.Messages.DoverName")]
+    [ResourceBOM("Dover.Framework.DatabaseTables.xml", ResourceType.UserTable)]
+    [ResourceBOM("Dover.Framework.DatabaseFields.xml", ResourceType.UserField)]
     public class Application : MarshalByRefObject
     {
         private IWindsorContainer appContainer;

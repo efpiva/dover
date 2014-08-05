@@ -129,6 +129,9 @@
   <data name="CreatedAppFolder" xml:space="preserve">
     <value>Created AppFolder {0} - Initializing Core and Addins</value>
   </data>
+  <data name="DoverName" xml:space="preserve">
+    <value>Dover Framework</value>
+  </data>
   <data name="ErrorStartup" xml:space="preserve">
     <value>Error initializing addins {0}</value>
   </data>
