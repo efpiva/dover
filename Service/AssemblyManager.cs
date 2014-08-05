@@ -378,6 +378,7 @@ namespace Dover.Framework.Service
                         {
                             SaveAddinI18NResources(Environment.CurrentDirectory, asm.Name, asm.Code);
                             asm.MD5 = savedAsm.MD5; // update MD5Sum, so AppData is updated latter.
+                            asm.Version = savedAsm.Version; // Correct version
                         }
                     }
                     catch (FileNotFoundException)
@@ -480,6 +481,7 @@ namespace Dover.Framework.Service
         {
             try
             {
+                Logger.Info(String.Format(Messages.FileUpdating, asmMeta.Name, asmMeta.Version));
                 byte[] asmBytes = asmDAO.GetAssembly(asmMeta);
                 if (asmBytes != null)
                 {
