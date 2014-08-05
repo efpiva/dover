@@ -125,33 +125,35 @@ namespace Dover.Framework.Service
             AppDomain testDomain = null;
             string mainDll = string.Empty;
             bool ret;
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
 
-            testDomain = CreateTestDomain();
+            // check if it's a DLL or ZIP.
+            if (extension != null && extension == ".zip")
+            {
+                mainDll = UnzipFile(path, tempDirectory);
+            }
+            else if (extension != null && (extension == ".dll" || extension == ".exe"))
+            {
+                string destination = Path.Combine(tempDirectory, Path.GetFileName(path));
+                File.Copy(path, destination);
+                mainDll = Path.GetFileName(path);
+            }
+            else
+            {
+                throw new ArgumentException(Messages.InvalidAddInExtension);
+            }
+            if (mainDll == null)
+            {
+                datatable = string.Empty;
+                return false;
+            }
+
+            mainDll = mainDll.Substring(0, mainDll.Length - 4);
+
+            testDomain = CreateTestDomain(mainDll, tempDirectory);
             try
             {
-                // check if it's a DLL or ZIP.
-                if (extension != null && extension == ".zip")
-                {
-                    mainDll = UnzipFile(path, testDomain.BaseDirectory);
-                }
-                else if (extension != null && (extension == ".dll" || extension == ".exe"))
-                {
-                    string destination = Path.Combine(testDomain.BaseDirectory, Path.GetFileName(path));
-                    File.Copy(path, destination);
-                    mainDll = Path.GetFileName(path);
-                }
-                else
-                {
-                    throw new ArgumentException(Messages.InvalidAddInExtension);
-                }
-
-                if (mainDll == null)
-                {
-                    datatable = string.Empty;
-                    return false;
-                }
-
-                mainDll = mainDll.Substring(0, mainDll.Length - 4);
                 testDomain.SetData("assemblyName", mainDll); // Used to get current AssemblyName for logging and reflection
                 Application testApp = (Application)testDomain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
                 SAPServiceFactory.PrepareForInception(testDomain);
@@ -161,9 +163,8 @@ namespace Dover.Framework.Service
             }
             finally
             {
-                string appDomainFolder = testDomain.BaseDirectory;
-                AppDomain.Unload(testDomain); 
-                Directory.Delete(appDomainFolder, true);
+                AppDomain.Unload(testDomain);
+                Directory.Delete(tempDirectory, true);
             }
             return ret;
         }
@@ -230,17 +231,15 @@ namespace Dover.Framework.Service
             return mainDll;
         }
 
-        private AppDomain CreateTestDomain()
+        private AppDomain CreateTestDomain(string mainDll, string tempDirectory)
         {
-            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            Directory.CreateDirectory(tempDirectory);
-
             AppDomainSetup setup = new AppDomainSetup();
             setup.ApplicationName = "Addin.test";
             setup.ApplicationBase = tempDirectory;
 
             AppDomain testDomain = AppDomain.CreateDomain("Addin.test", null, setup);
-            UpdateAssemblies(AssemblySource.Core, tempDirectory);
+            if (mainDll != "Framework") // do not need Core.
+                UpdateAssemblies(AssemblySource.Core, tempDirectory);
 
             return testDomain;
         }
@@ -268,9 +267,10 @@ namespace Dover.Framework.Service
                     string fileName = Path.GetFileName(path);
                     string addInName = fileName.Substring(0, fileName.Length - 4);
                     bool hasi18n = false;
+                    string type = (addInName == "Framework") ? "C" : "A";
                     byte[] asmBytes;
 
-                    AssemblyInformation existingAsm = asmDAO.GetAssemblyInformation(addInName, "A");
+                    AssemblyInformation existingAsm = asmDAO.GetAssemblyInformation(addInName, type);
 
                     if (fileName.EndsWith(".zip"))
                     {
@@ -284,7 +284,7 @@ namespace Dover.Framework.Service
                         directory = Path.GetDirectoryName(path);
                     }
 
-                    AssemblyInformation newAsm = GetNewAsm(directory, fileName, addInName, "A", out asmBytes);
+                    AssemblyInformation newAsm = GetNewAsm(directory, fileName, addInName, type, out asmBytes);
                     AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(existingAsm, newAsm, asmBytes);
                     if (hasi18n)
                     {
