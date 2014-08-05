@@ -42,6 +42,8 @@ namespace Dover.Framework.Form
         private DataTable configTemp;
 
         public AssemblyManager AsmLoader { get; set; }
+        public AppEventHandler appEventHandler { get; set; }
+        public SAPbouiCOM.Application app { get; set; }
         private AddinManager _frameworkAddinManager;
         public AddinManager FrameworkAddinManager
         {
@@ -295,16 +297,26 @@ namespace Dover.Framework.Form
         internal void InstallAddin()
         {
             string addinName = AsmLoader.SaveAddIn(modulePath.Value);
-            if (FrameworkAddinManager.GetAddinStatus(addinName) == AddinStatus.Running)
+            if (addinName == "Framework")
             {
-                FrameworkAddinManager.ShutdownAddin(addinName);
-                FrameworkAddinManager.StartAddin(addinName);
+                if (app.MessageBox(Messages.AdminConfirmReboot, 1, Messages.AdminOK, Messages.AdminCancel) == 1)
+                {
+                    appEventHandler.Reboot();
+                }
+            }
+            else
+            {
+                if (FrameworkAddinManager.GetAddinStatus(addinName) == AddinStatus.Running)
+                {
+                    FrameworkAddinManager.ShutdownAddin(addinName);
+                    FrameworkAddinManager.StartAddin(addinName);
+                }
+                UpdateInstallGrid();
+                UpdateLicenseGrid();
+                SAPAppender.SilentMode = false;
+                Logger.Info(Messages.AdminSuccessInstall);
             }
             
-            UpdateInstallGrid();
-            UpdateLicenseGrid();
-            SAPAppender.SilentMode = false;
-            Logger.Info(Messages.AdminSuccessInstall);
         }
 
         protected virtual void RemoveButtom_ClickAfter(object sboObject, SAPbouiCOM.SBOItemEventArg pVal)

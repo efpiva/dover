@@ -99,7 +99,6 @@ namespace Dover.Framework.Service
         {
             Logger.Info(Messages.Shutdown);
             microBoot.InceptionAddinManager.Do(x => x.ShutdownAddins());
-            // AppDomain.Unload(microBoot.Inception);
             System.Windows.Forms.Application.Exit();
         }
 
@@ -109,16 +108,14 @@ namespace Dover.Framework.Service
             i18nManager.ConfigureThreadI18n(System.Threading.Thread.CurrentThread);
         }
 
-        private void Reboot()
+        internal void Reboot()
         {
             try
             {
-                Logger.Info(String.Format(Messages.Restarting, this.GetType().Assembly.GetName().Version));
-                Logger.Info(Messages.Shutdown);
+                Logger.Info(Messages.Reboot);
                 microBoot.InceptionAddinManager.Do(x => x.ShutdownAddins());
-                AppDomain.Unload(microBoot.Inception);
-                microBoot.StartInception();
-                microBoot.Boot();
+                MicroCore.reboot = true;
+                System.Windows.Forms.Application.Exit();
             }
             catch (Exception e)
             {
@@ -126,5 +123,6 @@ namespace Dover.Framework.Service
                 Environment.Exit(10);
             }
         }
+
     }
 }

@@ -276,4 +276,7 @@
   <data name="ConfigureMenu" xml:space="preserve">
     <value>Configuring Menu for {0}</value>
   </data>
+  <data name="Reboot" xml:space="preserve">
+    <value>Rebooting Dover Framework.</value>
+  </data>
 </root>

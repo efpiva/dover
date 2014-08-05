@@ -42,6 +42,7 @@ namespace Dover.Framework
         private MicroCoreEventDispatcher dispatcher;
         private MicroBoot microBoot;
         private I18NService i18nService;
+        internal static bool reboot = true; // Used to signal a reboot by AppEvent.
 
         public ILogger Logger { get; set; }
 
@@ -62,25 +63,29 @@ namespace Dover.Framework
         {
             try
             {
-                Logger.Debug(Messages.PreparingFramework);
-                dbConf.PrepareDatabase();
+                while (reboot)
+                {
+                    reboot = false;
+                    Logger.Debug(Messages.PreparingFramework);
+                    dbConf.PrepareDatabase();
 
-                if (InsideInception())
-                    return;
+                    if (InsideInception())
+                        return;
 
-                string appFolder = CheckAppFolder();
-                Logger.Debug(DebugString.Format(Messages.CreatedAppFolder, appFolder));
+                    string appFolder = CheckAppFolder();
+                    Logger.Debug(DebugString.Format(Messages.CreatedAppFolder, appFolder));
 
-                assemblyLoader.UpdateAssemblies(AssemblySource.Core, appFolder);
-                assemblyLoader.UpdateAssemblies(AssemblySource.AddIn, appFolder);
-                CopyInstallResources(appFolder, Environment.CurrentDirectory);
+                    assemblyLoader.UpdateAssemblies(AssemblySource.Core, appFolder);
+                    assemblyLoader.UpdateAssemblies(AssemblySource.AddIn, appFolder);
+                    CopyInstallResources(appFolder, Environment.CurrentDirectory);
 
-                dispatcher.RegisterEvents();
+                    dispatcher.RegisterEvents();
 
-                microBoot.AppFolder = appFolder;
-                microBoot.StartInception();
-                microBoot.Boot();
-                System.Windows.Forms.Application.Run();
+                    microBoot.AppFolder = appFolder;
+                    microBoot.StartInception();
+                    microBoot.Boot();
+                    System.Windows.Forms.Application.Run();
+                }
                 ContainerManager.Container.Dispose();
                 SAPServiceFactory.LogOff();
             }

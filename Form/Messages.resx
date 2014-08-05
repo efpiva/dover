@@ -303,4 +303,10 @@
   <data name="ShutdownMenu" xml:space="preserve">
     <value>Shutdown Dover</value>
   </data>
+  <data name="AdminCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="AdminConfirmReboot" xml:space="preserve">
+    <value>Framework was updated. A full reboot is needed in order to load it now.</value>
+  </data>
 </root>

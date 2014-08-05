@@ -61,6 +61,24 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string AdminCancel {
+            get {
+                return ResourceManager.GetString("AdminCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Framework was updated. A full reboot is needed in order to load it now..
+        /// </summary>
+        internal static string AdminConfirmReboot {
+            get {
+                return ResourceManager.GetString("AdminConfirmReboot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Uploading addin to separate AppDomain for validation.
         /// </summary>
         internal static string AdminCreatingAppDomain {

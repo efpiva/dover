@@ -349,6 +349,15 @@ namespace Dover.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rebooting Dover Framework..
+        /// </summary>
+        internal static string Reboot {
+            get {
+                return ResourceManager.GetString("Reboot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Assembly {0} registered in container.
         /// </summary>
         internal static string RegisteredAssembly {
