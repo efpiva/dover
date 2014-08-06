@@ -3,3 +3,5 @@ obj
 /*.suo
 Dover.b1s
 AssemblyInfo.cs
+build
+temp
