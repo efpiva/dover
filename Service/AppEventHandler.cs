@@ -99,7 +99,6 @@ namespace Dover.Framework.Service
         {
             Logger.Info(Messages.Shutdown);
             microBoot.InceptionAddinManager.Do(x => x.ShutdownAddins());
-            AppDomain.Unload(microBoot.Inception);
             System.Windows.Forms.Application.Exit();
         }
 

@@ -204,6 +204,7 @@ namespace Dover.Framework.Service
     {
         public ILogger Logger { get; set; }
         private PermissionManager permissionManager;
+        private AddinLoader addinLoader;
         private AssemblyDAO assemblyDAO;
         private AssemblyManager assemblyManager;
         private BusinessOneDAO b1DAO;
@@ -213,13 +214,14 @@ namespace Dover.Framework.Service
         private I18NService i18nService;
 
         public AddinManager(PermissionManager permissionManager, AssemblyManager assemblyManager,
-            BusinessOneDAO b1DAO, I18NService i18nService, AssemblyDAO assemblyDAO)
+            BusinessOneDAO b1DAO, I18NService i18nService, AssemblyDAO assemblyDAO, AddinLoader addinLoader)
         {
             this.permissionManager = permissionManager;
             this.assemblyDAO = assemblyDAO;
             this.b1DAO = b1DAO;
             this.i18nService = i18nService;
             this.assemblyManager = assemblyManager;
+            this.addinLoader = addinLoader;
         }
 
         [Transaction]
@@ -509,6 +511,8 @@ namespace Dover.Framework.Service
                 addin.addinLoader.StartMenu();
                 addin.addinFormEventHandler.RegisterForms(false);
             }
+            addinLoader.StartMenu();
+            
         }
 
          private bool IsInstalled(string code)

@@ -9,4 +9,8 @@ then
     tag=$tag".0"
 fi
 
+# Assembly version
 cat Properties/AssemblyInfoTemplate.cs | sed "s/FULLTAG/$fulltag/" | sed "s/TAG/$tag/" |  sed "s/BRANCHNAME/$branch/" > Properties/AssemblyInfo.cs
+# ISS setup
+cat Install/DoverTemplate.iss | sed "s/FULLTAG/$fulltag/" | sed "s/TAG/$tag/" |  sed "s/BRANCH/$branch/" > Install/Dover.iss
+cat Install/Doverx64Template.iss | sed "s/FULLTAG/$fulltag/" | sed "s/TAG/$tag/" |  sed "s/BRANCH/$branch/" > Install/Doverx64.iss
