@@ -92,7 +92,7 @@ namespace Dover.Framework.DAO
                         if (found)
                         {
                             if (Update)
-                                UpdateDIObject(obj, resourceXml, bom.BO[i].GetName(), bom.BO[i].GetFormattedKey(), notifier);
+                                UpdateDIObject(obj, xml, resourceXml, bom.BO[i].GetName(), bom.BO[i].GetFormattedKey(), notifier);
                         }
                         else
                         {
@@ -198,16 +198,16 @@ namespace Dover.Framework.DAO
             }
         }
 
-        private void UpdateDIObject<T>(T obj, XDocument resourceXml, string name, string formatName, INotifier notifier)
+        private void UpdateDIObject<T>(T obj, string resourceXmlString, XDocument resourceXml, string name, string formatName, INotifier notifier)
         {
             Type type = typeof(T);
             string xml = (string)type.InvokeMember("GetAsXML", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
             var currXml = XDocument.Parse(xml);
             if (!XDocument.DeepEquals(currXml, resourceXml))
             {
-                var browser = type.InvokeMember("Browser", BindingFlags.GetField | BindingFlags.Public, null, obj, null);
+                var browser = type.InvokeMember("Browser", BindingFlags.GetProperty | BindingFlags.Public, null, obj, null);
                 browser.GetType().InvokeMember("ReadXml", BindingFlags.InvokeMethod | BindingFlags.Public,
-                    null, obj, new object[] { resourceXml.ToString(), 0 });
+                    null, browser, new object[] { resourceXmlString, 0 });
                 int ret = (int)type.InvokeMember("Update", BindingFlags.InvokeMethod | BindingFlags.Public, null, obj, null);
                 if (ret != 0)
                 {
