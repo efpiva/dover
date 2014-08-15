@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SAPbouiCOM;
+using Dover.Framework.Factory;
 
 namespace Dover.Framework.Attribute
 {
@@ -114,7 +115,21 @@ namespace Dover.Framework.Attribute
 
         public int CompareTo(MenuAttribute other)
         {
-            return this.Position.CompareTo(other.Position);
+            SAPbouiCOM.Application app = SAPServiceFactory.ApplicationFactory();
+
+            bool thisExists = app.Menus.Exists(this.FatherUID);
+            bool otherExists = app.Menus.Exists(other.FatherUID);
+
+            if (thisExists && !otherExists)
+                return -1;
+
+            if (otherExists && !thisExists)
+                return 1;
+
+            if (this.FatherUID == other.FatherUID)
+               return this.Position.CompareTo(other.Position);
+
+            return this.UniqueID.CompareTo(other.UniqueID);
         }
     }
 }
