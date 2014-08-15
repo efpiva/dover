@@ -104,7 +104,7 @@ namespace Dover.Framework.DAO
                 Logger.Error(String.Format(Messages.MenuError, e.Message), e);
                 throw e;
             }
-            string result = application.GetLastBatchResults();
+            ParseBatchResult(application.GetLastBatchResults());
 
             Logger.Debug(Messages.MenuEnd);
         }
