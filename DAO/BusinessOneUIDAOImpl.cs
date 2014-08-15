@@ -75,7 +75,7 @@ namespace Dover.Framework.DAO
                 actionMenu.Checked = menu.Return(x => x.Checked, "0");
                 actionMenu.Enabled = menu.Return(x => x.Enabled, "1");
                 actionMenu.FatherUID = menu.FatherUID;
-                if (menu.Image != null)
+                if (!string.IsNullOrWhiteSpace(menu.Image))
                     actionMenu.Image = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, menu.Image);
                 actionMenu.String = menu.String;
                 actionMenu.Type = ((int)menu.Type).ToString();
