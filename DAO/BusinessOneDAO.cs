@@ -35,6 +35,9 @@ namespace Dover.Framework.DAO
         void OnError(string xml, int errCode, string errMessage);
     }
 
+    /// <summary>
+    /// Business One DAO (Data Access Object) Implementation. 
+    /// </summary>
     public interface BusinessOneDAO
     {
         /// <summary>
@@ -153,5 +156,32 @@ namespace Dover.Framework.DAO
         /// <param name="permissionAttribute">Permission attribute to check for</param>
         /// <returns>true if exists</returns>
         bool PermissionExists(Attribute.PermissionAttribute permissionAttribute);
+
+        /// <summary>
+        /// Return the desired Business Object API from current Company
+        /// </summary>
+        /// <param name="objType">Desired ObjectType</param>
+        /// <returns></returns>
+        dynamic GetBusinessObject(BoObjectTypes objType);
+
+        /// <summary>
+        /// Call the Update() API on the desired object. On Error an exception is thrown and the 
+        /// Business Object is cleaned from memory (ReleaseComObject is called).
+        /// </summary>
+        /// <param name="b1Object">COM object that will have Update() call done.</param>
+        void UpdateBusinessObject(object b1Object);
+
+        /// <summary>
+        /// Call the Save() API on the desired object. On Error an exception is thrown and the 
+        /// Business Object is cleaned from memory (ReleaseComObject is called).
+        /// </summary>
+        /// <param name="b1Object">COM object that will have Save() call done.</param>
+        void SaveBusinessObject(object b1Object);
+
+        /// <summary>
+        /// Proper release of COM resources.
+        /// </summary>
+        /// <param name="b1Object">COM object that will be released</param>
+        void Release(object b1Object);
     }
 }

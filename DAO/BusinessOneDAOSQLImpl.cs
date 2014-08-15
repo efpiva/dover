@@ -685,5 +685,49 @@ namespace Dover.Framework.DAO
                 Logger.Debug(DebugString.Format(Messages.PermissionEnd, permissionAttribute.PermissionID));
             }
         }
+
+        public dynamic GetBusinessObject(BoObjectTypes objType)
+        {
+            return company.GetBusinessObject(objType);
+        }
+
+        public void UpdateBusinessObject(object b1Object)
+        {
+            CallBusinessObjectMethod(b1Object, "Update");
+        }
+
+        public void SaveBusinessObject(object b1Object)
+        {
+            CallBusinessObjectMethod(b1Object, "Save");
+        }
+
+        private void CallBusinessObjectMethod(object b1Object, string method)
+        {
+            Type type = b1Object.GetType();
+            try
+            {
+                int ret = (int)type.InvokeMember(method, BindingFlags.InvokeMethod | BindingFlags.Public, null, b1Object, null);
+                if (ret != 0)
+                {
+                    string err;
+                    company.GetLastError(out ret, out err);
+                    Release(b1Object);
+                    throw new Exception(err);
+                }
+            }
+            catch (Exception e)
+            {
+                Release(b1Object);
+                throw e;
+            }
+        }
+
+        public void Release(object b1Object)
+        {
+            if (b1Object != null)
+            {
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(b1Object);
+            }
+        }
     }
 }
