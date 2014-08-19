@@ -28,6 +28,13 @@ using System.IO;
 using System.Collections.Generic;
 using Dover.Framework.Attribute;
 
+/*! \mainpage Dover Framework public API
+ *
+ * \section intro_sec Introduction
+ *
+ * This page describe the Dover Framework public API. For more information about dover visit <a href="http://efpiva.github.io">Dover Github Page</a>
+ *
+ */
 namespace Dover.Framework
 {
     /// <summary>
