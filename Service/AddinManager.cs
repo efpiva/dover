@@ -192,10 +192,20 @@ namespace Dover.Framework.Service
             Sponsor<FormEventHandler> formEventSponsor = new Sponsor<FormEventHandler>(addinFormEventHandler);
             Sponsor<AddinLoader> loaderSponsor = new Sponsor<AddinLoader>(addinLoader);
             Sponsor<EventDispatcher> eventSponsor = new Sponsor<EventDispatcher>(eventDispatcher);
-            app.RunAddin();
-            AppDomain.Unload(domain);
-            runningAddins.Remove(this);
-            runningAddinsHash.Remove(asm.Name);
+            try 
+            {
+                app.RunAddin();
+                AppDomain.Unload(domain);
+            }
+            catch (AppDomainUnloadedException e)
+            {
+                // ignore and continue shutdown.
+            }
+            finally
+            {
+                runningAddins.Remove(this);
+                runningAddinsHash.Remove(asm.Name);
+            }
         } 
     }
 

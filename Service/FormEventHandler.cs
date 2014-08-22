@@ -27,6 +27,8 @@ using Dover.Framework.Form;
 using System.Reflection;
 using Dover.Framework.Factory;
 using Castle.Core;
+using Castle.Core.Logging;
+using System.IO;
 
 namespace Dover.Framework.Service
 {
@@ -36,6 +38,8 @@ namespace Dover.Framework.Service
         private SAPbouiCOM.Application sapApp;
         private PermissionManager permissionManager;
         private B1SResourceManager resourceManager;
+
+        public ILogger Logger { get; set; }
 
         Dictionary<string, EventForm> formEvents = new Dictionary<string, EventForm>();
         Dictionary<string, Type> formImplementationType = new Dictionary<string, Type>();
@@ -124,23 +128,37 @@ namespace Dover.Framework.Service
 
             foreach (var asmName in currentAsm.GetReferencedAssemblies())
             {
-                Assembly dependency = AppDomain.CurrentDomain.Load(asmName);
-                formAttributes.AddRange((from type in dependency.GetTypes()
-                                      from attribute in type.GetCustomAttributes(true)
-                                      where attribute is SAPbouiCOM.Framework.FormAttribute
-                                        && typeof(DoverUserFormBase).IsAssignableFrom(type)
-                                        /* do not register systemForm from ReferencedAssemblies, they
-                                         * should be registered by the addin owner.
-                                         * Just ExceptionTrace UserForm can be reused
-                                         */
-                                        && (dependency != Assembly.GetExecutingAssembly()
-                                         || (dependency == Assembly.GetExecutingAssembly()
-                                               && (((SAPbouiCOM.Framework.FormAttribute)attribute).Resource 
-                                                        == "Dover.Framework.Form.ExceptionTrace.srf")))
-                                      select new {
-                                            FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute,
-                                            Assembly = dependency,
-                                            Type = type}).ToList() );
+                try
+                {
+                    Assembly dependency = AppDomain.CurrentDomain.Load(asmName);
+                    formAttributes.AddRange((from type in dependency.GetTypes()
+                                             from attribute in type.GetCustomAttributes(true)
+                                             where attribute is SAPbouiCOM.Framework.FormAttribute
+                                               && typeof(DoverUserFormBase).IsAssignableFrom(type)
+                                                 /* do not register systemForm from ReferencedAssemblies, they
+                                                  * should be registered by the addin owner.
+                                                  * Just ExceptionTrace UserForm can be reused
+                                                  */
+                                               && (dependency != Assembly.GetExecutingAssembly()
+                                                || (dependency == Assembly.GetExecutingAssembly()
+                                                      && (((SAPbouiCOM.Framework.FormAttribute)attribute).Resource
+                                                               == "Dover.Framework.Form.ExceptionTrace.srf")))
+                                             select new
+                                             {
+                                                 FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute,
+                                                 Assembly = dependency,
+                                                 Type = type
+                                             }).ToList());
+                }
+
+                catch (TargetInvocationException tie)
+                {
+                    Logger.Debug(Messages.IgnoringType, tie);
+                }
+                catch (FileNotFoundException fnfe)
+                {
+                    Logger.Debug(Messages.IgnoringType, fnfe);
+                }
             }
 
             foreach (var attribute in formAttributes)

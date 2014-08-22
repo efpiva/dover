@@ -250,6 +250,15 @@ namespace Dover.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ignoring type on menu and form loading because of missing dependency..
+        /// </summary>
+        internal static string IgnoringType {
+            get {
+                return ResourceManager.GetString("IgnoringType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Resource {0} not found on assembly..
         /// </summary>
         internal static string InternalResourceMissing {

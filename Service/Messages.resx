@@ -282,4 +282,7 @@
   <data name="FileUpdating" xml:space="preserve">
     <value>Updating file {0} - Version {1}</value>
   </data>
+  <data name="IgnoringType" xml:space="preserve">
+    <value>Ignoring type on menu and form loading because of missing dependency.</value>
+  </data>
 </root>
