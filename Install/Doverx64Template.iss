@@ -21,6 +21,7 @@ Uninstallable=yes
 Source: "AddOnInstallAPI.exe"; DestDir: {app}; Flags: ignoreversion
 Source: "Dover.exe"; DestDir: {app}; Flags: ignoreversion
 Source: "Framework.dll"; DestDir: {app}; Flags: ignoreversion
+Source: "pt-BR/Framework.resources.dll"; DestDir: {app}/pt-BR; Flags: ignoreversion
 [Registry]
 Root: HKLM; Subkey: "Software\Dover"
 Root: HKLM; Subkey: "Software\Dover\Frameworkx64"; Flags: uninsdeletekey
