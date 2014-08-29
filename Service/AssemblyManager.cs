@@ -59,6 +59,9 @@ namespace Dover.Framework.Service
             var version = asm.GetName().Version;
             asmInfo.Version = version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString()
                     + "." + version.Revision;
+            Type addInAttributeType = asm.GetType("Dover.Framework.Attribute.AddInAttribute");
+            if (addInAttributeType == null)
+                addInAttributeType = typeof(AddInAttribute);
 
             var types = (from type in asm.GetTypes()
                         where type.IsClass
@@ -66,11 +69,11 @@ namespace Dover.Framework.Service
 
             foreach (var type in types)
             {
-                var attrs = type.GetCustomAttributes(typeof(AddInAttribute), true);
+                var attrs = type.GetCustomAttributes(addInAttributeType, true);
                 if (attrs != null && attrs.Length > 0)
                 {
                     var attr = attrs[0];
-                    var addInAttribute = ((AddInAttribute)attr);
+                    dynamic addInAttribute = attr;
                     if (!string.IsNullOrEmpty(addInAttribute.i18n))
                     {
                         asmInfo.Description = i18nService.GetLocalizedString(addInAttribute.i18n, asm);
