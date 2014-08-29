@@ -535,7 +535,9 @@ namespace Dover.Framework.Service
         [Transaction]
         protected internal virtual void ShutdownAddins()
         {
-            foreach (var runner in runningAddIns)
+            // prevent list modification sync issues on shutdown.
+            var runningAddinsTemp = new List<AddInRunner>(runningAddIns);
+            foreach (var runner in runningAddinsTemp)
             {
                 Logger.Info(string.Format(Messages.ShutdownAddin, runner.asm.Name));
                 runner.eventDispatcher.UnregisterEvents();

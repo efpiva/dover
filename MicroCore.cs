@@ -43,6 +43,7 @@ namespace Dover.Framework
         private MicroBoot microBoot;
         private I18NService i18nService;
         internal static bool reboot = true; // Used to signal a reboot by AppEvent.
+        private int rebootCount = 0;
 
         public ILogger Logger { get; set; }
 
@@ -79,12 +80,14 @@ namespace Dover.Framework
                     assemblyLoader.UpdateAssemblies(AssemblySource.AddIn, appFolder);
                     CopyInstallResources(appFolder, Environment.CurrentDirectory);
 
-                    dispatcher.RegisterEvents();
+                    if (rebootCount == 0)
+                        dispatcher.RegisterEvents();
 
                     microBoot.AppFolder = appFolder;
                     microBoot.StartInception();
                     microBoot.Boot();
                     System.Windows.Forms.Application.Run();
+                    rebootCount++;
                 }
                 ContainerManager.Container.Dispose();
                 SAPServiceFactory.LogOff();
