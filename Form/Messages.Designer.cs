@@ -160,6 +160,15 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string AdminModuleDescription {
+            get {
+                return ResourceManager.GetString("AdminModuleDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Addin File.
         /// </summary>
         internal static string AdminModuleFile {

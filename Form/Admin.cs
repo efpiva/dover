@@ -43,7 +43,6 @@ namespace Dover.Framework.Form
 
         public AssemblyManager AsmLoader { get; set; }
         public AppEventHandler appEventHandler { get; set; }
-        public SAPbouiCOM.Application app { get; set; }
         private AddinManager _frameworkAddinManager;
         public AddinManager FrameworkAddinManager
         {
