@@ -26,13 +26,51 @@ using Dover.Framework.Monad;
 
 namespace Dover.Framework.Model
 {
-    public class AssemblyInformation : MarshalByRefObject
+    public class AssemblyInformation : MarshalByRefObject, IComparable<AssemblyInformation>
     {
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-        public string Version { get; set; }
+        private int major;
+        private int minor;
+        private int build;
+        private int revision;
+
+        private string _version;
+
+        public string Version
+        {
+            get
+            {
+                return _version;
+            }
+            set
+            {
+                _version = value;
+                int index = _version.IndexOf('.', 0);
+                int lastIndex;
+                if (index < 0)
+                    return;
+
+                int.TryParse(_version.Substring(0, index), out major);
+                lastIndex = index+1;
+
+                index = _version.IndexOf('.', lastIndex);
+                if (index < 0)
+                    return;
+                int.TryParse(_version.Substring(lastIndex, index-lastIndex), out minor);
+                lastIndex = index+1;
+
+                index = _version.IndexOf('.', lastIndex);
+                if (index < 0)
+                    return;
+                int.TryParse(_version.Substring(lastIndex, index-lastIndex), out build);
+                lastIndex = index+1;
+
+                int.TryParse(_version.Substring(lastIndex), out revision);
+            }
+        }
 
         public string MD5 { get; set; }
 
@@ -51,6 +89,55 @@ namespace Dover.Framework.Model
         public override string ToString()
         {
             return Name.Return(x => x, string.Empty) + " " + Version.Return(x => x, string.Empty);
+        }
+
+        public int CompareTo(AssemblyInformation other)
+        {
+            if (major < other.major)
+            {
+                return -1;
+            }
+            else if (major > other.major)
+            {
+                return 1;
+            }
+            else
+            {
+                if (minor < other.minor)
+                {
+                    return -1;
+                }
+                else if (minor > other.minor)
+                {
+                    return 1;
+                }
+                else
+                {
+                    if (build < other.build)
+                    {
+                        return -1;
+                    }
+                    else if (build > other.build)
+                    {
+                        return 1;
+                    }
+                    else
+                    {
+                        if (revision < other.revision)
+                        {
+                            return -1;
+                        }
+                        else if (revision > other.revision)
+                        {
+                            return 1;
+                        }
+                        else
+                        {
+                            return 0;
+                        }
+                    }
+                }
+            }
         }
     }
 }
