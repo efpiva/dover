@@ -445,7 +445,7 @@ namespace Dover.Framework.Service
             if (existingAsm != null)
                 newAsm.Code = existingAsm.Code; // Prepare for update.
 
-            if (existingAsm == null || newAsm.Version.CompareTo(existingAsm.Version) == 1
+            if (existingAsm == null || newAsm.CompareTo(existingAsm) == 1
                 || (newAsm.Version == existingAsm.Version && newAsm.MD5 != existingAsm.MD5))
             {
                 asmDAO.SaveAssembly(newAsm, asmBytes);
