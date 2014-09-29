@@ -19,11 +19,13 @@
  * 
  */
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Dover.Framework.Model;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using ICSharpCode.SharpZipLib.Zip;
 
 namespace Dover.Framework.DAO
 {
@@ -58,13 +60,13 @@ namespace Dover.Framework.DAO
                 sb.Append(hex);
             }
             SoapHexBinary shb = SoapHexBinary.Parse(sb.ToString());
-            return shb.Value;
+            return Uncompress(shb.Value);
         }
 
         internal override void SaveAssembly(AssemblyInformation asm, byte[] asmBytes)
         {
             string installed = (asm.Type == "C") ? "Y" : "N";
-            SoapHexBinary shb = new SoapHexBinary(asmBytes);
+            SoapHexBinary shb = new SoapHexBinary(Compress(asmBytes));
             string asmHex = null;
             if (asmBytes != null)
                 asmHex = shb.ToString();
@@ -137,7 +139,7 @@ namespace Dover.Framework.DAO
            
             b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteModuleI18N.sql"), moduleCode));
 
-            SoapHexBinary shb = new SoapHexBinary(i18nAsm);
+            SoapHexBinary shb = new SoapHexBinary(Compress(i18nAsm));
             if (i18nAsm != null)
             {
                 string insertSQL = this.GetSQL("InsertI18N.sql");
@@ -184,7 +186,51 @@ namespace Dover.Framework.DAO
                 sb.Append(hex);
             }
             SoapHexBinary shb = SoapHexBinary.Parse(sb.ToString());
-            return shb.Value;
+            return Uncompress(shb.Value);
+        }
+
+        private byte[] Compress(byte[] asmBytes)
+        {
+            MemoryStream ms = new MemoryStream();
+            using (ZipOutputStream zos = new ZipOutputStream(ms))
+            {
+                ZipEntry ze = new ZipEntry("file");
+                ze.Size = asmBytes.Length;
+                zos.PutNextEntry(ze);
+                zos.Write(asmBytes, 0, asmBytes.Length);
+                zos.CloseEntry();
+            }
+
+            return ms.ToArray();
+        }
+        
+        private byte[] Uncompress(byte[] p)
+        {
+            MemoryStream output = new MemoryStream();
+            MemoryStream ms = new MemoryStream(p);
+            using (ZipInputStream zis = new ZipInputStream(ms))
+            {
+                int size = 2048;
+                byte[] data = new byte[size];
+
+                if (zis.GetNextEntry() != null)
+                {
+                    while (true)
+                    {
+                        size = zis.Read(data, 0, size);
+                        if (size > 0)
+                        {
+                            output.Write(data, 0, size);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return output.ToArray();
         }
     }
 }
