@@ -26,7 +26,6 @@ using Castle.Core.Logging;
 using SAPbouiCOM;
 using Dover.Framework.Attribute;
 using Dover.Framework.Factory;
-using SAPbouiCOM.Framework;
 using Dover.Framework.Form;
 using Dover.Framework.Log;
 
@@ -68,7 +67,7 @@ namespace Dover.Framework.Service
             try
             {
                 var obj = ContainerManager.Container.Resolve(menuEvent.OriginalType);
-                if (obj is FormBase || obj is DoverFormBase)
+                if (obj is DoverFormBase)
                 {
                     Logger.Debug(DebugString.Format(Messages.MenuDispatchInfo, pVal.MenuUID, menuEvent.OriginalType));
                     var method = menuEvent.OriginalType.GetMethod("Show");

@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SAPbouiCOM.Framework;
 using Dover.Framework.Attribute;
 using Dover.Framework.Service;
 using Castle.Core.Logging;
@@ -35,7 +34,7 @@ namespace Dover.Framework.Form
 {
 
     [MenuEvent(UniqueUID = "doverAdmin")]
-    [FormAttribute("dover.formAdmin", "Dover.Framework.Form.Admin.srf")]
+    [DoverForm("dover.formAdmin", "Dover.Framework.Form.Admin.srf")]
     public class Admin : DoverUserFormBase
     {
         private DataTable moduleDT;

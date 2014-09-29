@@ -56,10 +56,8 @@
       <HintPath>Assemblies\log4net.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SAPbouiCOM">
-      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\Extensions\SAP\Business One Studio\SAPbouiCOM.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <Private>False</Private>
+    <Reference Include="SAPBusinessOneSDK">
+      <HintPath>Assemblies\SAPBusinessOneSDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -75,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attribute\AddInAttribute.cs" />
+    <Compile Include="Attribute\DoverFormAttribute.cs" />
     <Compile Include="Attribute\MenuAttribute.cs" />
     <Compile Include="Attribute\MenuEventAttribute.cs" />
     <Compile Include="Attribute\PermissionAttribute.cs" />
@@ -171,17 +170,6 @@
     <Compile Include="Service\RawPrinter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="SAPbobsCOM">
-      <Guid>{FC8030BE-F5D2-4B8E-8F92-44228FE30090}</Guid>
-      <VersionMajor>9</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="DAO\Messages.pt-BR.resx" />
     <EmbeddedResource Include="Form\Messages.pt-BR.resx" />
     <EmbeddedResource Include="Form\Messages.resx">
@@ -219,12 +207,6 @@
     <EmbeddedResource Include="Assemblies\Castle.Windsor.dll" />
     <EmbeddedResource Include="Assemblies\ICSharpCode.SharpZipLib.dll" />
     <EmbeddedResource Include="Assemblies\log4net.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assemblies\SAPbouiCOM.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assemblies\Interop.SAPbobsCOM.dll" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form\ExportDBInfo.srf">
@@ -427,6 +409,9 @@
     <EmbeddedResource Include="Service\sql\IsInstalled.sql" />
     <EmbeddedResource Include="Service\sql\MarkAsInstalled.sql" />
     <EmbeddedResource Include="Service\sql\MarkAsNotInstalled.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assemblies\SAPBusinessOneSDK.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

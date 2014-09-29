@@ -24,11 +24,11 @@ using System.Linq;
 using System.Text;
 using Dover.Framework.DAO;
 using SAPbouiCOM;
-using SAPbouiCOM.Framework;
 using Dover.Framework.Monad;
 using Dover.Framework.Service;
 using Dover.Framework.Factory;
 using System.Xml.Linq;
+using Dover.Framework.Attribute;
 
 namespace Dover.Framework.Form
 {
@@ -79,8 +79,8 @@ namespace Dover.Framework.Form
                     initialized = true;
                     this.UIAPIRawForm.Freeze(true);
 
-                    FormAttribute formAttribute = (FormAttribute)(from attribute in this.GetType().GetCustomAttributes(true)
-                                                                  where attribute is FormAttribute
+                    DoverFormAttribute formAttribute = (DoverFormAttribute)(from attribute in this.GetType().GetCustomAttributes(true)
+                                                                  where attribute is DoverFormAttribute
                                                                   select attribute).First();
                     var asmName = this.GetType().BaseType.Assembly.GetName().FullName;
 

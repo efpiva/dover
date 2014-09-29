@@ -74,7 +74,7 @@ namespace Dover.Framework.Factory
 
         private static void SetApplication()
         {
-            SboGuiApi sboGuiApi = (SboGuiApi)new SboGuiApiClass();
+            SboGuiApi sboGuiApi = new SboGuiApi();
             sboGuiApi.Connect(GetConnectionString());
             application = sboGuiApi.GetApplication(-1);
         }

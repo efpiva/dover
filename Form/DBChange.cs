@@ -22,13 +22,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SAPbouiCOM.Framework;
 using SAPbouiCOM;
 using System.Threading;
+using Dover.Framework.Attribute;
 
 namespace Dover.Framework.Form
 {
-    [FormAttribute("Dover.dbchange", "Dover.Framework.Form.DBChange.srf")]
+    [DoverForm("Dover.dbchange", "Dover.Framework.Form.DBChange.srf")]
     public class DBChange : DoverUserFormBase
     {
         internal DataTable DBChangeDT;

@@ -22,12 +22,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SAPbouiCOM.Framework;
 using SAPbouiCOM;
+using Dover.Framework.Attribute;
 
 namespace Dover.Framework.Form
 {
-    [FormAttribute("Dover.ChangeLog","Dover.Framework.Form.ChangeLog.srf")]
+    [DoverForm("Dover.ChangeLog","Dover.Framework.Form.ChangeLog.srf")]
     public class ChangeLog : DoverUserFormBase
     {
 

@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SAPbouiCOM.Framework;
 using Dover.Framework.Attribute;
 using Dover.Framework.Form;
 using SAPbouiCOM;
@@ -33,7 +32,7 @@ namespace Dover.Framework.Form
 {
 
     [MenuEvent(UniqueUID = "doverMngmnt")]
-    [FormAttribute("dover.StartupManagement", "Dover.Framework.Form.AddInStartupManagement.srf")]
+    [DoverForm("dover.StartupManagement", "Dover.Framework.Form.AddInStartupManagement.srf")]
     public class AddInStartupManagement : DoverUserFormBase
     {
         private SAPbouiCOM.Grid gridUser;

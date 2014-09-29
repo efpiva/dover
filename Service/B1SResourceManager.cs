@@ -28,7 +28,6 @@ using Castle.Core.Logging;
 using System.Reflection;
 using Dover.Framework.Monad;
 using SAPbouiCOM;
-using SAPbouiCOM.Framework;
 using Dover.Framework.Form;
 using Dover.Framework.DAO;
 
@@ -73,8 +72,8 @@ namespace Dover.Framework.Service
 
             var formAttributes =
                     (from attribute in type.GetCustomAttributes(true)
-                        where attribute is FormAttribute
-                        select (FormAttribute)attribute).ToList();
+                        where attribute is DoverFormAttribute
+                        select (DoverFormAttribute)attribute).ToList();
 
             foreach (var formAttribute in formAttributes)
             {
@@ -93,7 +92,7 @@ namespace Dover.Framework.Service
             return null;
         }
 
-        private void LoadAssemblyFormResource(Assembly asm, FormAttribute addInAttribute)
+        private void LoadAssemblyFormResource(Assembly asm, DoverFormAttribute addInAttribute)
         {
             if (string.IsNullOrWhiteSpace(addInAttribute.Resource) || asm.IsDynamic)
                 return;

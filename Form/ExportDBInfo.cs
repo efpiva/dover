@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SAPbouiCOM.Framework;
 using Dover.Framework.Attribute;
 using SAPbouiCOM;
 using Dover.Framework.DAO;
@@ -34,7 +33,7 @@ namespace Dover.Framework.Form
 {
 
     [MenuEvent(UniqueUID = "doverExport")]
-    [FormAttribute("dover.exportDBInfo", "Dover.Framework.Form.ExportDBInfo.srf")]
+    [DoverForm("dover.exportDBInfo", "Dover.Framework.Form.ExportDBInfo.srf")]
     public class ExportDBInfo : DoverUserFormBase
     {
         private Button exportBT;

@@ -29,6 +29,7 @@ using Dover.Framework.Factory;
 using Castle.Core;
 using Castle.Core.Logging;
 using System.IO;
+using Dover.Framework.Attribute;
 
 namespace Dover.Framework.Service
 {
@@ -120,9 +121,9 @@ namespace Dover.Framework.Service
             Assembly currentAsm = AppDomain.CurrentDomain.Load((string)AppDomain.CurrentDomain.GetData("assemblyName"));
             var formAttributes = (from type in currentAsm.GetTypes()
                                   from attribute in type.GetCustomAttributes(true)
-                                  where attribute is SAPbouiCOM.Framework.FormAttribute
+                                  where attribute is DoverFormAttribute
                                   select new { 
-                                            FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute, 
+                                            FormAttribute = (DoverFormAttribute)attribute, 
                                             Assembly = currentAsm,
                                             Type = type}).ToList();
 
@@ -133,7 +134,7 @@ namespace Dover.Framework.Service
                     Assembly dependency = AppDomain.CurrentDomain.Load(asmName);
                     formAttributes.AddRange((from type in dependency.GetTypes()
                                              from attribute in type.GetCustomAttributes(true)
-                                             where attribute is SAPbouiCOM.Framework.FormAttribute
+                                             where attribute is DoverFormAttribute
                                                && typeof(DoverUserFormBase).IsAssignableFrom(type)
                                                  /* do not register systemForm from ReferencedAssemblies, they
                                                   * should be registered by the addin owner.
@@ -141,11 +142,11 @@ namespace Dover.Framework.Service
                                                   */
                                                && (dependency != Assembly.GetExecutingAssembly()
                                                 || (dependency == Assembly.GetExecutingAssembly()
-                                                      && (((SAPbouiCOM.Framework.FormAttribute)attribute).Resource
+                                                      && (((DoverFormAttribute)attribute).Resource
                                                                == "Dover.Framework.Form.ExceptionTrace.srf")))
                                              select new
                                              {
-                                                 FormAttribute = (SAPbouiCOM.Framework.FormAttribute)attribute,
+                                                 FormAttribute = (DoverFormAttribute)attribute,
                                                  Assembly = dependency,
                                                  Type = type
                                              }).ToList());

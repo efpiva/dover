@@ -25,7 +25,6 @@ using System.Text;
 using SAPbouiCOM;
 using Dover.Framework.Attribute;
 using Dover.Framework.Factory;
-using SAPbouiCOM.Framework;
 using Castle.Core.Logging;
 using System.ServiceModel;
 

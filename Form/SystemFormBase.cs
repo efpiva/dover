@@ -21,7 +21,7 @@
 using System.Linq;
 using Dover.Framework.DAO;
 using Dover.Framework.Service;
-using SAPbouiCOM.Framework;
+using Dover.Framework.Attribute;
 
 namespace Dover.Framework.Form
 {
@@ -57,8 +57,8 @@ namespace Dover.Framework.Form
 
         private void UpdateSystemForm()
         {
-            FormAttribute formAttribute = (FormAttribute)(from attribute in this.GetType().GetCustomAttributes(true)
-                                                          where attribute is FormAttribute
+            DoverFormAttribute formAttribute = (DoverFormAttribute)(from attribute in this.GetType().GetCustomAttributes(true)
+                                                          where attribute is DoverFormAttribute
                                                           select attribute).First();
             var asmName = this.GetType().BaseType.Assembly.GetName().FullName;
 

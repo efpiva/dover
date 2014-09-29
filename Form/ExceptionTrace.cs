@@ -24,11 +24,11 @@ using System.Linq;
 using System.Text;
 using SAPbouiCOM;
 using Dover.Framework.Factory;
-using SAPbouiCOM.Framework;
+using Dover.Framework.Attribute;
 
 namespace Dover.Framework.Form
 {
-    [FormAttribute("dover.exception", "Dover.Framework.Form.ExceptionTrace.srf")]
+    [DoverForm("dover.exception", "Dover.Framework.Form.ExceptionTrace.srf")]
     public class ExceptionTrace : DoverUserFormBase
     {
 
