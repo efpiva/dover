@@ -413,6 +413,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Assemblies\SAPBusinessOneSDK.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Assemblies\SAPbouiCOM.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd $(ProjectDir)
