@@ -29,6 +29,7 @@ using Dover.Framework.Service;
 using SAPbobsCOM;
 using Dover.Framework.DAO;
 using Dover.Framework.Form;
+using System.Runtime.InteropServices;
 
 namespace Dover.Framework.Log
 {
@@ -49,6 +50,10 @@ namespace Dover.Framework.Log
                     UIAPILog(loggingEvent, app, asm);
                 if (B1DAO != null && loggingEvent.Level >= Level.Error)
                     DIAPILog(loggingEvent, asm, version);
+            }
+            catch (COMException c)
+            {
+                // do nothing, SAP is closed, ignore.
             }
             catch (Exception e)
             {
