@@ -23,6 +23,7 @@ Source: "C:\Program Files (x86)\SAP\SAP Business One\AddOnInstallAPI.dll"; Flags
 ;Archivo .Exe del AddOn
 Source: "Dover.exe"; DestDir: {app}; Flags: ignoreversion
 Source: "Framework.dll"; DestDir: {app}; Flags: ignoreversion
+Source: "Interop.SAPbobsCOM.dll"; DestDir: {app}; Flags: ignoreversion
 Source: "pt-BR/Framework.resources.dll"; DestDir: {app}/pt-BR; Flags: ignoreversion
 
 ;Información para la desinstalación

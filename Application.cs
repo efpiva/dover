@@ -57,7 +57,6 @@ namespace Dover.Framework
         private static Dictionary<string, Assembly> assemblyCacheResolver = new Dictionary<string, Assembly>();
         private string[] embeddedAssemblies = {
             "Dover.Framework.Assemblies.SAPbouiCOM.dll",
-            "Dover.Framework.Assemblies.Interop.SAPbobsCOM.dll",
             "Dover.Framework.Assemblies.log4net.dll",
             "Dover.Framework.Assemblies.Castle.Core.dll",
             "Dover.Framework.Assemblies.Castle.Facilities.Logging.dll",
@@ -84,6 +83,18 @@ namespace Dover.Framework
             }
 
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
+
+            string bobsInteropPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Interop.SAPbobsCOM.dll");
+            if (!File.Exists(bobsInteropPath))
+            {
+                using (Stream stm = curAsm.GetManifestResourceStream("Dover.Framework.Assemblies.Interop.SAPbobsCOM.dll"))
+                {
+                    ba = new byte[(int)stm.Length];
+                    stm.Read(ba, 0, (int)stm.Length);
+                    File.WriteAllBytes(bobsInteropPath, ba);
+                }
+            }
+
             CheckLogging();
         }
 
