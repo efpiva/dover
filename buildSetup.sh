@@ -1,6 +1,12 @@
 #!/bin/bash
 export fulltag=$(git describe --tags)
 export tag=$(echo $fulltag | sed s/-/./ | sed s/-.*//)
+export dots=${tag//[^.]}
+
+if [ ${#dots} -lt 3 ]
+then
+    tag=$tag".0"
+fi
 
 MSBuild.exe AddOnInstallAPI/AddOnInstallAPI.sln //p:Configuration=Release
 MSBuild.exe Dover.sln //p:Configuration=Release //p:Platform=x64
