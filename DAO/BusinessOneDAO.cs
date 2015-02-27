@@ -179,6 +179,13 @@ namespace Dover.Framework.DAO
         void SaveBusinessObject(object b1Object);
 
         /// <summary>
+        /// Call the Add() API on the desired object. On Error an exception is thrown and the 
+        /// Business Object is cleaned from memory (ReleaseComObject is called).
+        /// </summary>
+        /// <param name="b1Object">COM object that will have Add() call done.</param>
+        void AddBusinessObject(object b1Object);
+
+        /// <summary>
         /// Proper release of COM resources.
         /// </summary>
         /// <param name="b1Object">COM object that will be released</param>

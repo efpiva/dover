@@ -701,6 +701,11 @@ namespace Dover.Framework.DAO
             CallBusinessObjectMethod(b1Object, "Save");
         }
 
+        public void AddBusinessObject(object b1Object)
+        {
+            CallBusinessObjectMethod(b1Object, "Add");
+        }
+
         private void CallBusinessObjectMethod(object b1Object, string method)
         {
             Type type = b1Object.GetType();
