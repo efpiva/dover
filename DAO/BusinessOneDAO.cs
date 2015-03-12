@@ -186,9 +186,17 @@ namespace Dover.Framework.DAO
         void AddBusinessObject(object b1Object);
 
         /// <summary>
+        /// Call the Close() API on the desired object. On Error an exception is thrown and the 
+        /// Business Object is cleaned from memory (ReleaseComObject is called).
+        /// </summary>
+        /// <param name="b1Object">COM object that will have Close() call done.</param>
+        void CloseBusinessObject(object doc);
+
+        /// <summary>
         /// Proper release of COM resources.
         /// </summary>
         /// <param name="b1Object">COM object that will be released</param>
         void Release(object b1Object);
+
     }
 }
