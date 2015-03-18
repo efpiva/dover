@@ -24,6 +24,7 @@ using System.Linq;
 using System.Text;
 using Dover.Framework.Model;
 using Dover.Framework.DAO;
+using Castle.Core.Logging;
 
 namespace Dover.Framework.Service
 {
@@ -33,6 +34,7 @@ namespace Dover.Framework.Service
     public class LicenseManager
     {
         private AssemblyDAO asmDAO;
+        public ILogger Logger { get; set; }
 
         public LicenseManager(AssemblyDAO asmDAO)
         {
@@ -44,19 +46,23 @@ namespace Dover.Framework.Service
             return asmDAO.GetAssembliesInformation("A");
         }
 
-        internal void BootLicense()
+        internal bool SaveLicense(string xml)
         {
+            return true;
             // fake implementation
         }
 
-        public void SaveLicense(string p)
-        {
-            // fake implementation
-        }
-
-        public DateTime GetAddInExpireDate(string module)
+        internal DateTime GetAddInExpireDate(string module)
         {
             return DateTime.MaxValue;
+        }
+
+        internal bool AddInValid(string p)
+        {
+            // Logger.Error("Addin is not valid");
+            return true;
+            // Fake implementation
+            // throw new NotImplementedException();
         }
     }
 }

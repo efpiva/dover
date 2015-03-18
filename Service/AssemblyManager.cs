@@ -294,7 +294,6 @@ namespace Dover.Framework.Service
                         SaveAddinI18NResources(directory, addInName, savedAsm.Code);
                     }
 
-                    licenseManager.BootLicense(); // reload licenses to include added license.
                     Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
                     return addInName;
                 }

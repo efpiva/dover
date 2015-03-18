@@ -23,7 +23,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.ServiceModel;
 using System.Threading;
 using System.Xml.Linq;
 using Dover.Framework.Attribute;
@@ -166,14 +165,22 @@ namespace Dover.Framework.Service
         internal List<AddInRunner> runningAddins;
         internal Dictionary<string, AddInRunner> runningAddinsHash;
 
-        internal AddInRunner(AssemblyInformation asm, AddinManager frameworkAddinManager)
+        private LicenseManager licenseManager;
+
+        internal AddInRunner(AssemblyInformation asm, AddinManager frameworkAddinManager, LicenseManager licenseManager)
         {
             this.asm = asm;
             this.frameworkAddinManager = frameworkAddinManager;
+            this.licenseManager = licenseManager;
         }
 
         internal void Run()
         {
+            if (!licenseManager.AddInValid(asm.Name))
+            {
+                return; // Do not run it.
+            }
+
             var setup = new AppDomainSetup();
             setup.ApplicationName = "Dover.Inception";
             setup.ApplicationBase = Environment.CurrentDirectory;
@@ -220,11 +227,13 @@ namespace Dover.Framework.Service
         private BusinessOneDAO b1DAO;
         private List<AddInRunner> runningAddIns = new List<AddInRunner>();
         private Dictionary<string, AddInRunner> runningAddinsHash = new Dictionary<string, AddInRunner>();
+        private LicenseManager licenseManager;
          
         private I18NService i18nService;
 
         public AddinManager(PermissionManager permissionManager, AssemblyManager assemblyManager,
-            BusinessOneDAO b1DAO, I18NService i18nService, AssemblyDAO assemblyDAO, AddinLoader addinLoader)
+            BusinessOneDAO b1DAO, I18NService i18nService, AssemblyDAO assemblyDAO, AddinLoader addinLoader,
+            LicenseManager licenseManager)
         {
             this.permissionManager = permissionManager;
             this.assemblyDAO = assemblyDAO;
@@ -232,6 +241,7 @@ namespace Dover.Framework.Service
             this.i18nService = i18nService;
             this.assemblyManager = assemblyManager;
             this.addinLoader = addinLoader;
+            this.licenseManager = licenseManager;
         }
 
         [Transaction]
@@ -489,7 +499,7 @@ namespace Dover.Framework.Service
 
         private void RegisterAddin(AssemblyInformation addin)
         {
-            AddInRunner runner = new AddInRunner(addin, this);
+            AddInRunner runner = new AddInRunner(addin, this, licenseManager);
             runningAddIns.Add(runner);
             runningAddinsHash.Add(addin.Name, runner);
             var thread = new Thread(new ThreadStart(runner.Run));

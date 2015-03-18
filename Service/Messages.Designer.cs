@@ -331,6 +331,15 @@ namespace Dover.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No License found for {0}.
+        /// </summary>
+        internal static string NoLicenseError {
+            get {
+                return ResourceManager.GetString("NoLicenseError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ZIP package contains more than one DLL.
         /// </summary>
         internal static string PackageContainsMoreThanOneDLL {
