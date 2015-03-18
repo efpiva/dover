@@ -502,6 +502,96 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string LicenseCancelButton {
+            get {
+                return ResourceManager.GetString("LicenseCancelButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description.
+        /// </summary>
+        internal static string LicenseDescription {
+            get {
+                return ResourceManager.GetString("LicenseDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DueDate.
+        /// </summary>
+        internal static string LicenseDueDate {
+            get {
+                return ResourceManager.GetString("LicenseDueDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No License.
+        /// </summary>
+        internal static string LicenseEmpty {
+            get {
+                return ResourceManager.GetString("LicenseEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error validating license file.
+        /// </summary>
+        internal static string LicenseErrorInstall {
+            get {
+                return ResourceManager.GetString("LicenseErrorInstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import License.
+        /// </summary>
+        internal static string LicenseImportButton {
+            get {
+                return ResourceManager.GetString("LicenseImportButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage License.
+        /// </summary>
+        internal static string LicenseMenu {
+            get {
+                return ResourceManager.GetString("LicenseMenu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string LicenseName {
+            get {
+                return ResourceManager.GetString("LicenseName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to License successfully installed.
+        /// </summary>
+        internal static string LicenseSuccessInstall {
+            get {
+                return ResourceManager.GetString("LicenseSuccessInstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage License.
+        /// </summary>
+        internal static string LicenseTitle {
+            get {
+                return ResourceManager.GetString("LicenseTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ChangeLog.
         /// </summary>
         internal static string LogTitle {

@@ -312,4 +312,34 @@
   <data name="AdminModuleDescription" xml:space="preserve">
     <value>Description</value>
   </data>
+  <data name="LicenseCancelButton" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="LicenseDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="LicenseDueDate" xml:space="preserve">
+    <value>DueDate</value>
+  </data>
+  <data name="LicenseImportButton" xml:space="preserve">
+    <value>Import License</value>
+  </data>
+  <data name="LicenseMenu" xml:space="preserve">
+    <value>Manage License</value>
+  </data>
+  <data name="LicenseName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="LicenseTitle" xml:space="preserve">
+    <value>Manage License</value>
+  </data>
+  <data name="LicenseErrorInstall" xml:space="preserve">
+    <value>Error validating license file</value>
+  </data>
+  <data name="LicenseSuccessInstall" xml:space="preserve">
+    <value>License successfully installed</value>
+  </data>
+  <data name="LicenseEmpty" xml:space="preserve">
+    <value>No License</value>
+  </data>
 </root>

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Licenses>
+  <Module>
+    <Name>Nome do Módulo</Name>
+    <Description> Descrição do módulo</Description>
+    <ExpirationDate>01/01/2010</ExpirationDate>
+  </Module>
+  <Module>
+    <Name>Nome do Módulo</Name>
+    <Description> Descrição do módulo</Description>
+    <ExpirationDate>01/01/2010</ExpirationDate>
+  </Module>
+</Licenses>

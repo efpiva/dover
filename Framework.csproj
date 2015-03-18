@@ -105,6 +105,7 @@
     <Compile Include="Form\ExportDBInfo.cs" />
     <Compile Include="Form\FormBase.cs" />
     <Compile Include="Form\ChangeLog.cs" />
+    <Compile Include="Form\License.cs" />
     <Compile Include="Form\MenuConfiguration.cs" />
     <Compile Include="Form\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -125,6 +126,9 @@
     <Compile Include="MicroBoot.cs" />
     <Compile Include="MicroCore.cs" />
     <Compile Include="Model\AssemblyInformation.cs" />
+    <Compile Include="Model\License\LicenseFile.cs">
+      <DependentUpon>LicenseFile.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Model\SAP\BOM.cs" />
     <Compile Include="Model\SAP\Documents.cs" />
     <Compile Include="Model\SAP\FormattedSearch.cs" />
@@ -427,6 +431,23 @@
     <EmbeddedResource Include="Service\sql\IsInstalled.sql" />
     <EmbeddedResource Include="Service\sql\MarkAsInstalled.sql" />
     <EmbeddedResource Include="Service\sql\MarkAsNotInstalled.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form\License.srf">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Model\License\LicenseFile.xsc">
+      <DependentUpon>LicenseFile.xsd</DependentUpon>
+    </None>
+    <None Include="Model\License\LicenseFile.xsd" />
+    <None Include="Model\License\LicenseFile.xss">
+      <DependentUpon>LicenseFile.xsd</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Model\License\LicenseFileTemplate.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
