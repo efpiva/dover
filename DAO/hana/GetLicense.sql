@@ -1,0 +1,2 @@
+﻿SELECT "U_Asm" 
+FROM "@DOVER_LICENSE_BIN" 

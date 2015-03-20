@@ -1,0 +1,1 @@
+﻿SELECT current_timestamp frmo DUMMY

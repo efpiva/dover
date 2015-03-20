@@ -89,6 +89,8 @@
     <Compile Include="DAO\BusinessOneUIDAOImpl.cs" />
     <Compile Include="DAO\Compression.cs" />
     <Compile Include="DAO\DBResourceExtension.cs" />
+    <Compile Include="DAO\LicenseDAO.cs" />
+    <Compile Include="DAO\LicenseDAOImpl.cs" />
     <Compile Include="DAO\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -448,6 +450,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\DeleteLicense.sql" />
+    <EmbeddedResource Include="DAO\hana\GetLicense.sql" />
+    <EmbeddedResource Include="DAO\hana\InsertLicense.sql" />
+    <EmbeddedResource Include="DAO\sql\DeleteLicense.sql" />
+    <EmbeddedResource Include="DAO\sql\GetLicense.sql" />
+    <EmbeddedResource Include="DAO\sql\InsertLicense.sql" />
+    <EmbeddedResource Include="DAO\sql\GetDate.sql" />
+    <EmbeddedResource Include="DAO\hana\GetDate.sql" />
     <Content Include="Model\License\LicenseFileTemplate.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
