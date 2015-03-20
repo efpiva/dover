@@ -285,4 +285,7 @@
 	<data name="IgnoringType" xml:space="preserve">
 		<value>Ignorando tipo no evento de menu/form por conta de dependências faltantes.</value>
 	</data>
+	<data name="NoLicenseError" xml:space="preserve">
+		<value>Licença não encontrada para {0}</value>
+	</data>
 </root>

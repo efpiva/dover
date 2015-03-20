@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,287 +59,287 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="AdminDatabaseChangeWarning" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="AdminDatabaseChangeWarning" xml:space="preserve">
     <value>Database structure will be modified</value>
   </data>
-  <data name="AdminEmptyFile" xml:space="preserve">
+	<data name="AdminEmptyFile" xml:space="preserve">
     <value>Empty file</value>
   </data>
-  <data name="AdminInstall" xml:space="preserve">
+	<data name="AdminInstall" xml:space="preserve">
     <value>Install</value>
   </data>
-  <data name="AdminInstalled" xml:space="preserve">
+	<data name="AdminInstalled" xml:space="preserve">
     <value>Installed</value>
   </data>
-  <data name="AdminInstallUpdate" xml:space="preserve">
+	<data name="AdminInstallUpdate" xml:space="preserve">
     <value>Install/Update</value>
   </data>
-  <data name="AdminManagement" xml:space="preserve">
+	<data name="AdminManagement" xml:space="preserve">
     <value>Addin Management</value>
   </data>
-  <data name="AdminMenu" xml:space="preserve">
+	<data name="AdminMenu" xml:space="preserve">
     <value>Addin configuration and installation</value>
   </data>
-  <data name="AdminModuleFile" xml:space="preserve">
+	<data name="AdminModuleFile" xml:space="preserve">
     <value>Addin File</value>
   </data>
-  <data name="AdminModuleFilterPrefix" xml:space="preserve">
+	<data name="AdminModuleFilterPrefix" xml:space="preserve">
     <value>Addin file</value>
   </data>
-  <data name="AdminModuleHistory" xml:space="preserve">
+	<data name="AdminModuleHistory" xml:space="preserve">
     <value>History</value>
   </data>
-  <data name="AdminModuleName" xml:space="preserve">
+	<data name="AdminModuleName" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="AdminModuleType" xml:space="preserve">
+	<data name="AdminModuleType" xml:space="preserve">
     <value>Type</value>
   </data>
-  <data name="AdminModuleVersion" xml:space="preserve">
+	<data name="AdminModuleVersion" xml:space="preserve">
     <value>Version</value>
   </data>
-  <data name="AdminOK" xml:space="preserve">
+	<data name="AdminOK" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="AdminRemove" xml:space="preserve">
+	<data name="AdminRemove" xml:space="preserve">
     <value>Remove</value>
   </data>
-  <data name="AdminShutdown" xml:space="preserve">
+	<data name="AdminShutdown" xml:space="preserve">
     <value>Shutdown</value>
   </data>
-  <data name="AdminStart" xml:space="preserve">
+	<data name="AdminStart" xml:space="preserve">
     <value>Start</value>
   </data>
-  <data name="AdminStatus" xml:space="preserve">
+	<data name="AdminStatus" xml:space="preserve">
     <value>Status</value>
   </data>
-  <data name="AdminTitle" xml:space="preserve">
+	<data name="AdminTitle" xml:space="preserve">
     <value>Modules Management</value>
   </data>
-  <data name="AllArgumentsMandatory" xml:space="preserve">
+	<data name="AllArgumentsMandatory" xml:space="preserve">
     <value>All arguments are mandatory</value>
   </data>
-  <data name="ExportDBInfoButtonCancel" xml:space="preserve">
+	<data name="ExportDBInfoButtonCancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="ExportDBInfoButtonOK" xml:space="preserve">
+	<data name="ExportDBInfoButtonOK" xml:space="preserve">
     <value>Export</value>
   </data>
-  <data name="ExportDBInfoCode" xml:space="preserve">
+	<data name="ExportDBInfoCode" xml:space="preserve">
     <value>Code</value>
   </data>
-  <data name="ExportDBInfoFileNotFound" xml:space="preserve">
+	<data name="ExportDBInfoFileNotFound" xml:space="preserve">
     <value>Could not create file</value>
   </data>
-  <data name="ExportDBInfoLabelSelectSource" xml:space="preserve">
+	<data name="ExportDBInfoLabelSelectSource" xml:space="preserve">
     <value>Select object type</value>
   </data>
-  <data name="ExportDBInfoMenu" xml:space="preserve">
+	<data name="ExportDBInfoMenu" xml:space="preserve">
     <value>Export DB information</value>
   </data>
-  <data name="ExportDBInfoName" xml:space="preserve">
+	<data name="ExportDBInfoName" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="ExportDBInfoSuccess" xml:space="preserve">
+	<data name="ExportDBInfoSuccess" xml:space="preserve">
     <value>File exported successfully</value>
   </data>
-  <data name="ExportDBInfoTitle" xml:space="preserve">
+	<data name="ExportDBInfoTitle" xml:space="preserve">
     <value>Export Database Information</value>
   </data>
-  <data name="ExportDBInfoUDF" xml:space="preserve">
+	<data name="ExportDBInfoUDF" xml:space="preserve">
     <value>User Defined Field</value>
   </data>
-  <data name="ExportDBInfoUDO" xml:space="preserve">
+	<data name="ExportDBInfoUDO" xml:space="preserve">
     <value>User Defined Object</value>
   </data>
-  <data name="ExportDBInfoUDT" xml:space="preserve">
+	<data name="ExportDBInfoUDT" xml:space="preserve">
     <value>User Defined Table</value>
   </data>
-  <data name="FileDialogTitle" xml:space="preserve">
+	<data name="FileDialogTitle" xml:space="preserve">
     <value>Please inform a file name</value>
   </data>
-  <data name="FolderDialogTitle" xml:space="preserve">
+	<data name="FolderDialogTitle" xml:space="preserve">
     <value>Please select a folder</value>
   </data>
-  <data name="MngmntActive" xml:space="preserve">
+	<data name="MngmntActive" xml:space="preserve">
     <value>Active</value>
   </data>
-  <data name="MngmntDefault" xml:space="preserve">
+	<data name="MngmntDefault" xml:space="preserve">
     <value>Default</value>
   </data>
-  <data name="MngmntDescription" xml:space="preserve">
+	<data name="MngmntDescription" xml:space="preserve">
     <value>Description</value>
   </data>
-  <data name="MngmntGeneral" xml:space="preserve">
+	<data name="MngmntGeneral" xml:space="preserve">
     <value>General</value>
   </data>
-  <data name="MngmntInactive" xml:space="preserve">
+	<data name="MngmntInactive" xml:space="preserve">
     <value>Inactive</value>
   </data>
-  <data name="MngmntName" xml:space="preserve">
+	<data name="MngmntName" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="MngmntPerUser" xml:space="preserve">
+	<data name="MngmntPerUser" xml:space="preserve">
     <value>Per User</value>
   </data>
-  <data name="MngmntStatus" xml:space="preserve">
+	<data name="MngmntStatus" xml:space="preserve">
     <value>Status</value>
   </data>
-  <data name="MngmntTitle" xml:space="preserve">
+	<data name="MngmntTitle" xml:space="preserve">
     <value>Addin startup configuration</value>
   </data>
-  <data name="MngmntUser" xml:space="preserve">
+	<data name="MngmntUser" xml:space="preserve">
     <value>User</value>
   </data>
-  <data name="MngmntVersion" xml:space="preserve">
+	<data name="MngmntVersion" xml:space="preserve">
     <value>Version</value>
   </data>
-  <data name="MngmntMenu" xml:space="preserve">
+	<data name="MngmntMenu" xml:space="preserve">
     <value>Addin startup configuration</value>
   </data>
-  <data name="AdminCreatingAppDomain" xml:space="preserve">
+	<data name="AdminCreatingAppDomain" xml:space="preserve">
     <value>Uploading addin to separate AppDomain for validation</value>
   </data>
-  <data name="AdminSuccessInstall" xml:space="preserve">
+	<data name="AdminSuccessInstall" xml:space="preserve">
     <value>Successfully installed addin</value>
   </data>
-  <data name="No" xml:space="preserve">
+	<data name="No" xml:space="preserve">
     <value>No</value>
   </data>
-  <data name="Yes" xml:space="preserve">
+	<data name="Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
-  <data name="AdminRunning" xml:space="preserve">
+	<data name="AdminRunning" xml:space="preserve">
     <value>Running</value>
   </data>
-  <data name="AdminStopped" xml:space="preserve">
+	<data name="AdminStopped" xml:space="preserve">
     <value>Stopped</value>
   </data>
-  <data name="AdminInvalidAddin" xml:space="preserve">
+	<data name="AdminInvalidAddin" xml:space="preserve">
     <value>Invalid addin</value>
   </data>
-  <data name="DBChangeCancelBt" xml:space="preserve">
+	<data name="DBChangeCancelBt" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="DBChangeDescription" xml:space="preserve">
+	<data name="DBChangeDescription" xml:space="preserve">
     <value>Description</value>
   </data>
-  <data name="DBChangeKey" xml:space="preserve">
+	<data name="DBChangeKey" xml:space="preserve">
     <value>Key</value>
   </data>
-  <data name="DBChangeTitle" xml:space="preserve">
+	<data name="DBChangeTitle" xml:space="preserve">
     <value>Database structure WARNING</value>
   </data>
-  <data name="DBChangeType" xml:space="preserve">
+	<data name="DBChangeType" xml:space="preserve">
     <value>Type</value>
   </data>
-  <data name="DBChangeWarning" xml:space="preserve">
+	<data name="DBChangeWarning" xml:space="preserve">
     <value>Database will be updated. It's recomended to logoff all users from SAP Business One.</value>
   </data>
-  <data name="DBChangeWarningBt" xml:space="preserve">
+	<data name="DBChangeWarningBt" xml:space="preserve">
     <value>Confirm</value>
   </data>
-  <data name="LogTitle" xml:space="preserve">
+	<data name="LogTitle" xml:space="preserve">
     <value>ChangeLog</value>
   </data>
-  <data name="ShutdownMenu" xml:space="preserve">
+	<data name="ShutdownMenu" xml:space="preserve">
     <value>Shutdown Dover</value>
   </data>
-  <data name="AdminCancel" xml:space="preserve">
+	<data name="AdminCancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="AdminConfirmReboot" xml:space="preserve">
+	<data name="AdminConfirmReboot" xml:space="preserve">
     <value>Framework was updated. A full reboot is needed in order to load it now.</value>
   </data>
-  <data name="AdminModuleDescription" xml:space="preserve">
+	<data name="AdminModuleDescription" xml:space="preserve">
     <value>Description</value>
   </data>
-  <data name="LicenseCancelButton" xml:space="preserve">
+	<data name="LicenseCancelButton" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="LicenseDescription" xml:space="preserve">
+	<data name="LicenseDescription" xml:space="preserve">
     <value>Description</value>
   </data>
-  <data name="LicenseDueDate" xml:space="preserve">
+	<data name="LicenseDueDate" xml:space="preserve">
     <value>DueDate</value>
   </data>
-  <data name="LicenseImportButton" xml:space="preserve">
+	<data name="LicenseImportButton" xml:space="preserve">
     <value>Import License</value>
   </data>
-  <data name="LicenseMenu" xml:space="preserve">
+	<data name="LicenseMenu" xml:space="preserve">
     <value>Manage License</value>
   </data>
-  <data name="LicenseName" xml:space="preserve">
+	<data name="LicenseName" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="LicenseTitle" xml:space="preserve">
+	<data name="LicenseTitle" xml:space="preserve">
     <value>Manage License</value>
   </data>
-  <data name="LicenseErrorInstall" xml:space="preserve">
+	<data name="LicenseErrorInstall" xml:space="preserve">
     <value>Error validating license file</value>
   </data>
-  <data name="LicenseSuccessInstall" xml:space="preserve">
+	<data name="LicenseSuccessInstall" xml:space="preserve">
     <value>License successfully installed</value>
   </data>
-  <data name="LicenseEmpty" xml:space="preserve">
+	<data name="LicenseEmpty" xml:space="preserve">
     <value>No License</value>
   </data>
 </root>
