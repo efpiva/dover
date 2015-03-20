@@ -331,11 +331,20 @@ namespace Dover.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No License found for {0}.
+        ///   Looks up a localized string similar to No license found for {0}.
         /// </summary>
         internal static string NoLicenseError {
             get {
                 return ResourceManager.GetString("NoLicenseError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Addin {0} is invalid..
+        /// </summary>
+        internal static string NotSigned {
+            get {
+                return ResourceManager.GetString("NotSigned", resourceCulture);
             }
         }
         

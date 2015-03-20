@@ -176,31 +176,42 @@ namespace Dover.Framework.Service
 
         internal void Run()
         {
-            if (!licenseManager.AddInValid(asm.Name))
+            try
             {
-                return; // Do not run it.
-            }
+                bool isValid = false, hasLicense = false;
+                licenseManager.AddInValid(asm.Name, out isValid, out hasLicense);
+                if (!hasLicense)
+                {
+                    frameworkAddinManager.Logger.Error(string.Format(Messages.NoLicenseError, asm.Name));
+                    return;
+                } else if (!isValid)
+                {
+                    frameworkAddinManager.Logger.Error(string.Format(Messages.NotSigned, asm.Name));
+                    return; // Do not run it.
+                }
 
-            var setup = new AppDomainSetup();
-            setup.ApplicationName = "Dover.Inception";
-            setup.ApplicationBase = Environment.CurrentDirectory;
-            var domain = AppDomain.CreateDomain("Dover.AddIn", null, setup);
-            domain.SetData("shutdownEvent", shutdownEvent); // Thread synchronization
-            domain.SetData("assemblyName", asm.Name); // Used to get current AssemblyName for logging and reflection
-            domain.SetData("frameworkManager", frameworkAddinManager); 
-            Application app = (Application)domain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
-            SAPServiceFactory.PrepareForInception(domain);
-            addinB1SResourceManager = app.Resolve<B1SResourceManager>();
-            addinFormEventHandler = app.Resolve<FormEventHandler>();
-            addinLoader = app.Resolve<AddinLoader>();
-            eventDispatcher = app.Resolve<EventDispatcher>();
-            Sponsor<Application> appSponsor = new Sponsor<Application>(app);
-            Sponsor<B1SResourceManager> b1sSponsor = new Sponsor<B1SResourceManager>(addinB1SResourceManager);
-            Sponsor<FormEventHandler> formEventSponsor = new Sponsor<FormEventHandler>(addinFormEventHandler);
-            Sponsor<AddinLoader> loaderSponsor = new Sponsor<AddinLoader>(addinLoader);
-            Sponsor<EventDispatcher> eventSponsor = new Sponsor<EventDispatcher>(eventDispatcher);
-            try 
-            {
+                runningAddins.Add(this);
+                runningAddinsHash.Add(asm.Name, this);
+
+                var setup = new AppDomainSetup();
+                setup.ApplicationName = "Dover.Inception";
+                setup.ApplicationBase = Environment.CurrentDirectory;
+                var domain = AppDomain.CreateDomain("Dover.AddIn", null, setup);
+                domain.SetData("shutdownEvent", shutdownEvent); // Thread synchronization
+                domain.SetData("assemblyName", asm.Name); // Used to get current AssemblyName for logging and reflection
+                domain.SetData("frameworkManager", frameworkAddinManager);
+                Application app = (Application)domain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
+                SAPServiceFactory.PrepareForInception(domain);
+                addinB1SResourceManager = app.Resolve<B1SResourceManager>();
+                addinFormEventHandler = app.Resolve<FormEventHandler>();
+                addinLoader = app.Resolve<AddinLoader>();
+                eventDispatcher = app.Resolve<EventDispatcher>();
+                Sponsor<Application> appSponsor = new Sponsor<Application>(app);
+                Sponsor<B1SResourceManager> b1sSponsor = new Sponsor<B1SResourceManager>(addinB1SResourceManager);
+                Sponsor<FormEventHandler> formEventSponsor = new Sponsor<FormEventHandler>(addinFormEventHandler);
+                Sponsor<AddinLoader> loaderSponsor = new Sponsor<AddinLoader>(addinLoader);
+                Sponsor<EventDispatcher> eventSponsor = new Sponsor<EventDispatcher>(eventDispatcher);
+                
                 app.RunAddin();
                 AppDomain.Unload(domain);
             }
@@ -259,6 +270,11 @@ namespace Dover.Framework.Service
                     Logger.Error(string.Format(Messages.StartThisError, addin), e);
                 }
             }
+        }
+
+        internal List<AssemblyInformation> ListAddins()
+        {
+            return assemblyDAO.GetAssembliesInformation("A");
         }
 
         private void LoadAddin(AssemblyInformation addin)
@@ -500,8 +516,6 @@ namespace Dover.Framework.Service
         private void RegisterAddin(AssemblyInformation addin)
         {
             AddInRunner runner = new AddInRunner(addin, this, licenseManager);
-            runningAddIns.Add(runner);
-            runningAddinsHash.Add(addin.Name, runner);
             var thread = new Thread(new ThreadStart(runner.Run));
             thread.SetApartmentState(ApartmentState.STA);
             i18nService.ConfigureThreadI18n(thread);
