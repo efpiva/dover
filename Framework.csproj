@@ -87,6 +87,7 @@
     <Compile Include="Boot.cs" />
     <Compile Include="DAO\BusinessOneUIDAO.cs" />
     <Compile Include="DAO\BusinessOneUIDAOImpl.cs" />
+    <Compile Include="DAO\Compression.cs" />
     <Compile Include="DAO\DBResourceExtension.cs" />
     <Compile Include="DAO\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
