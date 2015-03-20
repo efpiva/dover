@@ -180,6 +180,7 @@ namespace Dover.Framework.Factory
             Container.Register(Component.For<BusinessOneUIDAO>().ImplementedBy<BusinessOneUIDAOImpl>());
             Container.Register(Component.For<AssemblyDAO>().ImplementedBy<AssemblyDAOImpl>());
             Container.Register(Component.For<PermissionDAO>().ImplementedBy<PermissionDAOSQLImpl>());
+            Container.Register(Component.For<LicenseDAO>().ImplementedBy<LicenseDAOImpl>());
 
             // Core and MicroCore
             Container.Register(Component.For<MicroCore>().LifestyleSingleton());
