@@ -83,7 +83,7 @@ namespace Dover.Framework.Form
         {
             this.UIAPIRawForm.Freeze(true);
 
-            var modulesList = licenseManager.ListAddins();
+            var modulesList = licenseManager.ListAllAddins();
             licenseDT.LoadSerializedXML(BoDataTableXmlSelect.dxs_DataOnly, emptyDT.SerializeAsXML(BoDataTableXmlSelect.dxs_DataOnly));
             for (int i = 0; i < modulesList.Count; ++i )
             {
