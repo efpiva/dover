@@ -191,7 +191,7 @@ namespace Dover.Framework.Service
                 return false;
             }
 
-            mainDll = mainDll.Substring(0, mainDll.Length - 4);
+            mainDll = Path.GetFileNameWithoutExtension(mainDll);
 
             testDomain = CreateTestDomain(mainDll, tempDirectory);
             try
@@ -219,7 +219,6 @@ namespace Dover.Framework.Service
         /// <returns>main DLL found on zip archive.</returns>
         private string UnzipFile(string path, string destinationFolder)
         {
-            string mainDll = null;
             using (ZipInputStream s = new ZipInputStream(File.OpenRead(path)))
             {
 
@@ -237,14 +236,6 @@ namespace Dover.Framework.Service
                     if (baseDirName.Length > 0)
                     {
                         Directory.CreateDirectory(directoryName);
-                    }
-                    else if (fileName.EndsWith(".dll") || fileName.EndsWith(".exe"))
-                    {
-                        if (mainDll != null)
-                        {
-                            throw new ArgumentException(Messages.PackageContainsMoreThanOneDLL);
-                        }
-                        mainDll = fileName; // root main DLL.
                     }
 
                     if (fileName != String.Empty)
@@ -270,6 +261,13 @@ namespace Dover.Framework.Service
                     }
                 }
             }
+
+            string mainDll = Path.Combine(destinationFolder, Path.GetFileNameWithoutExtension(path) + ".dll");
+            if (!File.Exists(mainDll))
+            {
+                throw new ArgumentException(Messages.InvalidAddInExtension);
+            }
+
             return mainDll;
         }
 
@@ -310,7 +308,7 @@ namespace Dover.Framework.Service
                         return string.Empty;
                     }
 
-                    string addInName = fileName.Substring(0, fileName.Length - 4);
+                    string addInName = Path.GetFileNameWithoutExtension(fileName);
                     AssemblyType type = (addInName == "Framework") ? AssemblyType.Core : AssemblyType.Addin;
 
                     directory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -325,6 +323,11 @@ namespace Dover.Framework.Service
                     licenseManager.BootLicense(); // reload licenses to include added license.
                     Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
                     return addInName;
+                }
+                catch (InvalidCastException e)
+                {
+                    Logger.Error(string.Format(Messages.UpdateFrameworkError));
+                    return string.Empty;
                 }
                 catch (Exception e)
                 {
@@ -355,7 +358,7 @@ namespace Dover.Framework.Service
             Logger.Debug(DebugString.Format(Messages.UpdatingAssembly, AssemblyType.Core));
 
             AssemblyInformation asm = asmDAO.GetAssemblyInformation("Framework", AssemblyType.Core);
-            UpdateFrameworkDBAssembly(asm);
+            UpdateFrameworkDBAssembly(ref asm);
             UpdateAppDataFolder(asm, appFolder);
         }
 
@@ -370,7 +373,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        private void UpdateFrameworkDBAssembly(AssemblyInformation asm)
+        private void UpdateFrameworkDBAssembly(ref AssemblyInformation asm)
         {
             const string defaultFrameworkDll = "Framework.dll";
             const string asmName = "Framework";
@@ -380,6 +383,7 @@ namespace Dover.Framework.Service
                 AssemblyInformation newAsm = GetCurrentAsm(Environment.CurrentDirectory, defaultFrameworkDll, AssemblyType.Core);
                 AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(null, newAsm);
                 SaveAddinI18NResources(Environment.CurrentDirectory, asmName, savedAsm.Code);
+                asm = savedAsm;
             }
             else
             {
@@ -415,6 +419,7 @@ namespace Dover.Framework.Service
                     asm.MD5 = savedAsm.MD5; // update MD5Sum, so AppData is updated latter.
                     asm.Version = savedAsm.Version; // Correct version
                 }
+                Logger.Info(string.Format(Messages.FileUpdated, savedAsm.Name, savedAsm.Version));
             }
             catch (FileNotFoundException)
             {
@@ -534,7 +539,7 @@ namespace Dover.Framework.Service
         {
             try
             {
-                Logger.Info(String.Format(Messages.FileUpdating, asmMeta.Name, asmMeta.Version));
+                Logger.Debug(String.Format(Messages.FileUpdating, asmMeta.Name, asmMeta.Version));
                 string cacheFile = Path.Combine(GetDoverDirectory(), "Cache", asmMeta.MD5);
                 if (!CreateFromCache(asmMeta, cacheFile, fullPath))
                 {
@@ -561,7 +566,7 @@ namespace Dover.Framework.Service
             if (File.Exists(cacheFile))
             {
                 File.Copy(cacheFile, fullPath, true);
-                Logger.Info(String.Format(Messages.FileUpdated, asmMeta.Name, asmMeta.Version));
+                Logger.Debug(String.Format(Messages.FileUpdated, asmMeta.Name, asmMeta.Version));
                 return true;
             }
             return false;
@@ -577,7 +582,8 @@ namespace Dover.Framework.Service
             }
             if (dependencies.Count == 0)
             {
-                UpdateFrameworkAssemblies(appFolder);
+                AssemblyInformation coreAsm = asmDAO.GetAssemblyInformation("Framework", AssemblyType.Core);
+                UpdateAppDataFolder(coreAsm, appFolder);
             }
         }
 

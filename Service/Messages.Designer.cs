@@ -331,15 +331,6 @@ namespace Dover.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ZIP package contains more than one DLL.
-        /// </summary>
-        internal static string PackageContainsMoreThanOneDLL {
-            get {
-                return ResourceManager.GetString("PackageContainsMoreThanOneDLL", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Permission.
         /// </summary>
         internal static string Permission {
@@ -525,6 +516,15 @@ namespace Dover.Framework.Service {
         internal static string UnhandledLicense {
             get {
                 return ResourceManager.GetString("UnhandledLicense", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Addin with unsupported Framework, please update.
+        /// </summary>
+        internal static string UpdateFrameworkError {
+            get {
+                return ResourceManager.GetString("UpdateFrameworkError", resourceCulture);
             }
         }
         

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
+  <!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,230 +59,230 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="metadata">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" />
-							</xsd:sequence>
-							<xsd:attribute name="name" use="required" type="xsd:string" />
-							<xsd:attribute name="type" type="xsd:string" />
-							<xsd:attribute name="mimetype" type="xsd:string" />
-							<xsd:attribute ref="xml:space" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="assembly">
-						<xsd:complexType>
-							<xsd:attribute name="alias" type="xsd:string" />
-							<xsd:attribute name="name" type="xsd:string" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-							<xsd:attribute ref="xml:space" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>2.0</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<data name="AddInNotFound" xml:space="preserve">
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddInNotFound" xml:space="preserve">
     <value>Nenhum Assembly de nome {0} encontrado</value>
   </data>
-	<data name="B1SResourceMissing" xml:space="preserve">
+  <data name="B1SResourceMissing" xml:space="preserve">
     <value>B1S resource para {0} nao encontrado</value>
   </data>
-	<data name="CheckSum" xml:space="preserve">
+  <data name="CheckSum" xml:space="preserve">
     <value>Checando MD5Sum({0}) - para {1}</value>
   </data>
-	<data name="ConfiguringAddin" xml:space="preserve">
+  <data name="ConfiguringAddin" xml:space="preserve">
     <value>Inicializando configuração do AddIn {0}</value>
   </data>
-	<data name="ErrorReboot" xml:space="preserve">
+  <data name="ErrorReboot" xml:space="preserve">
     <value>Erro reiniciando addins</value>
   </data>
-	<data name="EventCompanyChangedError" xml:space="preserve">
+  <data name="EventCompanyChangedError" xml:space="preserve">
     <value>Erro atualizando Dover, em troca de base de dados.</value>
   </data>
-	<data name="EventLanguageChangedError" xml:space="preserve">
+  <data name="EventLanguageChangedError" xml:space="preserve">
     <value>Erro atualizando Dover. Evento de troca de idioma.</value>
   </data>
-	<data name="FileError" xml:space="preserve">
+  <data name="FileError" xml:space="preserve">
     <value>Erro atualizando arquivo {0} - Versao {1}.</value>
   </data>
-	<data name="FileMissing" xml:space="preserve">
+  <data name="FileMissing" xml:space="preserve">
     <value>Arquivo {0} - Versao {1} - não encontrado</value>
   </data>
-	<data name="FileUpdated" xml:space="preserve">
+  <data name="FileUpdated" xml:space="preserve">
     <value>Atualizado arquivo {0} - Versao {1}</value>
   </data>
-	<data name="i18nError" xml:space="preserve">
+  <data name="i18nError" xml:space="preserve">
     <value>Nome {0} com formato i18n incorreto.</value>
   </data>
-	<data name="IgnoringFile" xml:space="preserve">
+  <data name="IgnoringFile" xml:space="preserve">
     <value>Ignorando arquivo {0} - não encontrado</value>
   </data>
-	<data name="InternalResourceMissing" xml:space="preserve">
+  <data name="InternalResourceMissing" xml:space="preserve">
     <value>Recurso {0} não encontrado no assembly</value>
   </data>
-	<data name="InvalidLicense" xml:space="preserve">
+  <data name="InvalidLicense" xml:space="preserve">
     <value>Licença inválida</value>
   </data>
-	<data name="LicenseFileMissing" xml:space="preserve">
+  <data name="LicenseFileMissing" xml:space="preserve">
     <value>Arquivo {0} não encontrado</value>
   </data>
-	<data name="MD5Sum" xml:space="preserve">
+  <data name="MD5Sum" xml:space="preserve">
     <value>MD5Sum: {0}</value>
   </data>
-	<data name="MenuDispatchError" xml:space="preserve">
+  <data name="MenuDispatchError" xml:space="preserve">
     <value>Erro processando evento para menu {0} - {1}</value>
   </data>
-	<data name="MenuDispatchInfo" xml:space="preserve">
+  <data name="MenuDispatchInfo" xml:space="preserve">
     <value>Processando evento do tipo {0} para classe/metodo {1}</value>
   </data>
-	<data name="ProcessingAttribute" xml:space="preserve">
+  <data name="ProcessingAttribute" xml:space="preserve">
     <value>Processando atributo {0} - classe {1}</value>
   </data>
-	<data name="RegisteredAssembly" xml:space="preserve">
+  <data name="RegisteredAssembly" xml:space="preserve">
     <value>Assembly {0} registrado no container</value>
   </data>
-	<data name="RegisteringAssembly" xml:space="preserve">
+  <data name="RegisteringAssembly" xml:space="preserve">
     <value>Registrando assembly {0} no container</value>
   </data>
-	<data name="RegisteringMenuEvent" xml:space="preserve">
+  <data name="RegisteringMenuEvent" xml:space="preserve">
     <value>Registrando menu {0} - para tipo {1}</value>
   </data>
-	<data name="RemoveAddinSuccess" xml:space="preserve">
+  <data name="RemoveAddinSuccess" xml:space="preserve">
     <value>Addin {0} removido com sucesso</value>
   </data>
-	<data name="Restarting" xml:space="preserve">
+  <data name="Restarting" xml:space="preserve">
     <value>Reiniciando Dover</value>
   </data>
-	<data name="SaveAddInError" xml:space="preserve">
+  <data name="SaveAddInError" xml:space="preserve">
     <value>Erro salvando addin {0}</value>
   </data>
-	<data name="SaveAddInSuccess" xml:space="preserve">
+  <data name="SaveAddInSuccess" xml:space="preserve">
     <value>AddIn {0} salvo com sucesso</value>
   </data>
-	<data name="SaveLicenseSuccess" xml:space="preserve">
+  <data name="SaveLicenseSuccess" xml:space="preserve">
     <value>Licença salva com sucesso</value>
   </data>
-	<data name="Shutdown" xml:space="preserve">
+  <data name="Shutdown" xml:space="preserve">
     <value>Desligando Dover</value>
   </data>
-	<data name="ShutdownAddin" xml:space="preserve">
+  <data name="ShutdownAddin" xml:space="preserve">
     <value>Desligando AddIn {0}</value>
   </data>
-	<data name="StartThisError" xml:space="preserve">
+  <data name="StartThisError" xml:space="preserve">
     <value>Erro inicializando addin {0}</value>
   </data>
-	<data name="UnhandledCrypto" xml:space="preserve">
+  <data name="UnhandledCrypto" xml:space="preserve">
     <value>Erro inesperado em CryptoService</value>
   </data>
-	<data name="UnhandledLicense" xml:space="preserve">
+  <data name="UnhandledLicense" xml:space="preserve">
     <value>Erro inesperado iniciando serviço de licença</value>
   </data>
-	<data name="UpdatingAssembly" xml:space="preserve">
+  <data name="UpdatingAssembly" xml:space="preserve">
     <value>Iniciando atualização de assemblies - {0}</value>
   </data>
-	<data name="GetLocalizedStringFoundResource" xml:space="preserve">
+  <data name="GetLocalizedStringFoundResource" xml:space="preserve">
     <value>Resource {0} encontrado</value>
   </data>
-	<data name="GetLocalizedStringNotFoundResource" xml:space="preserve">
+  <data name="GetLocalizedStringNotFoundResource" xml:space="preserve">
     <value>Resource {0} não encontrado</value>
   </data>
-	<data name="ResourceNotFound" xml:space="preserve">
+  <data name="ResourceNotFound" xml:space="preserve">
     <value>Resource {1} not found for asm {0}</value>
   </data>
-	<data name="B1SResourceKeyNotFound" xml:space="preserve">
+  <data name="B1SResourceKeyNotFound" xml:space="preserve">
     <value>Tag para form {1} não encontrada no assembly {0}</value>
   </data>
-	<data name="B1SResourceVSICreatedNotFound" xml:space="preserve">
+  <data name="B1SResourceVSICreatedNotFound" xml:space="preserve">
     <value>Tag VSICreated não encontrada no assembly {0}</value>
   </data>
-	<data name="FormTypeNotUnique" xml:space="preserve">
+  <data name="FormTypeNotUnique" xml:space="preserve">
     <value>FormType {0} não é único. Não é possível registrar eventos UI.</value>
   </data>
-	<data name="LicenseAddInNotFound" xml:space="preserve">
+  <data name="LicenseAddInNotFound" xml:space="preserve">
     <value>Addin {0} não encontrado durante carga de licença.</value>
   </data>
-	<data name="InvalidAddInExtension" xml:space="preserve">
+  <data name="InvalidAddInExtension" xml:space="preserve">
     <value>Extenção de addin inválida</value>
   </data>
-	<data name="PackageContainsMoreThanOneDLL" xml:space="preserve">
-    <value>Pacote ZIP contém mais de uma DLL</value>
-  </data>
-	<data name="FS" xml:space="preserve">
+  <data name="FS" xml:space="preserve">
     <value>Consulta formatada</value>
   </data>
-	<data name="QC" xml:space="preserve">
+  <data name="QC" xml:space="preserve">
     <value>Categoria de consulta</value>
   </data>
-	<data name="UDO" xml:space="preserve">
+  <data name="UDO" xml:space="preserve">
     <value>UDO</value>
   </data>
-	<data name="UQ" xml:space="preserve">
+  <data name="UQ" xml:space="preserve">
     <value>Consulta de usuário</value>
   </data>
-	<data name="UserField" xml:space="preserve">
+  <data name="UserField" xml:space="preserve">
     <value>Campo de usuário</value>
   </data>
-	<data name="UserTable" xml:space="preserve">
+  <data name="UserTable" xml:space="preserve">
     <value>Tabela de usuário</value>
   </data>
-	<data name="Permission" xml:space="preserve">
+  <data name="Permission" xml:space="preserve">
     <value>Permissão</value>
   </data>
-	<data name="ServerTerminationError" xml:space="preserve">
-		<value>Erro em ServerTermination</value>
-	</data>
-	<data name="ShutdownError" xml:space="preserve">
-		<value>Erro de Shutdown</value>
-	</data>
-	<data name="ConfiguredAddin" xml:space="preserve">
-		<value>Addin {0} configurado com sucesso</value>
-	</data>
-	<data name="ConfigureMenu" xml:space="preserve">
-		<value>Configurando Menu para {0}</value>
-	</data>
-	<data name="Reboot" xml:space="preserve">
-		<value>Reiniciando Dover Framework.</value>
-	</data>
-	<data name="FileUpdating" xml:space="preserve">
-		<value>Atualizando arquivo {0} - Versão {1}</value>
-	</data>
-	<data name="IgnoringType" xml:space="preserve">
-		<value>Ignorando tipo no evento de menu/form por conta de dependências faltantes.</value>
-	</data>
+  <data name="ServerTerminationError" xml:space="preserve">
+    <value>Erro em ServerTermination</value>
+  </data>
+  <data name="ShutdownError" xml:space="preserve">
+    <value>Erro de Shutdown</value>
+  </data>
+  <data name="ConfiguredAddin" xml:space="preserve">
+    <value>Addin {0} configurado com sucesso</value>
+  </data>
+  <data name="ConfigureMenu" xml:space="preserve">
+    <value>Configurando Menu para {0}</value>
+  </data>
+  <data name="Reboot" xml:space="preserve">
+    <value>Reiniciando Dover Framework.</value>
+  </data>
+  <data name="FileUpdating" xml:space="preserve">
+    <value>Atualizando arquivo {0} - Versão {1}</value>
+  </data>
+  <data name="IgnoringType" xml:space="preserve">
+    <value>Ignorando tipo no evento de menu/form por conta de dependências faltantes.</value>
+  </data>
+  <data name="UpdateFrameworkError" xml:space="preserve">
+    <value>Addin com Framework desatualizado, por favor atualize.</value>
+  </data>
 </root>
