@@ -130,7 +130,7 @@ namespace Dover.Framework.Factory
         }
 
 
-        public static void PrepareForInception(AppDomain inception)
+        internal static void PrepareForInception(AppDomain inception)
         {
             lock (threadLock)
             {
