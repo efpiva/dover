@@ -259,7 +259,7 @@ namespace Dover.Framework.Service
             if (!IsInstalled(addin.Code))
             {
                 Logger.Info(string.Format(Messages.ConfiguringAddin, addin.Name));
-                InstallAddin(addin);
+                InstallAddin(addin, directory);
                 Logger.Info(string.Format(Messages.ConfiguredAddin, addin.Name));
             }
             RegisterAddin(addin);
@@ -267,11 +267,11 @@ namespace Dover.Framework.Service
             
         }
 
-        private void InstallAddin(AssemblyInformation addin)
+        private void InstallAddin(AssemblyInformation addin, string baseDirectory)
         {
             try
             {
-                ConfigureAddin(addin);
+                ConfigureAddin(addin, baseDirectory);
                 MarkAsInstalled(addin.Code);
             }
             catch (Exception e)
@@ -470,12 +470,12 @@ namespace Dover.Framework.Service
             return row;
         }
 
-        private void ConfigureAddin(AssemblyInformation addin)
+        private void ConfigureAddin(AssemblyInformation addin, string baseDirectory)
         {
             Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
             var setup = new AppDomainSetup();
             setup.ApplicationName = "Dover.ConfigureDomain";
-            setup.ApplicationBase = Environment.CurrentDirectory;
+            setup.ApplicationBase = baseDirectory;
             AppDomain configureDomain = AppDomain.CreateDomain("ConfigureDomain", null, setup);
             try
             {
@@ -595,7 +595,8 @@ namespace Dover.Framework.Service
         protected internal virtual void InstallAddin(string name)
         {
             AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, AssemblyType.Addin);
-            InstallAddin(asmInfo);
+            string directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", asmInfo.Name);
+            InstallAddin(asmInfo, directory);
         }
         
         internal string GetAddinChangeLog(string addin)
