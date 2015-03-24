@@ -48,7 +48,7 @@ namespace Dover.Framework
     /// Dover.Framework.Container.ContainerManager.
     /// 
     /// </summary>
-    [AddIn(i18n="Dover.Framework.Messages.DoverName", Description="Dover Framework")]
+    [AddIn(i18n="Dover.Framework.Messages.DoverName", Description="Dover Framework", Name="Framework")]
     [ResourceBOM("Dover.Framework.DatabaseTables.xml", ResourceType.UserTable)]
     [ResourceBOM("Dover.Framework.DatabaseFields.xml", ResourceType.UserField)]
     public class Application : MarshalByRefObject
