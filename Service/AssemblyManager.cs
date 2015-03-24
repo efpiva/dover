@@ -54,19 +54,23 @@ namespace Dover.Framework.Service
             SaveVersion(asm, asmInfo);
             SaveAddinAttribute(asm, asmInfo);
             List<AssemblyInformation> dependencies = new List<AssemblyInformation>();
-
-            try
+            string[] defaultDependenciesNames = {"Castle.Core", "Castle.Facilities.Logging",
+                                                "Castle.Services.Logging.Log4netIntegration",
+                                                "Castle.Windsor", "ICSharpCode.SharpZipLib",
+                                                "log4net", "SAPbouiCOM"};
+            HashSet<string> defaultDependenciesNamesSet = new HashSet<string>(defaultDependenciesNames);
+            foreach (var dependency in defaultDependenciesNames)
             {
-                // This is a dependency from castle, not listed on framework. If present, load it.
-                Assembly log4netasm = AppDomain.CurrentDomain.Load("Castle.Services.Logging.Log4netIntegration");
+                Assembly log4netasm = AppDomain.CurrentDomain.Load(dependency);
                 CheckAssembly(dependencies, log4netasm.GetName());
             }
-            catch { }
 
             foreach (var dependency in asm.GetReferencedAssemblies())
             {
-                CheckAssembly(dependencies, dependency);
+                if (!defaultDependenciesNamesSet.Contains(dependency.Name))
+                    CheckAssembly(dependencies, dependency);
             }
+
             return dependencies;
         }
 
