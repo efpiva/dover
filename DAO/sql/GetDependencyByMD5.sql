@@ -1,0 +1,1 @@
+﻿SELECT Code FROM [@DOVER_MODULES] WHERE U_MD5 = '{0}' and U_Type = 'D'

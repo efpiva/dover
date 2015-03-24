@@ -41,7 +41,7 @@ namespace Dover.Framework.Service
 
         internal List<AssemblyInformation> ListAddins()
         {
-            return asmDAO.GetAssembliesInformation("A");
+            return asmDAO.GetAssembliesInformation(AssemblyType.Addin);
         }
 
         internal void BootLicense()

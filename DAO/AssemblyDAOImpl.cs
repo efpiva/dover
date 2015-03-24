@@ -38,15 +38,15 @@ namespace Dover.Framework.DAO
             this.b1DAO = b1DAO;
         }
 
-        internal override AssemblyInformation GetAssemblyInformation(string asmFile, string type)
+        internal override AssemblyInformation GetAssemblyInformation(string asmFile, AssemblyType type)
         {
-            String sql = string.Format(this.GetSQL("GetAssemblyInformation.sql"), asmFile, type);
+            String sql = string.Format(this.GetSQL("GetAssemblyInformation.sql"), asmFile, AssemblyInformation.ConvertTypeToCode(type));
             return b1DAO.ExecuteSqlForObject<AssemblyInformation>(sql);
         }
 
-        internal override List<AssemblyInformation> GetAssembliesInformation(string type)
+        internal override List<AssemblyInformation> GetAssembliesInformation(AssemblyType type)
         {
-            String sql = string.Format(this.GetSQL("GetAssembliesInformation.sql"), type);
+            String sql = string.Format(this.GetSQL("GetAssembliesInformation.sql"), AssemblyInformation.ConvertTypeToCode(type));
             return b1DAO.ExecuteSqlForList<AssemblyInformation>(sql);
         }
 
@@ -63,9 +63,23 @@ namespace Dover.Framework.DAO
             return Uncompress(shb.Value);
         }
 
+
+        internal override void SaveAssemblyDependency(AssemblyInformation newAsm,
+               AssemblyInformation dependency, byte[] dependencyBytes)
+        {
+            string code = b1DAO.ExecuteSqlForObject<string>(string.Format(this.GetSQL("GetDependencyByMD5.sql"), dependency.MD5));
+            if (string.IsNullOrEmpty(code))
+            {
+                SaveAssembly(dependency, dependencyBytes);
+                code = dependency.Code;
+            }
+            string newCode = b1DAO.GetNextCode("DOVER_MODULES_DEP");
+            b1DAO.ExecuteStatement(string.Format(this.GetSQL("InsertDependency.sql"), newCode, newAsm.Code, code));
+        }
+
         internal override void SaveAssembly(AssemblyInformation asm, byte[] asmBytes)
         {
-            string installed = (asm.Type == "C") ? "Y" : "N";
+            string installed = (asm.Type ==AssemblyType.Core) ? "Y" : "N";
             SoapHexBinary shb = new SoapHexBinary(Compress(asmBytes));
             string asmHex = null;
             if (asmBytes != null)
@@ -77,13 +91,14 @@ namespace Dover.Framework.DAO
                 asm.Code = b1DAO.GetNextCode("DOVER_MODULES");
                 sql = String.Format(this.GetSQL("SaveAssembly.sql"),
                         asm.Code, asm.Code, asm.Name, asm.Description, asm.FileName, asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length,
-                        asm.Type, installed);
+                        asm.TypeCode, installed);
             }
             else
             {
                 sql = String.Format(this.GetSQL("UpdateAssembly.sql"), asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length, asm.Code,
                     asm.Description, installed);
                 b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteAssembly.sql"), asm.Code));
+                b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteDependencies.sql"), asm.Code));
             }
 
             b1DAO.ExecuteStatement(sql);
@@ -126,7 +141,7 @@ namespace Dover.Framework.DAO
             if (moduleName != null)
             {
                 b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteModule.sql"), code));
-                b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteModuleBIN.sql"), code));
+                b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteAssembly.sql"), code));
             }
         }
 
@@ -137,7 +152,7 @@ namespace Dover.Framework.DAO
             int insertedText = 0;
             string asmHex = null;
            
-            b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteModuleI18N.sql"), moduleCode));
+            b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteModuleI18N.sql"), moduleCode, i18n));
 
             SoapHexBinary shb = new SoapHexBinary(Compress(i18nAsm));
             if (i18nAsm != null)
@@ -231,6 +246,16 @@ namespace Dover.Framework.DAO
             }
 
             return output.ToArray();
+        }
+
+        internal override List<AssemblyInformation> GetAutoUpdateAssemblies()
+        {
+            return b1DAO.ExecuteSqlForList<AssemblyInformation>(this.GetSQL("GetAutoUpdateAssembliesInformation.sql"));
+        }
+
+        internal override List<AssemblyInformation> GetDependencies(AssemblyInformation asm)
+        {
+            return b1DAO.ExecuteSqlForList<AssemblyInformation>(string.Format(this.GetSQL("GetDependencyInformation.sql"), asm.Code));
         }
     }
 }

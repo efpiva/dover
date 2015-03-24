@@ -37,12 +37,6 @@ using Dover.Framework.Factory;
 
 namespace Dover.Framework.Service
 {
-    internal enum AssemblySource
-    {
-        Core,
-        AddIn
-    }
-
     /// <summary>
     /// This is called from a temp AppDomain to load a Assembly and get it`s information.
     /// 
@@ -53,12 +47,53 @@ namespace Dover.Framework.Service
     {
         public I18NService i18nService { get; set; }
 
-        internal void GetAssemblyInfoFromBin(byte[] asmBytes, AssemblyInformation asmInfo)
+        internal List<AssemblyInformation> GetAssemblyInfoFromBin(byte[] asmBytes, AssemblyInformation asmInfo)
         {
             Assembly asm = AppDomain.CurrentDomain.Load(asmBytes);
-            var version = asm.GetName().Version;
-            asmInfo.Version = version.Major.ToString() + "." + version.Minor.ToString() + "." + version.Build.ToString()
-                    + "." + version.Revision;
+            asmInfo.Size = asmBytes.Length;
+            SaveVersion(asm, asmInfo);
+            SaveAddinAttribute(asm, asmInfo);
+            List<AssemblyInformation> dependencies = new List<AssemblyInformation>();
+
+            try
+            {
+                // This is a dependency from castle, not listed on framework. If present, load it.
+                Assembly log4netasm = AppDomain.CurrentDomain.Load("Castle.Services.Logging.Log4netIntegration");
+                CheckAssembly(dependencies, log4netasm.GetName());
+            }
+            catch { }
+
+            foreach (var dependency in asm.GetReferencedAssemblies())
+            {
+                CheckAssembly(dependencies, dependency);
+            }
+            return dependencies;
+        }
+
+        private void CheckAssembly(List<AssemblyInformation> dependencies, AssemblyName dependency)
+        {
+                string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dependency.Name + ".dll");
+                if (File.Exists(path))
+                {
+                    byte[] depBytes = File.ReadAllBytes(path);
+                    AssemblyInformation dependencyInformation = new AssemblyInformation()
+                        {
+                            Name = dependency.Name,
+                            Description = dependency.Name,
+                            Date = DateTime.Today,
+                            Type = AssemblyType.Dependency,
+                            FileName = dependency.Name + ".dll",
+                            MD5 = AssemblyManager.MD5Sum(depBytes)
+                        };
+                    Assembly depAsm = AppDomain.CurrentDomain.Load(depBytes);
+                    SaveVersion(depAsm, dependencyInformation);
+                    dependencyInformation.Size = depBytes.Length;
+                    dependencies.Add(dependencyInformation);
+                }
+        }
+
+        private void SaveAddinAttribute(Assembly asm, AssemblyInformation asmInfo)
+        {
             Type addInAttributeType = asm.GetType("Dover.Framework.Attribute.AddInAttribute");
             if (addInAttributeType == null)
                 addInAttributeType = typeof(AddInAttribute);
@@ -80,33 +115,39 @@ namespace Dover.Framework.Service
                     }
                     else
                     {
-                        asmInfo.Description = ((AddInAttribute)attr).Description;
+                        asmInfo.Description = addInAttribute.Description;
                     }
+                    asmInfo.Name = addInAttribute.Name;
                     break;
                 }
             }
+        }
+
+        private void SaveVersion(Assembly asm, AssemblyInformation asmInfo)
+        {
+            var version = asm.GetName().Version;
+            asmInfo.Major = version.Major;
+            asmInfo.Minor = version.Minor;
+            asmInfo.Build = version.Build;
+            asmInfo.Revision = version.Revision;
         }
     }
 
     public class AssemblyManager
     {
-        private string[] addinsAssemblies = {
-        };
-
-        private string[] coreAssemblies = {
-            "Framework.dll",
-        };
         private AssemblyDAO asmDAO;
         private LicenseManager licenseManager;
         private I18NService i18nService;
+        private SAPbobsCOM.Company company;
         public ILogger Logger { get; set; }
 
 
-        public AssemblyManager(AssemblyDAO asmDAO, LicenseManager licenseManager, I18NService i18nService)
+        public AssemblyManager(AssemblyDAO asmDAO, LicenseManager licenseManager, I18NService i18nService, SAPbobsCOM.Company company)
         {
             this.asmDAO = asmDAO;
             this.licenseManager = licenseManager;
             this.i18nService = i18nService;
+            this.company = company;
         }
 
         internal void RemoveAddIn(string moduleName)
@@ -132,15 +173,9 @@ namespace Dover.Framework.Service
             Directory.CreateDirectory(tempDirectory);
 
             // check if it's a DLL or ZIP.
-            if (extension != null && extension == ".zip")
+            if (extension != null && extension == ".dover")
             {
                 mainDll = UnzipFile(path, tempDirectory);
-            }
-            else if (extension != null && (extension == ".dll" || extension == ".exe"))
-            {
-                string destination = Path.Combine(tempDirectory, Path.GetFileName(path));
-                File.Copy(path, destination);
-                mainDll = Path.GetFileName(path);
             }
             else
             {
@@ -241,9 +276,6 @@ namespace Dover.Framework.Service
             setup.ApplicationBase = tempDirectory;
 
             AppDomain testDomain = AppDomain.CreateDomain("Addin.test", null, setup);
-            if (mainDll != "Framework") // do not need Core.
-                UpdateAssemblies(AssemblySource.Core, tempDirectory);
-
             return testDomain;
         }
 
@@ -268,31 +300,23 @@ namespace Dover.Framework.Service
                 {
                     string directory;
                     string fileName = Path.GetFileName(path);
+                    if (!fileName.EndsWith(".dover"))
+                    {
+                        Logger.Error(Messages.InvalidAddInExtension);
+                        return string.Empty;
+                    }
+
                     string addInName = fileName.Substring(0, fileName.Length - 4);
-                    bool hasi18n = false;
-                    string type = (addInName == "Framework") ? "C" : "A";
-                    byte[] asmBytes;
+                    AssemblyType type = (addInName == "Framework") ? AssemblyType.Core : AssemblyType.Addin;
+
+                    directory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                    Directory.CreateDirectory(directory);
+                    fileName = UnzipFile(path, directory);
 
                     AssemblyInformation existingAsm = asmDAO.GetAssemblyInformation(addInName, type);
-
-                    if (fileName.EndsWith(".zip"))
-                    {
-                        directory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-                        Directory.CreateDirectory(directory);
-                        fileName = UnzipFile(path, directory);
-                        hasi18n = true;
-                    }
-                    else
-                    {
-                        directory = Path.GetDirectoryName(path);
-                    }
-
-                    AssemblyInformation newAsm = GetNewAsm(directory, fileName, addInName, type, out asmBytes);
-                    AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(existingAsm, newAsm, asmBytes);
-                    if (hasi18n)
-                    {
-                        SaveAddinI18NResources(directory, addInName, savedAsm.Code);
-                    }
+                    AssemblyInformation newAsm = GetCurrentAsm(directory, fileName, type);
+                    AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(existingAsm, newAsm);
+                    SaveAddinI18NResources(directory, addInName, savedAsm.Code);
 
                     licenseManager.BootLicense(); // reload licenses to include added license.
                     Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
@@ -322,21 +346,13 @@ namespace Dover.Framework.Service
             }
         }
 
-        internal void UpdateAssemblies(AssemblySource assemblyLocation, string appFolder)
+        internal void UpdateFrameworkAssemblies(string appFolder)
         {
-            List<AssemblyInformation> asms;
-            Logger.Debug(DebugString.Format(Messages.UpdatingAssembly, assemblyLocation));
-            if (assemblyLocation == AssemblySource.Core)
-            {
-                asms = InitializeCoreAssemblies(appFolder);
-            }
-            else
-                asms = InitializeAddInAssemblies(appFolder);
+            Logger.Debug(DebugString.Format(Messages.UpdatingAssembly, AssemblyType.Core));
 
-            foreach(var asm in asms)
-            {
-                UpdateAppDataFolder(asm, appFolder);
-            }
+            AssemblyInformation asm = asmDAO.GetAssemblyInformation("Framework", AssemblyType.Core);
+            UpdateFrameworkDBAssembly(asm);
+            UpdateAppDataFolder(asm, appFolder);
         }
 
         internal void UpdateAppDataFolder(AssemblyInformation asm, string appFolder)
@@ -345,93 +361,78 @@ namespace Dover.Framework.Service
             if (IsDifferent(asm, fullPath))
             {
                 UpdateAssembly(asm, fullPath);
+                UpdateAssemblyDependencies(asm, appFolder);
                 UpdateI18NAssembly(asm, appFolder);
             }
         }
 
-        private List<AssemblyInformation> InitializeAddInAssemblies(string appFolder)
+        private void UpdateFrameworkDBAssembly(AssemblyInformation asm)
         {
-            List<AssemblyInformation> addinsAsms = asmDAO.GetAssembliesInformation("A");
-            GenericInitialize(addinsAsms, "A", addinsAssemblies);
-            return addinsAsms;
-        }
+            const string defaultFrameworkDll = "Framework.dll";
+            const string asmName = "Framework";
 
-        private List<AssemblyInformation> InitializeCoreAssemblies(string appFolder)
-        {
-            List<AssemblyInformation> coreAsms = asmDAO.GetAssembliesInformation("C");
-            GenericInitialize(coreAsms, "C", coreAssemblies);
-            return coreAsms;
-        }
-
-        private void GenericInitialize(List<AssemblyInformation> asms, string type,
-            string[] defaultAsms)
-        {
-            HashSet<string> dbAsms = new HashSet<string>();
-            byte[] asmBytes;
-
-            foreach(var asm in asms)
+            if (asm == null)
+            {
+                AssemblyInformation newAsm = GetCurrentAsm(Environment.CurrentDirectory, defaultFrameworkDll, AssemblyType.Core);
+                AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(null, newAsm);
+                SaveAddinI18NResources(Environment.CurrentDirectory, asmName, savedAsm.Code);
+            }
+            else
             {
                 if (asmDAO.AutoUpdateEnabled(asm))
                 {
-                    try
-                    {
-                        AssemblyInformation newAsm = GetNewAsm(Environment.CurrentDirectory, asm.FileName, asm.Name, type, out asmBytes);
-                        AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(asm, newAsm, asmBytes);
-                        if (savedAsm.MD5 != asm.MD5)
-                        {
-                            SaveAddinI18NResources(Environment.CurrentDirectory, asm.Name, asm.Code);
-                            asm.MD5 = savedAsm.MD5; // update MD5Sum, so AppData is updated latter.
-                            asm.Version = savedAsm.Version; // Correct version
-                        }
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        // Ignore it, use DB version.
-                        Logger.Warn(string.Format(Messages.FileMissing, asm.Name, "?"));
-                    }
+                    UpdateModuleDBAssembly(asm, AssemblyType.Core);
                 }
-                dbAsms.Add(asm.Name);
-            }
-            foreach (string asmFile in defaultAsms)
-            {
-                string asmName = asmFile.Substring(0, asmFile.Length - 4);
-                if (!dbAsms.Contains(asmName)) // first upload, do not check if AutoUpdateEnabled and if filenotfound, force error (no try-catch).
+                else
                 {
-                    AssemblyInformation newAsm = GetNewAsm(Environment.CurrentDirectory, asmFile, asmName, type, out asmBytes);
-                    AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(null, newAsm, asmBytes);
-                    SaveAddinI18NResources(Environment.CurrentDirectory, asmName, savedAsm.Code);
-                    asms.Add(savedAsm); // do not need to check if is valid, it's default asm.
+                    asm.Dependencies = asmDAO.GetDependencies(asm);
                 }
             }
         }
 
-        private AssemblyInformation GetNewAsm(string directory, string filename, string name, string type,
-            out byte[] asmBytes)
+        internal void UpdateAddinsDBAssembly()
         {
-            string path = Path.Combine(directory, filename);
-            List<byte> allBytes = new List<byte>();
-            byte[] fileByte;
-
-            AssemblyInformation newAsm = new AssemblyInformation();
-            newAsm.Name = name;
-            newAsm.FileName = filename;
-            fileByte = File.ReadAllBytes(path);
-            allBytes.AddRange(fileByte);
-
-            string[] i18nDirectories = Directory.GetDirectories(directory);
-            foreach (string i18nPath in i18nDirectories)
+            List<AssemblyInformation> autoUpdateAddins = asmDAO.GetAutoUpdateAssemblies();
+            foreach (var asm in autoUpdateAddins)
             {
-                string i18n = Path.GetFileName(i18nPath);
-                string resourceAsm = Path.Combine(directory, i18n, name + ".resources.dll");
-                if (i18nService.IsValidi18NCode(i18n) && File.Exists(resourceAsm))
+                UpdateModuleDBAssembly(asm, AssemblyType.Addin);
+            }
+        }
+
+        private void UpdateModuleDBAssembly(AssemblyInformation asm, AssemblyType assemblyType)
+        {
+            try
+            {
+                AssemblyInformation newAsm = GetCurrentAsm(Environment.CurrentDirectory, asm.FileName, assemblyType);
+                AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(asm, newAsm);
+                if (savedAsm.MD5 != asm.MD5)
                 {
-                    allBytes.AddRange(File.ReadAllBytes(resourceAsm));
+                    SaveAddinI18NResources(Environment.CurrentDirectory, asm.Name, asm.Code);
+                    asm.MD5 = savedAsm.MD5; // update MD5Sum, so AppData is updated latter.
+                    asm.Version = savedAsm.Version; // Correct version
                 }
             }
+            catch (FileNotFoundException)
+            {
+                // Ignore it, use DB version.
+                Logger.Warn(string.Format(Messages.FileMissing, asm.Name, "?"));
+            }
+        }
 
-            asmBytes = allBytes.ToArray();
-            GetAssemblyInfoFromBin(fileByte, newAsm);
-            newAsm.MD5 = MD5Sum(asmBytes);
+        private AssemblyInformation GetCurrentAsm(string directory, string filename, AssemblyType type)
+        {
+            string path = Path.Combine(directory, filename);
+            byte[] asmBytes;
+
+            AssemblyInformation newAsm = new AssemblyInformation();
+            newAsm.FileName = filename;
+            asmBytes = File.ReadAllBytes(path);
+
+            GetAssemblyInfoFromBin(directory, asmBytes, newAsm);
+            // TODO: move i18n to DOVER_MODULES.
+            GetI18Dependencies(directory, newAsm.Name);
+            // calculate MD5 based on all binary, so if something changes trigger a full directory update.
+            newAsm.MD5 = MD5Sum(asmBytes); 
             newAsm.Size = asmBytes.Length;
             newAsm.Date = DateTime.Now;
             newAsm.Type = type;
@@ -440,7 +441,7 @@ namespace Dover.Framework.Service
         }
 
         private AssemblyInformation SaveIfNotExistsOrDifferent(AssemblyInformation existingAsm,
-            AssemblyInformation newAsm, byte[] asmBytes)
+            AssemblyInformation newAsm)
         {
             if (existingAsm != null)
                 newAsm.Code = existingAsm.Code; // Prepare for update.
@@ -448,7 +449,15 @@ namespace Dover.Framework.Service
             if (existingAsm == null || newAsm.CompareTo(existingAsm) == 1
                 || (newAsm.Version == existingAsm.Version && newAsm.MD5 != existingAsm.MD5))
             {
+                byte[] asmBytes = File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, newAsm.FileName));
                 asmDAO.SaveAssembly(newAsm, asmBytes);
+
+                foreach (var dependency in newAsm.Dependencies)
+                {
+                    asmBytes = File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, dependency.FileName));
+                    asmDAO.SaveAssemblyDependency(newAsm, dependency, asmBytes);
+                }
+
                 return newAsm;
             }
             else
@@ -458,13 +467,28 @@ namespace Dover.Framework.Service
 
         }
 
-        private void GetAssemblyInfoFromBin(byte[] asmBytes, AssemblyInformation asmInfo)
+        private void GetI18Dependencies(string directory, string name)
+        {
+            string[] i18nDirectories = Directory.GetDirectories(directory);
+            foreach (string i18nPath in i18nDirectories)
+            {
+                string i18n = Path.GetFileName(i18nPath);
+                string resourceAsm = Path.Combine(directory, i18n, name + ".resources.dll");
+                if (i18nService.IsValidi18NCode(i18n) && File.Exists(resourceAsm))
+                {
+                }
+            }
+        }
+
+
+        private void GetAssemblyInfoFromBin(string directory, byte[] asmBytes, AssemblyInformation asmInfo)
         {
             AppDomain tempDomain;
             var setup = new AppDomainSetup();
             setup.ApplicationName = "Dover.GetAssemblyInformation";
-            setup.ApplicationBase = Environment.CurrentDirectory;
+            setup.ApplicationBase = directory;
             tempDomain = AppDomain.CreateDomain("Dover.GetAssemblyInformation", null, setup);
+            List<AssemblyInformation> dependencyInformation;
 
             try
             {
@@ -472,7 +496,29 @@ namespace Dover.Framework.Service
                     "Dover.Framework.Application");
                 SAPServiceFactory.PrepareForInception(tempDomain);
                 TempAssemblyLoader asmLoader = app.Resolve<TempAssemblyLoader>();
-                asmLoader.GetAssemblyInfoFromBin(asmBytes, asmInfo);
+                dependencyInformation = asmLoader.GetAssemblyInfoFromBin(asmBytes, asmInfo);
+                asmInfo.Dependencies = new List<AssemblyInformation>();
+
+                // The appDomain will die, clone return.
+                foreach (var dep in dependencyInformation)
+                {
+                    AssemblyInformation newInfo = new AssemblyInformation();
+                    newInfo.Build = dep.Build;
+                    newInfo.Code = dep.Code;
+                    newInfo.Date = dep.Date;
+                    newInfo.ExpireDate = dep.ExpireDate;
+                    newInfo.FileName = string.Copy(dep.FileName);
+                    newInfo.Major = dep.Major;
+                    newInfo.MD5 = string.Copy(dep.MD5);
+                    newInfo.Minor = dep.Minor;
+                    newInfo.Name = string.Copy(dep.Name);
+                    newInfo.Description = string.Copy(dep.Description);
+                    newInfo.Revision = dep.Revision;
+                    newInfo.Size = dep.Size;
+                    newInfo.Type = dep.Type;
+                    asmInfo.Dependencies.Add(newInfo);
+                }
+
             }
             finally
             {
@@ -485,20 +531,49 @@ namespace Dover.Framework.Service
             try
             {
                 Logger.Info(String.Format(Messages.FileUpdating, asmMeta.Name, asmMeta.Version));
-                byte[] asmBytes = asmDAO.GetAssembly(asmMeta);
-                if (asmBytes != null)
+                string cacheFile = Path.Combine(GetDoverDirectory(), "Cache", asmMeta.MD5);
+                if (!CreateFromCache(asmMeta, cacheFile, fullPath))
                 {
-                    File.WriteAllBytes(fullPath, asmBytes);
-                    Logger.Info(String.Format(Messages.FileUpdated, asmMeta.Name, asmMeta.Version));
-                }
-                else
-                {
-                    Logger.Warn(String.Format(Messages.FileMissing, asmMeta.Name, asmMeta.Version));
+                    byte[] asmBytes = asmDAO.GetAssembly(asmMeta);
+                    if (asmBytes != null)
+                    {
+                        File.WriteAllBytes(cacheFile, asmBytes);
+                        CreateFromCache(asmMeta, cacheFile, fullPath);
+                    }
+                    else
+                    {
+                        Logger.Warn(String.Format(Messages.FileMissing, asmMeta.Name, asmMeta.Version));
+                    }
                 }
             }
             catch (Exception e)
             {
                 Logger.Error(String.Format(Messages.FileError, asmMeta.Name, asmMeta.Version), e);
+            }
+        }
+
+        private bool CreateFromCache(AssemblyInformation asmMeta, string cacheFile, string fullPath)
+        {
+            if (File.Exists(cacheFile))
+            {
+                File.Copy(cacheFile, fullPath, true);
+                Logger.Info(String.Format(Messages.FileUpdated, asmMeta.Name, asmMeta.Version));
+                return true;
+            }
+            return false;
+        }
+
+        private void UpdateAssemblyDependencies(AssemblyInformation asm, string appFolder)
+        {
+            List<AssemblyInformation> dependencies = asmDAO.GetDependencies(asm);
+            foreach (var dep in dependencies)
+            {
+                string fullPath = Path.Combine(appFolder, dep.FileName);
+                UpdateAssembly(dep, fullPath);
+            }
+            if (dependencies.Count == 0)
+            {
+                UpdateFrameworkAssemblies(appFolder);
             }
         }
 
@@ -534,7 +609,7 @@ namespace Dover.Framework.Service
             return !File.Exists(fullPath) || !CheckSum(asm.MD5, fullPath);
         }
 
-        private string MD5Sum(byte[] fileByte)
+        internal static string MD5Sum(byte[] fileByte)
         {
             using (var md5 = MD5.Create())
             {
@@ -545,7 +620,6 @@ namespace Dover.Framework.Service
                     sb.Append(hash[i].ToString("X2"));
                 }
                 var md5sum = sb.ToString();
-                Logger.Debug(DebugString.Format(Messages.MD5Sum, md5sum));
                 return md5sum;
             }
         }
@@ -557,5 +631,16 @@ namespace Dover.Framework.Service
             return MD5Sum(fileByte) == asmHash;
         }
 
+        internal string GetDoverDirectory()
+        {
+            string appFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Dover";
+
+            string server = company.Server;
+            int port = server.LastIndexOf(":");
+            if (port > 0)
+                server = server.Substring(0, port); // Hana servers have :
+            appFolder = Path.Combine(appFolder, server + "-" + company.CompanyDB);
+            return appFolder;
+        }
     }
 }

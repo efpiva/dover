@@ -213,20 +213,6 @@
     <EmbeddedResource Include="DatabaseFields.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Assemblies\Castle.Core.dll" />
-    <EmbeddedResource Include="Assemblies\Castle.Facilities.Logging.dll" />
-    <EmbeddedResource Include="Assemblies\Castle.Services.Logging.Log4netIntegration.dll" />
-    <EmbeddedResource Include="Assemblies\Castle.Windsor.dll" />
-    <EmbeddedResource Include="Assemblies\ICSharpCode.SharpZipLib.dll" />
-    <EmbeddedResource Include="Assemblies\log4net.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assemblies\SAPbouiCOM.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Assemblies\Interop.SAPbobsCOM.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Form\ExportDBInfo.srf">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -279,7 +265,6 @@
   <ItemGroup>
     <EmbeddedResource Include="DAO\sql\CheckAutoUpdate.sql" />
     <EmbeddedResource Include="DAO\sql\DeleteModule.sql" />
-    <EmbeddedResource Include="DAO\sql\DeleteModuleBIN.sql" />
     <EmbeddedResource Include="DAO\sql\DeleteModuleI18N.sql" />
     <EmbeddedResource Include="DAO\sql\GetAssembliesInformation.sql" />
     <EmbeddedResource Include="DAO\sql\GetAssembly.sql" />
@@ -427,6 +412,33 @@
     <EmbeddedResource Include="Service\sql\IsInstalled.sql" />
     <EmbeddedResource Include="Service\sql\MarkAsInstalled.sql" />
     <EmbeddedResource Include="Service\sql\MarkAsNotInstalled.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\DeleteDependencies.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\InsertDependency.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\InsertDependency.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetDependencyByMD5.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\GetDependencyByMD5.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetAutoUpdateAssembliesInformation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\GetAutoUpdateAssembliesInformation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\GetDependencyInformation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetDependencyInformation.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
