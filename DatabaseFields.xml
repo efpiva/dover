@@ -7,6 +7,44 @@
     </AdmInfo>
     <UserFieldsMD>
       <row>
+        <Name>Code</Name>
+        <Type>db_Alpha</Type>
+        <Size>30</Size>
+        <Description>Module Code</Description>
+        <SubType>st_None</SubType>
+        <TableName>@DOVER_MODULES_DEP</TableName>
+        <FieldID>0</FieldID>
+        <EditSize>30</EditSize>
+        <Mandatory>tNO</Mandatory>
+      </row>
+    </UserFieldsMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
+        <Name>DepCode</Name>
+        <Type>db_Alpha</Type>
+        <Size>30</Size>
+        <Description>Dependency module</Description>
+        <SubType>st_None</SubType>
+        <TableName>@DOVER_MODULES_DEP</TableName>
+        <FieldID>1</FieldID>
+        <EditSize>30</EditSize>
+        <Mandatory>tNO</Mandatory>
+      </row>
+    </UserFieldsMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
         <Name>Assembly</Name>
         <Type>db_Alpha</Type>
         <Size>200</Size>

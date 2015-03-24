@@ -7,6 +7,20 @@
     </AdmInfo>
     <UserTablesMD>
       <row>
+        <TableName>DOVER_MODULES_DEP</TableName>
+        <TableDescription>Modules Dependency</TableDescription>
+        <TableType>bott_NoObject</TableType>
+        <Archivable>tNO</Archivable>
+      </row>
+    </UserTablesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>153</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserTablesMD>
+      <row>
         <TableName>DOVER_MODULES</TableName>
         <TableDescription>Dover Modules</TableDescription>
         <TableType>bott_NoObject</TableType>
