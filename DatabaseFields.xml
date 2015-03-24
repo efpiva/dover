@@ -255,69 +255,6 @@
     </AdmInfo>
     <UserFieldsMD>
       <row>
-        <Name>Code</Name>
-        <Type>db_Alpha</Type>
-        <Size>30</Size>
-        <Description>Code</Description>
-        <SubType>st_None</SubType>
-        <LinkedTable />
-        <DefaultValue />
-        <TableName>@DOVER_MODULES_I18N</TableName>
-        <EditSize>30</EditSize>
-        <Mandatory>tNO</Mandatory>
-      </row>
-    </UserFieldsMD>
-    <ValidValuesMD></ValidValuesMD>
-  </BO>
-  <BO>
-    <AdmInfo>
-      <Object>152</Object>
-      <Version>2</Version>
-    </AdmInfo>
-    <UserFieldsMD>
-      <row>
-        <Name>Asm</Name>
-        <Type>db_Memo</Type>
-        <Size>4</Size>
-        <Description>Asm</Description>
-        <SubType>st_Link</SubType>
-        <LinkedTable />
-        <DefaultValue />
-        <TableName>@DOVER_MODULES_I18N</TableName>
-        <EditSize>254</EditSize>
-        <Mandatory>tNO</Mandatory>
-      </row>
-    </UserFieldsMD>
-    <ValidValuesMD></ValidValuesMD>
-  </BO>
-  <BO>
-    <AdmInfo>
-      <Object>152</Object>
-      <Version>2</Version>
-    </AdmInfo>
-    <UserFieldsMD>
-      <row>
-        <Name>i18n</Name>
-        <Type>db_Alpha</Type>
-        <Size>30</Size>
-        <Description>i18n</Description>
-        <SubType>st_None</SubType>
-        <LinkedTable />
-        <DefaultValue />
-        <TableName>@DOVER_MODULES_I18N</TableName>
-        <EditSize>30</EditSize>
-        <Mandatory>tNO</Mandatory>
-      </row>
-    </UserFieldsMD>
-    <ValidValuesMD></ValidValuesMD>
-  </BO>
-  <BO>
-    <AdmInfo>
-      <Object>152</Object>
-      <Version>2</Version>
-    </AdmInfo>
-    <UserFieldsMD>
-      <row>
         <Name>Type</Name>
         <Type>db_Alpha</Type>
         <Size>2</Size>

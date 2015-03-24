@@ -318,7 +318,6 @@ namespace Dover.Framework.Service
                     AssemblyInformation existingAsm = asmDAO.GetAssemblyInformation(addInName, type);
                     AssemblyInformation newAsm = GetCurrentAsm(directory, fileName, type);
                     AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(existingAsm, newAsm);
-                    SaveAddinI18NResources(directory, addInName, savedAsm.Code);
 
                     licenseManager.BootLicense(); // reload licenses to include added license.
                     Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
@@ -338,21 +337,6 @@ namespace Dover.Framework.Service
 
         }
 
-        private void SaveAddinI18NResources(string directory, string addInName, string moduleCode)
-        {
-            string[] i18nDirectories = Directory.GetDirectories(directory);
-            foreach (string i18nPath in i18nDirectories)
-            {
-                string i18n = Path.GetFileName(i18nPath);
-                string resourceAsm = Path.Combine(directory, i18n, addInName + ".resources.dll");
-                
-                if (i18nService.IsValidi18NCode(i18n) && File.Exists(resourceAsm))
-                {
-                    asmDAO.SaveAssemblyI18N(moduleCode, i18n, File.ReadAllBytes(resourceAsm));
-                }
-            }
-        }
-
         internal void UpdateFrameworkAssemblies(string appFolder)
         {
             Logger.Debug(DebugString.Format(Messages.UpdatingAssembly, AssemblyType.Core));
@@ -369,20 +353,17 @@ namespace Dover.Framework.Service
             {
                 UpdateAssembly(asm, fullPath);
                 UpdateAssemblyDependencies(asm, appFolder);
-                UpdateI18NAssembly(asm, appFolder);
             }
         }
 
         private void UpdateFrameworkDBAssembly(ref AssemblyInformation asm)
         {
             const string defaultFrameworkDll = "Framework.dll";
-            const string asmName = "Framework";
 
             if (asm == null)
             {
                 AssemblyInformation newAsm = GetCurrentAsm(Environment.CurrentDirectory, defaultFrameworkDll, AssemblyType.Core);
                 AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(null, newAsm);
-                SaveAddinI18NResources(Environment.CurrentDirectory, asmName, savedAsm.Code);
                 asm = savedAsm;
             }
             else
@@ -413,12 +394,6 @@ namespace Dover.Framework.Service
             {
                 AssemblyInformation newAsm = GetCurrentAsm(Environment.CurrentDirectory, asm.FileName, assemblyType);
                 AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(asm, newAsm);
-                if (savedAsm.MD5 != asm.MD5)
-                {
-                    SaveAddinI18NResources(Environment.CurrentDirectory, asm.Name, asm.Code);
-                    asm.MD5 = savedAsm.MD5; // update MD5Sum, so AppData is updated latter.
-                    asm.Version = savedAsm.Version; // Correct version
-                }
                 Logger.Info(string.Format(Messages.FileUpdated, savedAsm.Name, savedAsm.Version));
             }
             catch (FileNotFoundException)
@@ -584,33 +559,6 @@ namespace Dover.Framework.Service
             {
                 AssemblyInformation coreAsm = asmDAO.GetAssemblyInformation("Framework", AssemblyType.Core);
                 UpdateAppDataFolder(coreAsm, appFolder);
-            }
-        }
-
-        private void UpdateI18NAssembly(AssemblyInformation asm, string appFolder)
-        {
-            List<string> supportedI18N = asmDAO.GetSupportedI18N(asm);
-            foreach (var i18n in supportedI18N)
-            {
-                Directory.CreateDirectory(Path.Combine(appFolder, i18n));
-                string asmName = asm.Name + ".resources.dll";
-                try
-                {
-                    byte[] asmBytes = asmDAO.GetI18NAssembly(asm, i18n);
-                    if (asmBytes != null)
-                    {
-                        File.WriteAllBytes(Path.Combine(appFolder, i18n, asmName), asmBytes);
-                        Logger.Info(String.Format(Messages.FileUpdated, asmName, asm.Version));
-                    }
-                    else
-                    {
-                        Logger.Warn(String.Format(Messages.FileMissing, asmName, asm.Version));
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(String.Format(Messages.FileError, asmName, asm.Version), e);
-                }
             }
         }
 

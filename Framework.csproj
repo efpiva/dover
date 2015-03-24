@@ -193,7 +193,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="DatabaseTables.xml" />
+    <EmbeddedResource Include="DatabaseTables.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Messages.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
@@ -210,7 +212,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DatabaseFields.xml" />
+    <EmbeddedResource Include="DatabaseFields.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Form\ExportDBInfo.srf">
@@ -265,20 +269,16 @@
   <ItemGroup>
     <EmbeddedResource Include="DAO\sql\CheckAutoUpdate.sql" />
     <EmbeddedResource Include="DAO\sql\DeleteModule.sql" />
-    <EmbeddedResource Include="DAO\sql\DeleteModuleI18N.sql" />
     <EmbeddedResource Include="DAO\sql\GetAssembliesInformation.sql" />
     <EmbeddedResource Include="DAO\sql\GetAssembly.sql" />
     <EmbeddedResource Include="DAO\sql\GetAssemblyInformation.sql" />
     <EmbeddedResource Include="DAO\sql\GetCUFDKey.sql" />
-    <EmbeddedResource Include="DAO\sql\GetI18N.sql" />
     <EmbeddedResource Include="DAO\sql\GetModuleCode.sql" />
     <EmbeddedResource Include="DAO\sql\GetModulePermission.sql" />
     <EmbeddedResource Include="DAO\sql\GetNextCode.sql" />
-    <EmbeddedResource Include="DAO\sql\GetSupportedI18N.sql" />
     <EmbeddedResource Include="DAO\sql\GetUserPermission.sql" />
     <EmbeddedResource Include="DAO\sql\GetUserPermissionCode.sql" />
     <EmbeddedResource Include="DAO\sql\InsertAsm.sql" />
-    <EmbeddedResource Include="DAO\sql\InsertI18N.sql" />
     <EmbeddedResource Include="DAO\sql\IsSuperUser.sql" />
     <EmbeddedResource Include="DAO\sql\SaveAddinPermission.sql" />
     <EmbeddedResource Include="DAO\sql\SaveAddinUserPermission.sql" />
@@ -302,9 +302,6 @@
     <EmbeddedResource Include="DAO\hana\DeleteModuleBIN.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DAO\hana\DeleteModuleI18N.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="DAO\hana\GetAssembliesInformation.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -317,9 +314,6 @@
     <EmbeddedResource Include="DAO\hana\GetCUFDKey.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DAO\hana\GetI18N.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="DAO\hana\GetModuleCode.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -329,9 +323,6 @@
     <EmbeddedResource Include="DAO\hana\GetNextCode.sql" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DAO\hana\GetSupportedI18N.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="DAO\hana\GetUserPermission.sql" />
   </ItemGroup>
   <ItemGroup>
@@ -339,9 +330,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\hana\InsertAsm.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DAO\hana\InsertI18N.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\hana\IsSuperUser.sql" />

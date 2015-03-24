@@ -145,39 +145,6 @@ namespace Dover.Framework.DAO
             }
         }
 
-        internal override void SaveAssemblyI18N(string moduleCode, string i18n, byte[] i18nAsm)
-        {
-            string sql;
-            int maxtext = 256000;
-            int insertedText = 0;
-            string asmHex = null;
-           
-            b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteModuleI18N.sql"), moduleCode, i18n));
-
-            SoapHexBinary shb = new SoapHexBinary(Compress(i18nAsm));
-            if (i18nAsm != null)
-            {
-                string insertSQL = this.GetSQL("InsertI18N.sql");
-                asmHex = shb.ToString();
-                for (int i = 0; i < asmHex.Length / maxtext; i++)
-                {
-                    string code = b1DAO.GetNextCode("DOVER_MODULES_I18N");
-                    sql = String.Format(insertSQL,
-                        code, code, moduleCode, asmHex.Substring(i * maxtext, maxtext), i18n);
-                    b1DAO.ExecuteStatement(sql);
-                    insertedText += maxtext;
-                }
-
-                if (insertedText < asmHex.Length)
-                {
-                    string code = b1DAO.GetNextCode("DOVER_MODULES_I18N");
-                    sql = String.Format(insertSQL,
-                        code, code, moduleCode, asmHex.Substring(insertedText), i18n);
-                    b1DAO.ExecuteStatement(sql);
-                }
-            }
-        }
-
         internal override bool AutoUpdateEnabled(AssemblyInformation asm)
         {
             string autoUpdateFlag = b1DAO.ExecuteSqlForObject<string>(
@@ -185,24 +152,6 @@ namespace Dover.Framework.DAO
             return !string.IsNullOrEmpty(autoUpdateFlag) && autoUpdateFlag == "Y";
         }
 
-
-        internal override List<string> GetSupportedI18N(AssemblyInformation asm)
-        {
-            return b1DAO.ExecuteSqlForList<string>(string.Format(this.GetSQL("GetSupportedI18N.sql"), asm.Code));
-        }
-
-        internal override byte[] GetI18NAssembly(AssemblyInformation asm, string i18n)
-        {
-            List<String> hexFile = b1DAO.ExecuteSqlForList<String>(
-                String.Format(this.GetSQL("GetI18N.sql"), asm.Code, i18n));
-            StringBuilder sb = new StringBuilder();
-            foreach (var hex in hexFile)
-            {
-                sb.Append(hex);
-            }
-            SoapHexBinary shb = SoapHexBinary.Parse(sb.ToString());
-            return Uncompress(shb.Value);
-        }
 
         private byte[] Compress(byte[] asmBytes)
         {

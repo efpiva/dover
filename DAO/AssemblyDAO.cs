@@ -38,13 +38,7 @@ namespace Dover.Framework.DAO
 
         internal abstract void RemoveAssembly(string moduleName);
 
-        internal abstract void SaveAssemblyI18N(string moduleCode, string i18n, byte[] i18nAsm);
-
         internal abstract bool AutoUpdateEnabled(AssemblyInformation asm);
-
-        internal abstract List<string> GetSupportedI18N(AssemblyInformation asm);
-
-        internal abstract byte[] GetI18NAssembly(AssemblyInformation asm, string i18n);
 
         internal abstract void SaveAssemblyDependency(AssemblyInformation newAsm, AssemblyInformation dependency, byte[] dependencyBytes);
 

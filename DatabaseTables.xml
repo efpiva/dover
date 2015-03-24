@@ -49,20 +49,6 @@
     </AdmInfo>
     <UserTablesMD>
       <row>
-        <TableName>DOVER_MODULES_I18N</TableName>
-        <TableDescription>Modules i18n Resources</TableDescription>
-        <TableType>bott_NoObject</TableType>
-        <Archivable>tNO</Archivable>
-      </row>
-    </UserTablesMD>
-  </BO>
-  <BO>
-    <AdmInfo>
-      <Object>153</Object>
-      <Version>2</Version>
-    </AdmInfo>
-    <UserTablesMD>
-      <row>
         <TableName>DOVER_LOGS</TableName>
         <TableDescription>Dover Logs</TableDescription>
         <TableType>bott_NoObject</TableType>

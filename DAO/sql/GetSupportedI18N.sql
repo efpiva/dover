@@ -1,1 +1,0 @@
-﻿select distinct u_i18n from [@DOVER_MODULES_I18N] WHERE U_Code = '{0}'
