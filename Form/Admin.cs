@@ -242,7 +242,7 @@ namespace Dover.Framework.Form
         {
             BubbleEvent = true;
             SelectFileDialog dialog = new SelectFileDialog("C:\\", "",
-                Messages.AdminModuleFilterPrefix + "|*.dll;*.exe;*.zip", DialogType.OPEN);
+                Messages.AdminModuleFilterPrefix + "|*.dover", DialogType.OPEN);
             dialog.Open();
             modulePath.Value = dialog.SelectedFile;
         }
@@ -303,7 +303,7 @@ namespace Dover.Framework.Form
                     appEventHandler.Reboot();
                 }
             }
-            else
+            else if (!string.IsNullOrEmpty(addinName))
             {
                 if (FrameworkAddinManager.GetAddinStatus(addinName) == AddinStatus.Running)
                 {
