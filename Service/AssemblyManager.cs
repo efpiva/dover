@@ -207,9 +207,20 @@ namespace Dover.Framework.Service
 
         internal void RemoveAddIn(string moduleName)
         {
-            // TODO: reload appDomain!
-            asmDAO.RemoveAssembly(moduleName);
-            Logger.Info(string.Format(Messages.RemoveAddinSuccess, moduleName));
+            AssemblyInformation asm = asmDAO.GetAssemblyInformation(moduleName, AssemblyType.Addin);
+            if (asm != null)
+            {
+                List<AssemblyInformation> dependencies = asmDAO.GetDependencies(asm);
+                foreach (var dep in dependencies)
+                {
+                    if (asmDAO.GetDependencyCount(dep) == 1)
+                    {
+                        asmDAO.RemoveAssembly(dep.Code);
+                    }
+                }
+                asmDAO.RemoveAssembly(asm.Code);
+                Logger.Info(string.Format(Messages.RemoveAddinSuccess, moduleName));
+            }
         }
 
         /// <summary>

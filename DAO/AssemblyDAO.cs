@@ -36,7 +36,7 @@ namespace Dover.Framework.DAO
 
         internal abstract void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes);
 
-        internal abstract void RemoveAssembly(string moduleName);
+        internal abstract void RemoveAssembly(string code);
 
         internal abstract bool AutoUpdateEnabled(AssemblyInformation asm);
 
@@ -45,5 +45,7 @@ namespace Dover.Framework.DAO
         internal abstract List<AssemblyInformation> GetAutoUpdateAssemblies();
 
         internal abstract List<AssemblyInformation> GetDependencies(AssemblyInformation asm);
+
+        internal abstract int GetDependencyCount(AssemblyInformation dep);
     }
 }

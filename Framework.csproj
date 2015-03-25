@@ -273,7 +273,6 @@
     <EmbeddedResource Include="DAO\sql\GetAssembly.sql" />
     <EmbeddedResource Include="DAO\sql\GetAssemblyInformation.sql" />
     <EmbeddedResource Include="DAO\sql\GetCUFDKey.sql" />
-    <EmbeddedResource Include="DAO\sql\GetModuleCode.sql" />
     <EmbeddedResource Include="DAO\sql\GetModulePermission.sql" />
     <EmbeddedResource Include="DAO\sql\GetNextCode.sql" />
     <EmbeddedResource Include="DAO\sql\GetUserPermission.sql" />
@@ -312,9 +311,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\hana\GetCUFDKey.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DAO\hana\GetModuleCode.sql" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\hana\GetModulePermission.sql" />
@@ -427,6 +423,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\hana\GetDependencyInformation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\GetDependencyCount.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetDependencyCount.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

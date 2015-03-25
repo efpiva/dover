@@ -134,14 +134,13 @@ namespace Dover.Framework.DAO
             }
         }
 
-        internal override void RemoveAssembly(string moduleName)
+        internal override void RemoveAssembly(string code)
         {
-            string code = b1DAO.ExecuteSqlForObject<string>(
-                string.Format(this.GetSQL("GetModuleCode.sql"), moduleName));
-            if (moduleName != null)
+            if (code != null)
             {
                 b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteModule.sql"), code));
                 b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteAssembly.sql"), code));
+                b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteDependencies.sql"), code));
             }
         }
 
@@ -205,6 +204,11 @@ namespace Dover.Framework.DAO
         internal override List<AssemblyInformation> GetDependencies(AssemblyInformation asm)
         {
             return b1DAO.ExecuteSqlForList<AssemblyInformation>(string.Format(this.GetSQL("GetDependencyInformation.sql"), asm.Code));
+        }
+
+        internal override int GetDependencyCount(AssemblyInformation dep)
+        {
+            return b1DAO.ExecuteSqlForObject<int>(string.Format(this.GetSQL("GetDependencyCount.sql"), dep.Code));
         }
     }
 }
