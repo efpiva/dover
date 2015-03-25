@@ -1,1 +1,0 @@
-﻿DELETE FROM [@DOVER_MODULES_BIN] WHERE U_Code = '{0}'

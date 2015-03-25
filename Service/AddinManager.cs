@@ -195,7 +195,7 @@ namespace Dover.Framework.Service
 
                 var setup = new AppDomainSetup();
                 setup.ApplicationName = "Dover.Inception";
-                setup.ApplicationBase = Environment.CurrentDirectory;
+                setup.ApplicationBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", asm.Name);
                 var domain = AppDomain.CreateDomain("Dover.AddIn", null, setup);
                 domain.SetData("shutdownEvent", shutdownEvent); // Thread synchronization
                 domain.SetData("assemblyName", asm.Name); // Used to get current AssemblyName for logging and reflection
@@ -274,15 +274,18 @@ namespace Dover.Framework.Service
 
         internal List<AssemblyInformation> ListAddins()
         {
-            return assemblyDAO.GetAssembliesInformation("A");
+            return assemblyDAO.GetAssembliesInformation(AssemblyType.Addin);
         }
 
         private void LoadAddin(AssemblyInformation addin)
         {
+            string directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", addin.Name);
+            Directory.CreateDirectory(directory);
+            assemblyManager.UpdateAppDataFolder(addin, directory);
             if (!IsInstalled(addin.Code))
             {
                 Logger.Info(string.Format(Messages.ConfiguringAddin, addin.Name));
-                InstallAddin(addin);
+                InstallAddin(addin, directory);
                 Logger.Info(string.Format(Messages.ConfiguredAddin, addin.Name));
             }
             RegisterAddin(addin);
@@ -290,11 +293,11 @@ namespace Dover.Framework.Service
             
         }
 
-        private void InstallAddin(AssemblyInformation addin)
+        private void InstallAddin(AssemblyInformation addin, string baseDirectory)
         {
             try
             {
-                ConfigureAddin(addin);
+                ConfigureAddin(addin, baseDirectory);
                 MarkAsInstalled(addin.Code);
             }
             catch (Exception e)
@@ -319,7 +322,7 @@ namespace Dover.Framework.Service
         private void ConfigureLog(AssemblyInformation addin)
         {
             var source = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DoverAddin.config");
-            var destination = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, addin.Name + ".config");
+            var destination = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", addin.Name, addin.Name + ".config");
 
             if (File.Exists(source) && !File.Exists(destination)) 
             {
@@ -367,7 +370,8 @@ namespace Dover.Framework.Service
                     }
                     else if (attr is AddInAttribute &&
                         (!string.IsNullOrWhiteSpace(((AddInAttribute)attr).Description)
-                         || !string.IsNullOrWhiteSpace(((AddInAttribute)attr).i18n)))
+                         || !string.IsNullOrWhiteSpace(((AddInAttribute)attr).i18n))
+                        && !string.IsNullOrWhiteSpace(((AddInAttribute)attr).Name))
                     {
                         isValid = true;
                     }
@@ -492,12 +496,12 @@ namespace Dover.Framework.Service
             return row;
         }
 
-        private void ConfigureAddin(AssemblyInformation addin)
+        private void ConfigureAddin(AssemblyInformation addin, string baseDirectory)
         {
             Logger.Info(String.Format(Messages.ConfiguringAddin, addin));
             var setup = new AppDomainSetup();
             setup.ApplicationName = "Dover.ConfigureDomain";
-            setup.ApplicationBase = Environment.CurrentDirectory;
+            setup.ApplicationBase = baseDirectory;
             AppDomain configureDomain = AppDomain.CreateDomain("ConfigureDomain", null, setup);
             try
             {
@@ -607,17 +611,16 @@ namespace Dover.Framework.Service
         [Transaction]
         protected internal virtual void StartAddin(string name)
         {
-            AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, "A");
-            assemblyManager.UpdateAppDataFolder(asmInfo, AppDomain.CurrentDomain.BaseDirectory);
+            AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, AssemblyType.Addin);
             LoadAddin(asmInfo);
         }
 
         [Transaction]
         protected internal virtual void InstallAddin(string name)
         {
-            AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, "A");
-            assemblyManager.UpdateAppDataFolder(asmInfo, AppDomain.CurrentDomain.BaseDirectory);
-            InstallAddin(asmInfo);
+            AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, AssemblyType.Addin);
+            string directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", asmInfo.Name);
+            InstallAddin(asmInfo, directory);
         }
         
         internal string GetAddinChangeLog(string addin)

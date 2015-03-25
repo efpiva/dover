@@ -198,10 +198,12 @@ namespace Dover.Framework.Factory
                 assemblyName = "Dover"; // Framework should be threated the same as Dover.
             }
 
-            if (!File.Exists(assemblyName + ".config"))
-                assemblyName = "DoverTemp"; // Temp AppDomain logging.
+            string logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, assemblyName + ".config");
 
-            Container.AddFacility<LoggingFacility>(f => f.UseLog4Net(assemblyName + ".config"));
+            if (!File.Exists(logPath))
+                logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DoverTemp.config"); // Temp AppDomain logging.
+
+            Container.AddFacility<LoggingFacility>(f => f.UseLog4Net(logPath));
 
             var logger = Container.Resolve<ILogger>();
             logger.Debug(DebugString.Format(Messages.StartupFolder, runningFolder));

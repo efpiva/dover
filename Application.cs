@@ -48,59 +48,23 @@ namespace Dover.Framework
     /// Dover.Framework.Container.ContainerManager.
     /// 
     /// </summary>
-    [AddIn(i18n="Dover.Framework.Messages.DoverName", Description="Dover Framework")]
+    [AddIn(i18n="Dover.Framework.Messages.DoverName", Description="Dover Framework", Name="Framework")]
     [ResourceBOM("Dover.Framework.DatabaseTables.xml", ResourceType.UserTable)]
     [ResourceBOM("Dover.Framework.DatabaseFields.xml", ResourceType.UserField)]
     public class Application : MarshalByRefObject
     {
         private IWindsorContainer appContainer;
-        private static Dictionary<string, Assembly> assemblyCacheResolver = new Dictionary<string, Assembly>();
-        private string[] embeddedAssemblies = {
-            "Dover.Framework.Assemblies.SAPbouiCOM.dll",
-            "Dover.Framework.Assemblies.log4net.dll",
-            "Dover.Framework.Assemblies.Castle.Core.dll",
-            "Dover.Framework.Assemblies.Castle.Facilities.Logging.dll",
-            "Dover.Framework.Assemblies.Castle.Services.Logging.Log4netIntegration.dll",
-            "Dover.Framework.Assemblies.Castle.Windsor.dll",
-            "Dover.Framework.Assemblies.ICSharpCode.SharpZipLib.dll"};
 
         private string doverLogTemplate = "Dover.Framework.Dover.config";
 
         public Application()
         {
-            // load all embedded resource into memory;
-            byte[] ba = null;
-            Assembly curAsm = Assembly.GetExecutingAssembly();
-            foreach (string resource in embeddedAssemblies)
-            {
-                using (Stream stm = curAsm.GetManifestResourceStream(resource))
-                {
-                    ba = new byte[(int)stm.Length];
-                    stm.Read(ba, 0, (int)stm.Length);
-                    Assembly asm = Assembly.Load(ba);
-                    assemblyCacheResolver.Add(asm.FullName, asm);
-                }
-            }
-
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
-
-            string bobsInteropPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Interop.SAPbobsCOM.dll");
-            if (!File.Exists(bobsInteropPath))
-            {
-                using (Stream stm = curAsm.GetManifestResourceStream("Dover.Framework.Assemblies.Interop.SAPbobsCOM.dll"))
-                {
-                    ba = new byte[(int)stm.Length];
-                    stm.Read(ba, 0, (int)stm.Length);
-                    File.WriteAllBytes(bobsInteropPath, ba);
-                }
-            }
-
             CheckLogging();
         }
 
         private void CheckLogging()
         {
-            string logging = Path.Combine(Environment.CurrentDirectory, "Dover.config");
+            string logging = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Dover.config");
             if (!File.Exists(logging))
             {
                 using (var doverConfig = Assembly.GetExecutingAssembly().GetManifestResourceStream(doverLogTemplate))
@@ -117,13 +81,6 @@ namespace Dover.Framework
                     }
                 }
             }
-        }
-
-        static Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            if (assemblyCacheResolver.ContainsKey(args.Name))
-                return assemblyCacheResolver[args.Name];
-            return null;
         }
 
         /// <summary>

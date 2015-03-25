@@ -240,9 +240,6 @@
 	<data name="InvalidAddInExtension" xml:space="preserve">
     <value>Extenção de addin inválida</value>
   </data>
-	<data name="PackageContainsMoreThanOneDLL" xml:space="preserve">
-    <value>Pacote ZIP contém mais de uma DLL</value>
-  </data>
 	<data name="FS" xml:space="preserve">
     <value>Consulta formatada</value>
   </data>
@@ -288,4 +285,7 @@
 	<data name="NoLicenseError" xml:space="preserve">
 		<value>Licença não encontrada para {0}</value>
 	</data>
+  <data name="UpdateFrameworkError" xml:space="preserve">
+    <value>Addin com Framework desatualizado, por favor atualize.</value>
+  </data>
 </root>

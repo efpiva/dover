@@ -62,7 +62,7 @@ namespace Dover.Framework.Service
 
         internal List<AssemblyInformation> ListAllAddins()
         {
-            var retValue = asmDAO.GetAssembliesInformation("A");
+            var retValue = asmDAO.GetAssembliesInformation(AssemblyType.Addin);
             foreach (var asm in retValue)
             {
                 asm.ExpireDate = DateTime.MinValue;
@@ -72,7 +72,7 @@ namespace Dover.Framework.Service
 
         internal List<AssemblyInformation> ListAddins()
         {
-            var retValue = asmDAO.GetAssembliesInformation("A");
+            var retValue = asmDAO.GetAssembliesInformation(AssemblyType.Addin);
             List<AssemblyInformation> filteredReturn = new List<AssemblyInformation>();
 
             string publicKey = GetPublicKey();

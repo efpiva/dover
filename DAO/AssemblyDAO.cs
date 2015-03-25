@@ -30,20 +30,22 @@ namespace Dover.Framework.DAO
     {
         internal abstract byte[] GetAssembly(AssemblyInformation asm);
 
-        internal abstract List<AssemblyInformation> GetAssembliesInformation(string type);
+        internal abstract List<AssemblyInformation> GetAssembliesInformation(AssemblyType type);
 
-        internal abstract AssemblyInformation GetAssemblyInformation(string asmName, string type);
+        internal abstract AssemblyInformation GetAssemblyInformation(string asmName, AssemblyType type);
 
         internal abstract void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes);
 
-        internal abstract void RemoveAssembly(string moduleName);
-
-        internal abstract void SaveAssemblyI18N(string moduleCode, string i18n, byte[] i18nAsm);
+        internal abstract void RemoveAssembly(string code);
 
         internal abstract bool AutoUpdateEnabled(AssemblyInformation asm);
 
-        internal abstract List<string> GetSupportedI18N(AssemblyInformation asm);
+        internal abstract void SaveAssemblyDependency(AssemblyInformation newAsm, AssemblyInformation dependency, byte[] dependencyBytes);
 
-        internal abstract byte[] GetI18NAssembly(AssemblyInformation asm, string i18n);
+        internal abstract List<AssemblyInformation> GetAutoUpdateAssemblies();
+
+        internal abstract List<AssemblyInformation> GetDependencies(AssemblyInformation asm);
+
+        internal abstract int GetDependencyCount(AssemblyInformation dep);
     }
 }

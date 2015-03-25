@@ -31,12 +31,12 @@ using Dover.Framework.Model;
 using Dover.Framework.Factory;
 using Dover.Framework.Log;
 using System.Reflection;
+using Dover.Framework.Attribute;
 
 namespace Dover.Framework
 {
     class MicroCore
     {
-        private SAPbobsCOM.Company company;
         private DatabaseConfiguration dbConf;
         private AssemblyManager assemblyLoader;
         private MicroCoreEventDispatcher dispatcher;
@@ -47,11 +47,10 @@ namespace Dover.Framework
 
         public ILogger Logger { get; set; }
 
-        public MicroCore(DatabaseConfiguration dbConf, SAPbobsCOM.Company company, AssemblyManager assemblyLoader,
+        public MicroCore(DatabaseConfiguration dbConf, AssemblyManager assemblyLoader,
             MicroCoreEventDispatcher dispatcher, MicroBoot microBoot, I18NService i18nService)
         {
             this.microBoot = microBoot;
-            this.company = company;
             this.dbConf = dbConf;
             this.assemblyLoader = assemblyLoader;
             this.dispatcher = dispatcher;
@@ -76,8 +75,8 @@ namespace Dover.Framework
                     string appFolder = CheckAppFolder();
                     Logger.Debug(DebugString.Format(Messages.CreatedAppFolder, appFolder));
 
-                    assemblyLoader.UpdateAssemblies(AssemblySource.Core, appFolder);
-                    assemblyLoader.UpdateAssemblies(AssemblySource.AddIn, appFolder);
+                    assemblyLoader.UpdateFrameworkAssemblies(appFolder);
+                    assemblyLoader.UpdateAddinsDBAssembly();
                     CopyInstallResources(appFolder, Environment.CurrentDirectory);
 
                     if (rebootCount == 0)
@@ -134,15 +133,14 @@ namespace Dover.Framework
 
         private string CheckAppFolder()
         {
-            string appFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Dover";
-            CreateIfNotExists(appFolder);
-            string server = company.Server;
-            int port = server.LastIndexOf(":");
-            if (port > 0)
-                server = server.Substring(0, port); // Hana servers have :
-            appFolder = Path.Combine(appFolder, server + "-" + company.CompanyDB);
-            CreateIfNotExists(appFolder);
-            return appFolder;
+            string appFolder = assemblyLoader.GetDoverDirectory();
+
+            string frameworkFolder = Path.Combine(appFolder, "Framework");
+            CreateIfNotExists(frameworkFolder);
+            string cacheFolder = Path.Combine(appFolder, "Cache");
+            CreateIfNotExists(cacheFolder);
+
+            return frameworkFolder;
         }
 
         private void CreateIfNotExists(string appFolder)

@@ -1,1 +1,1 @@
-﻿select TableId Id1, cast(FieldId as nvarchar) Id2, '[' + TableID + '].' + AliasID Code, Descr Name from CUFD
+﻿select TableId Id1, cast(FieldId as nvarchar) Id2, cast('[' + TableID + '].' + AliasID as nvarchar(20)) Code, cast(Descr as nvarchar(100)) Name from CUFD

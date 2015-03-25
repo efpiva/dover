@@ -26,49 +26,64 @@ using Dover.Framework.Monad;
 
 namespace Dover.Framework.Model
 {
+    public enum AssemblyType
+    {
+        Core,
+        Addin,
+        Dependency
+    }
+
     public class AssemblyInformation : MarshalByRefObject, IComparable<AssemblyInformation>
     {
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-        private int major;
-        private int minor;
-        private int build;
-        private int revision;
-
-        private string _version;
+        internal int Major { get; set; }
+        internal int Minor { get; set; }
+        internal int Build { get; set; }
+        internal int Revision { get; set; }
 
         public string Version
         {
             get
             {
-                return _version;
+                return Major.ToString() + "." + Minor.ToString() + "." + Build.ToString()
+                    + "." + Revision.ToString();
             }
             set
             {
-                _version = value;
-                int index = _version.IndexOf('.', 0);
+                int temp = 0;
+                int index = value.IndexOf('.', 0);
                 int lastIndex;
                 if (index < 0)
                     return;
 
-                int.TryParse(_version.Substring(0, index), out major);
-                lastIndex = index+1;
+                int.TryParse(value.Substring(0, index), out temp);
+                Major = temp;
+                lastIndex = index + 1;
 
-                index = _version.IndexOf('.', lastIndex);
+                index = value.IndexOf('.', lastIndex);
                 if (index < 0)
                     return;
-                int.TryParse(_version.Substring(lastIndex, index-lastIndex), out minor);
-                lastIndex = index+1;
 
-                index = _version.IndexOf('.', lastIndex);
+                temp = 0;
+                int.TryParse(value.Substring(lastIndex, index - lastIndex), out temp);
+                Minor = temp;
+                lastIndex = index + 1;
+
+                index = value.IndexOf('.', lastIndex);
                 if (index < 0)
                     return;
-                int.TryParse(_version.Substring(lastIndex, index-lastIndex), out build);
-                lastIndex = index+1;
 
-                int.TryParse(_version.Substring(lastIndex), out revision);
+                temp = 0;
+                int.TryParse(value.Substring(lastIndex, index - lastIndex), out temp);
+                Build = temp;
+                lastIndex = index + 1;
+
+                temp = 0;
+                int.TryParse(value.Substring(lastIndex), out temp);
+                Revision = temp;
             }
         }
 
@@ -80,11 +95,51 @@ namespace Dover.Framework.Model
 
         public string Code { get; set; }
 
-        public string Type { get; set; }
+        public AssemblyType Type { get; set; }
+
+        internal static string ConvertTypeToCode(AssemblyType type)
+        {
+            switch (type)
+            {
+                case AssemblyType.Addin:
+                    return "A";
+                case AssemblyType.Core:
+                    return "C";
+                case AssemblyType.Dependency:
+                    return "D";
+                default:
+                    return "X";
+            }
+        }
+
+        internal string TypeCode
+        {
+            get 
+            {
+                return AssemblyInformation.ConvertTypeToCode(Type);
+            }
+            set
+            {
+                switch (value)
+                {
+                    case "A":
+                        Type = AssemblyType.Addin;
+                        break;
+                    case "C":
+                        Type = AssemblyType.Core;
+                        break;
+                    default:
+                        Type = AssemblyType.Dependency;
+                        break;
+                }
+            }
+        }
 
         public DateTime ExpireDate { get; set; }
 
         public string FileName { get; set; }
+
+        internal List<AssemblyInformation> Dependencies { get; set; }
 
         public override string ToString()
         {
@@ -93,41 +148,41 @@ namespace Dover.Framework.Model
 
         public int CompareTo(AssemblyInformation other)
         {
-            if (major < other.major)
+            if (Major < other.Major)
             {
                 return -1;
             }
-            else if (major > other.major)
+            else if (Major > other.Major)
             {
                 return 1;
             }
             else
             {
-                if (minor < other.minor)
+                if (Minor < other.Minor)
                 {
                     return -1;
                 }
-                else if (minor > other.minor)
+                else if (Minor > other.Minor)
                 {
                     return 1;
                 }
                 else
                 {
-                    if (build < other.build)
+                    if (Build < other.Build)
                     {
                         return -1;
                     }
-                    else if (build > other.build)
+                    else if (Build > other.Build)
                     {
                         return 1;
                     }
                     else
                     {
-                        if (revision < other.revision)
+                        if (Revision < other.Revision)
                         {
                             return -1;
                         }
-                        else if (revision > other.revision)
+                        else if (Revision > other.Revision)
                         {
                             return 1;
                         }
