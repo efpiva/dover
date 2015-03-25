@@ -186,7 +186,7 @@ namespace Dover.Framework.Service
 
         internal void AddInValid(string asm, out bool isValid, out bool hasLicense)
         {
-            isValid = CheckAssembly(asm + ".dll", clrToken);
+            isValid = CheckAssembly(asm, clrToken);
             hasLicense = GetDate() < GetAddInExpireDate(asm);
         }
         
@@ -268,13 +268,13 @@ namespace Dover.Framework.Service
         [DllImport("mscoree.dll", CharSet = CharSet.Unicode)]
         private static extern bool StrongNameSignatureVerificationEx(string wszFilePath, bool fForceVerification, ref bool pfWasVerified);
 
-        private bool CheckAssembly(string asmPath, byte[] clrToken)
+        private bool CheckAssembly(string asmName, byte[] clrToken)
         {
             bool notForced = false;
-            if (clrToken == null) // Token if for dummies.
+            if (clrToken == null || string.IsNullOrWhiteSpace(asmName)) // Token if for dummies.
                 return true;
 
-            string asmFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, asmPath);
+            string asmFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addin", asmName, asmName + ".dll");
 
             bool verified = StrongNameSignatureVerificationEx(asmFullPath, false, ref notForced);
 
