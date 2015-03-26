@@ -95,6 +95,7 @@ namespace Dover.Framework.DAO
                 sql = String.Format(this.GetSQL("UpdateAssembly.sql"), asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length, asm.Code,
                     asm.Description, installed);
                 b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteAssembly.sql"), asm.Code));
+                // TODO: delete MODULES and MODULES_BIN if dependency is used only here.
                 b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteDependencies.sql"), asm.Code));
             }
 
