@@ -28,10 +28,11 @@ using Castle.Core.Logging;
 using Dover.Framework.Attribute;
 using Dover.Framework.Log;
 using Dover.Framework.DAO;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {
-    public class AddinLoader : MarshalByRefObject
+    public class AddinLoader : MarshalByRefObject, IAddinLoader
     {
         public ILogger Logger { get; set; }
         private PermissionManager permissionManager;
@@ -46,7 +47,7 @@ namespace Dover.Framework.Service
             this.menuHandler = menuHandler;
         }
 
-        internal void StartThis()
+        void IAddinLoader.StartThis()
         {
             string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
             try
@@ -60,6 +61,11 @@ namespace Dover.Framework.Service
                 Logger.Error(string.Format(Messages.StartThisError, thisAsmName), e);
                 throw e;
             }
+        }
+
+        void IAddinLoader.StartMenu(Assembly asm)
+        {
+            this.StartMenu(asm);
         }
 
         internal void StartMenu(Assembly asm)
@@ -83,7 +89,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        internal void StartMenu()
+        void IAddinLoader.StartMenu()
         {
             string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
             try

@@ -27,7 +27,7 @@ using Castle.Core.Logging;
 
 namespace Dover.Framework.Proxy
 {
-    public class EventProxy : IInterceptor
+    public class EventProxy : MarshalByRefObject, IInterceptor
     {
         public ILogger Logger { get; set; }
 

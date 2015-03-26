@@ -28,19 +28,20 @@ using Dover.Framework.Factory;
 using SAPbouiCOM.Framework;
 using Castle.Core.Logging;
 using System.ServiceModel;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {
     /// <summary>
     /// User by MicroCore. Just AppEvent (reboot / reload addins).
     /// </summary>
-    public class MicroCoreEventDispatcher
+    internal class MicroCoreEventDispatcher
     {
         public ILogger Logger { get; set; }
         private SAPbouiCOM.Application sapApp;
-        private AppEventHandler appEventHandler;
+        private IAppEventHandler appEventHandler;
 
-        public MicroCoreEventDispatcher(SAPbouiCOM.Application sapApp, AppEventHandler appEventHandler)
+        public MicroCoreEventDispatcher(SAPbouiCOM.Application sapApp, IAppEventHandler appEventHandler)
         {
             this.sapApp = sapApp;
             this.appEventHandler = appEventHandler;

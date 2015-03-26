@@ -26,6 +26,7 @@ using Dover.Framework.Factory;
 using System.Threading;
 using Dover.Framework.Remoting;
 using Dover.Framework.Service;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework
 {
@@ -35,7 +36,7 @@ namespace Dover.Framework
         private I18NService I18NService;
 
         internal AppDomain Inception { get; set; }
-        internal AddinManager InceptionAddinManager { get; set; }
+        internal IAddinManager InceptionAddinManager { get; set; }
 
         public MicroBoot(I18NService I18NService)
         {
@@ -63,12 +64,12 @@ namespace Dover.Framework
         {
             try
             {
-                Application app = (Application)Inception.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
+                IApplication app = (IApplication)Inception.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
                 SAPServiceFactory.PrepareForInception(Inception); // need to be after Application creation because of assembly resolving from embedded resources.
                 Inception.SetData("assemblyName", "Framework"); // Used to get current AssemblyName for logging and reflection            
-                InceptionAddinManager = app.Resolve<AddinManager>();
-                Sponsor<Application> appSponsor = new Sponsor<Application>(app);
-                Sponsor<AddinManager> addInManagerSponsor = new Sponsor<AddinManager>(InceptionAddinManager);
+                InceptionAddinManager = app.Resolve<IAddinManager>();
+                Sponsor<IApplication> appSponsor = new Sponsor<IApplication>(app);
+                Sponsor<IAddinManager> addInManagerSponsor = new Sponsor<IAddinManager>(InceptionAddinManager);
                 app.RunInception();
                 AppDomain.Unload(Inception); // release AppDomain on shutdown.
             }

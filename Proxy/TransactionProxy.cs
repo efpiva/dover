@@ -9,7 +9,7 @@ using Castle.Core.Logging;
 
 namespace Dover.Framework.Proxy
 {
-    public class TransactionProxy : IInterceptor
+    public class TransactionProxy : MarshalByRefObject, IInterceptor
     {
         private Company company { get; set; }
 
@@ -46,6 +46,10 @@ namespace Dover.Framework.Proxy
                     transactionNestedLevel = 0;
                     throw e;
                 }
+            }
+            else
+            {
+                invocation.Proceed();
             }
         }
     }

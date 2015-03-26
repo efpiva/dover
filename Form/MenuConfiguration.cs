@@ -26,6 +26,7 @@ using Dover.Framework.Attribute;
 using SAPbouiCOM;
 using Dover.Framework.DAO;
 using Dover.Framework.Service;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Form
 {
@@ -37,10 +38,10 @@ namespace Dover.Framework.Form
     internal class MenuConfiguration
     {
         private BusinessOneDAO b1DAO;
-        private AppEventHandler appEvent;
+        private IAppEventHandler appEvent;
         private LicenseManager licenseManager;
 
-        public MenuConfiguration(BusinessOneDAO b1DAO, LicenseManager licenseManager, AppEventHandler appEvent)
+        public MenuConfiguration(BusinessOneDAO b1DAO, LicenseManager licenseManager, IAppEventHandler appEvent)
         {
             this.b1DAO = b1DAO;
             this.appEvent = appEvent;

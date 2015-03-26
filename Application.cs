@@ -27,6 +27,7 @@ using System.Reflection;
 using System.IO;
 using System.Collections.Generic;
 using Dover.Framework.Attribute;
+using Dover.Framework.Interface;
 
 /*! \mainpage Dover Framework public API
  *
@@ -51,7 +52,7 @@ namespace Dover.Framework
     [AddIn(i18n="Dover.Framework.Messages.DoverName", Description="Dover Framework", Name="Framework")]
     [ResourceBOM("Dover.Framework.DatabaseTables.xml", ResourceType.UserTable)]
     [ResourceBOM("Dover.Framework.DatabaseFields.xml", ResourceType.UserField)]
-    public class Application : MarshalByRefObject
+    public class Application : MarshalByRefObject, IApplication
     {
         private IWindsorContainer appContainer;
 
@@ -117,7 +118,6 @@ namespace Dover.Framework
             {
                 appContainer = ContainerManager.BuildContainer();
             }
-
             return appContainer.Resolve<T>();
         }
 
@@ -137,7 +137,7 @@ namespace Dover.Framework
         /// <summary>
         /// Called for each addin that is started by Dover.
         /// </summary>
-        internal void RunAddin()
+        void IApplication.RunAddin()
         {
             if (appContainer == null)
             {
@@ -156,7 +156,7 @@ namespace Dover.Framework
         /// Called before all resources are loaded on AppDomain. This is done so we can guarantee
         /// that all code, including Framework code, is running using Database registered assembly Version.
         /// </summary>
-        internal void RunInception()
+        void IApplication.RunInception()
         {
             if (appContainer == null)
             {

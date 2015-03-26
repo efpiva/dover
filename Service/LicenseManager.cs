@@ -46,7 +46,7 @@ namespace Dover.Framework.Service
         public ILogger Logger { get; set; }
 
         // Change here your token, if you want to check for it. Place null if you want to ignore token check.
-        byte[] clrToken = null;
+        byte[] clrToken = new byte[] { 163, 72, 246, 186, 128, 207, 208, 148 };
         private const string licensePath = "Dover.Framework.publicKey.xml";
 
         public LicenseManager(AssemblyDAO asmDAO, LicenseDAO licenseDAO)

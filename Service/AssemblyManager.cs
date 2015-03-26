@@ -34,6 +34,7 @@ using Dover.Framework.Monad;
 using Castle.Core.Logging;
 using ICSharpCode.SharpZipLib.Zip;
 using Dover.Framework.Factory;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {
@@ -43,11 +44,11 @@ namespace Dover.Framework.Service
     /// It`s temp because after it`s call, the AppDomain will be Unload, unloading 
     /// all information loaded during this class call.
     /// </summary>
-    public class TempAssemblyLoader : MarshalByRefObject
+    public class TempAssemblyLoader : MarshalByRefObject, ITempAssemblyLoader
     {
         public I18NService i18nService { get; set; }
 
-        internal List<AssemblyInformation> GetAssemblyInfoFromBin(byte[] asmBytes, AssemblyInformation asmInfo)
+        List<AssemblyInformation> ITempAssemblyLoader.GetAssemblyInfoFromBin(byte[] asmBytes, AssemblyInformation asmInfo)
         {
             Assembly asm = AppDomain.CurrentDomain.Load(asmBytes);
             asmInfo.Size = asmBytes.Length;
@@ -58,7 +59,7 @@ namespace Dover.Framework.Service
             string[] defaultDependenciesNames = {"Castle.Core", "Castle.Facilities.Logging",
                                                 "Castle.Services.Logging.Log4netIntegration",
                                                 "Castle.Windsor", "ICSharpCode.SharpZipLib",
-                                                "log4net", "SAPbouiCOM"};
+                                                "log4net", "SAPbouiCOM", "FrameworkInterface"};
             HashSet<string> defaultDependenciesNamesSet = new HashSet<string>(defaultDependenciesNames);
             foreach (var dependency in defaultDependenciesNames)
             {
@@ -254,14 +255,13 @@ namespace Dover.Framework.Service
             }
 
             mainDll = Path.GetFileNameWithoutExtension(mainDll);
-
             testDomain = CreateTestDomain(mainDll, tempDirectory);
             try
             {
                 testDomain.SetData("assemblyName", mainDll); // Used to get current AssemblyName for logging and reflection
-                Application testApp = (Application)testDomain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
+                IApplication testApp = (IApplication)testDomain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
                 SAPServiceFactory.PrepareForInception(testDomain);
-                var addinManager = testApp.Resolve<AddinManager>();
+                var addinManager = testApp.Resolve<IAddinManager>();
                 ret = addinManager.CheckAddinConfiguration(mainDll, out datatable);
                 testApp.ShutDownApp();
             }
@@ -532,10 +532,10 @@ namespace Dover.Framework.Service
 
             try
             {
-                Application app = (Application)tempDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
+                IApplication app = (IApplication)tempDomain.CreateInstanceAndUnwrap("Framework",
                     "Dover.Framework.Application");
                 SAPServiceFactory.PrepareForInception(tempDomain);
-                TempAssemblyLoader asmLoader = app.Resolve<TempAssemblyLoader>();
+                ITempAssemblyLoader asmLoader = app.Resolve<ITempAssemblyLoader>();
                 dependencyInformation = asmLoader.GetAssemblyInfoFromBin(asmBytes, asmInfo);
                 asmInfo.Dependencies = new List<AssemblyInformation>();
 

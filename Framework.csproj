@@ -128,7 +128,6 @@
     </Compile>
     <Compile Include="MicroBoot.cs" />
     <Compile Include="MicroCore.cs" />
-    <Compile Include="Model\AssemblyInformation.cs" />
     <Compile Include="Model\License\LicenseFile.cs">
       <DependentUpon>LicenseFile.xsd</DependentUpon>
     </Compile>
@@ -153,7 +152,6 @@
     <Compile Include="Proxy\EventProxy.cs" />
     <Compile Include="Proxy\FormProxy.cs" />
     <Compile Include="Proxy\TransactionProxy.cs" />
-    <Compile Include="Remoting\Sponsor.cs" />
     <Compile Include="Service\AddinLoader.cs" />
     <Compile Include="Service\I18NService.cs" />
     <Compile Include="Service\AddinManager.cs" />
@@ -461,6 +459,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\hana\GetDependencyCount.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="FrameworkInterface\FrameworkInterface.csproj">
+      <Project>{019E07C2-7C40-4A91-ABA7-FD6B325FC710}</Project>
+      <Name>FrameworkInterface</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

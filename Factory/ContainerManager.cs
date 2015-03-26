@@ -39,6 +39,7 @@ using Dover.Framework.Remoting;
 using Castle.Core;
 using Dover.Framework.Attribute;
 using SAPbouiCOM;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Factory
 {
@@ -60,8 +61,8 @@ namespace Dover.Framework.Factory
         /// Use with caution.
         /// </summary>
         public static IWindsorContainer Container { get; private set; }
-        private static Sponsor<AddinManager> addinManagerSponsor;
-        private static Sponsor<AppEventHandler> appEventHandlerSponsor;
+        private static Sponsor<IAddinManager> addinManagerSponsor;
+        private static Sponsor<IAppEventHandler> appEventHandlerSponsor;
 
         internal static void RegisterAssembly(Assembly addIn)
         {
@@ -129,7 +130,6 @@ namespace Dover.Framework.Factory
         internal static IWindsorContainer BuildContainer()
         {
             string assemblyName;
-
             Func<SAPbobsCOM.Company>[] companyFactory =  (customCompanyFactory == null) 
                 ? new Func<SAPbobsCOM.Company>[] {SAPServiceFactory.CompanyFactory} : customCompanyFactory;
 
@@ -137,8 +137,6 @@ namespace Dover.Framework.Factory
             Container.Kernel.Resolver.AddSubResolver(new ArrayResolver(Container.Kernel));
             // proxy for forms.
             Container.Register(Component.For<IInterceptor>().ImplementedBy<FormProxy>().Named("formProxy"));
-            // proxy for FormEvents
-            Container.Register(Component.For<IInterceptor>().ImplementedBy<EventProxy>().Named("eventProxy"));
             // proxy for Transactions
             Container.Register(Component.For<IInterceptor>().ImplementedBy<TransactionProxy>().Named("transactionProxy"));
             // forms are Transient.
@@ -159,23 +157,22 @@ namespace Dover.Framework.Factory
 
             // AddinManager registration. If I'm an AddIn, get addinManager from AppDomain, so
             // both (addin AppDomain and inception AppDomain) references the same implementation.
-            AddinManager addinManager = (AddinManager)AppDomain.CurrentDomain.GetData("frameworkManager");
+            IAddinManager addinManager = (IAddinManager)AppDomain.CurrentDomain.GetData("frameworkManager");
             if (addinManager != null)
             {
-                addinManagerSponsor = new Sponsor<AddinManager>(addinManager);
-                Container.Register(Component.For<AddinManager>().Instance(addinManager));
+                addinManagerSponsor = new Sponsor<IAddinManager>(addinManager);
+                Container.Register(Component.For<IAddinManager>().Instance(addinManager).Named("IAddinManager"));
             }
 
-            AppEventHandler appEventHandler = (AppEventHandler)AppDomain.CurrentDomain.GetData("appHandler");
+            IAppEventHandler appEventHandler = (IAppEventHandler)AppDomain.CurrentDomain.GetData("appHandler");
             if (appEventHandler != null)
             {
-                appEventHandlerSponsor = new Sponsor<AppEventHandler>(appEventHandler);
-                Container.Register(Component.For<AppEventHandler>().Instance(appEventHandler));
+                appEventHandlerSponsor = new Sponsor<IAppEventHandler>(appEventHandler);
+                Container.Register(Component.For<IAppEventHandler>().Instance(appEventHandler).Named("IAppEventHandler"));
             }
 
-            // Service registration, they are singleton.
-            Container.Register(Classes.FromThisAssembly().IncludeNonPublicTypes().InNamespace("Dover.Framework.Service")
-                .WithService.DefaultInterfaces().LifestyleSingleton());
+            // Register this Service as interface, not the underlying class.
+            Container.Register(Component.For<ITempAssemblyLoader>().ImplementedBy<TempAssemblyLoader>());
             // DAO registration. Abstract classes, they're singleton.
             Container.Register(Component.For<BusinessOneUIDAO>().ImplementedBy<BusinessOneUIDAOImpl>());
             Container.Register(Component.For<AssemblyDAO>().ImplementedBy<AssemblyDAOImpl>());
@@ -204,6 +201,15 @@ namespace Dover.Framework.Factory
                 logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DoverTemp.config"); // Temp AppDomain logging.
 
             Container.AddFacility<LoggingFacility>(f => f.UseLog4Net(logPath));
+
+            Container.Register(Component.For<TransactionProxy>().ImplementedBy<TransactionProxy>());
+            Container.Register(Component.For<EventProxy>().ImplementedBy<EventProxy>());
+            Container.Register(Component.For<AddinManager, IAddinManager>().Interceptors(typeof(TransactionProxy)));
+            Container.Register(Component.For<FormEventHandler, IFormEventHandler>().Interceptors(typeof(EventProxy)));
+
+            // Service registration, they are singleton.
+            Container.Register(Classes.FromThisAssembly().IncludeNonPublicTypes().InNamespace("Dover.Framework.Service")
+                .WithServiceAllInterfaces().LifestyleSingleton());
 
             var logger = Container.Resolve<ILogger>();
             logger.Debug(DebugString.Format(Messages.StartupFolder, runningFolder));

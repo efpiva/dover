@@ -29,11 +29,11 @@ using Dover.Framework.Factory;
 using Castle.Core;
 using Castle.Core.Logging;
 using System.IO;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {
-    [Interceptor("eventProxy")]
-    public class FormEventHandler : MarshalByRefObject
+    public class FormEventHandler : MarshalByRefObject, IFormEventHandler
     {
         private SAPbouiCOM.Application sapApp;
         private PermissionManager permissionManager;
@@ -54,7 +54,13 @@ namespace Dover.Framework.Service
             this.resourceManager = resourceManager;
         }
 
-        internal void RegisterFormLoadBefore(string type, DoverFormBase form)
+
+        void IFormEventHandler.RegisterFormLoadBefore(string type, dynamic form)
+        {
+            this.RegisterFormLoadBefore(type, form);
+        }
+
+        private void RegisterFormLoadBefore(string type, DoverFormBase form)
         {
             List<DoverFormBase> pendingList; // forms that does not have UniqueID created by UI.
             if (!pendingForms.TryGetValue(type, out pendingList))
@@ -65,7 +71,7 @@ namespace Dover.Framework.Service
             pendingList.Add(form);
         }
 
-        internal void UnRegisterForms()
+        void IFormEventHandler.UnRegisterForms()
         {
             foreach (var formEvent in formEvents)
             {
@@ -110,7 +116,7 @@ namespace Dover.Framework.Service
             pendingForms = new Dictionary<string, List<DoverFormBase>>();
         }
 
-        internal void RegisterForms(bool registerEvents = true)
+        void IFormEventHandler.RegisterForms(bool registerEvents = true)
         {
             if (!registerEvents) // language change.
             {
@@ -223,10 +229,15 @@ namespace Dover.Framework.Service
             }
         }
 
+        void IFormEventHandler.RegisterForm(string uniqueID, dynamic form)
+        {
+            this.RegisterForm(uniqueID, form);
+        }
+
         /*
          * Register form so we can get FormUID when form is being created.
          */
-        internal void RegisterForm(string uniqueID, DoverFormBase form)
+        private void RegisterForm(string uniqueID, DoverFormBase form)
         {
             if (!events.ContainsKey(uniqueID)) // prevent duplicates. Shouldn't happen.
             {

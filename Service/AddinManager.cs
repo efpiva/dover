@@ -33,18 +33,13 @@ using Dover.Framework.Model.SAP;
 using Dover.Framework.Remoting;
 using Castle.Core.Logging;
 using Dover.Framework.Log;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {
-    internal enum AddinStatus
+    internal class AssemblyChangeLog : MarshalByRefObject, IAssemblyChangeLog
     {
-        Running,
-        Stopped
-    }
-
-    internal class AssemblyChangeLog : MarshalByRefObject
-    {
-        internal string GetAddinChangeLog(string addin)
+        string IAssemblyChangeLog.GetAddinChangeLog(string addin)
         {
             Assembly asm = Assembly.Load(addin);
             foreach (var type in asm.GetTypes())
@@ -70,24 +65,24 @@ namespace Dover.Framework.Service
         }
     }
 
-    public class ConfigAddin : MarshalByRefObject
+    public class ConfigAddin : MarshalByRefObject, IConfigAddin
     {
 
         public ILogger Logger { get; set; }
         public BusinessOneDAO b1DAO { get; set; }
 
-        internal void ConfigureAddin(AssemblyInformation addin)
+        void IConfigAddin.ConfigureAddin(string addinName)
         {
             List<ResourceBOMAttribute> resourceAttr = new List<ResourceBOMAttribute>();
             Assembly assembly;
 
             try
             {
-                assembly = Assembly.Load(addin.Name);
+                assembly = Assembly.Load(addinName);
             }
             catch (InvalidOperationException e)
             {
-                Logger.Error(String.Format(Messages.AddInNotFound, addin), e);
+                Logger.Error(String.Format(Messages.AddInNotFound, addinName), e);
                 return;
             }
             ContainerManager.CheckProxy(assembly);
@@ -155,11 +150,10 @@ namespace Dover.Framework.Service
         /// <summary>
         /// This is the AddinManager of the Framework (creator of all Addins AppDomains)
         /// </summary>
-        internal AddinManager frameworkAddinManager;
-        internal B1SResourceManager addinB1SResourceManager;
-        internal FormEventHandler addinFormEventHandler;
-        internal EventDispatcher eventDispatcher;
-        internal AddinLoader addinLoader;
+        internal IAddinManager frameworkAddinManager;
+        internal IFormEventHandler addinFormEventHandler;
+        internal IEventDispatcher eventDispatcher;
+        internal IAddinLoader addinLoader;
 
         internal Thread runnerThread;
         internal List<AddInRunner> runningAddins;
@@ -167,7 +161,7 @@ namespace Dover.Framework.Service
 
         private LicenseManager licenseManager;
 
-        internal AddInRunner(AssemblyInformation asm, AddinManager frameworkAddinManager, LicenseManager licenseManager)
+        internal AddInRunner(AssemblyInformation asm, IAddinManager frameworkAddinManager, LicenseManager licenseManager)
         {
             this.asm = asm;
             this.frameworkAddinManager = frameworkAddinManager;
@@ -182,11 +176,11 @@ namespace Dover.Framework.Service
                 licenseManager.AddInValid(asm.Name, out isValid, out hasLicense);
                 if (!hasLicense)
                 {
-                    frameworkAddinManager.Logger.Error(string.Format(Messages.NoLicenseError, asm.Name));
+                    frameworkAddinManager.LogError(string.Format(Messages.NoLicenseError, asm.Name));
                     return;
                 } else if (!isValid)
                 {
-                    frameworkAddinManager.Logger.Error(string.Format(Messages.NotSigned, asm.Name));
+                    frameworkAddinManager.LogError(string.Format(Messages.NotSigned, asm.Name));
                     return; // Do not run it.
                 }
 
@@ -200,17 +194,15 @@ namespace Dover.Framework.Service
                 domain.SetData("shutdownEvent", shutdownEvent); // Thread synchronization
                 domain.SetData("assemblyName", asm.Name); // Used to get current AssemblyName for logging and reflection
                 domain.SetData("frameworkManager", frameworkAddinManager);
-                Application app = (Application)domain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
+                IApplication app = (IApplication)domain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
                 SAPServiceFactory.PrepareForInception(domain);
-                addinB1SResourceManager = app.Resolve<B1SResourceManager>();
-                addinFormEventHandler = app.Resolve<FormEventHandler>();
-                addinLoader = app.Resolve<AddinLoader>();
-                eventDispatcher = app.Resolve<EventDispatcher>();
-                Sponsor<Application> appSponsor = new Sponsor<Application>(app);
-                Sponsor<B1SResourceManager> b1sSponsor = new Sponsor<B1SResourceManager>(addinB1SResourceManager);
-                Sponsor<FormEventHandler> formEventSponsor = new Sponsor<FormEventHandler>(addinFormEventHandler);
-                Sponsor<AddinLoader> loaderSponsor = new Sponsor<AddinLoader>(addinLoader);
-                Sponsor<EventDispatcher> eventSponsor = new Sponsor<EventDispatcher>(eventDispatcher);
+                addinFormEventHandler = app.Resolve<IFormEventHandler>();
+                addinLoader = app.Resolve<IAddinLoader>();
+                eventDispatcher = app.Resolve<IEventDispatcher>();
+                Sponsor<IApplication> appSponsor = new Sponsor<IApplication>(app);
+                Sponsor<IFormEventHandler> formEventSponsor = new Sponsor<IFormEventHandler>(addinFormEventHandler);
+                Sponsor<IAddinLoader> loaderSponsor = new Sponsor<IAddinLoader>(addinLoader);
+                Sponsor<IEventDispatcher> eventSponsor = new Sponsor<IEventDispatcher>(eventDispatcher);
                 
                 app.RunAddin();
                 AppDomain.Unload(domain);
@@ -227,12 +219,11 @@ namespace Dover.Framework.Service
         } 
     }
 
-    [Transaction]
-    public class AddinManager : MarshalByRefObject
+    internal class AddinManager : MarshalByRefObject, IAddinManager
     {
         public ILogger Logger { get; set; }
         private PermissionManager permissionManager;
-        private AddinLoader addinLoader;
+        private IAddinLoader addinLoader;
         private AssemblyDAO assemblyDAO;
         private AssemblyManager assemblyManager;
         private BusinessOneDAO b1DAO;
@@ -243,7 +234,7 @@ namespace Dover.Framework.Service
         private I18NService i18nService;
 
         public AddinManager(PermissionManager permissionManager, AssemblyManager assemblyManager,
-            BusinessOneDAO b1DAO, I18NService i18nService, AssemblyDAO assemblyDAO, AddinLoader addinLoader,
+            BusinessOneDAO b1DAO, I18NService i18nService, AssemblyDAO assemblyDAO, IAddinLoader addinLoader,
             LicenseManager licenseManager)
         {
             this.permissionManager = permissionManager;
@@ -255,7 +246,11 @@ namespace Dover.Framework.Service
             this.licenseManager = licenseManager;
         }
 
-        [Transaction]
+        void IAddinManager.LoadAddins(List<AssemblyInformation> addins)
+        {
+            this.LoadAddins(addins);
+        }
+
         protected internal virtual void LoadAddins(List<AssemblyInformation> addins)
         {
             var authorizedAddins = FilterAuthorizedAddins(addins);
@@ -341,7 +336,7 @@ namespace Dover.Framework.Service
             }
         }
 
-        internal bool CheckAddinConfiguration(string assemblyName, out string xmlDataTable)
+        bool IAddinManager.CheckAddinConfiguration(string assemblyName, out string xmlDataTable)
         {
             Assembly assembly = Assembly.Load(assemblyName);
             XDocument dataTable = CreateDTXML();
@@ -505,11 +500,11 @@ namespace Dover.Framework.Service
             AppDomain configureDomain = AppDomain.CreateDomain("ConfigureDomain", null, setup);
             try
             {
-                Application app = (Application)configureDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
+                IApplication app = (IApplication)configureDomain.CreateInstanceAndUnwrap("Framework",
                     "Dover.Framework.Application");
                 SAPServiceFactory.PrepareForInception(configureDomain);
-                ConfigAddin addinConfig = app.Resolve<ConfigAddin>();
-                addinConfig.ConfigureAddin(addin);
+                IConfigAddin addinConfig = app.Resolve<IConfigAddin>();
+                addinConfig.ConfigureAddin(addin.Name);
             }
             finally
             {
@@ -540,7 +535,7 @@ namespace Dover.Framework.Service
             return authorized;
         }
 
-        internal void ConfigureAddinsI18N()
+        void IAddinManager.ConfigureAddinsI18N()
         {
             i18nService.ConfigureThreadI18n(Thread.CurrentThread);
             foreach (var addin in runningAddIns)
@@ -549,7 +544,7 @@ namespace Dover.Framework.Service
                 addin.addinLoader.StartMenu();
                 addin.addinFormEventHandler.RegisterForms(false);
             }
-            addinLoader.StartMenu();
+            ((IAddinLoader)addinLoader).StartMenu();
             
         }
 
@@ -560,8 +555,13 @@ namespace Dover.Framework.Service
             return !string.IsNullOrEmpty(installedFlag) && installedFlag == "Y";
         }
 
+         void IAddinManager.ShutdownAddins()
+         {
+             this.ShutdownAddins();
+         }
+
         [Transaction]
-        protected internal virtual void ShutdownAddins()
+        protected virtual void ShutdownAddins()
         {
             // prevent list modification sync issues on shutdown.
             var runningAddinsTemp = new List<AddInRunner>(runningAddIns);
@@ -577,9 +577,14 @@ namespace Dover.Framework.Service
             System.Windows.Forms.Application.Exit(); // free main Inception thread.
         }
 
-        internal AddinStatus GetAddinStatus(string name)
+        AddinStatus IAddinManager.GetAddinStatus(string name)
         {
             return (runningAddinsHash.ContainsKey(name)) ? AddinStatus.Running : AddinStatus.Stopped;
+        }
+
+        void IAddinManager.ShutdownAddin(string name)
+        {
+            this.ShutdownAddin(name);
         }
 
         [Transaction]
@@ -608,11 +613,21 @@ namespace Dover.Framework.Service
             }
         }
 
+        void IAddinManager.StartAddin(string name)
+        {
+            this.StartAddin(name);
+        }
+
         [Transaction]
         protected internal virtual void StartAddin(string name)
         {
             AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, AssemblyType.Addin);
             LoadAddin(asmInfo);
+        }
+
+        void IAddinManager.InstallAddin(string name)
+        {
+            this.InstallAddin(name);
         }
 
         [Transaction]
@@ -623,7 +638,7 @@ namespace Dover.Framework.Service
             InstallAddin(asmInfo, directory);
         }
         
-        internal string GetAddinChangeLog(string addin)
+        string IAddinManager.GetAddinChangeLog(string addin)
         {
             var setup = new AppDomainSetup();
             setup.ApplicationName = "Dover.ConfigureDomain";
@@ -631,9 +646,9 @@ namespace Dover.Framework.Service
             AppDomain tempDomain = AppDomain.CreateDomain("ChangeLogDomain", null, setup);
             try
             {
-                Application app = (Application)tempDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
+                IApplication app = (IApplication)tempDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
                     "Dover.Framework.Application");  // config assembly resolver for dependencies.
-                AssemblyChangeLog asmCL = (AssemblyChangeLog)tempDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
+                IAssemblyChangeLog asmCL = (IAssemblyChangeLog)tempDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
                     "Dover.Framework.Service.AssemblyChangeLog");
                 return asmCL.GetAddinChangeLog(addin);
             }
@@ -641,6 +656,11 @@ namespace Dover.Framework.Service
             {
                 AppDomain.Unload(tempDomain);
             }
+        }
+
+        public void LogError(string msg)
+        {
+            Logger.Error(msg);
         }
     }
 }

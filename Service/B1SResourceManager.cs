@@ -31,6 +31,7 @@ using SAPbouiCOM;
 using SAPbouiCOM.Framework;
 using Dover.Framework.Form;
 using Dover.Framework.DAO;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {

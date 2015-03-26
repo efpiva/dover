@@ -27,13 +27,14 @@ using Dover.Framework.Attribute;
 using Dover.Framework.Factory;
 using Castle.Core.Logging;
 using Dover.Framework.Form;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {
     /// <summary>
     /// User just by Inception / addins. No App event.
     /// </summary>
-    public class EventDispatcher : MarshalByRefObject
+    public class EventDispatcher : MarshalByRefObject, IEventDispatcher
     {
         public ILogger Logger { get; set; }
         private SAPbouiCOM.Application sapApp;
@@ -45,12 +46,12 @@ namespace Dover.Framework.Service
             this.menuHandler = menuHandler;
         }
 
-        internal void RegisterEvents()
+        void IEventDispatcher.RegisterEvents()
         {
             sapApp.MenuEvent += new _IApplicationEvents_MenuEventEventHandler(menuHandler.sapApp_MenuEvent);
         }
 
-        internal void UnregisterEvents()
+        void IEventDispatcher.UnregisterEvents()
         {
             sapApp.MenuEvent -= new _IApplicationEvents_MenuEventEventHandler(menuHandler.sapApp_MenuEvent);
         }

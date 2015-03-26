@@ -30,33 +30,33 @@ using SAPbouiCOM;
 using Dover.Framework.Form;
 using Dover.Framework.Log;
 using Dover.Framework.DAO;
+using Dover.Framework.Interface;
+using Dover.Framework.Factory;
 
 namespace Dover.Framework.Form
 {
 
     [MenuEvent(UniqueUID = "doverAdmin")]
     [FormAttribute("dover.formAdmin", "Dover.Framework.Form.Admin.srf")]
-    public class Admin : DoverUserFormBase
+    internal class Admin : DoverUserFormBase
     {
         private DataTable moduleDT;
         private DataTable configTemp;
 
-        public AssemblyManager AsmLoader { get; set; }
-        public AppEventHandler appEventHandler { get; set; }
-        private AddinManager _frameworkAddinManager;
-        public AddinManager FrameworkAddinManager
+        private AssemblyManager asmLoader;
+        private IAppEventHandler appEventHandler;
+        private IAddinManager frameworkAddinManager;
+        private ILogger Logger;
+
+        public Admin()
         {
-            get
-            {
-                return _frameworkAddinManager;
-            }
-            set
-            {
-                this._frameworkAddinManager = value;
-                UpdateAddinStatus();
-            }
+            this.asmLoader = ContainerManager.Container.Resolve<AssemblyManager>();
+            this.appEventHandler = ContainerManager.Container.Resolve<IAppEventHandler>();
+            this.frameworkAddinManager = ContainerManager.Container.Resolve<IAddinManager>();
+            this.Logger = ContainerManager.Container.Resolve<ILogger>();
+            UpdateAddinStatus();
         }
-        public ILogger Logger { get; set; }
+
 
         // UI components
         private SAPbouiCOM.EditText modulePath;
@@ -112,7 +112,7 @@ namespace Dover.Framework.Form
                 string moduleName = (string)moduleDT.GetValue("Name", rowId);
                 string type = (string)moduleDT.GetValue("Type", rowId);
                 if (type == "AddIn")
-                    FrameworkAddinManager.InstallAddin(moduleName);
+                    frameworkAddinManager.InstallAddin(moduleName);
             }
             UpdateInstallGrid();
             UpdateLicenseGrid();
@@ -127,7 +127,7 @@ namespace Dover.Framework.Form
                 string moduleName = (string)moduleDT.GetValue("Name", rowId);
                 string type = (string)moduleDT.GetValue("Type", rowId);
                 if (type == "AddIn")
-                    FrameworkAddinManager.ShutdownAddin(moduleName);
+                    frameworkAddinManager.ShutdownAddin(moduleName);
             }
             UpdateInstallGrid();
             UpdateLicenseGrid();
@@ -142,7 +142,7 @@ namespace Dover.Framework.Form
                 string moduleName = (string)moduleDT.GetValue("Name", rowId);
                 string type = (string)moduleDT.GetValue("Type", rowId);
                 if (type == "AddIn")
-                    FrameworkAddinManager.StartAddin(moduleName);
+                    frameworkAddinManager.StartAddin(moduleName);
             }
             UpdateInstallGrid();
             UpdateLicenseGrid();
@@ -158,7 +158,7 @@ namespace Dover.Framework.Form
                 string status;
                 if (type == "AddIn")
                 {
-                    AddinStatus addinStatus = FrameworkAddinManager.GetAddinStatus(name);
+                    AddinStatus addinStatus = frameworkAddinManager.GetAddinStatus(name);
                     status = (addinStatus == AddinStatus.Running) ? "R" : "S";
                 }
                 else
@@ -199,7 +199,7 @@ namespace Dover.Framework.Form
                 {
                     string module = (string)moduleDT.GetValue("Name", pVal.Row);
                     var logForm = CreateForm<ChangeLog>();
-                    logForm.LogMessage.Value = FrameworkAddinManager.GetAddinChangeLog(module);
+                    logForm.LogMessage.Value = frameworkAddinManager.GetAddinChangeLog(module);
                     logForm.Show();
                 }
             }
@@ -261,7 +261,7 @@ namespace Dover.Framework.Form
                 try
                 {
                     SAPAppender.SilentMode = true; // Prevent messy log.
-                    if (AsmLoader.AddInIsValid(modulePath.Value, out confirmation))
+                    if (asmLoader.AddInIsValid(modulePath.Value, out confirmation))
                     {
                         if (string.IsNullOrEmpty(confirmation))
                         {
@@ -295,7 +295,7 @@ namespace Dover.Framework.Form
 
         internal void InstallAddin()
         {
-            string addinName = AsmLoader.SaveAddIn(modulePath.Value);
+            string addinName = asmLoader.SaveAddIn(modulePath.Value);
             if (addinName == "Framework")
             {
                 if (app.MessageBox(Messages.AdminConfirmReboot, 1, Messages.AdminOK, Messages.AdminCancel) == 1)
@@ -305,10 +305,10 @@ namespace Dover.Framework.Form
             }
             else if (!string.IsNullOrEmpty(addinName))
             {
-                if (FrameworkAddinManager.GetAddinStatus(addinName) == AddinStatus.Running)
+                if (frameworkAddinManager.GetAddinStatus(addinName) == AddinStatus.Running)
                 {
-                    FrameworkAddinManager.ShutdownAddin(addinName);
-                    FrameworkAddinManager.StartAddin(addinName);
+                    frameworkAddinManager.ShutdownAddin(addinName);
+                    frameworkAddinManager.StartAddin(addinName);
                 }
                 UpdateInstallGrid();
                 UpdateLicenseGrid();
@@ -327,8 +327,8 @@ namespace Dover.Framework.Form
                 string type = (string)moduleDT.GetValue("Type", rowId);
                 if (type == "AddIn")
                 {
-                    FrameworkAddinManager.ShutdownAddin(moduleName);
-                    AsmLoader.RemoveAddIn(moduleName);
+                    frameworkAddinManager.ShutdownAddin(moduleName);
+                    asmLoader.RemoveAddIn(moduleName);
                 }
             }
             UpdateInstallGrid();

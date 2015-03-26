@@ -30,6 +30,7 @@ using Castle.Core.Logging;
 using Dover.Framework.Monad;
 using Dover.Framework.Remoting;
 using Dover.Framework.Service;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Factory
 {
@@ -142,7 +143,7 @@ namespace Dover.Framework.Factory
                 inception.SetData("SAPApplication", application);
                 inception.SetData("AddOnePIPE", pipeName);
                 // app instances in all AppDomains references this singleton from this AppDomain.
-                inception.SetData("appHandler", ContainerManager.Container.Resolve<AppEventHandler>());
+                inception.SetData("appHandler", ContainerManager.Container.Resolve<IAppEventHandler>());
             }
         }
 

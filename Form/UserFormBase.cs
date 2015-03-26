@@ -27,6 +27,7 @@ using Dover.Framework.Service;
 using SAPbouiCOM.Framework;
 using SAPbouiCOM;
 using Dover.Framework.DAO;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Form
 {
@@ -46,7 +47,7 @@ namespace Dover.Framework.Form
         {
             var resourceManager = ContainerManager.Container.Resolve<B1SResourceManager>();
             var b1UIDAO = ContainerManager.Container.Resolve<BusinessOneUIDAO>();
-            var formEventHandler = ContainerManager.Container.Resolve<FormEventHandler>();
+            var formEventHandler = ContainerManager.Container.Resolve<IFormEventHandler>();
             
             FormAttribute formAttribute = (FormAttribute)(from attribute in this.GetType().GetCustomAttributes(true)
                                                             where attribute is FormAttribute

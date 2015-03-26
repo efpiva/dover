@@ -25,6 +25,7 @@ using System.Text;
 using System.Reflection;
 using Castle.Core.Logging;
 using Dover.Framework.Service;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework
 {
@@ -33,13 +34,13 @@ namespace Dover.Framework
         public ILogger Logger { get; set; }
 
         private LicenseManager licenseManager;
-        private AddinLoader addinLoader;
-        private AddinManager addinManager;
-        private EventDispatcher dispatcher;
-        private FormEventHandler formEventHandler;
+        private IAddinLoader addinLoader;
+        private IAddinManager addinManager;
+        private IEventDispatcher dispatcher;
+        private IFormEventHandler formEventHandler;
 
-        public Boot(LicenseManager licenseValidation, AddinManager addinManager, AddinLoader addinLoader,
-            EventDispatcher dispatcher, FormEventHandler formEventHandler, I18NService i18nService)
+        public Boot(LicenseManager licenseValidation, IAddinManager addinManager, IAddinLoader addinLoader,
+            IEventDispatcher dispatcher, IFormEventHandler formEventHandler, I18NService i18nService)
         {
             this.licenseManager = licenseValidation;
             this.addinManager = addinManager;

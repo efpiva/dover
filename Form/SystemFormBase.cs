@@ -22,6 +22,8 @@ using System.Linq;
 using Dover.Framework.DAO;
 using Dover.Framework.Service;
 using SAPbouiCOM.Framework;
+using Dover.Framework.Interface;
+using Dover.Framework.Factory;
 
 namespace Dover.Framework.Form
 {
@@ -39,10 +41,11 @@ namespace Dover.Framework.Form
         private string formUID;
         public B1SResourceManager resourceManager { get; set; }
         public BusinessOneUIDAO b1UIDAO { get; set; }
-        public FormEventHandler formEventHandler { get; set; }
+        private IFormEventHandler formEventHandler;
 
         public DoverSystemFormBase()
         {
+            formEventHandler = ContainerManager.Container.Resolve<IFormEventHandler>();
         }
 
         internal override string FormUID

@@ -25,10 +25,11 @@ using System.Text;
 using Castle.Core.Logging;
 using System.ServiceModel;
 using Dover.Framework.Monad;
+using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {
-    public class AppEventHandler : MarshalByRefObject
+    public class AppEventHandler : MarshalByRefObject, IAppEventHandler
     {
         private MicroBoot microBoot;
         private I18NService i18nManager;
@@ -40,7 +41,7 @@ namespace Dover.Framework.Service
             this.i18nManager = i18nManager;
         }
 
-        internal void sapApp_AppEvent(SAPbouiCOM.BoAppEventTypes EventType)
+        void IAppEventHandler.sapApp_AppEvent(SAPbouiCOM.BoAppEventTypes EventType)
         {
             try
             {
@@ -95,11 +96,16 @@ namespace Dover.Framework.Service
             }
         }
 
-        internal void ShutDown()
+        private void ShutDown()
         {
             Logger.Info(Messages.Shutdown);
             microBoot.InceptionAddinManager.Do(x => x.ShutdownAddins());
             System.Windows.Forms.Application.Exit();
+        }
+
+        void IAppEventHandler.ShutDown()
+        {
+            this.ShutDown();
         }
 
         private void ConfigureI18N()
@@ -108,7 +114,7 @@ namespace Dover.Framework.Service
             i18nManager.ConfigureThreadI18n(System.Threading.Thread.CurrentThread);
         }
 
-        internal void Reboot()
+        void IAppEventHandler.Reboot()
         {
             try
             {

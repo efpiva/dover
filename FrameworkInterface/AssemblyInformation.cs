@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Dover.Framework.Monad;
 
 namespace Dover.Framework.Model
 {
@@ -143,7 +142,11 @@ namespace Dover.Framework.Model
 
         public override string ToString()
         {
-            return Name.Return(x => x, string.Empty) + " " + Version.Return(x => x, string.Empty);
+            StringBuilder sb = new StringBuilder();
+            sb.Append(Name == null ? string.Empty : Name);
+            sb.Append(" ");
+            sb.Append(Version == null ? string.Empty : Version);
+            return sb.ToString();
         }
 
         public int CompareTo(AssemblyInformation other)
