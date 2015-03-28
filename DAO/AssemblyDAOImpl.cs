@@ -64,14 +64,9 @@ namespace Dover.Framework.DAO
         internal override void SaveAssemblyDependency(AssemblyInformation newAsm,
                AssemblyInformation dependency, byte[] dependencyBytes)
         {
-            string code = b1DAO.ExecuteSqlForObject<string>(string.Format(this.GetSQL("GetDependencyByMD5.sql"), dependency.MD5));
-            if (string.IsNullOrEmpty(code))
-            {
-                SaveAssembly(dependency, dependencyBytes);
-                code = dependency.Code;
-            }
-            string newCode = b1DAO.GetNextCode("DOVER_MODULES_DEP");
-            b1DAO.ExecuteStatement(string.Format(this.GetSQL("InsertDependency.sql"), newCode, newAsm.Code, code));
+            dependency.Code = null; // force insert.
+            SaveAssembly(dependency, dependencyBytes);
+            SaveAssemblyDependency(newAsm, dependency.Code);
         }
 
         internal override void SaveAssembly(AssemblyInformation asm, byte[] asmBytes)
@@ -95,7 +90,6 @@ namespace Dover.Framework.DAO
                 sql = String.Format(this.GetSQL("UpdateAssembly.sql"), asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length, asm.Code,
                     asm.Description, installed);
                 b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteAssembly.sql"), asm.Code));
-                // TODO: delete MODULES and MODULES_BIN if dependency is used only here.
                 b1DAO.ExecuteStatement(String.Format(this.GetSQL("DeleteDependencies.sql"), asm.Code));
             }
 
@@ -162,6 +156,26 @@ namespace Dover.Framework.DAO
         internal override int GetDependencyCount(AssemblyInformation dep)
         {
             return b1DAO.ExecuteSqlForObject<int>(string.Format(this.GetSQL("GetDependencyCount.sql"), dep.Code));
+        }
+
+        internal override string GetDependencyCode(string md5)
+        {
+            return b1DAO.ExecuteSqlForObject<string>(string.Format(this.GetSQL("GetDependencyByMD5.sql"), md5));
+        }
+
+        internal override void SaveAssemblyDependency(AssemblyInformation newAsm, string dependencyCode)
+        {
+            string newCode = b1DAO.GetNextCode("DOVER_MODULES_DEP");
+            b1DAO.ExecuteStatement(string.Format(this.GetSQL("InsertDependency.sql"), newCode, newAsm.Code, dependencyCode));
+        }
+
+        internal override void DeleteOrphanDependency()
+        {
+            List<string> orphanCodes = b1DAO.ExecuteSqlForList<string>(this.GetSQL("GetOrphanCodes.sql"));
+            foreach (var code in orphanCodes)
+            {
+                RemoveAssembly(code);
+            }
         }
     }
 }

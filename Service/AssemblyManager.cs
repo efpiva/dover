@@ -510,9 +510,18 @@ namespace Dover.Framework.Service
                 // Updating each assembly deparatly. Right now we just update everything if mainDll differs.
                 foreach (var dependency in newAsm.Dependencies)
                 {
-                    asmBytes = File.ReadAllBytes(Path.Combine(baseDirectory, dependency.FileName));
-                    asmDAO.SaveAssemblyDependency(newAsm, dependency, asmBytes);
+                    string dependencyCode = asmDAO.GetDependencyCode(dependency.MD5);
+                    if (string.IsNullOrEmpty(dependencyCode))
+                    {
+                        asmBytes = File.ReadAllBytes(Path.Combine(baseDirectory, dependency.FileName));
+                        asmDAO.SaveAssemblyDependency(newAsm, dependency, asmBytes);
+                    }
+                    else
+                    {
+                        asmDAO.SaveAssemblyDependency(newAsm, dependencyCode);
+                    }
                 }
+                asmDAO.DeleteOrphanDependency();
                 return newAsm;
             }
             else
