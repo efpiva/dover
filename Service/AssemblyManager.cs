@@ -580,7 +580,7 @@ namespace Dover.Framework.Service
             try
             {
                 Logger.Debug(String.Format(Messages.FileUpdating, asmMeta.Name, asmMeta.Version));
-                string cacheFile = Path.Combine(GetDoverDirectory(), "Cache", asmMeta.MD5);
+                string cacheFile = Path.Combine(GetDoverDirectory(), "..", "Cache", asmMeta.MD5);
                 if (!CreateFromCache(asmMeta, cacheFile, fullPath))
                 {
                     byte[] asmBytes = asmDAO.GetAssembly(asmMeta);

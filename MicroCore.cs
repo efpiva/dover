@@ -137,7 +137,7 @@ namespace Dover.Framework
 
             string frameworkFolder = Path.Combine(appFolder, "Framework");
             CreateIfNotExists(frameworkFolder);
-            string cacheFolder = Path.Combine(appFolder, "Cache");
+            string cacheFolder = Path.Combine(appFolder, "..", "Cache");
             CreateIfNotExists(cacheFolder);
 
             return frameworkFolder;
