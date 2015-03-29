@@ -7,6 +7,25 @@
     </AdmInfo>
     <UserFieldsMD>
       <row>
+        <Name>Asm</Name>
+        <Type>db_Memo</Type>
+        <Size>4</Size>
+        <Description>Asm</Description>
+        <SubType>st_Link</SubType>
+        <TableName>@DOVER_LICENSE_BIN</TableName>
+        <FieldID>0</FieldID>
+        <EditSize>254</EditSize>
+        <Mandatory>tNO</Mandatory>
+      </row>
+    </UserFieldsMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>152</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserFieldsMD>
+      <row>
         <Name>Code</Name>
         <Type>db_Alpha</Type>
         <Size>30</Size>
