@@ -425,6 +425,8 @@
     <EmbeddedResource Include="DAO\sql\InsertLicense.sql" />
     <EmbeddedResource Include="DAO\sql\GetDate.sql" />
     <EmbeddedResource Include="DAO\hana\GetDate.sql" />
+    <EmbeddedResource Include="DAO\sql\GetOrphanCodes.sql" />
+    <EmbeddedResource Include="DAO\hana\GetOrphanCodes.sql" />
     <Content Include="Model\License\LicenseFileTemplate.xml" />
   </ItemGroup>
   <ItemGroup>
