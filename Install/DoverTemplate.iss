@@ -22,6 +22,14 @@ Source: "C:\Program Files (x86)\SAP\SAP Business One\AddOnInstallAPI.dll"; Flags
 
 ;Archivo .Exe del AddOn
 Source: "Dover.exe"; DestDir: {app}; Flags: ignoreversion
+Source: "Castle.Core.dll"; DestDir: {app}; Flags: ignoreversion
+Source: "Castle.Facilities.Logging.dll"; DestDir: {app}; Flags: ignoreversion
+Source: "Castle.Services.Logging.Log4netIntegration.dll"; DestDir: {app}; Flags: ignoreversion
+Source: "Castle.Windsor.dll"; DestDir: {app}; Flags: ignoreversion
+Source: "FrameworkInterface.dll"; DestDir: {app}; Flags: ignoreversion
+Source: "ICSharpCode.SharpZipLib.dll"; DestDir: {app}; Flags: ignoreversion
+Source: "SAPbouiCOM.dll"; DestDir: {app}; Flags: ignoreversion
+Source: "log4net.dll"; DestDir: {app}; Flags: ignoreversion
 Source: "Framework.dll"; DestDir: {app}; Flags: ignoreversion
 Source: "Interop.SAPbobsCOM.dll"; DestDir: {app}; Flags: ignoreversion
 Source: "pt-BR/Framework.resources.dll"; DestDir: {app}/pt-BR; Flags: ignoreversion
