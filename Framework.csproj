@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Certificate.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core">
       <HintPath>Assemblies\Castle.Core.dll</HintPath>
@@ -408,6 +414,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Certificate.snk" />
     <None Include="Model\License\LicenseFile.xsc">
       <DependentUpon>LicenseFile.xsd</DependentUpon>
     </None>
@@ -417,6 +424,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="publicToken.txt" />
+    <EmbeddedResource Include="publicKey.xml" />
     <EmbeddedResource Include="DAO\hana\DeleteLicense.sql" />
     <EmbeddedResource Include="DAO\hana\GetLicense.sql" />
     <EmbeddedResource Include="DAO\hana\InsertLicense.sql" />

@@ -7,3 +7,9 @@ build
 temp
 Dover.iss
 Doverx64.iss
+Certificate.snk
+commit-msg
+*~
+publicKey.xml
+*.swp
+publicToken.txt

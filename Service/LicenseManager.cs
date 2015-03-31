@@ -45,14 +45,32 @@ namespace Dover.Framework.Service
         private AssemblyDAO asmDAO;
         public ILogger Logger { get; set; }
 
-        // Change here your token, if you want to check for it. Place null if you want to ignore token check.
-        byte[] clrToken = new byte[] { 163, 72, 246, 186, 128, 207, 208, 148 };
+        byte[] clrToken = null;
         private const string licensePath = "Dover.Framework.publicKey.xml";
 
         public LicenseManager(AssemblyDAO asmDAO, LicenseDAO licenseDAO)
         {
             this.licenseDAO = licenseDAO;
             this.asmDAO = asmDAO;
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Dover.Framework.publicToken.txt"))
+            {
+                if (stream != null)
+                {
+                    using (var streamReader = new StreamReader(stream))
+                    {
+                        // publicToken should be stored as an hex array.
+                        string hexKey = streamReader.ReadToEnd().Trim();
+                        if ((hexKey.Length % 2) == 0)
+                        {
+                            clrToken = new byte[hexKey.Length/2];
+                            for (int i = 0; i < clrToken.Length; ++i)
+                            {
+                                clrToken[i] = Convert.ToByte(hexKey.Substring(i*2, 2), 16);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         internal bool HasLicense()
