@@ -41,6 +41,7 @@ namespace Dover.Framework.Service
     /// </summary>
     public class LicenseManager
     {
+        private SAPbouiCOM.Application sapApp;
         private LicenseDAO licenseDAO;
         private AssemblyDAO asmDAO;
         public ILogger Logger { get; set; }
@@ -48,8 +49,9 @@ namespace Dover.Framework.Service
         byte[] clrToken = null;
         private const string licensePath = "Dover.Framework.publicKey.xml";
 
-        public LicenseManager(AssemblyDAO asmDAO, LicenseDAO licenseDAO)
+        public LicenseManager(AssemblyDAO asmDAO, LicenseDAO licenseDAO, SAPbouiCOM.Application sapApp)
         {
+            this.sapApp = sapApp;
             this.licenseDAO = licenseDAO;
             this.asmDAO = asmDAO;
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Dover.Framework.publicToken.txt"))
@@ -186,17 +188,26 @@ namespace Dover.Framework.Service
                 return DateTime.MinValue; // no license found, but license control enabled.
             }
 
-            License licenseFile = xml.Deserialize<License>();
-            List<LicenseModule> licenseModules = licenseFile.Items.Where(i => i.Name == module).ToList(); ;
-            LicenseModule licenseModule = null;
-            if (licenseModules != null && licenseModules.Count() > 0)
-            {
-                licenseModule = licenseModules.First();
-            }
+            string sysNumber = sapApp.Company.SystemId;
+            string installNumber = sapApp.Company.InstallationId;
 
-            if (licenseModule != null)
+            License licenseFile = xml.Deserialize<License>();
+
+            if (!string.IsNullOrEmpty(licenseFile.SystemNumber) &&
+                !string.IsNullOrEmpty(licenseFile.InstallNumber) &&
+                licenseFile.SystemNumber == sysNumber && licenseFile.InstallNumber == installNumber)
             {
-                return licenseModule.ExpirationDate;
+                List<LicenseModule> licenseModules = licenseFile.Items.Where(i => i.Name == module).ToList(); ;
+                LicenseModule licenseModule = null;
+                if (licenseModules != null && licenseModules.Count() > 0)
+                {
+                    licenseModule = licenseModules.First();
+                }
+
+                if (licenseModule != null)
+                {
+                    return licenseModule.ExpirationDate;
+                }
             }
 
             return DateTime.MinValue;

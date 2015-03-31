@@ -134,9 +134,7 @@
     </Compile>
     <Compile Include="MicroBoot.cs" />
     <Compile Include="MicroCore.cs" />
-    <Compile Include="Model\License\LicenseFile.cs">
-      <DependentUpon>LicenseFile.xsd</DependentUpon>
-    </Compile>
+    <Compile Include="Model\License\LicenseFile.cs" />
     <Compile Include="Model\SAP\BOM.cs" />
     <Compile Include="Model\SAP\Documents.cs" />
     <Compile Include="Model\SAP\FormattedSearch.cs" />
@@ -415,13 +413,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Certificate.snk" />
-    <None Include="Model\License\LicenseFile.xsc">
-      <DependentUpon>LicenseFile.xsd</DependentUpon>
-    </None>
-    <None Include="Model\License\LicenseFile.xsd" />
-    <None Include="Model\License\LicenseFile.xss">
-      <DependentUpon>LicenseFile.xsd</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="publicToken.txt" />
