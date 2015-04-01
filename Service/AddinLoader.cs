@@ -38,13 +38,15 @@ namespace Dover.Framework.Service
         private PermissionManager permissionManager;
         private MenuEventHandler menuHandler;
         private BusinessOneUIDAO uiDAO;
+        private LicenseManager licenseManager;
 
         public AddinLoader(MenuEventHandler menuHandler, PermissionManager permissionManager,
-             BusinessOneUIDAO uiDAO)
+             BusinessOneUIDAO uiDAO, LicenseManager licenseManager)
         {
             this.permissionManager = permissionManager;
             this.uiDAO = uiDAO;
             this.menuHandler = menuHandler;
+            this.licenseManager = licenseManager;
         }
 
         void IAddinLoader.StartThis()
@@ -52,6 +54,20 @@ namespace Dover.Framework.Service
             string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
             try
             {
+                bool isValid = false, hasLicense = false;
+                licenseManager.AddInValid(thisAsmName, out isValid, out hasLicense);
+                if (!hasLicense)
+                {
+                    Logger.Error(string.Format(Messages.NoLicenseError, thisAsmName));
+                    // We shouldn´t be here. bye.
+                    throw new Exception();
+                } else if (!isValid)
+                {
+                    Logger.Error(string.Format(Messages.NotSigned, thisAsmName));
+                    // We shouldn´t be here. bye.
+                    throw new Exception();
+                }
+
                 Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
                 RegisterObjects(thisAsm);
                 StartMenu(thisAsm);

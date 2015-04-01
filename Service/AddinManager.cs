@@ -279,9 +279,7 @@ namespace Dover.Framework.Service
             assemblyManager.UpdateAppDataFolder(addin, directory);
             if (!IsInstalled(addin.Code))
             {
-                Logger.Info(string.Format(Messages.ConfiguringAddin, addin.Name));
                 InstallAddin(addin, directory);
-                Logger.Info(string.Format(Messages.ConfiguredAddin, addin.Name));
             }
             RegisterAddin(addin);
             ConfigureLog(addin);
@@ -292,8 +290,23 @@ namespace Dover.Framework.Service
         {
             try
             {
-                ConfigureAddin(addin, baseDirectory);
-                MarkAsInstalled(addin.Code);
+                bool isValid = false, hasLicense = false;
+                licenseManager.AddInValid(addin.Name, out isValid, out hasLicense);
+                if (!hasLicense)
+                {
+                    Logger.Error(string.Format(Messages.NoLicenseError, addin.Name));
+                }
+                else if (!isValid)
+                {
+                    Logger.Error(string.Format(Messages.NotSigned, addin.Name));
+                }
+                else
+                {
+                    Logger.Info(string.Format(Messages.ConfiguringAddin, addin.Name));
+                    ConfigureAddin(addin, baseDirectory);
+                    MarkAsInstalled(addin.Code);
+                    Logger.Info(string.Format(Messages.ConfiguredAddin, addin.Name));
+                }
             }
             catch (Exception e)
             {
