@@ -56,7 +56,7 @@ namespace Dover.Framework
     {
         private IWindsorContainer appContainer;
 
-        private string doverLogTemplate = "Dover.Framework.Dover.config";
+        private string[] configFiles = { "Dover.config", "DoverTemp.config" };
 
         public Application()
         {
@@ -65,20 +65,23 @@ namespace Dover.Framework
 
         private void CheckLogging()
         {
-            string logging = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Dover.config");
-            if (!File.Exists(logging))
+            foreach (var config in configFiles)
             {
-                using (var doverConfig = Assembly.GetExecutingAssembly().GetManifestResourceStream(doverLogTemplate))
+                string logFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, config);
+                string logResource = "Dover.Framework." + config;
+                if (!File.Exists(logFile))
                 {
-                    using (var destinationStream = new FileStream(logging, FileMode.CreateNew))
+                    using (var doverConfig = Assembly.GetExecutingAssembly().GetManifestResourceStream(logResource))
                     {
-                        byte[] buffer = new byte[1000];
-                        int buffLen;
-                        while ((buffLen = doverConfig.Read(buffer, 0, 1000)) > 0)
+                        using (var destinationStream = new FileStream(logFile, FileMode.CreateNew))
                         {
-                            destinationStream.Write(buffer, 0, buffLen);
+                            byte[] buffer = new byte[1000];
+                            int buffLen;
+                            while ((buffLen = doverConfig.Read(buffer, 0, 1000)) > 0)
+                            {
+                                destinationStream.Write(buffer, 0, buffLen);
+                            }
                         }
-
                     }
                 }
             }

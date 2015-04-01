@@ -21,6 +21,8 @@ Uninstallable=yes
 Source: "C:\Program Files (x86)\SAP\SAP Business One\AddOnInstallAPI.dll"; Flags: dontcopy;
 
 ;Archivo .Exe del AddOn
+Source: "Dover.config"; DestDir: {app}; Flags: ignoreversion
+Source: "DoverTemp.config"; DestDir: {app}; Flags: ignoreversion
 Source: "Dover.exe"; DestDir: {app}; Flags: ignoreversion
 Source: "Castle.Core.dll"; DestDir: {app}; Flags: ignoreversion
 Source: "Castle.Facilities.Logging.dll"; DestDir: {app}; Flags: ignoreversion

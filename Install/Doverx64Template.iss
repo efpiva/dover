@@ -18,6 +18,8 @@ AppendDefaultDirName=yes
 Uninstallable=yes
 
 [Files]
+Source: "Dover.config"; DestDir: {app}; Flags: ignoreversion
+Source: "DoverTemp.config"; DestDir: {app}; Flags: ignoreversion
 Source: "AddOnInstallAPI.exe"; DestDir: {app}; Flags: ignoreversion
 Source: "Castle.Core.dll"; DestDir: {app}; Flags: ignoreversion
 Source: "Castle.Facilities.Logging.dll"; DestDir: {app}; Flags: ignoreversion

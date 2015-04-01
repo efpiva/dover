@@ -316,23 +316,25 @@ namespace Dover.Framework.Service
 
         private void ConfigureLog(AssemblyInformation addin)
         {
-            var source = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DoverAddin.config");
-            var destination = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", addin.Name, addin.Name + ".config");
-
-            if (File.Exists(source) && !File.Exists(destination)) 
+            using (var source = Assembly.GetExecutingAssembly().GetManifestResourceStream("Dover.Framework.DoverAddin.config"))
             {
-                var doc = XDocument.Load(source);
+                var destination = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", addin.Name, addin.Name + ".config");
 
-                var query = from c in doc.Elements("configuration").Elements("log4net")
-                            .Elements("appender").Elements("file")
-                            select c;
-
-                foreach (var fileTag in query)
+                if (source != null && !File.Exists(destination))
                 {
-                    fileTag.Attribute("value").Value = addin.Name + ".log";
-                }
+                    var doc = XDocument.Load(source);
 
-                doc.Save(destination);
+                    var query = from c in doc.Elements("configuration").Elements("log4net")
+                                .Elements("appender").Elements("file")
+                                select c;
+
+                    foreach (var fileTag in query)
+                    {
+                        fileTag.Attribute("value").Value = addin.Name + ".log";
+                    }
+
+                    doc.Save(destination);
+                }
             }
         }
 

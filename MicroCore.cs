@@ -77,7 +77,6 @@ namespace Dover.Framework
 
                     assemblyLoader.UpdateFrameworkAssemblies(appFolder);
                     assemblyLoader.UpdateAddinsDBAssembly();
-                    CopyInstallResources(appFolder, Environment.CurrentDirectory);
 
                     if (rebootCount == 0)
                         dispatcher.RegisterEvents();
@@ -96,19 +95,6 @@ namespace Dover.Framework
                 Logger.Fatal(String.Format(Messages.GeneralError, e.Message), e);
                 Environment.Exit(10);
             }
-        }
-
-        private void CopyInstallResources(string appFolder, string sourceFolder)
-        {
-            string destination;
-            destination = Path.Combine(appFolder, "Dover.config");
-            CopyResource(destination, "Dover.Framework.DoverInception.config");
-            
-            destination = Path.Combine(appFolder, "DoverAddin.config");
-            CopyResource(destination, "Dover.Framework.DoverAddin.config");
-
-            destination = Path.Combine(appFolder, "DoverTemp.config");
-            CopyResource(destination, "Dover.Framework.DoverTemp.config");
         }
 
         private void CopyResource(string destination, string resource)
