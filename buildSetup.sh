@@ -32,6 +32,7 @@ mkdir -p $setup_dir
 
 cp -a Core/bin/x64/Release/*.exe $exe_dir
 cp -a Core/bin/x64/Release/*.dll $dll_dir
+cp -a Core/bin/x64/Release/pt-BR $dll_dir
 cp -a Core/bin/x64/Release/Output/setup.exe $setup_dir
 
 rm -rf temp
@@ -65,6 +66,7 @@ mkdir -p $dll_dir
 
 cp -a Core/bin/Release/*.exe $exe_dir
 cp -a Core/bin/Release/*.dll $dll_dir
+cp -a Core/bin/Release/pt-BR $dll_dir
 cp -a Core/bin/Release/Output/setup.exe $setup_dir
 
 rm -rf temp
