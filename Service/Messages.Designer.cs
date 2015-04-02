@@ -160,6 +160,15 @@ namespace Dover.Framework.Service {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Event in class {0} method {1} not registered.
+        /// </summary>
+        internal static string EventNotRegisteredError {
+            get {
+                return ResourceManager.GetString("EventNotRegisteredError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error updating file {0} - Version {1}..
         /// </summary>
         internal static string FileError {
@@ -348,6 +357,7 @@ namespace Dover.Framework.Service {
             }
         }
         
+        /// <summary>
         ///   Looks up a localized string similar to Permission.
         /// </summary>
         internal static string Permission {

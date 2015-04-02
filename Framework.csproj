@@ -81,11 +81,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attribute\AddInAttribute.cs" />
+    <Compile Include="Attribute\AppEventAttribute.cs" />
+    <Compile Include="Attribute\FormDataEventAttribute.cs" />
+    <Compile Include="Attribute\ItemEventAttribute.cs" />
     <Compile Include="Attribute\MenuAttribute.cs" />
     <Compile Include="Attribute\MenuEventAttribute.cs" />
     <Compile Include="Attribute\PermissionAttribute.cs" />
+    <Compile Include="Attribute\PrintEventAttribute.cs" />
+    <Compile Include="Attribute\ProgressBarEventAttribute.cs" />
+    <Compile Include="Attribute\ReportDataEventAttribute.cs" />
     <Compile Include="Attribute\ResourceBOMAttribute.cs" />
+    <Compile Include="Attribute\RightClickEventAttribute.cs" />
+    <Compile Include="Attribute\ServerInvokeCompletedEventAttribute.cs" />
+    <Compile Include="Attribute\StatusBarEventAttribute.cs" />
     <Compile Include="Attribute\TransactionAttribute.cs" />
+    <Compile Include="Attribute\UDOEventAttribute.cs" />
+    <Compile Include="Attribute\WidgetEventAttribute.cs" />
     <Compile Include="DAO\AssemblyDAO.cs" />
     <Compile Include="DAO\AssemblyDAOImpl.cs" />
     <Compile Include="DAO\BusinessOneDAO.cs" />
@@ -163,6 +174,7 @@
     <Compile Include="Service\AssemblyManager.cs" />
     <Compile Include="Service\B1SResourceManager.cs" />
     <Compile Include="Service\FormEventHandler.cs" />
+    <Compile Include="Service\AddinAppEventHandler.cs" />
     <Compile Include="Service\Messages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

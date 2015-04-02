@@ -12,7 +12,6 @@ namespace Dover.Framework.Interface
 
         void sapApp_AppEvent(BoAppEventTypes EventType);
 
-
         void Reboot();
     }
 }

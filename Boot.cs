@@ -38,15 +38,18 @@ namespace Dover.Framework
         private IAddinManager addinManager;
         private IEventDispatcher dispatcher;
         private IFormEventHandler formEventHandler;
+        private AddinAppEventHandler addinAppEventHandler;
 
         public Boot(LicenseManager licenseValidation, IAddinManager addinManager, IAddinLoader addinLoader,
-            IEventDispatcher dispatcher, IFormEventHandler formEventHandler, I18NService i18nService)
+            IEventDispatcher dispatcher, IFormEventHandler formEventHandler, I18NService i18nService,
+            AddinAppEventHandler addinAppEventHandler)
         {
             this.licenseManager = licenseValidation;
             this.addinManager = addinManager;
             this.dispatcher = dispatcher;
             this.formEventHandler = formEventHandler;
             this.addinLoader = addinLoader;
+            this.addinAppEventHandler = addinAppEventHandler;
 
             i18nService.ConfigureThreadI18n(System.Threading.Thread.CurrentThread);
         }
@@ -89,6 +92,7 @@ namespace Dover.Framework
                 addinLoader.StartThis();
                 dispatcher.RegisterEvents();
                 formEventHandler.RegisterForms();
+                addinAppEventHandler.RegisterEvents();
                 Logger.Info(String.Format(Messages.Started, thisAsmName, thisAsm.GetName().Version));
                 return true;
             }

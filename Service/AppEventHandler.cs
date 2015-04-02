@@ -26,6 +26,7 @@ using Castle.Core.Logging;
 using System.ServiceModel;
 using Dover.Framework.Monad;
 using Dover.Framework.Interface;
+using SAPbouiCOM;
 
 namespace Dover.Framework.Service
 {

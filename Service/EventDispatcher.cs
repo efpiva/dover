@@ -34,27 +34,49 @@ namespace Dover.Framework.Service
     /// <summary>
     /// User just by Inception / addins. No App event.
     /// </summary>
-    public class EventDispatcher : MarshalByRefObject, IEventDispatcher
+    internal class EventDispatcher : MarshalByRefObject, IEventDispatcher
     {
         public ILogger Logger { get; set; }
         private SAPbouiCOM.Application sapApp;
         private MenuEventHandler menuHandler;
+        private AddinAppEventHandler addinAppEventHandler;
 
-        public EventDispatcher(SAPbouiCOM.Application sapApp, MenuEventHandler menuHandler)
+        public EventDispatcher(SAPbouiCOM.Application sapApp, MenuEventHandler menuHandler,
+            AddinAppEventHandler addinAppEventHandler)
         {
             this.sapApp = sapApp;
             this.menuHandler = menuHandler;
+            this.addinAppEventHandler = addinAppEventHandler;
         }
 
         void IEventDispatcher.RegisterEvents()
         {
             sapApp.MenuEvent += new _IApplicationEvents_MenuEventEventHandler(menuHandler.sapApp_MenuEvent);
+            sapApp.FormDataEvent += new _IApplicationEvents_FormDataEventEventHandler(addinAppEventHandler.sapApp_FormDataEvent);
+            sapApp.ItemEvent += new _IApplicationEvents_ItemEventEventHandler(addinAppEventHandler.sapApp_ItemEvent);
+            sapApp.PrintEvent += new _IApplicationEvents_PrintEventEventHandler(addinAppEventHandler.sapApp_PrintEvent);
+            sapApp.ProgressBarEvent += new _IApplicationEvents_ProgressBarEventEventHandler(addinAppEventHandler.sapApp_ProgressBarEvent);
+            sapApp.ReportDataEvent += new _IApplicationEvents_ReportDataEventEventHandler(addinAppEventHandler.sapApp_ReportDataEvent);
+            sapApp.RightClickEvent += new _IApplicationEvents_RightClickEventEventHandler(addinAppEventHandler.sapApp_RightClickEvent);
+            sapApp.ServerInvokeCompletedEvent += new _IApplicationEvents_ServerInvokeCompletedEventEventHandler(addinAppEventHandler.sapApp_ServerInvokeCompletedEvent);
+            sapApp.StatusBarEvent += new _IApplicationEvents_StatusBarEventEventHandler(addinAppEventHandler.sapApp_StatusBarEvent);
+            sapApp.UDOEvent += new _IApplicationEvents_UDOEventEventHandler(addinAppEventHandler.sapApp_UDOEvent);
+            sapApp.WidgetEvent += new _IApplicationEvents_WidgetEventEventHandler(addinAppEventHandler.sapApp_WidgetEvent);
         }
 
         void IEventDispatcher.UnregisterEvents()
         {
             sapApp.MenuEvent -= new _IApplicationEvents_MenuEventEventHandler(menuHandler.sapApp_MenuEvent);
+            sapApp.FormDataEvent -= new _IApplicationEvents_FormDataEventEventHandler(addinAppEventHandler.sapApp_FormDataEvent);
+            sapApp.ItemEvent -= new _IApplicationEvents_ItemEventEventHandler(addinAppEventHandler.sapApp_ItemEvent);
+            sapApp.PrintEvent -= new _IApplicationEvents_PrintEventEventHandler(addinAppEventHandler.sapApp_PrintEvent);
+            sapApp.ProgressBarEvent -= new _IApplicationEvents_ProgressBarEventEventHandler(addinAppEventHandler.sapApp_ProgressBarEvent);
+            sapApp.ReportDataEvent -= new _IApplicationEvents_ReportDataEventEventHandler(addinAppEventHandler.sapApp_ReportDataEvent);
+            sapApp.RightClickEvent -= new _IApplicationEvents_RightClickEventEventHandler(addinAppEventHandler.sapApp_RightClickEvent);
+            sapApp.ServerInvokeCompletedEvent -= new _IApplicationEvents_ServerInvokeCompletedEventEventHandler(addinAppEventHandler.sapApp_ServerInvokeCompletedEvent);
+            sapApp.StatusBarEvent -= new _IApplicationEvents_StatusBarEventEventHandler(addinAppEventHandler.sapApp_StatusBarEvent);
+            sapApp.UDOEvent -= new _IApplicationEvents_UDOEventEventHandler(addinAppEventHandler.sapApp_UDOEvent);
+            sapApp.WidgetEvent -= new _IApplicationEvents_WidgetEventEventHandler(addinAppEventHandler.sapApp_WidgetEvent);
         }
-
     }
 }
