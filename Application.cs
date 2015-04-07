@@ -169,5 +169,24 @@ namespace Dover.Framework
             boot.StartUp();
             appContainer.Dispose();
         }
+
+        /// <summary>
+        /// Used to probe if Framework was properly initialized. Used by unit tests mainly.
+        /// </summary>
+        public bool Initialized
+        {
+            get
+            {
+                if (appContainer == null)
+                {
+                    return false;
+                }
+                var microBoot = appContainer.Resolve<MicroBoot>();
+                if (microBoot.InceptionAddinManager == null)
+                    return false;
+
+                return microBoot.InceptionAddinManager.Initialized;
+            }
+        }
     }
 }

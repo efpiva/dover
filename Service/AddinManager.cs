@@ -222,6 +222,7 @@ namespace Dover.Framework.Service
     internal class AddinManager : MarshalByRefObject, IAddinManager
     {
         public ILogger Logger { get; set; }
+        private bool _initialized;
         private PermissionManager permissionManager;
         private IAddinLoader addinLoader;
         private AssemblyDAO assemblyDAO;
@@ -237,6 +238,7 @@ namespace Dover.Framework.Service
             BusinessOneDAO b1DAO, I18NService i18nService, AssemblyDAO assemblyDAO, IAddinLoader addinLoader,
             LicenseManager licenseManager)
         {
+            _initialized = false;
             this.permissionManager = permissionManager;
             this.assemblyDAO = assemblyDAO;
             this.b1DAO = b1DAO;
@@ -673,9 +675,21 @@ namespace Dover.Framework.Service
             }
         }
 
-        public void LogError(string msg)
+        void IAddinManager.LogError(string msg)
         {
             Logger.Error(msg);
+        }
+
+        bool IAddinManager.Initialized
+        {
+            get
+            {
+                return _initialized;
+            }
+            set
+            {
+                _initialized = value;
+            }
         }
     }
 }

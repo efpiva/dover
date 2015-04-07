@@ -66,6 +66,7 @@ namespace Dover.Framework
                 dispatcher.RegisterEvents();
                 StartFrameworkUI(); // load admin forms.
                 addinManager.LoadAddins(addins);
+                addinManager.Initialized = true;
                 Logger.Info(String.Format(Messages.Started, moduleName, this.GetType().Assembly.GetName().Version));
                 System.Windows.Forms.Application.Run();
             }

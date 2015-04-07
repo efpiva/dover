@@ -36,5 +36,7 @@ namespace Dover.Framework.Interface
         void ShutdownAddin(string moduleName);
 
         void StartAddin(string moduleName);
+
+        bool Initialized { get; set; }
     }
 }

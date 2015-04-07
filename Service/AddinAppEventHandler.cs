@@ -163,7 +163,7 @@ namespace Dover.Framework.Service
             filterDelegates(attributeMap, currentAsm);
         }
 
-        internal void filterDelegates(Dictionary<Type, EventHandlerMap> delegateTypes, Assembly currentAsm)
+        private void filterDelegates(Dictionary<Type, EventHandlerMap> delegateTypes, Assembly currentAsm)
         {
             var attributes = (from type in currentAsm.GetTypes()
                                   from method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic)

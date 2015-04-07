@@ -31,6 +31,7 @@ using Dover.Framework.Monad;
 using Dover.Framework.Remoting;
 using Dover.Framework.Service;
 using Dover.Framework.Interface;
+using System.IO;
 
 namespace Dover.Framework.Factory
 {
@@ -83,7 +84,9 @@ namespace Dover.Framework.Factory
         private static string GetConnectionString()
         {
             string ret;
-            if (Environment.GetCommandLineArgs().Length > 1)
+            if (Environment.GetCommandLineArgs().Length > 1 
+                && !Path.GetFileNameWithoutExtension(Environment.GetCommandLineArgs()[0]).StartsWith("QTAgent"))
+                // QTAgent is the runtime for unit tests.
             {
                 ret = Environment.GetCommandLineArgs()[1];
             }
