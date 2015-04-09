@@ -12,9 +12,16 @@ namespace FrameworkTest
         [TestInitialize]
         public void Initialize()
         {
-            DoverSetup.CleanDover();
+            DoverSetup.CleanDover(false);
             app = DoverSetup.bootDover();
         }
+
+        [TestCleanup]
+        public void Cleanup()
+        {
+            DoverSetup.shutdownDover();
+        }
+
         [TestMethod]
         public void InstallDover()
         {
@@ -25,6 +32,13 @@ namespace FrameworkTest
             Assert.AreEqual( b1dao.ExecuteSqlForObject<int>("select count(*) from \"@DOVER_MODULES_USER\""), 0);
             Assert.AreEqual( b1dao.ExecuteSqlForObject<int>("select count(*) from \"@DOVER_LOGS\""), 0);
             Assert.AreEqual( b1dao.ExecuteSqlForObject<int>("select count(*) from \"@DOVER_LICENSE_BIN\""), 0);
+        }
+
+        [TestMethod]
+        public void InstallI18NAddin()
+        {
+            SAPbouiCOM.Application b1App = app.Resolve<SAPbouiCOM.Application>();
+            b1App.Menus.Item("doverAdmin").Activate();
         }
     }
 }

@@ -84,6 +84,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomainHelper.cs" />
     <Compile Include="DoverSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="InstallTest.cs" />
