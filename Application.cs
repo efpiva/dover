@@ -19,15 +19,14 @@
  * 
  */
 using System;
-using Castle.Windsor;
-using Dover.Framework.Factory;
-using System.Threading;
-using Dover.Framework.Remoting;
-using System.Reflection;
 using System.IO;
-using System.Collections.Generic;
+using System.Reflection;
+using System.Threading;
+using Castle.Windsor;
 using Dover.Framework.Attribute;
+using Dover.Framework.Factory;
 using Dover.Framework.Interface;
+using Dover.Framework.Remoting;
 
 /*! \mainpage Dover Framework public API
  *
@@ -92,7 +91,12 @@ namespace Dover.Framework
         /// </summary>
         public void ShutDownApp()
         {
-            appContainer.Dispose();
+            if (appContainer != null)
+            {
+                IAppEventHandler appEventHandler = appContainer.Resolve<IAppEventHandler>();
+                appEventHandler.ShutDown();
+                appContainer = null;
+            }
         }
 
         /// <summary>
@@ -167,7 +171,6 @@ namespace Dover.Framework
             }
             var boot = appContainer.Resolve<Boot>();
             boot.StartUp();
-            appContainer.Dispose();
         }
 
         /// <summary>

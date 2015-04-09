@@ -588,6 +588,7 @@ namespace Dover.Framework.Service
                 runner.eventDispatcher.UnregisterEvents();
                 runner.addinFormEventHandler.UnRegisterForms();
                 runner.shutdownEvent.Set();
+                runner.runnerThread.Join();
             }
             runningAddIns = new List<AddInRunner>(); // clean running AddIns.
             runningAddinsHash = new Dictionary<string, AddInRunner>(); // clean-up.

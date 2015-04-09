@@ -32,6 +32,7 @@ using Dover.Framework.Factory;
 using Dover.Framework.Log;
 using System.Reflection;
 using Dover.Framework.Attribute;
+using System.Threading;
 
 namespace Dover.Framework
 {
@@ -57,6 +58,7 @@ namespace Dover.Framework
             this.i18nService = i18nService;
 
             i18nService.ConfigureThreadI18n(System.Threading.Thread.CurrentThread);
+            microBoot.coreShutdownEvent = new ManualResetEvent(false);
         }
 
         internal void PrepareFramework()
@@ -65,6 +67,7 @@ namespace Dover.Framework
             {
                 while (reboot)
                 {
+                    microBoot.coreShutdownEvent.Reset();
                     reboot = false;
                     Logger.Debug(Messages.PreparingFramework);
                     dbConf.PrepareDatabase();
@@ -84,9 +87,10 @@ namespace Dover.Framework
                     microBoot.AppFolder = appFolder;
                     microBoot.StartInception();
                     microBoot.Boot();
-                    System.Windows.Forms.Application.Run();
+                    microBoot.coreShutdownEvent.WaitOne();
                     rebootCount++;
                 }
+                reboot = true; // in case we need to start it again (i.e. unit test).
                 ContainerManager.Container.Dispose();
                 SAPServiceFactory.LogOff();
             }

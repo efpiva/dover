@@ -155,6 +155,17 @@ namespace Dover.Framework.Factory
             if (b1Connected)
             {
                 company.Disconnect();
+                if (company != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(company);
+                    company = null;
+                }
+                if (application != null)
+                {
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(application);
+                    application = null;
+                }
+                b1Connected = false;
             }
         }
     }

@@ -30,7 +30,7 @@ using SAPbouiCOM;
 
 namespace Dover.Framework.Service
 {
-    public class AppEventHandler : MarshalByRefObject, IAppEventHandler
+    internal class AppEventHandler : MarshalByRefObject, IAppEventHandler
     {
         private MicroBoot microBoot;
         private I18NService i18nManager;
@@ -101,7 +101,9 @@ namespace Dover.Framework.Service
         {
             Logger.Info(Messages.Shutdown);
             microBoot.InceptionAddinManager.Do(x => x.ShutdownAddins());
-            System.Windows.Forms.Application.Exit();
+            microBoot.inceptionShutdownEvent.Set();
+            microBoot.inceptionThread.Join();
+            microBoot.coreShutdownEvent.Set();
         }
 
         void IAppEventHandler.ShutDown()
@@ -122,7 +124,9 @@ namespace Dover.Framework.Service
                 Logger.Info(Messages.Reboot);
                 microBoot.InceptionAddinManager.Do(x => x.ShutdownAddins());
                 MicroCore.reboot = true;
-                System.Windows.Forms.Application.Exit();
+                microBoot.inceptionShutdownEvent.Set();
+                microBoot.inceptionThread.Join();
+                microBoot.coreShutdownEvent.Set();
             }
             catch (Exception e)
             {

@@ -19,14 +19,11 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Dover.Framework.Factory;
 using System.Threading;
+using Dover.Framework.Factory;
+using Dover.Framework.Interface;
 using Dover.Framework.Remoting;
 using Dover.Framework.Service;
-using Dover.Framework.Interface;
 
 namespace Dover.Framework
 {
@@ -37,6 +34,9 @@ namespace Dover.Framework
 
         internal AppDomain Inception { get; set; }
         internal IAddinManager InceptionAddinManager { get; set; }
+        internal Thread inceptionThread { get; set; }
+        internal ManualResetEvent inceptionShutdownEvent { get; set; }
+        internal ManualResetEvent coreShutdownEvent { get; set; }
 
         public MicroBoot(I18NService I18NService)
         {
@@ -54,16 +54,17 @@ namespace Dover.Framework
 
         internal void Boot()
         {
-            var thread = new Thread(new ThreadStart(this.PrivateBoot));
-            thread.SetApartmentState(ApartmentState.STA);
-            I18NService.ConfigureThreadI18n(thread);
-            thread.Start();
+            inceptionThread = new Thread(new ThreadStart(this.PrivateBoot));
+            inceptionThread.SetApartmentState(ApartmentState.STA);
+            I18NService.ConfigureThreadI18n(inceptionThread);
+            inceptionThread.Start();
         }
 
         private void PrivateBoot()
         {
             try
             {
+                inceptionShutdownEvent = new ManualResetEvent(false);
                 IApplication app = (IApplication)Inception.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
                 SAPServiceFactory.PrepareForInception(Inception); // need to be after Application creation because of assembly resolving from embedded resources.
                 Inception.SetData("assemblyName", "Framework"); // Used to get current AssemblyName for logging and reflection            
@@ -71,6 +72,7 @@ namespace Dover.Framework
                 Sponsor<IApplication> appSponsor = new Sponsor<IApplication>(app);
                 Sponsor<IAddinManager> addInManagerSponsor = new Sponsor<IAddinManager>(InceptionAddinManager);
                 app.RunInception();
+                inceptionShutdownEvent.WaitOne();
                 AppDomain.Unload(Inception); // release AppDomain on shutdown.
             }
             catch (Exception e)
