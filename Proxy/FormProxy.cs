@@ -34,7 +34,7 @@ namespace Dover.Framework.Proxy
     /// <summary>
     /// Implement Proxy for DoverFormBase. This proxy is reponsible for handling i18n and exception handler in events.
     /// </summary>
-    public class FormProxy : IInterceptor
+    internal class FormProxy : IInterceptor
     {
         public ILogger Logger { get; set; }
         private I18NService i18nService;

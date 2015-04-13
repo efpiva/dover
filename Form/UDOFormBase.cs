@@ -49,11 +49,13 @@ namespace Dover.Framework.Form
     {
         private bool initialized = false;
         private string formUID;
-        public BusinessOneUIDAO b1UIDAO { get; set; }
-        public B1SResourceManager resourceManager { get; set; }
+        private BusinessOneUIDAO b1UIDAO;
+        private B1SResourceManager resourceManager;
 
         public DoverUDOFormBase()
         {
+            b1UIDAO = ContainerManager.Container.Resolve<BusinessOneUIDAO>();
+            resourceManager = ContainerManager.Container.Resolve<B1SResourceManager>();
         }
 
         internal override string FormUID

@@ -35,7 +35,7 @@ namespace Dover.Framework.Form
 
     [MenuEvent(UniqueUID = "doverExport")]
     [FormAttribute("dover.exportDBInfo", "Dover.Framework.Form.ExportDBInfo.srf")]
-    public class ExportDBInfo : DoverUserFormBase
+    internal class ExportDBInfo : DoverUserFormBase
     {
         private Button exportBT;
         private Grid expGrid;

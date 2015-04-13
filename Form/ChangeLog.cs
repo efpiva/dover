@@ -28,7 +28,7 @@ using SAPbouiCOM;
 namespace Dover.Framework.Form
 {
     [FormAttribute("Dover.ChangeLog","Dover.Framework.Form.ChangeLog.srf")]
-    public class ChangeLog : DoverUserFormBase
+    internal class ChangeLog : DoverUserFormBase
     {
 
         internal EditText LogMessage;

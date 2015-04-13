@@ -65,7 +65,7 @@ namespace Dover.Framework.Service
         }
     }
 
-    public class ConfigAddin : MarshalByRefObject, IConfigAddin
+    internal class ConfigAddin : MarshalByRefObject, IConfigAddin
     {
 
         public ILogger Logger { get; set; }

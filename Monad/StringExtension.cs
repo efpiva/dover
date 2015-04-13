@@ -25,9 +25,9 @@ using System.Text;
 
 namespace Dover.Framework.Monad
 {
-    public static class StringExtension
+    internal static class StringExtension
     {
-        public static String Left(this String s, Int32 length)
+        internal static String Left(this String s, Int32 length)
         {
             if (s.Length <= length)
                 return s;
@@ -35,14 +35,14 @@ namespace Dover.Framework.Monad
             return s.Substring(0, length);
         }
 
-        public static String Right(this String s, Int32 length)
+        internal static String Right(this String s, Int32 length)
         {
             if (s.Length <= length)
                 return s;
             return s.Substring(s.Length - length, length);
         }
 
-        public static String Truncate(this String s, Int32 length)
+        internal static String Truncate(this String s, Int32 length)
         {
             return s.Length > length ? s.Substring(0, length) : s;
         }

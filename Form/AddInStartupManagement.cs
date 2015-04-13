@@ -34,7 +34,7 @@ namespace Dover.Framework.Form
 
     [MenuEvent(UniqueUID = "doverMngmnt")]
     [FormAttribute("dover.StartupManagement", "Dover.Framework.Form.AddInStartupManagement.srf")]
-    public class AddInStartupManagement : DoverUserFormBase
+    internal class AddInStartupManagement : DoverUserFormBase
     {
         private SAPbouiCOM.Grid gridUser;
         private SAPbouiCOM.Grid gridCfg;

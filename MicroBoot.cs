@@ -27,7 +27,7 @@ using Dover.Framework.Service;
 
 namespace Dover.Framework
 {
-    public class MicroBoot
+    internal class MicroBoot
     {
         internal string AppFolder;
         private I18NService I18NService;

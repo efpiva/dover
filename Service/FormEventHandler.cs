@@ -33,7 +33,7 @@ using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {
-    public class FormEventHandler : MarshalByRefObject, IFormEventHandler
+    internal class FormEventHandler : MarshalByRefObject, IFormEventHandler
     {
         private SAPbouiCOM.Application sapApp;
         private PermissionManager permissionManager;

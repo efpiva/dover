@@ -39,13 +39,15 @@ namespace Dover.Framework.Form
     public class DoverSystemFormBase : DoverFormBase
     {
         private string formUID;
-        public B1SResourceManager resourceManager { get; set; }
-        public BusinessOneUIDAO b1UIDAO { get; set; }
+        private B1SResourceManager resourceManager;
+        private BusinessOneUIDAO b1UIDAO;
         private IFormEventHandler formEventHandler;
 
         public DoverSystemFormBase()
         {
             formEventHandler = ContainerManager.Container.Resolve<IFormEventHandler>();
+            b1UIDAO = ContainerManager.Container.Resolve<BusinessOneUIDAO>();
+            resourceManager = ContainerManager.Container.Resolve<B1SResourceManager>();
         }
 
         internal override string FormUID

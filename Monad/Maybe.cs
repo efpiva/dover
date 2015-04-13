@@ -28,9 +28,9 @@ using System.Reflection;
 namespace Dover.Framework.Monad
 {
     // based on http://devtalk.net/csharp/chained-null-checks-and-the-maybe-monad/
-    public static class MaybeClass
+    internal static class MaybeClass
     {
-        public static V With<T, V>(this T t, Func<T, V> selector)
+        internal static V With<T, V>(this T t, Func<T, V> selector)
             where T : class
             where V : class
         {
@@ -38,28 +38,28 @@ namespace Dover.Framework.Monad
             return selector(t);
         }
 
-        public static TResult Return<TInput,TResult>(this TInput o, Func<TInput, TResult> evaluator, TResult failureValue) 
+        internal static TResult Return<TInput,TResult>(this TInput o, Func<TInput, TResult> evaluator, TResult failureValue) 
             where TInput: class
         {
             if (o == null) return failureValue;
             return evaluator(o);
         }
 
-        public static TInput If<TInput>(this TInput o, Func<TInput, bool> evaluator)
+        internal static TInput If<TInput>(this TInput o, Func<TInput, bool> evaluator)
             where TInput : class
         {
             if (o == null) return null;
             return evaluator(o) ? o : null;
         }
 
-        public static TInput Unless<TInput>(this TInput o, Func<TInput, bool> evaluator)
+        internal static TInput Unless<TInput>(this TInput o, Func<TInput, bool> evaluator)
             where TInput : class
         {
             if (o == null) return null;
             return evaluator(o) ? null : o;
         }
 
-        public static TInput Do<TInput>(this TInput o, Action<TInput> action)
+        internal static TInput Do<TInput>(this TInput o, Action<TInput> action)
             where TInput : class
         {
             if (o == null) return null;

@@ -9,7 +9,7 @@ using Castle.Core.Logging;
 
 namespace Dover.Framework.Proxy
 {
-    public class TransactionProxy : MarshalByRefObject, IInterceptor
+    internal class TransactionProxy : MarshalByRefObject, IInterceptor
     {
         private Company company { get; set; }
 

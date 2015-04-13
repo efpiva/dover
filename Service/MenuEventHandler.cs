@@ -32,7 +32,7 @@ using Dover.Framework.Log;
 
 namespace Dover.Framework.Service
 {
-    public class MenuEventHandler
+    internal class MenuEventHandler
     {
         public ILogger Logger { get; set; }
         Dictionary<string, List<MenuEventAttribute>> menuEvents = new Dictionary<string, List<MenuEventAttribute>>();

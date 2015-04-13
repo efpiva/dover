@@ -26,7 +26,7 @@ using Dover.Framework.Model;
 
 namespace Dover.Framework.DAO
 {
-    class AssemblyDAOImpl : AssemblyDAO
+    internal class AssemblyDAOImpl : AssemblyDAO
     {
         private BusinessOneDAO b1DAO;
 

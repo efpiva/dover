@@ -24,7 +24,7 @@ using SAPbouiCOM;
 
 namespace Dover.Framework.DAO
 {
-    public abstract class BusinessOneUIDAO
+    internal abstract class BusinessOneUIDAO
     {
         internal abstract void ProcessMenuAttribute(List<MenuAttribute> menus);
 

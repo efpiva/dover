@@ -25,7 +25,7 @@ using System.Text;
 
 namespace Dover.Framework.Log
 {
-    public static class DebugString
+    internal static class DebugString
     {
         public static Func<string> Format(String msg, params object[] values)
         {

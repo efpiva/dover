@@ -10,7 +10,7 @@ using Castle.Core.Logging;
 
 namespace Dover.Framework.Service
 {
-    class AddinAppEventHandler
+    internal class AddinAppEventHandler
     {
         private class EventHandlerMap
         {

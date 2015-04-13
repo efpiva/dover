@@ -30,7 +30,7 @@ namespace Dover.Framework.Monad
 {
     internal class MyXmlTextWriter : XmlTextWriter
     {
-        public MyXmlTextWriter(Stream stream)
+        internal MyXmlTextWriter(Stream stream)
             : base(stream, Encoding.Unicode)
         {
 
@@ -42,9 +42,9 @@ namespace Dover.Framework.Monad
         }
     }
 
-    public static class XMLClass
+    internal static class XMLClass
     {
-        public static string Serialize<T>(this T obj)
+        internal static string Serialize<T>(this T obj)
             where T : class
         {
             if (obj == null)
@@ -63,7 +63,7 @@ namespace Dover.Framework.Monad
             return streamReader.ReadToEnd();
         }
 
-        public static V Deserialize<V>(this string xml)
+        internal static V Deserialize<V>(this string xml)
             where V : class
         {
             var objSerializer = new XmlSerializer(typeof(V), "");

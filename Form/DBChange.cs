@@ -29,7 +29,7 @@ using System.Threading;
 namespace Dover.Framework.Form
 {
     [FormAttribute("Dover.dbchange", "Dover.Framework.Form.DBChange.srf")]
-    public class DBChange : DoverUserFormBase
+    internal class DBChange : DoverUserFormBase
     {
         internal DataTable DBChangeDT;
         internal Admin BaseForm { get; set; }

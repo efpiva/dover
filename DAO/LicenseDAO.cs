@@ -25,7 +25,7 @@ using System.Text;
 
 namespace Dover.Framework.DAO
 {
-    public interface LicenseDAO
+    internal interface LicenseDAO
     {
         void SaveLicense(string xml);
 

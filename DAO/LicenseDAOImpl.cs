@@ -27,7 +27,7 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace Dover.Framework.DAO
 {
-    public class LicenseDAOImpl : LicenseDAO
+    internal class LicenseDAOImpl : LicenseDAO
     {
         private BusinessOneDAO b1DAO;
 

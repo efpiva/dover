@@ -35,7 +35,7 @@ using System.IO;
 
 namespace Dover.Framework.Factory
 {
-    public class SAPServiceFactory
+    internal class SAPServiceFactory
     {
         private static SAPbouiCOM.Application application;
         private static SAPbobsCOM.Company company;

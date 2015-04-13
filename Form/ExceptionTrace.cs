@@ -29,7 +29,7 @@ using SAPbouiCOM.Framework;
 namespace Dover.Framework.Form
 {
     [FormAttribute("dover.exception", "Dover.Framework.Form.ExceptionTrace.srf")]
-    public class ExceptionTrace : DoverUserFormBase
+    internal class ExceptionTrace : DoverUserFormBase
     {
 
         private EditText exMessage;

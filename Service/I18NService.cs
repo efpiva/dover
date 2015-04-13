@@ -32,7 +32,7 @@ using System.Globalization;
 
 namespace Dover.Framework.Service
 {
-    public class I18NService
+    internal class I18NService
     {
         public ILogger Logger { get; set; }
         private SAPbouiCOM.Application app;

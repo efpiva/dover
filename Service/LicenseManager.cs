@@ -39,7 +39,7 @@ namespace Dover.Framework.Service
     /// <summary>
     /// Stub class
     /// </summary>
-    public class LicenseManager
+    internal class LicenseManager
     {
         private SAPbouiCOM.Application sapApp;
         private LicenseDAO licenseDAO;

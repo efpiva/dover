@@ -28,7 +28,7 @@ using System.Security.Principal;
 
 namespace Dover.Framework.Service
 {
-    public class MachineInformation
+    internal class MachineInformation
     {
         private string ip;
         private string macAddress;

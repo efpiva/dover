@@ -11,7 +11,7 @@ namespace Dover.Framework.Model.License
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-    public partial class License
+    internal class License
     {
 
         private string sysNumber;
@@ -22,7 +22,7 @@ namespace Dover.Framework.Model.License
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string SystemNumber
+        internal string SystemNumber
         {
             get
             {
@@ -36,7 +36,7 @@ namespace Dover.Framework.Model.License
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string InstallNumber
+        internal string InstallNumber
         {
             get
             {
@@ -50,7 +50,7 @@ namespace Dover.Framework.Model.License
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Module", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public List<LicenseModule> Items
+        internal List<LicenseModule> Items
         {
             get
             {
@@ -69,7 +69,7 @@ namespace Dover.Framework.Model.License
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public partial class LicenseModule
+    internal class LicenseModule
     {
 
         private string nameField;
@@ -80,7 +80,7 @@ namespace Dover.Framework.Model.License
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string Name
+        internal string Name
         {
             get
             {
@@ -94,7 +94,7 @@ namespace Dover.Framework.Model.License
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public string Description
+        internal string Description
         {
             get
             {
@@ -108,7 +108,7 @@ namespace Dover.Framework.Model.License
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public DateTime ExpirationDate
+        internal DateTime ExpirationDate
         {
             get
             {

@@ -33,7 +33,7 @@ using Dover.Framework.Log;
 
 namespace Dover.Framework.DAO
 {
-    public class BusinessOneUIDAOImpl : BusinessOneUIDAO
+    internal class BusinessOneUIDAOImpl : BusinessOneUIDAO
     {
         private SAPbouiCOM.Application application;
         private I18NService i18NService;

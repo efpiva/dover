@@ -26,7 +26,7 @@ using Dover.Framework.Model;
 
 namespace Dover.Framework.DAO
 {
-    public abstract class AssemblyDAO
+    internal abstract class AssemblyDAO
     {
         internal abstract byte[] GetAssembly(AssemblyInformation asm);
 

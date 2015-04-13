@@ -12,7 +12,7 @@ namespace Dover.Framework.Form
 {
     [MenuEvent(UniqueUID = "doverLicense")]
     [FormAttribute("Dover.license", "Dover.Framework.Form.License.srf")]
-    public class License : DoverUserFormBase
+    internal class License : DoverUserFormBase
     {
         public ILogger Logger { get; set; }
 

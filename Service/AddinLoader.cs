@@ -32,7 +32,7 @@ using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {
-    public class AddinLoader : MarshalByRefObject, IAddinLoader
+    internal class AddinLoader : MarshalByRefObject, IAddinLoader
     {
         public ILogger Logger { get; set; }
         private PermissionManager permissionManager;

@@ -35,7 +35,7 @@ namespace Dover.Framework.Service
         Default
     }
 
-    public class PermissionManager
+    internal class PermissionManager
     {
 
         private PermissionDAO permissionDAO;

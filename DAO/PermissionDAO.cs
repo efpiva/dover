@@ -26,7 +26,7 @@ using Dover.Framework.Service;
 
 namespace Dover.Framework.DAO
 {
-    public abstract class PermissionDAO
+    internal abstract class PermissionDAO
     {
         internal abstract Permission GetUserPermission(string addInName);
 

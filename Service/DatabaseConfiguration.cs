@@ -30,7 +30,7 @@ using SAPbobsCOM;
 
 namespace Dover.Framework.Service
 {
-    public class DatabaseConfiguration
+    internal class DatabaseConfiguration
     {
         private BusinessOneDAO b1DAO;
         private const string DBTABLES_XML = "Dover.Framework.DatabaseTables.xml";

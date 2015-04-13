@@ -44,7 +44,7 @@ namespace Dover.Framework.Service
     /// It`s temp because after it`s call, the AppDomain will be Unload, unloading 
     /// all information loaded during this class call.
     /// </summary>
-    public class TempAssemblyLoader : MarshalByRefObject, ITempAssemblyLoader
+    internal class TempAssemblyLoader : MarshalByRefObject, ITempAssemblyLoader
     {
         public I18NService i18nService { get; set; }
 
@@ -189,7 +189,7 @@ namespace Dover.Framework.Service
         }
     }
 
-    public class AssemblyManager
+    internal class AssemblyManager
     {
         private AssemblyDAO asmDAO;
         private LicenseManager licenseManager;
@@ -263,7 +263,6 @@ namespace Dover.Framework.Service
                 SAPServiceFactory.PrepareForInception(testDomain);
                 var addinManager = testApp.Resolve<IAddinManager>();
                 ret = addinManager.CheckAddinConfiguration(mainDll, out datatable);
-                testApp.ShutDownApp();
             }
             finally
             {

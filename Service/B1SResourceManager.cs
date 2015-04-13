@@ -35,7 +35,7 @@ using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {
-    public class B1SResourceManager : MarshalByRefObject
+    internal class B1SResourceManager : MarshalByRefObject
     {
         // assembly -> form Key. -> XML
         private Dictionary<string, Dictionary<string, XDocument>> formSRFResource = new Dictionary<string, Dictionary<string, XDocument>>();

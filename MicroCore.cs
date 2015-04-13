@@ -36,7 +36,7 @@ using System.Threading;
 
 namespace Dover.Framework
 {
-    class MicroCore
+    internal class MicroCore
     {
         private DatabaseConfiguration dbConf;
         private AssemblyManager assemblyLoader;

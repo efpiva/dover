@@ -30,7 +30,7 @@ using Dover.Framework.Log;
 namespace Dover.Framework.DAO
 {
 
-    public class PermissionDAOSQLImpl : PermissionDAO
+    internal class PermissionDAOSQLImpl : PermissionDAO
     {
 
         public ILogger Logger { get; set; }
