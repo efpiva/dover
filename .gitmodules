@@ -4,3 +4,6 @@
 [submodule "AddOnInstallAPI"]
 	path = AddOnInstallAPI
 	url = git@github.com:efpiva/AddOnInstallAPI.git
+[submodule "Examples"]
+	path = Examples
+	url = https://github.com/efpiva/DoverTutorial
