@@ -147,6 +147,7 @@ namespace Dover.Framework.Service
     {
         internal AssemblyInformation asm;
         internal ManualResetEvent shutdownEvent = new ManualResetEvent(false);
+        internal ManualResetEvent bootEvent = new ManualResetEvent(false);
         /// <summary>
         /// This is the AddinManager of the Framework (creator of all Addins AppDomains)
         /// </summary>
@@ -159,31 +160,16 @@ namespace Dover.Framework.Service
         internal List<AddInRunner> runningAddins;
         internal Dictionary<string, AddInRunner> runningAddinsHash;
 
-        private LicenseManager licenseManager;
-
-        internal AddInRunner(AssemblyInformation asm, IAddinManager frameworkAddinManager, LicenseManager licenseManager)
+        internal AddInRunner(AssemblyInformation asm, IAddinManager frameworkAddinManager)
         {
             this.asm = asm;
             this.frameworkAddinManager = frameworkAddinManager;
-            this.licenseManager = licenseManager;
         }
 
         internal void Run()
         {
             try
             {
-                bool isValid = false, hasLicense = false;
-                licenseManager.AddInValid(asm.Name, out isValid, out hasLicense);
-                if (!hasLicense)
-                {
-                    frameworkAddinManager.LogError(string.Format(Messages.NoLicenseError, asm.Name));
-                    return;
-                } else if (!isValid)
-                {
-                    frameworkAddinManager.LogError(string.Format(Messages.NotSigned, asm.Name));
-                    return; // Do not run it.
-                }
-
                 runningAddins.Add(this);
                 runningAddinsHash.Add(asm.Name, this);
 
@@ -192,6 +178,7 @@ namespace Dover.Framework.Service
                 setup.ApplicationBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", asm.Name);
                 var domain = AppDomain.CreateDomain("Dover.AddIn", null, setup);
                 domain.SetData("shutdownEvent", shutdownEvent); // Thread synchronization
+                domain.SetData("bootEvent", bootEvent);
                 domain.SetData("assemblyName", asm.Name); // Used to get current AssemblyName for logging and reflection
                 domain.SetData("frameworkManager", frameworkAddinManager);
                 IApplication app = (IApplication)domain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
@@ -226,15 +213,16 @@ namespace Dover.Framework.Service
         private PermissionManager permissionManager;
         private IAddinLoader addinLoader;
         private AssemblyDAO assemblyDAO;
-        private AssemblyManager assemblyManager;
+        private FileUpdate fileUpdate;
         private BusinessOneDAO b1DAO;
+        private LicenseManager licenseManager;
+
         private List<AddInRunner> runningAddIns = new List<AddInRunner>();
         private Dictionary<string, AddInRunner> runningAddinsHash = new Dictionary<string, AddInRunner>();
-        private LicenseManager licenseManager;
          
         private I18NService i18nService;
 
-        public AddinManager(PermissionManager permissionManager, AssemblyManager assemblyManager,
+        public AddinManager(PermissionManager permissionManager, FileUpdate fileUpdate,
             BusinessOneDAO b1DAO, I18NService i18nService, AssemblyDAO assemblyDAO, IAddinLoader addinLoader,
             LicenseManager licenseManager)
         {
@@ -243,7 +231,7 @@ namespace Dover.Framework.Service
             this.assemblyDAO = assemblyDAO;
             this.b1DAO = b1DAO;
             this.i18nService = i18nService;
-            this.assemblyManager = assemblyManager;
+            this.fileUpdate = fileUpdate;
             this.addinLoader = addinLoader;
             this.licenseManager = licenseManager;
         }
@@ -276,39 +264,33 @@ namespace Dover.Framework.Service
 
         private void LoadAddin(AssemblyInformation addin)
         {
-            string directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", addin.Name);
-            Directory.CreateDirectory(directory);
-            assemblyManager.UpdateAppDataFolder(addin, directory);
-            if (!IsInstalled(addin.Code))
+            DateTime dueDate;
+            if (licenseManager.AddinIsValid(addin.Name, out dueDate))
             {
-                InstallAddin(addin, directory);
+                string directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", addin.Name);
+                Directory.CreateDirectory(directory);
+                fileUpdate.UpdateAppDataFolder(addin, directory);
+                if (!IsInstalled(addin.Code))
+                {
+                    InstallAddin(addin, directory);
+                }
+                RegisterAddin(addin);
+                ConfigureLog(addin);
             }
-            RegisterAddin(addin);
-            ConfigureLog(addin);
-            
+            else
+            {
+                Logger.Error(string.Format(Messages.NoLicenseError, addin.Name));
+            }
         }
 
         private void InstallAddin(AssemblyInformation addin, string baseDirectory)
         {
             try
             {
-                bool isValid = false, hasLicense = false;
-                licenseManager.AddInValid(addin.Name, out isValid, out hasLicense);
-                if (!hasLicense)
-                {
-                    Logger.Error(string.Format(Messages.NoLicenseError, addin.Name));
-                }
-                else if (!isValid)
-                {
-                    Logger.Error(string.Format(Messages.NotSigned, addin.Name));
-                }
-                else
-                {
-                    Logger.Info(string.Format(Messages.ConfiguringAddin, addin.Name));
-                    ConfigureAddin(addin, baseDirectory);
-                    MarkAsInstalled(addin.Code);
-                    Logger.Info(string.Format(Messages.ConfiguredAddin, addin.Name));
-                }
+                Logger.Info(string.Format(Messages.ConfiguringAddin, addin.Name));
+                ConfigureAddin(addin, baseDirectory);
+                MarkAsInstalled(addin.Code);
+                Logger.Info(string.Format(Messages.ConfiguredAddin, addin.Name));
             }
             catch (Exception e)
             {
@@ -531,7 +513,7 @@ namespace Dover.Framework.Service
 
         private void RegisterAddin(AssemblyInformation addin)
         {
-            AddInRunner runner = new AddInRunner(addin, this, licenseManager);
+            AddInRunner runner = new AddInRunner(addin, this);
             var thread = new Thread(new ThreadStart(runner.Run));
             thread.SetApartmentState(ApartmentState.STA);
             i18nService.ConfigureThreadI18n(thread);
@@ -539,6 +521,7 @@ namespace Dover.Framework.Service
             runner.runningAddins = runningAddIns;
             runner.runningAddinsHash = runningAddinsHash;
             thread.Start();
+            runner.bootEvent.WaitOne();
         }
 
         private List<AssemblyInformation> FilterAuthorizedAddins(List<AssemblyInformation> addins)
@@ -652,8 +635,11 @@ namespace Dover.Framework.Service
         protected internal virtual void InstallAddin(string name)
         {
             AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, AssemblyType.Addin);
-            string directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", asmInfo.Name);
-            InstallAddin(asmInfo, directory);
+            if (asmInfo != null)
+            {
+                string directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", asmInfo.Name);
+                InstallAddin(asmInfo, directory);
+            }
         }
         
         string IAddinManager.GetAddinChangeLog(string addin)

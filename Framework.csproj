@@ -168,6 +168,7 @@
     <Compile Include="Proxy\FormProxy.cs" />
     <Compile Include="Proxy\TransactionProxy.cs" />
     <Compile Include="Service\AddinLoader.cs" />
+    <Compile Include="Service\FileUpdateService.cs" />
     <Compile Include="Service\I18NService.cs" />
     <Compile Include="Service\AddinManager.cs" />
     <Compile Include="Service\AppEventHandler.cs" />
@@ -181,7 +182,6 @@
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
     <Compile Include="Service\MicroCoreEventDispatcher.cs" />
-    <Compile Include="Service\CryptoService.cs" />
     <Compile Include="Service\DatabaseConfiguration.cs" />
     <Compile Include="Service\EventDispatcher.cs" />
     <Compile Include="Service\LicenseManager.cs" />
@@ -422,8 +422,6 @@
     <None Include="Certificate.snk" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="publicToken.txt" />
-    <EmbeddedResource Include="publicKey.xml" />
     <EmbeddedResource Include="DAO\hana\DeleteLicense.sql" />
     <EmbeddedResource Include="DAO\hana\GetLicense.sql" />
     <EmbeddedResource Include="DAO\hana\InsertLicense.sql" />
@@ -434,7 +432,6 @@
     <EmbeddedResource Include="DAO\hana\GetDate.sql" />
     <EmbeddedResource Include="DAO\sql\GetOrphanCodes.sql" />
     <EmbeddedResource Include="DAO\hana\GetOrphanCodes.sql" />
-    <Content Include="Model\License\LicenseFileTemplate.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DAO\sql\DeleteDependencies.sql" />
@@ -474,6 +471,66 @@
       <Project>{019E07C2-7C40-4A91-ABA7-FD6B325FC710}</Project>
       <Name>FrameworkInterface</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\GetAllAssembliesInformation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetAllAssembliesInformation.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\InsertLicenseHeader.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\DeleteLicenseHeader.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\DeleteLicenseHeader.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\InsertLicenseHeader.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\GetLicenseCode.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetLicenseCode.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\GetAddinsByNamespace.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetAddinsByNamespace.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\UpdateNamespaceDueDate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\UpdateAddinDueDate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\UpdateAddinDueDate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\UpdateNamespaceDueDate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\GetAddinDueDate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetAddinDueDate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\ClearAddinDueDate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\ClearAddinDueDate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\ClearNamespaceDueDate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\ClearNamespaceDueDate.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

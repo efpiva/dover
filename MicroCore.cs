@@ -40,6 +40,7 @@ namespace Dover.Framework
     {
         private DatabaseConfiguration dbConf;
         private AssemblyManager assemblyLoader;
+        private FileUpdate fileUpdate;
         private MicroCoreEventDispatcher dispatcher;
         private MicroBoot microBoot;
         private I18NService i18nService;
@@ -49,13 +50,15 @@ namespace Dover.Framework
         public ILogger Logger { get; set; }
 
         public MicroCore(DatabaseConfiguration dbConf, AssemblyManager assemblyLoader,
-            MicroCoreEventDispatcher dispatcher, MicroBoot microBoot, I18NService i18nService)
+            MicroCoreEventDispatcher dispatcher, MicroBoot microBoot, I18NService i18nService,
+            FileUpdate fileUpdate)
         {
             this.microBoot = microBoot;
             this.dbConf = dbConf;
             this.assemblyLoader = assemblyLoader;
             this.dispatcher = dispatcher;
             this.i18nService = i18nService;
+            this.fileUpdate = fileUpdate;
 
             i18nService.ConfigureThreadI18n(System.Threading.Thread.CurrentThread);
             microBoot.coreShutdownEvent = new ManualResetEvent(false);
@@ -123,7 +126,7 @@ namespace Dover.Framework
 
         private string CheckAppFolder()
         {
-            string appFolder = assemblyLoader.GetDoverDirectory();
+            string appFolder = fileUpdate.GetDoverDirectory();
 
             string frameworkFolder = Path.Combine(appFolder, "Framework");
             CreateIfNotExists(frameworkFolder);

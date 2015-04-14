@@ -1,0 +1,1 @@
+﻿DELETE FROM "@DOVER_LICENSE" WHERE "Code" = '{0}'

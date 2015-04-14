@@ -11,8 +11,9 @@ namespace Dover.Framework.Model.License
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
-    internal class License
+    public class LicenseHeader
     {
+        private string licenseNamespace;
 
         private string sysNumber;
 
@@ -20,9 +21,22 @@ namespace Dover.Framework.Model.License
 
         private List<LicenseModule> itemsField;
 
+        [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public string LicenseNamespace
+        {
+            get
+            {
+                return licenseNamespace;
+            }
+            set
+            {
+                this.licenseNamespace = value;
+            }
+        }
+
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        internal string SystemNumber
+        public string SystemNumber
         {
             get
             {
@@ -36,7 +50,7 @@ namespace Dover.Framework.Model.License
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        internal string InstallNumber
+        public string InstallNumber
         {
             get
             {
@@ -50,7 +64,7 @@ namespace Dover.Framework.Model.License
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Module", Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        internal List<LicenseModule> Items
+        public List<LicenseModule> Items
         {
             get
             {
@@ -69,7 +83,7 @@ namespace Dover.Framework.Model.License
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    internal class LicenseModule
+    public class LicenseModule
     {
 
         private string nameField;
@@ -80,7 +94,7 @@ namespace Dover.Framework.Model.License
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        internal string Name
+        public string Name
         {
             get
             {
@@ -94,7 +108,7 @@ namespace Dover.Framework.Model.License
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        internal string Description
+        public string Description
         {
             get
             {
@@ -108,7 +122,7 @@ namespace Dover.Framework.Model.License
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form = System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        internal DateTime ExpirationDate
+        public DateTime ExpirationDate
         {
             get
             {

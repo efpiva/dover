@@ -285,9 +285,6 @@
   <data name="NoLicenseError" xml:space="preserve">
     <value>No license found for {0}</value>
   </data>
-  <data name="NotSigned" xml:space="preserve">
-    <value>Addin {0} is invalid.</value>
-  </data>
   <data name="UpdateFrameworkError" xml:space="preserve">
     <value>Addin with unsupported Framework, please update</value>
   </data>

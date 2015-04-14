@@ -27,6 +27,7 @@ using Castle.Core.Internal;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly:InternalsVisibleTo(InternalsVisible.ToDynamicProxyGenAssembly2)]
+[assembly: InternalsVisibleTo("FrameworkTest, PublicKey=002400000480000094000000060200000024000052534131000400000100010057015eb62f506d249895c9324b3dbe9b4274322a76cee903681e7855baebddc5a1633dadbd4471999a8486dde8f33e17dbf2ec7604a669bfa7ec9c367e046befd4be6b535b459d11ef6f7e393a7dd1acb0ae8a397e9637d1ba7240cad85da811bc5c35b5b8d6e79a18c05f64747490dbc9bb76cf697214b168079f63211857db")]
 [assembly: AssemblyTitle("Dover Framework")]
 [assembly: AssemblyDescription("Dover Framework")]
 [assembly: AssemblyConfiguration("Branch BRANCHNAME")]

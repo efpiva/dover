@@ -36,7 +36,7 @@ namespace Dover.Framework.DAO
             this.b1DAO = b1DAO;
         }
 
-        public void SaveLicense(string xml)
+        public string SaveLicense(string xml, string licenseNamespace)
         {
             if (string.IsNullOrWhiteSpace(xml))
             {
@@ -48,14 +48,23 @@ namespace Dover.Framework.DAO
             string xmlHex = null;
             xmlHex = shb.ToString();
 
-            b1DAO.ExecuteStatement(this.GetSQL("DeleteLicense.sql"));
+            string code = b1DAO.ExecuteSqlForObject<string>(string.Format(this.GetSQL("GetLicenseCode.sql"), licenseNamespace));
 
-            InsertAsmBin(xmlHex);
+            b1DAO.ExecuteStatement(string.Format(this.GetSQL("DeleteLicense.sql"), code));
+            b1DAO.ExecuteStatement(string.Format(this.GetSQL("DeleteLicenseHeader.sql"), code));
+
+            code = b1DAO.GetNextCode("DOVER_LICENSE");
+
+            b1DAO.ExecuteStatement(string.Format(this.GetSQL("InsertLicenseHeader.sql"), code, licenseNamespace));
+            InsertAsmBin(xmlHex, code);
+
+            return code;
         }
         
-        public string GetLicense()
+        public string GetLicense(string licenseNamespace)
         {
-            List<String> hexFile = b1DAO.ExecuteSqlForList<String>(this.GetSQL("GetLicense.sql"));
+            string code = b1DAO.ExecuteSqlForObject<string>(string.Format(this.GetSQL("GetLicenseCode.sql"), licenseNamespace));
+            List<String> hexFile = b1DAO.ExecuteSqlForList<String>(string.Format(this.GetSQL("GetLicense.sql"), code));
             if (hexFile.Count == 0)
                 return null;
             try
@@ -81,7 +90,7 @@ namespace Dover.Framework.DAO
             return b1DAO.ExecuteSqlForObject<DateTime>(this.GetSQL("GetDate.sql"));
         }
 
-        private void InsertAsmBin(string xmlHex)
+        private void InsertAsmBin(string xmlHex, string licenseCode)
         {
             string sql;
             int maxtext = 256000;
@@ -93,7 +102,7 @@ namespace Dover.Framework.DAO
             {
                 string code = b1DAO.GetNextCode("DOVER_LICENSE_BIN");
                 sql = String.Format(insertSQL,
-                    code, code, xmlHex.Substring(i * maxtext, maxtext));
+                    code, code, xmlHex.Substring(i * maxtext, maxtext), licenseCode);
                 b1DAO.ExecuteStatement(sql);
                 insertedText += maxtext;
             }
@@ -102,7 +111,7 @@ namespace Dover.Framework.DAO
             {
                 string code = b1DAO.GetNextCode("DOVER_LICENSE_BIN");
                 sql = String.Format(insertSQL,
-                    code, code, xmlHex.Substring(insertedText));
+                    code, code, xmlHex.Substring(insertedText), licenseCode);
                 b1DAO.ExecuteStatement(sql);
             }
         }
@@ -128,6 +137,40 @@ namespace Dover.Framework.DAO
                 {
                     return reader.ReadToEnd();
                 }
+            }
+        }
+
+        public DateTime GetAddInDueDate(string addin)
+        {
+            return b1DAO.ExecuteSqlForObject<DateTime>(string.Format(this.GetSQL("GetAddinDueDate.sql"), addin));
+        }
+
+        public List<string> getAddinsByNamespace(string licenseNamespace)
+        {
+            return b1DAO.ExecuteSqlForList<string>(this.GetSQL("GetAddinsByNamespace.sql"));
+        }
+
+        public void UpdateNamespaceDueDate(string licenseNamespace, DateTime dueDate)
+        {
+            if (dueDate == DateTime.MinValue)
+            {
+                b1DAO.ExecuteStatement(string.Format(this.GetSQL("ClearNamespaceDueDate.sql"), licenseNamespace));
+            }
+            else
+            {
+                b1DAO.ExecuteStatement(string.Format(this.GetSQL("UpdateNamespaceDueDate.sql"), licenseNamespace, dueDate.ToString("yyyyMMdd")));
+            }
+        }
+
+        public void UpdateAddinDueDate(string addin, DateTime dueDate)
+        {
+            if (dueDate == DateTime.MinValue)
+            {
+                b1DAO.ExecuteStatement(string.Format(this.GetSQL("ClearAddinDueDate.sql"), addin));
+            }
+            else
+            {
+                b1DAO.ExecuteStatement(string.Format(this.GetSQL("UpdateAddinDueDate.sql"), addin, dueDate.ToString("yyyyMMdd")));
             }
         }
     }

@@ -1,0 +1,1 @@
+﻿select U_Name from [@DOVER_MODULES] WHERE U_Namespace = '{0}'

@@ -68,12 +68,13 @@ namespace Dover.Framework.Form
                 return;
             }
 
-            if (licenseManager.SaveLicense(modulePath.Value))
+            try
             {
+                licenseManager.SaveLicense(modulePath.Value);
                 updateLicenseDT();
                 Logger.Info(Messages.LicenseSuccessInstall);
             }
-            else
+            catch (ArgumentException)
             {
                 Logger.Error(Messages.LicenseErrorInstall);
             }
@@ -91,7 +92,7 @@ namespace Dover.Framework.Form
                 licenseDT.Rows.Add();
                 licenseDT.SetValue("Name", i, module.Name);
                 licenseDT.SetValue("Description", i, module.Description);
-                DateTime dueDate = licenseManager.GetAddInExpireDate(module.Name);
+                DateTime dueDate = licenseManager.GetAddinDueDate(module.Name);
                 string dueDateStr = (dueDate == DateTime.MinValue) ? Messages.LicenseEmpty : dueDate.ToShortDateString();
                 licenseDT.SetValue("DueDate", i, dueDateStr);
             }

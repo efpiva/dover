@@ -54,19 +54,12 @@ namespace Dover.Framework.Service
             string thisAsmName = (string)AppDomain.CurrentDomain.GetData("assemblyName");
             try
             {
-                bool isValid = false, hasLicense = false;
-                licenseManager.AddInValid(thisAsmName, out isValid, out hasLicense);
-                if (!hasLicense)
+                DateTime dueDate;
+                if (!licenseManager.AddinIsValid(thisAsmName, out dueDate)) 
                 {
-                    Logger.Error(string.Format(Messages.NoLicenseError, thisAsmName));
                     // We shouldn´t be here. bye.
-                    throw new Exception();
-                } else if (!isValid)
-                {
-                    Logger.Error(string.Format(Messages.NotSigned, thisAsmName));
-                    // We shouldn´t be here. bye.
-                    throw new Exception();
-                }
+                    throw new Exception(string.Format(Messages.NoLicenseError, thisAsmName));
+                } 
 
                 Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
                 RegisterObjects(thisAsm);

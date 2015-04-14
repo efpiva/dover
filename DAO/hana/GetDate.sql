@@ -1,1 +1,1 @@
-﻿SELECT current_timestamp frmo DUMMY
+﻿SELECT current_timestamp from DUMMY

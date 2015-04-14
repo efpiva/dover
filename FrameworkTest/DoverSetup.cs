@@ -7,6 +7,7 @@ using SAPbobsCOM;
 using Dover.Framework;
 using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Dover.Framework.DAO;
 
 namespace FrameworkTest
 {
@@ -15,12 +16,11 @@ namespace FrameworkTest
         private static BootDoverHelper bootDoverHelper = null;
         private static bool cleaned = false;
 
-        internal static void CleanDover(bool dropTable)
+        internal static Application CleanDover(bool dropTable)
         {
-            var sboGuiApi = new SAPbouiCOM.SboGuiApi(); 
-            sboGuiApi.Connect("0030002C0030002C00530041005000420044005F00440061007400650076002C0050004C006F006D0056004900490056");
-            SAPbouiCOM.Application app = sboGuiApi.GetApplication();
-            var company = (SAPbobsCOM.Company)app.Company.GetDICompany();
+            Application doverApp = new Application();
+            var company = doverApp.Resolve<SAPbobsCOM.Company>();
+            var app = doverApp.Resolve<SAPbouiCOM.Application>();
             Recordset rs = (dropTable ? null : (Recordset)company.GetBusinessObject(BoObjectTypes.BoRecordset));
             UserTablesMD ut = (!dropTable ? null : (UserTablesMD)company.GetBusinessObject(BoObjectTypes.oUserTables));
 
@@ -44,6 +44,7 @@ namespace FrameworkTest
                     rs.DoQuery("DELETE FROM \"@DOVER_MODULES_DEP\"");
                     rs.DoQuery("DELETE FROM \"@DOVER_MODULES_USER\"");
                     rs.DoQuery("DELETE FROM \"@DOVER_LOGS\"");
+                    rs.DoQuery("DELETE FROM \"@DOVER_LICENSE\"");
                     rs.DoQuery("DELETE FROM \"@DOVER_LICENSE_BIN\"");
                 }
                 else
@@ -53,6 +54,7 @@ namespace FrameworkTest
                     removeTable(ut, "DOVER_MODULES_DEP", app, company);
                     removeTable(ut, "DOVER_MODULES_USER", app, company);
                     removeTable(ut, "DOVER_LOGS", app, company);
+                    removeTable(ut, "DOVER_LICENSE", app, company);
                     removeTable(ut, "DOVER_LICENSE_BIN", app, company);
                 }
                 
@@ -63,14 +65,15 @@ namespace FrameworkTest
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(rs);
                 if (ut != null)
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(ut);
-                company.Disconnect();
             }
+            return doverApp;
         }
 
         private static void cleanAllFiles(string appFolder)
         {
             // For some reason, some reference is hold for the Framework directory.
-            // All files are released and no AppDomain is loaded, so we delete only the files so we can move on.
+            // All files are released and no AppDomain is loaded, so we delete only the
+            // files so we can move on.
             var files = Directory.GetFiles(appFolder, "*", SearchOption.AllDirectories);
             foreach(var file in files)
             {
@@ -78,7 +81,48 @@ namespace FrameworkTest
             }
         }
 
-        private static void removeTable(UserTablesMD ut, string name, SAPbouiCOM.Application app,
+        internal static void removeUDO(UserObjectsMD uo, string name,
+                            SAPbouiCOM.Application app, SAPbobsCOM.Company company)
+        {
+            int ret;
+            string errMsg;
+            if (uo.GetByKey(name))
+            {
+                ret = uo.Remove();
+                if (ret != 0)
+                {
+                    company.GetLastError(out ret, out errMsg);
+                    app.SetStatusBarMessage(string.Format("Error removing object {0}", name),
+                        SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                    throw new Exception(errMsg);
+                }
+                app.StatusBar.SetSystemMessage(string.Format("Removed field {0}", name), 
+                    SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+            }
+        }
+
+        internal static void removeField(UserFieldsMD uf, string tableName, int fieldID, 
+                            SAPbouiCOM.Application app, SAPbobsCOM.Company company)
+        {
+            int ret;
+            string errMsg;
+            if (uf.GetByKey(tableName, fieldID))
+            {
+                ret = uf.Remove();
+                if (ret != 0)
+                {
+                    company.GetLastError(out ret, out errMsg);
+                    app.SetStatusBarMessage(string.Format("Error removing field {0}-{1}", 
+                        tableName, fieldID), SAPbouiCOM.BoMessageTime.bmt_Short, true);
+                    throw new Exception(errMsg);
+                }
+                app.StatusBar.SetSystemMessage(string.Format("Removed field {0}-{1}", 
+                    tableName, fieldID), 
+                    SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+            }
+        }
+
+        internal static void removeTable(UserTablesMD ut, string name, SAPbouiCOM.Application app,
                                         SAPbobsCOM.Company company)
         {
             int ret;
@@ -92,7 +136,8 @@ namespace FrameworkTest
                     app.SetStatusBarMessage("Error removing table " + name, SAPbouiCOM.BoMessageTime.bmt_Short, true);
                     throw new Exception(errMsg);
                 }
-                app.StatusBar.SetSystemMessage("Removed table " + name, SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
+                app.StatusBar.SetSystemMessage("Removed table " + name,
+                    SAPbouiCOM.BoMessageTime.bmt_Short, SAPbouiCOM.BoStatusBarMessageType.smt_Success);
             }
         }
 
@@ -105,15 +150,14 @@ namespace FrameworkTest
         {
             internal Thread bootThread;
             internal Application app;
-            internal BootDoverHelper()
+            internal BootDoverHelper(Application app)
             {
-                app = null;
+                this.app = app;
             }
             internal void Start()
             {
                 try
                 {
-                    app = new Application();
                     app.Run();
                 }
                 catch (Exception e)
@@ -128,12 +172,12 @@ namespace FrameworkTest
             }
         }
 
-        internal static Application bootDover()
+        internal static Application bootDover(Application doverApp)
         {
             if (bootDoverHelper != null)
                 throw new Exception("Dover is running");
 
-            bootDoverHelper = new BootDoverHelper();
+            bootDoverHelper = new BootDoverHelper(doverApp);
             Thread t = new Thread(bootDoverHelper.Start);
             bootDoverHelper.bootThread = t;
             t.SetApartmentState(ApartmentState.STA);
@@ -144,7 +188,7 @@ namespace FrameworkTest
             {
                 Thread.Sleep(5000);
                 if (count >= 60)
-                    throw new Exception("5 miuntes connection timeout");
+                    throw new Exception("5 minutes connection timeout");
                 ++count;
             }
 

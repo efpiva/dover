@@ -59,12 +59,13 @@ namespace Dover.Framework.Service
             string[] defaultDependenciesNames = {"Castle.Core", "Castle.Facilities.Logging",
                                                 "Castle.Services.Logging.Log4netIntegration",
                                                 "Castle.Windsor", "ICSharpCode.SharpZipLib",
-                                                "log4net", "SAPbouiCOM", "FrameworkInterface"};
+                                                "log4net", "SAPbouiCOM", "FrameworkInterface",
+                                                "Interop.SAPbobsCOM"};
             HashSet<string> defaultDependenciesNamesSet = new HashSet<string>(defaultDependenciesNames);
             foreach (var dependency in defaultDependenciesNames)
             {
-                Assembly log4netasm = AppDomain.CurrentDomain.Load(dependency);
-                CheckAssembly(dependencies, log4netasm.GetName());
+                Assembly dependencyAsm = AppDomain.CurrentDomain.Load(dependency);
+                CheckAssembly(dependencies, dependencyAsm.GetName());
             }
 
             foreach (var dependency in asm.GetReferencedAssemblies())
@@ -129,7 +130,7 @@ namespace Dover.Framework.Service
                         Date = DateTime.Today,
                         Type = AssemblyType.Dependency,
                         FileName = assemblyName.Name + ".dll",
-                        MD5 = AssemblyManager.MD5Sum(depBytes)
+                        MD5 = FileUpdate.MD5Sum(depBytes)
                     };
                 Assembly depAsm = AppDomain.CurrentDomain.Load(depBytes);
                 SaveVersion(depAsm, dependencyInformation);
@@ -189,21 +190,22 @@ namespace Dover.Framework.Service
         }
     }
 
-    internal class AssemblyManager
+    internal class AssemblyManager : MarshalByRefObject
     {
         private AssemblyDAO asmDAO;
         private LicenseManager licenseManager;
+        private FileUpdate fileUpdate;
         private I18NService i18nService;
-        private SAPbobsCOM.Company company;
         public ILogger Logger { get; set; }
 
 
-        public AssemblyManager(AssemblyDAO asmDAO, LicenseManager licenseManager, I18NService i18nService, SAPbobsCOM.Company company)
+        public AssemblyManager(AssemblyDAO asmDAO, LicenseManager licenseManager, I18NService i18nService,
+                                FileUpdate fileUpdate)
         {
             this.asmDAO = asmDAO;
             this.licenseManager = licenseManager;
             this.i18nService = i18nService;
-            this.company = company;
+            this.fileUpdate = fileUpdate;
         }
 
         internal void RemoveAddIn(string moduleName)
@@ -267,7 +269,13 @@ namespace Dover.Framework.Service
             finally
             {
                 AppDomain.Unload(testDomain);
-                Directory.Delete(tempDirectory, true);
+                try
+                {
+                    Directory.Delete(tempDirectory, true);
+                } catch (Exception e)
+                {
+                    Logger.Debug(string.Format("Directory {0} not cleaned", tempDirectory), e);
+                }
             }
             return ret;
         }
@@ -403,30 +411,7 @@ namespace Dover.Framework.Service
 
             AssemblyInformation asm = asmDAO.GetAssemblyInformation("Framework", AssemblyType.Core);
             UpdateFrameworkDBAssembly(ref asm);
-            UpdateAppDataFolder(asm, appFolder);
-        }
-
-        internal void UpdateAppDataFolder(AssemblyInformation asm, string appFolder)
-        {
-            string fullPath = Path.Combine(appFolder, asm.FileName);
-            List<AssemblyInformation> dependencies = asmDAO.GetDependencies(asm);
-            if (IsDifferent(asm, fullPath))
-            {
-                UpdateAssembly(asm, fullPath);
-            }
-            foreach (var dep in dependencies)
-            {
-                fullPath = Path.Combine(appFolder, dep.FileName);
-                if (IsDifferent(dep, fullPath))
-                {
-                    UpdateAssembly(dep, fullPath);
-                }
-            }
-            if (dependencies.Count == 0)
-            {
-                AssemblyInformation coreAsm = asmDAO.GetAssemblyInformation("Framework", AssemblyType.Core);
-                UpdateAppDataFolder(coreAsm, appFolder);
-            }
+            fileUpdate.UpdateAppDataFolder(asm, appFolder);
         }
 
         private void UpdateFrameworkDBAssembly(ref AssemblyInformation asm)
@@ -485,7 +470,7 @@ namespace Dover.Framework.Service
 
             GetAssemblyInfoFromBin(directory, asmBytes, newAsm);
             // calculate MD5 based on all binary, so if something changes trigger a full directory update.
-            newAsm.MD5 = MD5Sum(asmBytes); 
+            newAsm.MD5 = FileUpdate.MD5Sum(asmBytes); 
             newAsm.Size = asmBytes.Length;
             newAsm.Date = DateTime.Now;
             newAsm.Type = type;
@@ -521,6 +506,7 @@ namespace Dover.Framework.Service
                     }
                 }
                 asmDAO.DeleteOrphanDependency();
+                licenseManager.UpdateAddinDueDate(newAsm.Name);
                 return newAsm;
             }
             else
@@ -554,7 +540,6 @@ namespace Dover.Framework.Service
                     newInfo.Build = dep.Build;
                     newInfo.Code = dep.Code;
                     newInfo.Date = dep.Date;
-                    newInfo.ExpireDate = dep.ExpireDate;
                     newInfo.FileName = string.Copy(dep.FileName);
                     newInfo.Major = dep.Major;
                     newInfo.MD5 = string.Copy(dep.MD5);
@@ -572,85 +557,6 @@ namespace Dover.Framework.Service
             {
                 AppDomain.Unload(tempDomain);
             }
-        }
-
-        private void UpdateAssembly(AssemblyInformation asmMeta, string fullPath)
-        {
-            try
-            {
-                Logger.Debug(String.Format(Messages.FileUpdating, asmMeta.Name, asmMeta.Version));
-                string cacheFile = Path.Combine(GetDoverDirectory(), "..", "Cache", asmMeta.MD5);
-                if (!CreateFromCache(asmMeta, cacheFile, fullPath))
-                {
-                    byte[] asmBytes = asmDAO.GetAssembly(asmMeta);
-                    if (asmBytes != null)
-                    {
-                        File.WriteAllBytes(cacheFile, asmBytes);
-                        CreateFromCache(asmMeta, cacheFile, fullPath);
-                    }
-                    else
-                    {
-                        Logger.Warn(String.Format(Messages.FileMissing, asmMeta.Name, asmMeta.Version));
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(String.Format(Messages.FileError, asmMeta.Name, asmMeta.Version), e);
-            }
-        }
-
-        private bool CreateFromCache(AssemblyInformation asmMeta, string cacheFile, string fullPath)
-        {
-            if (File.Exists(cacheFile))
-            {
-                string baseDirectory = Path.GetDirectoryName(fullPath);
-                if (!Directory.Exists(baseDirectory))
-                    Directory.CreateDirectory(baseDirectory);
-                File.Copy(cacheFile, fullPath, true);
-                Logger.Debug(String.Format(Messages.FileUpdated, asmMeta.Name, asmMeta.Version));
-                return true;
-            }
-            return false;
-        }
-
-        private bool IsDifferent(AssemblyInformation asm, string fullPath)
-        {
-            return !File.Exists(fullPath) || !CheckSum(asm.MD5, fullPath);
-        }
-
-        internal static string MD5Sum(byte[] fileByte)
-        {
-            using (var md5 = MD5.Create())
-            {
-                byte[] hash = md5.ComputeHash(fileByte);
-                var sb = new StringBuilder();
-                for (int i = 0; i < hash.Length; i++)
-                {
-                    sb.Append(hash[i].ToString("X2"));
-                }
-                var md5sum = sb.ToString();
-                return md5sum;
-            }
-        }
-
-        private bool CheckSum(string asmHash, string filename)
-        {
-            Logger.Debug(DebugString.Format(Messages.CheckSum, asmHash, filename));
-            byte[] fileByte = File.ReadAllBytes(filename);
-            return MD5Sum(fileByte) == asmHash;
-        }
-
-        internal string GetDoverDirectory()
-        {
-            string appFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\Dover";
-
-            string server = company.Server;
-            int port = server.LastIndexOf(":");
-            if (port > 0)
-                server = server.Substring(0, port); // Hana servers have :
-            appFolder = Path.Combine(appFolder, server + "-" + company.CompanyDB);
-            return appFolder;
         }
     }
 }

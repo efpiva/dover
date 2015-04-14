@@ -7,3 +7,6 @@
 [submodule "Examples"]
 	path = Examples
 	url = https://github.com/efpiva/DoverTutorial
+[submodule "LicenseService"]
+	path = LicenseService
+	url = git@github.com:efpiva/License.git

@@ -1,1 +1,1 @@
-﻿Select U_asm from [@DOVER_LICENSE_BIN]
+﻿Select U_asm from [@DOVER_LICENSE_BIN] where U_Code = '{0}'

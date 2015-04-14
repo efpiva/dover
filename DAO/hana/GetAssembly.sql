@@ -1,4 +1,4 @@
 ﻿SELECT "U_Asm" 
 FROM "@DOVER_MODULES_BIN" 
-WHERE "U_Code" = '{0}' 
+WHERE "U_Code" = '{0}'
 ORDER BY "Code"

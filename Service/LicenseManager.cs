@@ -33,192 +33,83 @@ using System.Security.Cryptography.Xml;
 using System.Security.Cryptography;
 using Dover.Framework.Model.License;
 using Dover.Framework.Monad;
+using Dover.Framework.Attribute;
+using Dover.Framework.Interface;
+using Dover.Framework.Factory;
 
 namespace Dover.Framework.Service
 {
-    /// <summary>
-    /// Stub class
-    /// </summary>
-    internal class LicenseManager
+
+    internal class LicenseVerifyAddin : MarshalByRefObject
     {
-        private SAPbouiCOM.Application sapApp;
         private LicenseDAO licenseDAO;
-        private AssemblyDAO asmDAO;
-        public ILogger Logger { get; set; }
+        private SAPbouiCOM.Application sapApp;
 
-        byte[] clrToken = null;
-        private const string licensePath = "Dover.Framework.publicKey.xml";
-
-        public LicenseManager(AssemblyDAO asmDAO, LicenseDAO licenseDAO, SAPbouiCOM.Application sapApp)
+        public LicenseVerifyAddin(LicenseDAO licenseDAO, SAPbouiCOM.Application sapApp)
         {
-            this.sapApp = sapApp;
             this.licenseDAO = licenseDAO;
-            this.asmDAO = asmDAO;
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Dover.Framework.publicToken.txt"))
-            {
-                if (stream != null)
-                {
-                    using (var streamReader = new StreamReader(stream))
-                    {
-                        // publicToken should be stored as an hex array.
-                        string hexKey = streamReader.ReadToEnd().Trim();
-                        if ((hexKey.Length % 2) == 0)
-                        {
-                            clrToken = new byte[hexKey.Length/2];
-                            for (int i = 0; i < clrToken.Length; ++i)
-                            {
-                                clrToken[i] = Convert.ToByte(hexKey.Substring(i*2, 2), 16);
-                            }
-                        }
-                    }
-                }
-            }
+            this.sapApp = sapApp;
         }
 
-        internal bool HasLicense()
+        internal bool AddinIsValid(string addin, out DateTime dueDate)
         {
-            return GetPublicKey() != null;
-        }
-
-        internal List<AssemblyInformation> ListAllAddins()
-        {
-            var retValue = asmDAO.GetAssembliesInformation(AssemblyType.Addin);
-            foreach (var asm in retValue)
+            string xmlKey;
+            string licenseXml;
+            dueDate = DateTime.MinValue;
+            // TOOD: colocar appdomain com addin.
+            AddInAttribute addinAttribute = getAddinAttribute(addin);
+            if (string.IsNullOrWhiteSpace(addinAttribute.LicenseFile))
             {
-                asm.ExpireDate = DateTime.MinValue;
-            }
-            return retValue;
-        }
-
-        internal List<AssemblyInformation> ListAddins()
-        {
-            var retValue = asmDAO.GetAssembliesInformation(AssemblyType.Addin);
-            List<AssemblyInformation> filteredReturn = new List<AssemblyInformation>();
-
-            string publicKey = GetPublicKey();
-            if (publicKey == null)
-            {
-                filteredReturn = retValue;
-            }
-            else
-            {
-                try
-                {
-                    string xml = licenseDAO.GetLicense();
-                    if (xml != null && CheckSignature(xml, publicKey))
-                    {
-                        License license = xml.Deserialize<License>();
-                        Dictionary<string, DateTime> dueDates = getDueDates(license.Items);
-
-                        foreach (var asm in retValue)
-                        {
-                            DateTime dueDate;
-                            dueDates.TryGetValue(asm.Name, out dueDate);
-
-                            if (dueDate < GetDate())
-                            {
-                                Logger.Error(string.Format(Messages.NoLicenseError, asm.Name));
-                            }
-                            else
-                            {
-                                filteredReturn.Add(asm);
-                            }
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(Messages.InvalidLicense);
-                    Logger.Debug(Messages.InvalidLicense, e);
-                }
-            }
-
-            return filteredReturn;
-        }
-
-        private Dictionary<string, DateTime> getDueDates(List<LicenseModule> list)
-        {
-            Dictionary<string, DateTime> ret = new Dictionary<string, DateTime>();
-            foreach (var l in list)
-            {
-                ret.Add(l.Name, l.ExpirationDate);
-            }
-            return ret;
-        }
-
-        internal bool SaveLicense(string xmlPath)
-        {
-            string xml = null;
-            if (File.Exists(xmlPath))
-            {
-                xml = File.ReadAllText(xmlPath);
-            }
-            else
-            {
-                return false;
-            }
-
-            string publicKey = GetPublicKey();
-            if (publicKey == null)
-            {
-                throw new ArgumentException(); // shoulnd't be here. No license == no Manage License Menu.
-            }
-
-            if (CheckSignature(xml, publicKey))
-            {
-                licenseDAO.SaveLicense(xml);
+                dueDate = DateTime.MaxValue;
                 return true;
             }
+            xmlKey = readKeyXML(addin, addinAttribute.LicenseFile);
 
-            return false;
-        }
+            if (string.IsNullOrWhiteSpace(xmlKey) || string.IsNullOrWhiteSpace(addinAttribute.Namespace))
+                return false;
 
-        internal DateTime GetAddInExpireDate(string module)
-        {
-            string publicKey = GetPublicKey();
-            if (publicKey == null)
-            {
-                return DateTime.MaxValue; // no license control.
-            }
+            licenseXml = licenseDAO.GetLicense(addinAttribute.Namespace);
 
-            string xml = licenseDAO.GetLicense();
-
-            if (xml == null || !CheckSignature(xml, publicKey))
-            {
-                return DateTime.MinValue; // no license found, but license control enabled.
-            }
+            if (licenseXml == null || !CheckSignature(licenseXml, xmlKey))
+                return false;
 
             string sysNumber = sapApp.Company.SystemId;
             string installNumber = sapApp.Company.InstallationId;
 
-            License licenseFile = xml.Deserialize<License>();
+            LicenseHeader licenseFile = licenseXml.Deserialize<LicenseHeader>();
 
             if (!string.IsNullOrEmpty(licenseFile.SystemNumber) &&
                 !string.IsNullOrEmpty(licenseFile.InstallNumber) &&
                 licenseFile.SystemNumber == sysNumber && licenseFile.InstallNumber == installNumber)
             {
-                List<LicenseModule> licenseModules = licenseFile.Items.Where(i => i.Name == module).ToList(); ;
-                LicenseModule licenseModule = null;
+                List<LicenseModule> licenseModules = licenseFile.Items.Where(i => i.Name == addin).ToList(); ;
                 if (licenseModules != null && licenseModules.Count() > 0)
                 {
-                    licenseModule = licenseModules.First();
-                }
-
-                if (licenseModule != null)
-                {
-                    return licenseModule.ExpirationDate;
+                    dueDate = licenseModules[0].ExpirationDate;
                 }
             }
 
-            return DateTime.MinValue;
-        }
-
-        internal void AddInValid(string asm, out bool isValid, out bool hasLicense)
-        {
-            isValid = CheckAssembly(asm, clrToken);
-            hasLicense = GetDate() < GetAddInExpireDate(asm);
+            return GetDate() < dueDate;
         }
         
+        private AddInAttribute getAddinAttribute(string addin)
+        {
+            Assembly asm = AppDomain.CurrentDomain.Load(addin);
+            if (asm == null)
+                throw new ArgumentException("License public key not found");
+
+
+            foreach (var type in asm.GetTypes())
+            {
+                object[] custAttr = type.GetCustomAttributes(typeof(AddInAttribute), true);
+                if (custAttr.Count() > 0)
+                {
+                    return (AddInAttribute)custAttr[0];
+                }
+            }
+            return null;
+        }
+
         private DateTime GetDate()
         {
             return licenseDAO.GetDate();
@@ -244,77 +135,169 @@ namespace Dover.Framework.Service
             return false;
         }
 
-        private string GetPublicKey()
+        private string readKeyXML(string addin, string licenseFileResource)
         {
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(licensePath))
+            Assembly asm = AppDomain.CurrentDomain.Load(addin);
+            if (asm == null)
+                throw new ArgumentException("License public key not found");
+
+            using (var xmlresource = asm.GetManifestResourceStream(licenseFileResource))
             {
-                if (stream != null)
+                if (xmlresource == null)
+                    throw new ArgumentException("Resource not found");
+
+                using (StreamReader sr = new StreamReader(xmlresource))
                 {
-                    using (var reader = new StreamReader(stream)) 
+                    return sr.ReadToEnd();
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Stub class
+    /// </summary>
+    [Transaction]
+    internal class LicenseManager : MarshalByRefObject
+    {
+        private LicenseDAO licenseDAO;
+        private FileUpdate fileUpdate;
+        private AssemblyDAO asmDAO;
+
+        public ILogger Logger { get; set; }
+
+        public LicenseManager(AssemblyDAO asmDAO, FileUpdate fileUpdate,
+            LicenseDAO licenseDAO)
+        {
+            this.licenseDAO = licenseDAO;
+            this.asmDAO = asmDAO;
+            this.fileUpdate = fileUpdate;
+        }
+
+        internal List<AssemblyInformation> ListAllAddins()
+        {
+            return asmDAO.GetAllAssembliesInformation(AssemblyType.Addin);
+        }
+
+        internal List<AssemblyInformation> ListAddins()
+        {
+            return asmDAO.GetAssembliesInformation(AssemblyType.Addin);
+        }
+
+        [Transaction]
+        protected internal virtual void SaveLicense(string xmlPath)
+        {
+            string xml = null;
+            if (File.Exists(xmlPath))
+            {
+                xml = File.ReadAllText(xmlPath);
+            }
+            else
+            {
+                throw new ArgumentException();
+            }
+
+            LicenseHeader licenseFile = xml.Deserialize<LicenseHeader>();
+            string licenseID = licenseDAO.SaveLicense(xml, licenseFile.LicenseNamespace);
+
+            UpdateAddinDueDateByNamespace(licenseFile.LicenseNamespace);
+        }
+
+        private void UpdateAddinDueDateByNamespace(string licenseNamespace)
+        {
+            List<string> addins = licenseDAO.getAddinsByNamespace(licenseNamespace);
+            licenseDAO.UpdateNamespaceDueDate(licenseNamespace, DateTime.MinValue);
+
+            var setup = new AppDomainSetup();
+            setup.ApplicationName = "Dover.ConfigureDomain";
+            setup.ApplicationBase = AppDomain.CurrentDomain.BaseDirectory;
+            AppDomain configureDomain = AppDomain.CreateDomain("ConfigureDomain", null, setup);
+            try
+            {
+                configureDomain.SetData("assemblyName", "tempDomain");
+                IApplication app = (IApplication)configureDomain.CreateInstanceAndUnwrap("Framework",
+                    "Dover.Framework.Application");
+                SAPServiceFactory.PrepareForInception(configureDomain);
+                LicenseManager licenseManager = app.Resolve<LicenseManager>();
+                foreach (var addin in addins)
+                {
+                    DateTime dueDate;
+                    if (licenseManager.AddinIsValid(addin, out dueDate))
                     {
-                        return reader.ReadToEnd();
+                        licenseDAO.UpdateAddinDueDate(addin, dueDate);
                     }
                 }
             }
-            return null;
+            finally
+            {
+                AppDomain.Unload(configureDomain);
+            }
         }
 
-        private static bool CheckToken(string assembly, byte[] expectedToken)
+        internal void UpdateAddinDueDate(string addin)
         {
-            if (assembly == null)
-                throw new ArgumentNullException("assembly");
-            if (expectedToken == null)
-                throw new ArgumentNullException("expectedToken");
+            if (addin == "Framework")
+            {
+                licenseDAO.UpdateAddinDueDate(addin, DateTime.MaxValue);
+            }
+            else
+            {
+                DateTime dueDate;
+                if (AddinIsValid(addin, out dueDate))
+                {
+                    licenseDAO.UpdateAddinDueDate(addin, dueDate);
+                }
+            }
+        }
 
+        internal DateTime GetAddinDueDate(string module)
+        {
+            return licenseDAO.GetAddInDueDate(module);
+        }
+
+        internal bool AddinIsValid(string addin, out DateTime dueDate)
+        {
+            dueDate = DateTime.MinValue;
+
+            var setup = new AppDomainSetup();
+            setup.ApplicationName = "Dover.ConfigureDomain";
+            string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDirectory);
+            setup.ApplicationBase = tempDirectory;
+            AppDomain configureDomain = AppDomain.CreateDomain("ConfigureDomain", null, setup);
             try
             {
-                // Get the public static key token of the given assembly 
-                Assembly asm = Assembly.LoadFrom(assembly);
-                byte[] asmToken = asm.GetName().GetPublicKeyToken();
+                AssemblyInformation asm = asmDAO.GetAssemblyInformation(addin, AssemblyType.Addin);
+                fileUpdate.UpdateAppDataFolder(asm, tempDirectory);
 
-                // Compare it to the given token
-                if (asmToken.Length != expectedToken.Length)
-                    return false;
+                configureDomain.SetData("assemblyName", "tempDomain");
+                IApplication app = (IApplication)configureDomain.CreateInstanceAndUnwrap("Framework",
+                    "Dover.Framework.Application");
+                SAPServiceFactory.PrepareForInception(configureDomain);
+                LicenseVerifyAddin licenseManager = app.Resolve<LicenseVerifyAddin>();
 
-                for (int i = 0; i < asmToken.Length; i++)
-                    if (asmToken[i] != expectedToken[i])
-                        return false;
-
-                return true;
+                if (asm != null)
+                {
+                    return licenseManager.AddinIsValid(addin, out dueDate);
+                }
             }
-            catch (System.IO.FileNotFoundException)
+            catch (Exception e)
             {
-                // couldn't find the assembly
-                return false;
+                Logger.Error("Unhandled error", e);
             }
-            catch (BadImageFormatException)
+            finally
             {
-                // the given file couldn't get through the loader
-                return false;
-            }
-        }
-
-        [DllImport("mscoree.dll", CharSet = CharSet.Unicode)]
-        private static extern bool StrongNameSignatureVerificationEx(string wszFilePath, bool fForceVerification, ref bool pfWasVerified);
-
-        private bool CheckAssembly(string asmName, byte[] clrToken)
-        {
-            bool notForced = false;
-            if (clrToken == null || string.IsNullOrWhiteSpace(asmName)) // Token if for dummies.
-                return true;
-
-            string asmFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addin", asmName, asmName + ".dll");
-
-            bool verified = StrongNameSignatureVerificationEx(asmFullPath, false, ref notForced);
-
-            if (verified && notForced)
-            {
-                bool isOK = CheckToken(asmFullPath, clrToken);
-
-                return isOK && verified && notForced;
+                AppDomain.Unload(configureDomain);
+                try
+                {
+                    Directory.Delete(tempDirectory, true);
+                }
+                catch (Exception e)
+                {
+                    Logger.Debug(string.Format("Directory {0} not cleaned", tempDirectory), e);
+                }
             }
             return false;
         }
-
     }
 }

@@ -47,6 +47,12 @@ namespace Dover.Framework.DAO
             return b1DAO.ExecuteSqlForList<AssemblyInformation>(sql);
         }
 
+        internal override List<AssemblyInformation> GetAllAssembliesInformation(AssemblyType type)
+        {
+            String sql = string.Format(this.GetSQL("GetAllAssembliesInformation.sql"), AssemblyInformation.ConvertTypeToCode(type));
+            return b1DAO.ExecuteSqlForList<AssemblyInformation>(sql);
+        }
+
         internal override byte[] GetAssembly(AssemblyInformation asm)
         {
             List<String> hexFile = b1DAO.ExecuteSqlForList<String>(

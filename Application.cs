@@ -154,8 +154,15 @@ namespace Dover.Framework
             if (loader.StartThis()) // in case of error, stop addin but do not close Dover.
             {
                 ManualResetEvent shutdownEvent = (ManualResetEvent)AppDomain.CurrentDomain.GetData("shutdownEvent");
+                ManualResetEvent bootEvent = (ManualResetEvent)AppDomain.CurrentDomain.GetData("bootEvent");
+                bootEvent.Set();
                 Sponsor<ManualResetEvent> shutdownEventSponsor = new Sponsor<ManualResetEvent>(shutdownEvent);
                 shutdownEvent.WaitOne(); // Wait until shutdown event is signaled.
+            }
+            else
+            {
+                ManualResetEvent bootEvent = (ManualResetEvent)AppDomain.CurrentDomain.GetData("bootEvent");
+                bootEvent.Set();
             }
         }
 

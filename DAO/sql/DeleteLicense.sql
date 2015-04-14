@@ -1,1 +1,1 @@
-﻿delete from [@DOVER_LICENSE_BIN]
+﻿delete from [@DOVER_LICENSE_BIN] WHERE U_Code = '{0}'

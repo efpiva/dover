@@ -349,15 +349,6 @@ namespace Dover.Framework.Service {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Addin {0} is invalid..
-        /// </summary>
-        internal static string NotSigned {
-            get {
-                return ResourceManager.GetString("NotSigned", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Permission.
         /// </summary>
         internal static string Permission {

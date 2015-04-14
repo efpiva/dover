@@ -27,10 +27,18 @@ namespace Dover.Framework.DAO
 {
     internal interface LicenseDAO
     {
-        void SaveLicense(string xml);
+        string SaveLicense(string xml, string licenseNamespace);
 
-        string GetLicense();
+        string GetLicense(string licenseNamespace);
 
         DateTime GetDate();
+
+        DateTime GetAddInDueDate(string addin);
+
+        List<string> getAddinsByNamespace(string licenseNamespace);
+
+        void UpdateNamespaceDueDate(string licenseNamespace, DateTime dateTime);
+
+        void UpdateAddinDueDate(string addin, DateTime dueDate);
     }
 }

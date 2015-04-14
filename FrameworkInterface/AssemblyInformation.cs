@@ -134,8 +134,6 @@ namespace Dover.Framework.Model
             }
         }
 
-        public DateTime ExpireDate { get; set; }
-
         public string FileName { get; set; }
 
         internal List<AssemblyInformation> Dependencies { get; set; }

@@ -53,5 +53,7 @@ namespace Dover.Framework.DAO
         internal abstract void SaveAssemblyDependency(AssemblyInformation newAsm, string dependencyCode);
 
         internal abstract void DeleteOrphanDependency();
+
+        internal abstract List<AssemblyInformation> GetAllAssembliesInformation(AssemblyType assemblyType);
     }
 }
