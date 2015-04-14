@@ -60,5 +60,15 @@ namespace Dover.Framework.Attribute
         /// Fully Qualified Name of the resource that has the ChangeLog information
         /// </summary>
         public string ChangeLogResource { get; set; }
+
+        /// <summary>
+        /// Fully Qualified Name of the resource that has the public key for this addin.
+        /// </summary>
+        public string LicenseFile { get; set; }
+
+        /// <summary>
+        /// Namespace for this addin. Used for license control.
+        /// </summary>
+        public string Namespace { get; set; }
     }
 }
