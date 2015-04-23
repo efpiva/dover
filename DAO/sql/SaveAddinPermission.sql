@@ -1,1 +1,1 @@
-﻿UPDATE [@DOVER_MODULES] Set U_Status = '{0}' WHERE U_Name = '{1}'
+﻿UPDATE [@DOVER_MODULES] Set U_Status = '{0}' WHERE Code = '{1}'

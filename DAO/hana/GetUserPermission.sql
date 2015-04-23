@@ -1,4 +1,4 @@
-﻿SELECT "@DOVER_MODULES"."U_Name" AS "AddInName", 
+﻿SELECT "@DOVER_MODULES"."Code" AS "AddinCode", "@DOVER_MODULES"."U_Name" AS "AddInName", 
     CASE IFNULL("@DOVER_MODULES_USER"."U_Status", "@DOVER_MODULES"."U_Status") 
         WHEN 'D' THEN "@DOVER_MODULES"."U_Status" 
         ELSE IFNULL("@DOVER_MODULES_USER"."U_Status", "@DOVER_MODULES"."U_Status") 

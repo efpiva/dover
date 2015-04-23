@@ -39,14 +39,16 @@ namespace Dover.Framework.Service
         private MenuEventHandler menuHandler;
         private BusinessOneUIDAO uiDAO;
         private LicenseManager licenseManager;
+        private AssemblyDAO asmDAO;
 
         public AddinLoader(MenuEventHandler menuHandler, PermissionManager permissionManager,
-             BusinessOneUIDAO uiDAO, LicenseManager licenseManager)
+             BusinessOneUIDAO uiDAO, LicenseManager licenseManager, AssemblyDAO asmDAO)
         {
             this.permissionManager = permissionManager;
             this.uiDAO = uiDAO;
             this.menuHandler = menuHandler;
             this.licenseManager = licenseManager;
+            this.asmDAO = asmDAO;
         }
 
         void IAddinLoader.StartThis()
@@ -55,14 +57,16 @@ namespace Dover.Framework.Service
             try
             {
                 DateTime dueDate;
-                if (!licenseManager.AddinIsValid(thisAsmName, out dueDate)) 
+                Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
+                string thisAsmCode = GetThisAsmCode(thisAsm);
+
+                if (!licenseManager.AddinIsValid(thisAsmCode, out dueDate)) 
                 {
                     // We shouldn´t be here. bye.
-                    throw new Exception(string.Format(Messages.NoLicenseError, thisAsmName));
-                } 
+                    throw new Exception(string.Format(Messages.NoLicenseError, thisAsmCode));
+                }
 
-                Assembly thisAsm = AppDomain.CurrentDomain.Load(thisAsmName);
-                RegisterObjects(thisAsm);
+                ContainerManager.RegisterAssembly(thisAsm);
                 StartMenu(thisAsm);
             }
             catch (Exception e)
@@ -70,6 +74,25 @@ namespace Dover.Framework.Service
                 Logger.Error(string.Format(Messages.StartThisError, thisAsmName), e);
                 throw e;
             }
+        }
+
+        private string GetThisAsmCode(Assembly thisAsm)
+        {
+            var types = (from type in thisAsm.GetTypes()
+                         where type.IsClass
+                         select type);
+
+            foreach (var type in types)
+            {
+                var addinAttributes = type.GetCustomAttributes(typeof(AddInAttribute), true);
+                AddInAttribute addinAttribute;
+                if (addinAttributes.Count() > 0)
+                {
+                    addinAttribute = (AddInAttribute)addinAttributes[0];
+                    return asmDAO.GetAssemblyCode(addinAttribute.Name, addinAttribute.Namespace, Model.AssemblyType.Addin);
+                }
+            }
+            return null;
         }
 
         void IAddinLoader.StartMenu(Assembly asm)
@@ -144,18 +167,6 @@ namespace Dover.Framework.Service
             if (menus.Count > 0)
             {
                 uiDAO.ProcessMenuAttribute(menus);
-            }
-        }
-
-        private void RegisterObjects(Assembly thisAsm)
-        {
-            ContainerManager.RegisterAssembly(thisAsm);
-            foreach (var asm in thisAsm.GetReferencedAssemblies())
-            {
-                if (permissionManager.AddInEnabled(asm.Name))
-                {
-                    ContainerManager.RegisterAssembly(Assembly.Load(asm));
-                }
             }
         }
     }

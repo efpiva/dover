@@ -10,6 +10,7 @@ using SAPbouiCOM;
 using Dover.LicenseGenerator;
 using Dover.Framework.Model.License;
 using System.Collections.Generic;
+using Dover.Framework.Service;
 
 namespace FrameworkTest
 {
@@ -127,7 +128,7 @@ namespace FrameworkTest
         [TestMethod]
         public void InstallI18NAddinWithLicenseControl()
         {
-            InstallAddin(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
+            InstallAddin("DOVER_WL", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
                                 "..\\..\\..\\Examples\\testAddins\\withLicense\\I18NExample.dover"),
                 "I18NExample",
                 new List<UpdateDbValue>() {
@@ -148,7 +149,7 @@ namespace FrameworkTest
         [TestMethod]
         public void InstallI18NAddin()
         {
-            InstallAddin(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
+            InstallAddin("DOVER_NL", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
                             "..\\..\\..\\Examples\\testAddins\\withoutLicense\\I18NExample.dover"),
                  "I18NExample",
                 new List<UpdateDbValue>() {
@@ -166,7 +167,35 @@ namespace FrameworkTest
                 });
         }
         
-        private void InstallAddin(string filePath, string addinName, List<UpdateDbValue> updateDbList)
+        [TestMethod]
+        public void InstallAddinsWithDifferentNamespace()
+        {
+            InstallI18NAddin();
+            InstallI18NAddinWithLicenseControl();
+        }
+
+        [TestMethod]
+        public void InstallAddinsWithDifferentNamespaceAndRestart()
+        {
+            InstallLicense();
+            InstallI18NAddin();
+            InstallI18NAddinWithLicenseControl();
+
+            DoverSetup.shutdownDover();
+            DoverSetup.bootDover(app);
+            b1Company = app.Resolve<SAPbobsCOM.Company>();
+            b1App = app.Resolve<SAPbouiCOM.Application>();
+
+            Form adminForm = UIHelper.GetFormAfterAction("dover.formAdmin", b1App, () => b1App.Menus.Item("doverAdmin").Activate());
+            string dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
+            XDocument xdoc = XDocument.Parse(dtxml);
+
+            CheckAddinStatus("DOVER_WL", "I18NExample", "Y", "R", xdoc);
+            CheckAddinStatus("DOVER_NL", "I18NExample", "Y", "R", xdoc);
+            AssertNoFrameworkError();
+        }
+
+        private void InstallAddin(string addinNamespace, string filePath, string addinName, List<UpdateDbValue> updateDbList)
         {
             Form adminForm = UIHelper.GetFormAfterAction("dover.formAdmin", b1App, () => b1App.Menus.Item("doverAdmin").Activate() );
             EditText fileEdit = (SAPbouiCOM.EditText)adminForm.Items.Item("edArquivo").Specific;
@@ -190,7 +219,7 @@ namespace FrameworkTest
             dbChangeForm.Items.Item("btWarn").Click();
             dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
             xdoc = XDocument.Parse(dtxml);
-            CheckAddinStatus(addinName, "N", "S", xdoc);
+            CheckAddinStatus(addinNamespace, addinName, "N", "S", xdoc);
             adminForm.Close();
             AssertNoFrameworkError();
         }
@@ -208,7 +237,7 @@ namespace FrameworkTest
             string dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
             XDocument xdoc = XDocument.Parse(dtxml);
 
-            CheckAddinStatus("I18NExample", "Y", "R", xdoc);
+            CheckAddinStatus("DOVER_NL", "I18NExample", "Y", "R", xdoc);
             AssertNoFrameworkError();
         }
 
@@ -223,7 +252,7 @@ namespace FrameworkTest
 
             for (int i = 0; i < adminDT.Rows.Count; ++i)
             {
-                if ((string)adminDT.GetValue("Name", i) == "I18NExample")
+                if ((string)adminDT.GetValue("Name", i) == "I18NExample" && (string)adminDT.GetValue("Namespace", i) == "DOVER_NL")
                 {
                     adminGrid.Rows.SelectedRows.Add(i);
                     startButton.Enabled = true;
@@ -231,7 +260,43 @@ namespace FrameworkTest
                     string dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
                     XDocument xdoc = XDocument.Parse(dtxml);
 
-                    CheckAddinStatus("I18NExample", "Y", "R", xdoc);
+                    CheckAddinStatus("DOVER_NL", "I18NExample", "Y", "R", xdoc);
+                    return;
+                }
+            }
+            Assert.Fail("No I18NExample module found");
+            AssertNoFrameworkError();
+        }
+
+        [TestMethod]
+        public void InstallI18NAddinAndStartStop()
+        {
+            InstallI18NAddin();
+            Form adminForm = UIHelper.GetFormAfterAction("dover.formAdmin", b1App, () => b1App.Menus.Item("doverAdmin").Activate() );
+            Item startButton = adminForm.Items.Item("btStart");
+            Item stopButton = adminForm.Items.Item("btStop");
+            DataTable adminDT = adminForm.DataSources.DataTables.Item("modDT");
+            Grid adminGrid = (Grid)adminForm.Items.Item("gridArq").Specific;
+
+            for (int i = 0; i < adminDT.Rows.Count; ++i)
+            {
+                if ((string)adminDT.GetValue("Name", i) == "I18NExample" && (string)adminDT.GetValue("Namespace", i) == "DOVER_NL")
+                {
+                    adminGrid.Rows.SelectedRows.Add(i);
+                    startButton.Enabled = true;
+                    startButton.Click();
+                    string dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
+                    XDocument xdoc = XDocument.Parse(dtxml);
+
+                    CheckAddinStatus("DOVER_NL", "I18NExample", "Y", "R", xdoc);
+                    adminGrid.Rows.SelectedRows.Add(i);
+                    stopButton.Enabled = true;
+                    stopButton.Click();
+
+                    dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
+                    xdoc = XDocument.Parse(dtxml);
+
+                    CheckAddinStatus("DOVER_NL", "I18NExample", "Y", "S", xdoc);
                     return;
                 }
             }
@@ -251,7 +316,7 @@ namespace FrameworkTest
 
             for (int i = 0; i < adminDT.Rows.Count; ++i)
             {
-                if ((string)adminDT.GetValue("Name", i) == "I18NExample")
+                if ((string)adminDT.GetValue("Name", i) == "I18NExample" && (string)adminDT.GetValue("Namespace", i) == "DOVER_NL")
                 {
                     adminGrid.Rows.SelectedRows.Add(i);
                     initializeButton.Enabled = true;
@@ -259,14 +324,14 @@ namespace FrameworkTest
                     string dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
                     XDocument xdoc = XDocument.Parse(dtxml);
 
-                    CheckAddinStatus("I18NExample", "Y", "S", xdoc);
+                    CheckAddinStatus("DOVER_NL", "I18NExample", "Y", "S", xdoc);
                     startButton.Enabled = true;
                     adminGrid.Rows.SelectedRows.Add(i);
                     startButton.Click();
                     
                     dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
                     xdoc = XDocument.Parse(dtxml);
-                    CheckAddinStatus("I18NExample", "Y", "R", xdoc);
+                    CheckAddinStatus("DOVER_NL", "I18NExample", "Y", "R", xdoc);
 
                     return;
                 }
@@ -321,7 +386,7 @@ namespace FrameworkTest
             string dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
             XDocument xdoc = XDocument.Parse(dtxml);
 
-            CheckAddinStatus("I18NExample", "Y", "R", xdoc);
+            CheckAddinStatus("DOVER_WL", "I18NExample", "Y", "R", xdoc);
         }
 
         [TestMethod]
@@ -338,10 +403,10 @@ namespace FrameworkTest
             string dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
             XDocument xdoc = XDocument.Parse(dtxml);
 
-            CheckAddinStatus("I18NExample", "N", "S", xdoc);
+            CheckAddinStatus("DOVER_WL", "I18NExample", "N", "S", xdoc);
         }
 
-        private void CheckAddinStatus(string addinName, string installed, string status, XDocument xdoc)
+        private void CheckAddinStatus(string addinNamespace, string addinName, string installed, string status, XDocument xdoc)
         {
             bool hasElement = (from dt in xdoc.Elements("DataTable")
                         from rows in dt.Elements("Rows")
@@ -365,10 +430,16 @@ namespace FrameworkTest
                                    && (string)cell.Element("Value") == status
                             select cell
                             ).Any()
+                        &&
+                            (from cell in cells.Elements("Cell")
+                                where (string)cell.Element("ColumnUid") == "Namespace"
+                                   && (string)cell.Element("Value") == addinNamespace
+                            select cell
+                            ).Any()
                         select dt).Any();
             Assert.IsTrue(hasElement, 
-                string.Format("CheckAddinSatatus: addin {0}, installed {1} and status {2} not found",
-                addinName, installed, status));
+                string.Format("CheckAddinSatatus: Namespace {3}, addin {0}, installed {1} and status {2} not found on datatable",
+                addinName, installed, status, addinNamespace));
         }
 
         private int CheckDBChangeCount(XDocument xdoc)

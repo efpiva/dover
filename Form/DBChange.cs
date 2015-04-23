@@ -33,6 +33,8 @@ namespace Dover.Framework.Form
     {
         internal DataTable DBChangeDT;
         internal Admin BaseForm { get; set; }
+        internal string addinName;
+        internal string addinNamespace; 
         private Button confirm, cancel;
 
         public override void OnInitializeComponent()
@@ -48,7 +50,7 @@ namespace Dover.Framework.Form
         protected virtual void confirm_ClickAfter(object sboObject, SBOItemEventArg pVal)
         {
             if (BaseForm != null)
-                BaseForm.InstallAddin();
+                BaseForm.InstallAddin(addinName, addinNamespace);
             this.UIAPIRawForm.Close();
         }
 

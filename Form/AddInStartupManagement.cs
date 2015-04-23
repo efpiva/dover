@@ -128,11 +128,11 @@ namespace Dover.Framework.Form
             if (args.ColUID == "Status")
             {
                 var selectedRow = args.Row;
-                var name = generalGrid.DataTable.Columns.Item("Name").Cells.Item(selectedRow).Value.ToString();
+                var code = generalGrid.DataTable.Columns.Item("Code").Cells.Item(selectedRow).Value.ToString();
                 var status = generalGrid.DataTable.Columns.Item("Status").Cells.Item(selectedRow).Value.ToString();
 
                 Permission permission = PermissionManager.ParsePermissionStr(status);
-                PermissionManager.ConfigureAddIn(name, permission);
+                PermissionManager.ConfigureAddIn(code, permission);
 
                 if (this.UIAPIRawForm.Mode == BoFormMode.fm_UPDATE_MODE)
                     this.UIAPIRawForm.Mode = BoFormMode.fm_OK_MODE;
@@ -158,11 +158,11 @@ namespace Dover.Framework.Form
                 var index = gridUser.Rows.SelectedRows.Item(0, BoOrderType.ot_RowOrder);
                 var username = gridUser.DataTable.Columns.Item("UserName").Cells.Item(index).Value.ToString();
                 var selectedRow = args.Row;
-                var name = gridCfg.DataTable.Columns.Item("Name").Cells.Item(selectedRow).Value.ToString();
+                var code = gridCfg.DataTable.Columns.Item("Code").Cells.Item(selectedRow).Value.ToString();
                 var status = gridCfg.DataTable.Columns.Item("Status").Cells.Item(selectedRow).Value.ToString();
 
                 Permission permission = PermissionManager.ParsePermissionStr(status);
-                PermissionManager.ConfigureAddIn(name, username, permission);
+                PermissionManager.ConfigureAddIn(code, username, permission);
 
                 if (this.UIAPIRawForm.Mode == BoFormMode.fm_UPDATE_MODE)
                     this.UIAPIRawForm.Mode = BoFormMode.fm_OK_MODE;

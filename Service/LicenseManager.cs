@@ -56,7 +56,6 @@ namespace Dover.Framework.Service
             string xmlKey;
             string licenseXml;
             dueDate = DateTime.MinValue;
-            // TOOD: colocar appdomain com addin.
             AddInAttribute addinAttribute = getAddinAttribute(addin);
             if (string.IsNullOrWhiteSpace(addinAttribute.LicenseFile))
             {
@@ -205,7 +204,7 @@ namespace Dover.Framework.Service
 
         private void UpdateAddinDueDateByNamespace(string licenseNamespace)
         {
-            List<string> addins = licenseDAO.getAddinsByNamespace(licenseNamespace);
+            List<string> addinsCode = licenseDAO.getAddinsByNamespace(licenseNamespace);
             licenseDAO.UpdateNamespaceDueDate(licenseNamespace, DateTime.MinValue);
 
             var setup = new AppDomainSetup();
@@ -219,12 +218,12 @@ namespace Dover.Framework.Service
                     "Dover.Framework.Application");
                 SAPServiceFactory.PrepareForInception(configureDomain);
                 LicenseManager licenseManager = app.Resolve<LicenseManager>();
-                foreach (var addin in addins)
+                foreach (var addinCode in addinsCode)
                 {
                     DateTime dueDate;
-                    if (licenseManager.AddinIsValid(addin, out dueDate))
+                    if (licenseManager.AddinIsValid(addinCode, out dueDate))
                     {
-                        licenseDAO.UpdateAddinDueDate(addin, dueDate);
+                        licenseDAO.UpdateAddinDueDate(addinCode, dueDate);
                     }
                 }
             }
@@ -234,30 +233,32 @@ namespace Dover.Framework.Service
             }
         }
 
-        internal void UpdateAddinDueDate(string addin)
+        internal void UpdateAddinDueDate(AssemblyInformation asm)
         {
-            if (addin == "Framework")
+            if (asm.Type == AssemblyType.Core)
             {
-                licenseDAO.UpdateAddinDueDate(addin, DateTime.MaxValue);
+                licenseDAO.UpdateAddinDueDate(asm.Code, DateTime.MaxValue);
             }
             else
             {
                 DateTime dueDate;
-                if (AddinIsValid(addin, out dueDate))
+                if (AddinIsValid(asm.Code, out dueDate))
                 {
-                    licenseDAO.UpdateAddinDueDate(addin, dueDate);
+                    licenseDAO.UpdateAddinDueDate(asm.Code, dueDate);
                 }
             }
         }
 
-        internal DateTime GetAddinDueDate(string module)
+        internal DateTime GetAddinDueDate(string addinCode)
         {
-            return licenseDAO.GetAddInDueDate(module);
+            return licenseDAO.GetAddInDueDate(addinCode);
         }
 
-        internal bool AddinIsValid(string addin, out DateTime dueDate)
+        internal bool AddinIsValid(string asmCode, out DateTime dueDate)
         {
             dueDate = DateTime.MinValue;
+            if (asmCode == null)
+                return false;
 
             var setup = new AppDomainSetup();
             setup.ApplicationName = "Dover.ConfigureDomain";
@@ -267,7 +268,7 @@ namespace Dover.Framework.Service
             AppDomain configureDomain = AppDomain.CreateDomain("ConfigureDomain", null, setup);
             try
             {
-                AssemblyInformation asm = asmDAO.GetAssemblyInformation(addin, AssemblyType.Addin);
+                AssemblyInformation asm = asmDAO.GetAssemblyInformation(asmCode);
                 fileUpdate.UpdateAppDataFolder(asm, tempDirectory);
 
                 configureDomain.SetData("assemblyName", "tempDomain");
@@ -278,7 +279,7 @@ namespace Dover.Framework.Service
 
                 if (asm != null)
                 {
-                    return licenseManager.AddinIsValid(addin, out dueDate);
+                    return licenseManager.AddinIsValid(asm.Name, out dueDate);
                 }
             }
             catch (Exception e)

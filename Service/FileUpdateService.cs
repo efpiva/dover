@@ -42,7 +42,7 @@ namespace Dover.Framework.Service
             }
             if (dependencies.Count == 0)
             {
-                AssemblyInformation coreAsm = asmDAO.GetAssemblyInformation("Framework", AssemblyType.Core);
+                AssemblyInformation coreAsm = asmDAO.GetCoreAssemblyInformation();
                 UpdateAppDataFolder(coreAsm, appFolder);
             }
         }

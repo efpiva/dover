@@ -45,27 +45,27 @@ namespace Dover.Framework.Service
             this.permissionDAO = permissionDAO;
         }
 
-        internal bool AddInEnabled(string addInName)
+        internal bool AddInEnabled(string addinCode)
         {
             Permission perm;
 
-            perm = permissionDAO.GetUserPermission(addInName);
+            perm = permissionDAO.GetUserPermission(addinCode);
             if (perm == Permission.Inactive)
                 return false;
             else if (perm == Permission.Active)
                 return true;
             else if (perm == Permission.Default)
             {
-                perm = permissionDAO.GetAddInPermission(addInName);
+                perm = permissionDAO.GetAddInPermission(addinCode);
                 return (perm == Permission.Active);
             }
 
             return false;
         }
 
-        internal void ConfigureAddIn(string addInName, Permission permission)
+        internal void ConfigureAddIn(string addinCode, Permission permission)
         {
-            permissionDAO.SaveAddInPermission(addInName, permission);
+            permissionDAO.SaveAddInPermission(addinCode, permission);
         }
 
         internal Permission ParsePermissionStr(string permissionStr)
@@ -81,11 +81,11 @@ namespace Dover.Framework.Service
             }
         }
 
-        internal void ConfigureAddIn(string addInName, string userName, Permission permission)
+        internal void ConfigureAddIn(string addinCode, string userName, Permission permission)
         {
-            string userPermissionCode = permissionDAO.GetUserPermissionCode(addInName, userName);
+            string userPermissionCode = permissionDAO.GetUserPermissionCode(addinCode, userName);
             if (userPermissionCode == null)
-                permissionDAO.SaveAddInPermission(addInName, userName, permission);
+                permissionDAO.SaveAddInPermission(addinCode, userName, permission);
             else
                 permissionDAO.UpdateAddInPermission(userPermissionCode, permission);
         }

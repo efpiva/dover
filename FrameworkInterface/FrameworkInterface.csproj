@@ -86,7 +86,6 @@
     <Compile Include="IAddinManager.cs" />
     <Compile Include="IAppEventHandler.cs" />
     <Compile Include="IApplication.cs" />
-    <Compile Include="IAssemblyChangeLog.cs" />
     <Compile Include="IConfigAddin.cs" />
     <Compile Include="IEventDispatcher.cs" />
     <Compile Include="IFormEventHandler.cs" />

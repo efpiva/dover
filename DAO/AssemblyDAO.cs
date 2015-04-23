@@ -32,7 +32,7 @@ namespace Dover.Framework.DAO
 
         internal abstract List<AssemblyInformation> GetAssembliesInformation(AssemblyType type);
 
-        internal abstract AssemblyInformation GetAssemblyInformation(string asmName, AssemblyType type);
+        internal abstract AssemblyInformation GetAssemblyInformation(string asmCode);
 
         internal abstract void SaveAssembly(AssemblyInformation currentAsm, byte[] asmBytes);
 
@@ -55,5 +55,9 @@ namespace Dover.Framework.DAO
         internal abstract void DeleteOrphanDependency();
 
         internal abstract List<AssemblyInformation> GetAllAssembliesInformation(AssemblyType assemblyType);
+
+        internal abstract AssemblyInformation GetCoreAssemblyInformation();
+
+        internal abstract string GetAssemblyCode(string addinName, string addinNamespace, AssemblyType type);
     }
 }

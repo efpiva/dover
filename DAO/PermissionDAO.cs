@@ -28,15 +28,15 @@ namespace Dover.Framework.DAO
 {
     internal abstract class PermissionDAO
     {
-        internal abstract Permission GetUserPermission(string addInName);
+        internal abstract Permission GetUserPermission(string addinCode);
 
-        internal abstract Permission GetAddInPermission(string addInName);
+        internal abstract Permission GetAddInPermission(string addinCode);
 
-        internal abstract void SaveAddInPermission(string addInName, Permission permission);
+        internal abstract void SaveAddInPermission(string addinCode, Permission permission);
 
-        internal abstract string GetUserPermissionCode(string addInName, string userName);
+        internal abstract string GetUserPermissionCode(string addinCode, string userName);
 
-        internal abstract void SaveAddInPermission(string addInName, string userName, Permission permission);
+        internal abstract void SaveAddInPermission(string addinCode, string userName, Permission permission);
 
         internal abstract void UpdateAddInPermission(string userPermissionCode, Permission permission);
     }

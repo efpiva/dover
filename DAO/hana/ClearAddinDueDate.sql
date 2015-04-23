@@ -1,1 +1,1 @@
-﻿UPDATE "@DOVER_MODULES" SET "U_DueDate" = '{1}' WHERE "U_Name" = null
+﻿UPDATE "@DOVER_MODULES" SET "U_DueDate" = '{1}' WHERE "Code" = null

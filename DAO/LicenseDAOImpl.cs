@@ -140,9 +140,9 @@ namespace Dover.Framework.DAO
             }
         }
 
-        public DateTime GetAddInDueDate(string addin)
+        public DateTime GetAddInDueDate(string addinCode)
         {
-            return b1DAO.ExecuteSqlForObject<DateTime>(string.Format(this.GetSQL("GetAddinDueDate.sql"), addin));
+            return b1DAO.ExecuteSqlForObject<DateTime>(string.Format(this.GetSQL("GetAddinDueDate.sql"), addinCode));
         }
 
         public List<string> getAddinsByNamespace(string licenseNamespace)
@@ -162,15 +162,15 @@ namespace Dover.Framework.DAO
             }
         }
 
-        public void UpdateAddinDueDate(string addin, DateTime dueDate)
+        public void UpdateAddinDueDate(string addinCode, DateTime dueDate)
         {
             if (dueDate == DateTime.MinValue)
             {
-                b1DAO.ExecuteStatement(string.Format(this.GetSQL("ClearAddinDueDate.sql"), addin));
+                b1DAO.ExecuteStatement(string.Format(this.GetSQL("ClearAddinDueDate.sql"), addinCode));
             }
             else
             {
-                b1DAO.ExecuteStatement(string.Format(this.GetSQL("UpdateAddinDueDate.sql"), addin, dueDate.ToString("yyyyMMdd")));
+                b1DAO.ExecuteStatement(string.Format(this.GetSQL("UpdateAddinDueDate.sql"), addinCode, dueDate.ToString("yyyyMMdd")));
             }
         }
     }

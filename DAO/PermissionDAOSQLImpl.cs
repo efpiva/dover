@@ -54,6 +54,8 @@ namespace Dover.Framework.DAO
                 }
             }
             public string PermissionStr { get; set; }
+
+            public string AddinCode { get; set; }
         }
 
         private BusinessOneDAO b1DAO;
@@ -68,7 +70,7 @@ namespace Dover.Framework.DAO
                 this.GetSQL("GetModulePermission.sql"));
             foreach (var permission in addInPermission)
             {
-                addInHash.Add(permission.AddInName, permission.Permission);
+                addInHash.Add(permission.AddinCode, permission.Permission);
                 Logger.Debug(DebugString.Format(Messages.AddInPermission, permission.AddInName, permission.Permission));
             }
             string currentUser = b1DAO.GetCurrentUser();
@@ -77,46 +79,42 @@ namespace Dover.Framework.DAO
                 );
             foreach (var permission in addInPermission)
             {
-                userAddInHash.Add(permission.AddInName, permission.Permission);
+                userAddInHash.Add(permission.AddinCode, permission.Permission);
                 Logger.Debug(DebugString.Format(Messages.AddInUserPermission, currentUser, permission.AddInName, permission.Permission));
             }
         }
 
-        internal override Permission GetUserPermission(string addInName)
+        internal override Permission GetUserPermission(string addinCode)
         {
             Permission value;
-            userAddInHash.TryGetValue(addInName, out value);
+            userAddInHash.TryGetValue(addinCode, out value);
             return value;
         }
 
-        internal override Permission GetAddInPermission(string addInName)
+        internal override Permission GetAddInPermission(string addinCode)
         {
             Permission value;
-            addInHash.TryGetValue(addInName, out value);
+            addInHash.TryGetValue(addinCode, out value);
             return value;
         }
 
 
-        internal override void SaveAddInPermission(string addInName, Permission permission)
+        internal override void SaveAddInPermission(string addinCode, Permission permission)
         {
             b1DAO.ExecuteStatement(string.Format(this.GetSQL("SaveAddinPermission.sql"),
-                GetPermissionStr(permission), addInName));
+                GetPermissionStr(permission), addinCode));
         }
 
-        internal override string GetUserPermissionCode(string addInName, string userName)
+        internal override string GetUserPermissionCode(string addinCode, string userName)
         {
-            var moduleCode = b1DAO.ExecuteSqlForObject<string>(string.Format(
-                this.GetSQL("GetModuleCode.sql"), addInName));
             return  b1DAO.ExecuteSqlForObject<string>(string.Format(
-                this.GetSQL("GetUserPermissionCode.sql"), moduleCode, userName));
+                this.GetSQL("GetUserPermissionCode.sql"), addinCode, userName));
         }
 
-        internal override void SaveAddInPermission(string addInName, string userName, Permission permission)
+        internal override void SaveAddInPermission(string addinCode, string userName, Permission permission)
         {
-            var moduleCode = b1DAO.ExecuteSqlForObject<string>(string.Format(
-                this.GetSQL("GetModuleCode.sql"), addInName));
             var nextCode = b1DAO.GetNextCode("DOVER_MODULES_USER");
-            b1DAO.ExecuteStatement(string.Format(this.GetSQL("SaveAddinUserPermission.sql"), nextCode, moduleCode, GetPermissionStr(permission), userName));
+            b1DAO.ExecuteStatement(string.Format(this.GetSQL("SaveAddinUserPermission.sql"), nextCode, addinCode, GetPermissionStr(permission), userName));
         }
 
         internal override void UpdateAddInPermission(string userPermissionCode, Permission permission)

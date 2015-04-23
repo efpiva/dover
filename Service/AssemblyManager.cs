@@ -175,6 +175,7 @@ namespace Dover.Framework.Service
                         asmInfo.Description = addInAttribute.Description;
                     }
                     asmInfo.Name = addInAttribute.Name;
+                    asmInfo.Namespace = addInAttribute.Namespace;
                     break;
                 }
             }
@@ -208,9 +209,9 @@ namespace Dover.Framework.Service
             this.fileUpdate = fileUpdate;
         }
 
-        internal void RemoveAddIn(string moduleName)
+        internal void RemoveAddIn(string addinCode)
         {
-            AssemblyInformation asm = asmDAO.GetAssemblyInformation(moduleName, AssemblyType.Addin);
+            AssemblyInformation asm = asmDAO.GetAssemblyInformation(addinCode);
             if (asm != null)
             {
                 List<AssemblyInformation> dependencies = asmDAO.GetDependencies(asm);
@@ -222,7 +223,7 @@ namespace Dover.Framework.Service
                     }
                 }
                 asmDAO.RemoveAssembly(asm.Code);
-                Logger.Info(string.Format(Messages.RemoveAddinSuccess, moduleName));
+                Logger.Info(string.Format(Messages.RemoveAddinSuccess, asm.Name));
             }
         }
 
@@ -230,9 +231,11 @@ namespace Dover.Framework.Service
         /// Return true if the addin is valid.
         /// </summary>
         /// <param name="path">Path name for the intended addin</param>
-        /// <param name="comments">DataTable serialized, to be displayed to the user with db change information.</param>
+        /// <param name="datatable">DataTable serialized, to be displayed to the user with db change information.</param>
+        /// <param name="addinName">Name of the addin, defined using an AddinAttribute</param>
+        /// <param name="addinName">Namespace of the addin, defined using an AddinAttribute</param>
         /// <returns>true if addin is valid</returns>
-        internal bool AddInIsValid(string path, out string datatable)
+        internal bool AddInIsValid(string path, out string datatable, out string addinName, out string addinNamespace)
         {
             string extension = Path.GetExtension(path);
             AppDomain testDomain = null;
@@ -253,6 +256,8 @@ namespace Dover.Framework.Service
             if (mainDll == null)
             {
                 datatable = string.Empty;
+                addinName = string.Empty;
+                addinNamespace = string.Empty;
                 return false;
             }
 
@@ -264,7 +269,7 @@ namespace Dover.Framework.Service
                 IApplication testApp = (IApplication)testDomain.CreateInstanceAndUnwrap("Framework", "Dover.Framework.Application");
                 SAPServiceFactory.PrepareForInception(testDomain);
                 var addinManager = testApp.Resolve<IAddinManager>();
-                ret = addinManager.CheckAddinConfiguration(mainDll, out datatable);
+                ret = addinManager.CheckAddinConfiguration(mainDll, out datatable, out addinName, out addinNamespace);
             }
             finally
             {
@@ -357,13 +362,13 @@ namespace Dover.Framework.Service
         /// be errors during addin startup.
         /// </summary>
         /// <param name="path">path for the file to be saved</param>
-        /// <returns>Name of saved addin</returns>
-        internal string SaveAddIn(string path)
+        /// <param name="addinName">Name of the addin</param>
+        /// <param name="addinNamespace">Namespace of the addin</param>
+        internal void SaveAddIn(string path, string addinName, string addinNamespace)
         {
             if (path == null || path.Length < 4)
             {
                 Logger.Error(string.Format(Messages.SaveAddInError, path.Return( x => x, String.Empty)));
-                return string.Empty;
             }
             else
             {
@@ -374,32 +379,30 @@ namespace Dover.Framework.Service
                     if (!fileName.EndsWith(".dover"))
                     {
                         Logger.Error(Messages.InvalidAddInExtension);
-                        return string.Empty;
                     }
 
-                    string addInName = Path.GetFileNameWithoutExtension(fileName);
-                    AssemblyType type = (addInName == "Framework") ? AssemblyType.Core : AssemblyType.Addin;
+                    AssemblyType type = (addinName == "Framework" && addinNamespace == "Dover") ? AssemblyType.Core : AssemblyType.Addin;
 
                     directory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
                     Directory.CreateDirectory(directory);
                     fileName = UnzipFile(path, directory);
 
-                    AssemblyInformation existingAsm = asmDAO.GetAssemblyInformation(addInName, type);
+                    string addinCode = asmDAO.GetAssemblyCode(addinName, addinNamespace, AssemblyType.Addin);
+                    AssemblyInformation existingAsm = null;
+                    if (addinCode != null)
+                        existingAsm = asmDAO.GetAssemblyInformation(addinCode);
                     AssemblyInformation newAsm = GetCurrentAsm(directory, fileName, type);
                     AssemblyInformation savedAsm = SaveIfNotExistsOrDifferent(existingAsm, newAsm, directory);
 
                     Logger.Info(string.Format(Messages.SaveAddInSuccess, path));
-                    return addInName;
                 }
                 catch (InvalidCastException e)
                 {
                     Logger.Error(string.Format(Messages.UpdateFrameworkError));
-                    return string.Empty;
                 }
                 catch (Exception e)
                 {
                     Logger.Error(string.Format(Messages.SaveAddInError, path), e);
-                    return string.Empty;
                 }
             }
 
@@ -409,7 +412,7 @@ namespace Dover.Framework.Service
         {
             Logger.Debug(DebugString.Format(Messages.UpdatingAssembly, AssemblyType.Core));
 
-            AssemblyInformation asm = asmDAO.GetAssemblyInformation("Framework", AssemblyType.Core);
+            AssemblyInformation asm = asmDAO.GetCoreAssemblyInformation();
             UpdateFrameworkDBAssembly(ref asm);
             fileUpdate.UpdateAppDataFolder(asm, appFolder);
         }
@@ -506,7 +509,7 @@ namespace Dover.Framework.Service
                     }
                 }
                 asmDAO.DeleteOrphanDependency();
-                licenseManager.UpdateAddinDueDate(newAsm.Name);
+                licenseManager.UpdateAddinDueDate(newAsm);
                 return newAsm;
             }
             else
@@ -545,6 +548,7 @@ namespace Dover.Framework.Service
                     newInfo.MD5 = string.Copy(dep.MD5);
                     newInfo.Minor = dep.Minor;
                     newInfo.Name = string.Copy(dep.Name);
+                    newInfo.Namespace = string.Empty;
                     newInfo.Description = string.Copy(dep.Description);
                     newInfo.Revision = dep.Revision;
                     newInfo.Size = dep.Size;

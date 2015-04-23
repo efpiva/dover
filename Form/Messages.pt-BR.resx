@@ -342,4 +342,7 @@
   <data name="LicenseEmpty" xml:space="preserve">
     <value>Sem licença</value>
   </data>
+  <data name="AdminModuleNamespace" xml:space="preserve">
+    <value>Namespace</value>
+  </data>
 </root>

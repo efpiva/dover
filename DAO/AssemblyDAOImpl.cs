@@ -35,9 +35,9 @@ namespace Dover.Framework.DAO
             this.b1DAO = b1DAO;
         }
 
-        internal override AssemblyInformation GetAssemblyInformation(string asmFile, AssemblyType type)
+        internal override AssemblyInformation GetAssemblyInformation(string asmCode)
         {
-            String sql = string.Format(this.GetSQL("GetAssemblyInformation.sql"), asmFile, AssemblyInformation.ConvertTypeToCode(type));
+            String sql = string.Format(this.GetSQL("GetAssemblyInformation.sql"), asmCode);
             return b1DAO.ExecuteSqlForObject<AssemblyInformation>(sql);
         }
 
@@ -89,7 +89,7 @@ namespace Dover.Framework.DAO
                 asm.Code = b1DAO.GetNextCode("DOVER_MODULES");
                 sql = String.Format(this.GetSQL("SaveAssembly.sql"),
                         asm.Code, asm.Code, asm.Name, asm.Description, asm.FileName, asm.Version, asm.MD5, asm.Date.ToString("yyyyMMdd"), asmBytes.Length,
-                        asm.TypeCode, installed);
+                        asm.TypeCode, installed, asm.Namespace);
             }
             else
             {
@@ -182,6 +182,18 @@ namespace Dover.Framework.DAO
             {
                 RemoveAssembly(code);
             }
+        }
+
+        internal override AssemblyInformation GetCoreAssemblyInformation()
+        {
+            string asmCode = GetAssemblyCode("Framework", "DOVER", AssemblyType.Core);
+            return GetAssemblyInformation(asmCode);
+        }
+
+        internal override string GetAssemblyCode(string addinName, string addinNamespace, AssemblyType type)
+        {
+            return b1DAO.ExecuteSqlForObject<string>(string.Format(this.GetSQL("GetAssemblyCode.sql"),
+                addinName, addinNamespace, AssemblyInformation.ConvertTypeToCode(type)));
         }
     }
 }

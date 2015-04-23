@@ -33,12 +33,12 @@ namespace Dover.Framework.DAO
 
         DateTime GetDate();
 
-        DateTime GetAddInDueDate(string addin);
+        DateTime GetAddInDueDate(string addinCode);
 
         List<string> getAddinsByNamespace(string licenseNamespace);
 
         void UpdateNamespaceDueDate(string licenseNamespace, DateTime dateTime);
 
-        void UpdateAddinDueDate(string addin, DateTime dueDate);
+        void UpdateAddinDueDate(string addinCode, DateTime dueDate);
     }
 }

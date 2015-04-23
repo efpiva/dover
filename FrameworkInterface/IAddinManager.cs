@@ -23,19 +23,19 @@ namespace Dover.Framework.Interface
 
         void ConfigureAddinsI18N();
 
-        bool CheckAddinConfiguration(string mainDll, out string datatable);
+        bool CheckAddinConfiguration(string mainDll, out string datatable, out string addinName, out string addinNamespace);
 
         void LoadAddins(List<Model.AssemblyInformation> addins);
 
-        string GetAddinChangeLog(string module);
+        string GetAddinChangeLog(string addinCode);
 
-        AddinStatus GetAddinStatus(string name);
+        AddinStatus GetAddinStatus(string addinCode);
 
-        void InstallAddin(string moduleName);
+        void InstallAddin(string addinCode);
 
-        void ShutdownAddin(string moduleName);
+        void ShutdownAddin(string addinCode);
 
-        void StartAddin(string moduleName);
+        void StartAddin(string addinCode);
 
         bool Initialized { get; set; }
     }

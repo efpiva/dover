@@ -92,7 +92,7 @@ namespace Dover.Framework.Form
                 licenseDT.Rows.Add();
                 licenseDT.SetValue("Name", i, module.Name);
                 licenseDT.SetValue("Description", i, module.Description);
-                DateTime dueDate = licenseManager.GetAddinDueDate(module.Name);
+                DateTime dueDate = licenseManager.GetAddinDueDate(module.Code);
                 string dueDateStr = (dueDate == DateTime.MinValue) ? Messages.LicenseEmpty : dueDate.ToShortDateString();
                 licenseDT.SetValue("DueDate", i, dueDateStr);
             }

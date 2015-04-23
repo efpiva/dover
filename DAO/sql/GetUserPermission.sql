@@ -1,4 +1,4 @@
-﻿SELECT [@DOVER_MODULES].U_Name AddInName, 
+﻿SELECT  [@DOVER_MODULES].Code AddinCode, [@DOVER_MODULES].U_Name AddInName, 
                             case ISNULL([@DOVER_MODULES_USER].U_Status, [@DOVER_MODULES].U_Status) when 'D' then [@DOVER_MODULES].U_Status
                                     else ISNULL([@DOVER_MODULES_USER].U_Status, [@DOVER_MODULES].U_Status) end PermissionStr
                      from [@DOVER_MODULES]

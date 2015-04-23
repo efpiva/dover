@@ -37,34 +37,6 @@ using Dover.Framework.Interface;
 
 namespace Dover.Framework.Service
 {
-    internal class AssemblyChangeLog : MarshalByRefObject, IAssemblyChangeLog
-    {
-        string IAssemblyChangeLog.GetAddinChangeLog(string addin)
-        {
-            Assembly asm = Assembly.Load(addin);
-            foreach (var type in asm.GetTypes())
-            {
-                object[] custAttr = type.GetCustomAttributes(typeof(AddInAttribute), true);
-                if (custAttr.Count() > 0)
-                {
-                    AddInAttribute attr = (AddInAttribute)custAttr[0];
-                    if (attr.ChangeLogResource != null)
-                    {
-                        using (var stream = asm.GetManifestResourceStream(attr.ChangeLogResource))
-                        {
-                            if (stream != null)
-                            {
-                                StreamReader sr = new StreamReader(stream);
-                                return sr.ReadToEnd();
-                            }
-                        }
-                    }
-                }
-            }
-            return string.Empty;
-        }
-    }
-
     internal class ConfigAddin : MarshalByRefObject, IConfigAddin
     {
 
@@ -171,11 +143,11 @@ namespace Dover.Framework.Service
             try
             {
                 runningAddins.Add(this);
-                runningAddinsHash.Add(asm.Name, this);
+                runningAddinsHash.Add(asm.Code, this);
 
                 var setup = new AppDomainSetup();
                 setup.ApplicationName = "Dover.Inception";
-                setup.ApplicationBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", asm.Name);
+                setup.ApplicationBase = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", asm.Namespace, asm.Name);
                 var domain = AppDomain.CreateDomain("Dover.AddIn", null, setup);
                 domain.SetData("shutdownEvent", shutdownEvent); // Thread synchronization
                 domain.SetData("bootEvent", bootEvent);
@@ -265,9 +237,9 @@ namespace Dover.Framework.Service
         private void LoadAddin(AssemblyInformation addin)
         {
             DateTime dueDate;
-            if (licenseManager.AddinIsValid(addin.Name, out dueDate))
+            if (licenseManager.AddinIsValid(addin.Code, out dueDate))
             {
-                string directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", addin.Name);
+                string directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", addin.Namespace, addin.Name);
                 Directory.CreateDirectory(directory);
                 fileUpdate.UpdateAppDataFolder(addin, directory);
                 if (!IsInstalled(addin.Code))
@@ -315,7 +287,7 @@ namespace Dover.Framework.Service
         {
             using (var source = Assembly.GetExecutingAssembly().GetManifestResourceStream("Dover.Framework.DoverAddin.config"))
             {
-                var destination = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", addin.Name, addin.Name + ".config");
+                var destination = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", addin.Namespace, addin.Name, addin.Name + ".config");
 
                 if (source != null && !File.Exists(destination))
                 {
@@ -335,12 +307,15 @@ namespace Dover.Framework.Service
             }
         }
 
-        bool IAddinManager.CheckAddinConfiguration(string assemblyName, out string xmlDataTable)
+        bool IAddinManager.CheckAddinConfiguration(string assemblyName, out string xmlDataTable,
+                                    out string addinName, out string addinNamespace)
         {
             Assembly assembly = Assembly.Load(assemblyName);
             XDocument dataTable = CreateDTXML();
 
             bool isValid = false;
+            addinName = string.Empty;
+            addinNamespace = string.Empty;
             string tempComments = string.Empty;
             xmlDataTable = string.Empty;
 
@@ -365,9 +340,12 @@ namespace Dover.Framework.Service
                     else if (attr is AddInAttribute &&
                         (!string.IsNullOrWhiteSpace(((AddInAttribute)attr).Description)
                          || !string.IsNullOrWhiteSpace(((AddInAttribute)attr).i18n))
-                        && !string.IsNullOrWhiteSpace(((AddInAttribute)attr).Name))
+                        && !string.IsNullOrWhiteSpace(((AddInAttribute)attr).Name)
+                        && !string.IsNullOrWhiteSpace(((AddInAttribute)attr).Namespace))
                     {
                         isValid = true;
+                        addinName = ((AddInAttribute)attr).Name;
+                        addinNamespace = ((AddInAttribute)attr).Namespace;
                     }
                 }
             }
@@ -529,7 +507,7 @@ namespace Dover.Framework.Service
             var authorized = new List<AssemblyInformation>();
             foreach (var addin in addins)
             {
-                if (permissionManager.AddInEnabled(addin.Name))
+                if (permissionManager.AddInEnabled(addin.Code))
                     authorized.Add(addin);
             }
             return authorized;
@@ -578,88 +556,66 @@ namespace Dover.Framework.Service
             System.Windows.Forms.Application.Exit(); // free main Inception thread.
         }
 
-        AddinStatus IAddinManager.GetAddinStatus(string name)
+        AddinStatus IAddinManager.GetAddinStatus(string addinCode)
         {
-            return (runningAddinsHash.ContainsKey(name)) ? AddinStatus.Running : AddinStatus.Stopped;
+            return (runningAddinsHash.ContainsKey(addinCode)) ? AddinStatus.Running : AddinStatus.Stopped;
         }
 
-        void IAddinManager.ShutdownAddin(string name)
+        void IAddinManager.ShutdownAddin(string addinCode)
         {
-            this.ShutdownAddin(name);
+            this.ShutdownAddin(addinCode);
         }
 
         [Transaction]
-        protected internal virtual void ShutdownAddin(string name)
+        protected internal virtual void ShutdownAddin(string addinCode)
         {
-            var runningBackup = runningAddIns;
-            var runningHashBackup = runningAddinsHash;
-            try
+            AddInRunner addin;
+            runningAddinsHash.TryGetValue(addinCode, out addin);
+            if (addin != null)
             {
-                AddInRunner addin;
-                runningAddinsHash.TryGetValue(name, out addin);
-                if (addin != null)
-                {
-                    Logger.Info(string.Format(Messages.ShutdownAddin, addin.asm.Name));
-                    addin.eventDispatcher.UnregisterEvents();
-                    addin.addinFormEventHandler.UnRegisterForms();
-                    addin.shutdownEvent.Set();
-                }
-            }
-            catch (Exception e)
-            {
-                // rollback memory state.
-                runningAddIns = runningBackup;
-                runningAddinsHash = runningHashBackup;
-                throw e;
+                runningAddIns.Remove(addin);
+                runningAddinsHash.Remove(addinCode);
+                Logger.Info(string.Format(Messages.ShutdownAddin, addin.asm.Name));
+                addin.eventDispatcher.UnregisterEvents();
+                addin.addinFormEventHandler.UnRegisterForms();
+                addin.shutdownEvent.Set();
             }
         }
 
-        void IAddinManager.StartAddin(string name)
+        void IAddinManager.StartAddin(string addinCode)
         {
-            this.StartAddin(name);
+            this.StartAddin(addinCode);
         }
 
         [Transaction]
-        protected internal virtual void StartAddin(string name)
+        protected internal virtual void StartAddin(string addinCode)
         {
-            AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, AssemblyType.Addin);
-            LoadAddin(asmInfo);
+            AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(addinCode);
+            if (asmInfo != null)
+                LoadAddin(asmInfo);
         }
 
-        void IAddinManager.InstallAddin(string name)
+        void IAddinManager.InstallAddin(string addinCode)
         {
-            this.InstallAddin(name);
+            this.InstallAddin(addinCode);
         }
 
         [Transaction]
-        protected internal virtual void InstallAddin(string name)
+        protected internal virtual void InstallAddin(string addinCode)
         {
-            AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(name, AssemblyType.Addin);
+            AssemblyInformation asmInfo = assemblyDAO.GetAssemblyInformation(addinCode);
             if (asmInfo != null)
             {
-                string directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", asmInfo.Name);
+                string directory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "addIn", asmInfo.Namespace, asmInfo.Name);
+                Directory.CreateDirectory(directory);
+                fileUpdate.UpdateAppDataFolder(asmInfo, directory);
                 InstallAddin(asmInfo, directory);
             }
         }
         
-        string IAddinManager.GetAddinChangeLog(string addin)
+        string IAddinManager.GetAddinChangeLog(string addinCode)
         {
-            var setup = new AppDomainSetup();
-            setup.ApplicationName = "Dover.ConfigureDomain";
-            setup.ApplicationBase = Environment.CurrentDirectory;
-            AppDomain tempDomain = AppDomain.CreateDomain("ChangeLogDomain", null, setup);
-            try
-            {
-                IApplication app = (IApplication)tempDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
-                    "Dover.Framework.Application");  // config assembly resolver for dependencies.
-                IAssemblyChangeLog asmCL = (IAssemblyChangeLog)tempDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName,
-                    "Dover.Framework.Service.AssemblyChangeLog");
-                return asmCL.GetAddinChangeLog(addin);
-            }
-            finally
-            {
-                AppDomain.Unload(tempDomain);
-            }
+            throw new NotImplementedException("replace with database stored information");
         }
 
         void IAddinManager.LogError(string msg)

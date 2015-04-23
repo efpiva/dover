@@ -1,4 +1,4 @@
-﻿SELECT "U_Name" AS "Name", "U_Version" AS "Version", "U_Description" AS "Description"
+﻿SELECT "Code", "U_Namespace" AS "Namespace", "U_Name" AS "Name", "U_Version" AS "Version", "U_Description" AS "Description"
     CASE 
         WHEN "U_Type" = 'C' THEN 'Core' 
         ELSE 'AddIn' 

@@ -34,6 +34,8 @@ namespace Dover.Framework.Model
 
     public class AssemblyInformation : MarshalByRefObject, IComparable<AssemblyInformation>
     {
+        public string Namespace { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }

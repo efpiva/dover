@@ -532,6 +532,12 @@
   <ItemGroup>
     <EmbeddedResource Include="DAO\hana\ClearNamespaceDueDate.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\hana\GetAssemblyCode.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="DAO\sql\GetAssemblyCode.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd $(ProjectDir)

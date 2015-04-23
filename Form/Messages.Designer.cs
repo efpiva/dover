@@ -205,6 +205,15 @@ namespace Dover.Framework.Form {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Namespace.
+        /// </summary>
+        internal static string AdminModuleNamespace {
+            get {
+                return ResourceManager.GetString("AdminModuleNamespace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Type.
         /// </summary>
         internal static string AdminModuleType {

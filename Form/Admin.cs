@@ -109,13 +109,12 @@ namespace Dover.Framework.Form
             for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
             {
                 int rowId = moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder);
-                string moduleName = (string)moduleDT.GetValue("Name", rowId);
+                string moduleCode = (string)moduleDT.GetValue("Code", rowId);
                 string type = (string)moduleDT.GetValue("Type", rowId);
                 if (type == "AddIn")
-                    frameworkAddinManager.InstallAddin(moduleName);
+                    frameworkAddinManager.InstallAddin(moduleCode);
             }
-            UpdateInstallGrid();
-            UpdateLicenseGrid();
+            UpdateGrid();
             moduleGrid_ClickAfter(sboObject, pVal);
         }
 
@@ -124,13 +123,12 @@ namespace Dover.Framework.Form
             for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
             {
                 int rowId = moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder);
-                string moduleName = (string)moduleDT.GetValue("Name", rowId);
+                string moduleCode = (string)moduleDT.GetValue("Code", rowId);
                 string type = (string)moduleDT.GetValue("Type", rowId);
                 if (type == "AddIn")
-                    frameworkAddinManager.ShutdownAddin(moduleName);
+                    frameworkAddinManager.ShutdownAddin(moduleCode);
             }
-            UpdateInstallGrid();
-            UpdateLicenseGrid();
+            UpdateGrid();
             moduleGrid_ClickAfter(sboObject, pVal);
         }
 
@@ -139,13 +137,12 @@ namespace Dover.Framework.Form
             for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
             {
                 int rowId = moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder);
-                string moduleName = (string)moduleDT.GetValue("Name", rowId);
+                string moduleCode = (string)moduleDT.GetValue("Code", rowId);
                 string type = (string)moduleDT.GetValue("Type", rowId);
                 if (type == "AddIn")
-                    frameworkAddinManager.StartAddin(moduleName);
+                    frameworkAddinManager.StartAddin(moduleCode);
             }
-            UpdateInstallGrid();
-            UpdateLicenseGrid();
+            UpdateGrid();
             moduleGrid_ClickAfter(sboObject, pVal);
         }
 
@@ -153,12 +150,12 @@ namespace Dover.Framework.Form
         {
             for (int i = 0; i < moduleDT.Rows.Count; i++)
             {
-                string name = (string)moduleDT.GetValue("Name", i);
+                string code = (string)moduleDT.GetValue("Code", i);
                 string type = (string)moduleDT.GetValue("Type", i);
                 string status;
                 if (type == "AddIn")
                 {
-                    AddinStatus addinStatus = frameworkAddinManager.GetAddinStatus(name);
+                    AddinStatus addinStatus = frameworkAddinManager.GetAddinStatus(code);
                     status = (addinStatus == AddinStatus.Running) ? "R" : "S";
                 }
                 else
@@ -216,12 +213,7 @@ namespace Dover.Framework.Form
         {
         }
 
-        protected virtual void UpdateLicenseGrid()
-        {
-            // overrid on AddInSetup.
-        }
-
-        protected void UpdateInstallGrid()
+        protected void UpdateGrid()
         {
             try
             {
@@ -261,15 +253,16 @@ namespace Dover.Framework.Form
                 try
                 {
                     SAPAppender.SilentMode = true; // Prevent messy log.
-                    if (asmLoader.AddInIsValid(modulePath.Value, out confirmation))
+                    string addinName, addinNamespace;
+                    if (asmLoader.AddInIsValid(modulePath.Value, out confirmation, out addinName, out addinNamespace))
                     {
                         if (string.IsNullOrEmpty(confirmation))
                         {
-                            InstallAddin();
+                            InstallAddin(addinName, addinNamespace);
                         }
                         else
                         {
-                            GetUserConfirmation(confirmation);
+                            GetUserConfirmation(confirmation, addinName, addinNamespace);
                         }
                     }
                     else
@@ -285,17 +278,19 @@ namespace Dover.Framework.Form
             }
         }
 
-        private void GetUserConfirmation(string xml)
+        private void GetUserConfirmation(string xml, string addinName, string addinNamespace)
         {
             DBChange dbChangeForm = CreateForm<DBChange>();
             dbChangeForm.BaseForm = this;
+            dbChangeForm.addinName = addinName;
+            dbChangeForm.addinNamespace = addinNamespace;
             dbChangeForm.DBChangeDT.LoadSerializedXML(BoDataTableXmlSelect.dxs_DataOnly, xml);
             dbChangeForm.Show();
         }
 
-        internal void InstallAddin()
+        internal void InstallAddin(string addinName, string addinNamespace)
         {
-            string addinName = asmLoader.SaveAddIn(modulePath.Value);
+            asmLoader.SaveAddIn(modulePath.Value, addinName, addinNamespace);
             if (addinName == "Framework")
             {
                 if (app.MessageBox(Messages.AdminConfirmReboot, 1, Messages.AdminOK, Messages.AdminCancel) == 1)
@@ -310,8 +305,7 @@ namespace Dover.Framework.Form
                     frameworkAddinManager.ShutdownAddin(addinName);
                     frameworkAddinManager.StartAddin(addinName);
                 }
-                UpdateInstallGrid();
-                UpdateLicenseGrid();
+                UpdateGrid();
                 SAPAppender.SilentMode = false;
                 Logger.Info(Messages.AdminSuccessInstall);
             }
@@ -323,16 +317,15 @@ namespace Dover.Framework.Form
             for (int i = 0; i < moduleGrid.Rows.SelectedRows.Count; i++)
             {
                 int rowId = moduleGrid.Rows.SelectedRows.Item(i, BoOrderType.ot_RowOrder);
-                string moduleName = (string)moduleDT.GetValue("Name", rowId);
+                string moduleCode = (string)moduleDT.GetValue("Code", rowId);
                 string type = (string)moduleDT.GetValue("Type", rowId);
                 if (type == "AddIn")
                 {
-                    frameworkAddinManager.ShutdownAddin(moduleName);
-                    asmLoader.RemoveAddIn(moduleName);
+                    frameworkAddinManager.ShutdownAddin(moduleCode);
+                    asmLoader.RemoveAddIn(moduleCode);
                 }
             }
-            UpdateInstallGrid();
-            UpdateLicenseGrid();
+            UpdateGrid();
             moduleGrid_ClickAfter(sboObject, pVal);
         }
     }
