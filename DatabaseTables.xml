@@ -84,4 +84,32 @@
       </row>
     </UserTablesMD>
   </BO>
+  <BO>
+    <AdmInfo>
+      <Object>153</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserTablesMD>
+      <row>
+        <TableName>DOVER_LICENSE</TableName>
+        <TableDescription>Licese information</TableDescription>
+        <TableType>bott_NoObject</TableType>
+        <Archivable>tNO</Archivable>
+      </row>
+    </UserTablesMD>
+  </BO>
+  <BO>
+    <AdmInfo>
+      <Object>153</Object>
+      <Version>2</Version>
+    </AdmInfo>
+    <UserTablesMD>
+      <row>
+        <TableName>DOVER_LICENSE_BIN</TableName>
+        <TableDescription>Dover License</TableDescription>
+        <TableType>bott_NoObject</TableType>
+        <Archivable>tNO</Archivable>
+      </row>
+    </UserTablesMD>
+  </BO>
 </BOM>
