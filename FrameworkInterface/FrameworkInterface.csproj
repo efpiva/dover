@@ -67,7 +67,7 @@
       <HintPath>..\Assemblies\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="SAPbouiCOM">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\Extensions\SAP\Business One Studio\SAPbouiCOM.dll</HintPath>
+      <HintPath>..\Assemblies\SAPbouiCOM.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
