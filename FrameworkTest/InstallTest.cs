@@ -381,12 +381,43 @@ namespace FrameworkTest
             DoverSetup.bootDover(app);
             b1Company = app.Resolve<SAPbobsCOM.Company>();
             b1App = app.Resolve<SAPbouiCOM.Application>();
+            BusinessOneDAO b1DAO = app.Resolve<BusinessOneDAO>();
 
             Form adminForm = UIHelper.GetFormAfterAction("dover.formAdmin", b1App, () => b1App.Menus.Item("doverAdmin").Activate());
             string dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
             XDocument xdoc = XDocument.Parse(dtxml);
 
             CheckAddinStatus("DOVER_WL", "I18NExample", "Y", "R", xdoc);
+
+            AssertNoFrameworkError();
+            Assert.AreEqual(b1DAO.ExecuteSqlForObject<DateTime>(
+                string.Format("select U_DueDate from \"@DOVER_MODULES\" WHERE \"U_Name\" = '{0}' and \"U_Namespace\" = '{1}'",
+                "I18NExample", "DOVER_WL")), DateTime.Today.AddDays(3));
+        }
+
+        [TestMethod]
+        public void InstallAddinWithLicenseControlAndLicenseAndRestart()
+        {
+            InstallI18NAddinWithLicenseControl();
+            InstallLicense();
+
+            DoverSetup.shutdownDover();
+            DoverSetup.bootDover(app);
+            b1Company = app.Resolve<SAPbobsCOM.Company>();
+            b1App = app.Resolve<SAPbouiCOM.Application>();
+            BusinessOneDAO b1DAO = app.Resolve<BusinessOneDAO>();
+
+            Form adminForm = UIHelper.GetFormAfterAction("dover.formAdmin", b1App, () => b1App.Menus.Item("doverAdmin").Activate());
+            string dtxml = UIHelper.ExportDTXML(adminForm, "modDT");
+            XDocument xdoc = XDocument.Parse(dtxml);
+
+            CheckAddinStatus("DOVER_WL", "I18NExample", "Y", "R", xdoc);
+
+            AssertNoFrameworkError();
+            DateTime test = b1DAO.ExecuteSqlForObject<DateTime>(
+                string.Format("select U_DueDate from \"@DOVER_MODULES\" WHERE \"U_Name\" = '{0}' and \"U_Namespace\" = '{1}'",
+                "I18NExample", "DOVER_WL"));
+            Assert.AreEqual(test, DateTime.Today.AddDays(3));
         }
 
         [TestMethod]

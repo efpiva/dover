@@ -147,7 +147,7 @@ namespace Dover.Framework.DAO
 
         public List<string> getAddinsByNamespace(string licenseNamespace)
         {
-            return b1DAO.ExecuteSqlForList<string>(this.GetSQL("GetAddinsByNamespace.sql"));
+            return b1DAO.ExecuteSqlForList<string>(string.Format(this.GetSQL("GetAddinsByNamespace.sql"), licenseNamespace));
         }
 
         public void UpdateNamespaceDueDate(string licenseNamespace, DateTime dueDate)
