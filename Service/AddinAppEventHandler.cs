@@ -166,10 +166,11 @@ namespace Dover.Framework.Service
         private void filterDelegates(Dictionary<Type, EventHandlerMap> delegateTypes, Assembly currentAsm)
         {
             var attributes = (from type in currentAsm.GetTypes()
-                                  from method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic)
+                                  from method in type.GetMethods()
                                   from attribute in method.GetCustomAttributes(true)
                                   where attribute is AppEventAttribute
                                   select new {
+                                            AttributeType = attribute.GetType(),
                                             Assembly = currentAsm,
                                             Type = type,
                                             Method = method});
@@ -179,8 +180,8 @@ namespace Dover.Framework.Service
                 try
                 {
                     var obj = ContainerManager.Container.Resolve(a.Type);
-                    var genericDelegate = Delegate.CreateDelegate(delegateTypes[a.Type].EventHandlerType, obj, a.Method);
-                    delegateTypes[a.Type].EventList.Add(genericDelegate);
+                    var genericDelegate = Delegate.CreateDelegate(delegateTypes[a.AttributeType].EventHandlerType, obj, a.Method);
+                    delegateTypes[a.AttributeType].EventList.Add(genericDelegate);
                 }
                 catch (ArgumentException e)
                 {
