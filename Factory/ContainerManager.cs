@@ -127,7 +127,7 @@ namespace Dover.Framework.Factory
             }
         }
 
-        internal static IWindsorContainer BuildContainer()
+        public static IWindsorContainer BuildContainer()
         {
             string assemblyName;
             Func<SAPbobsCOM.Company>[] companyFactory =  (customCompanyFactory == null) 
