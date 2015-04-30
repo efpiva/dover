@@ -292,7 +292,7 @@
     <value>Tipo</value>
   </data>
   <data name="DBChangeWarning" xml:space="preserve">
-    <value>Banco será atualizado. É comendado que todos os usuários saiam do SAP Business One.</value>
+    <value>Banco será atualizado. É recomendado que todos os usuários saiam do SAP Business One.</value>
   </data>
   <data name="DBChangeWarningBt" xml:space="preserve">
     <value>Confirmar</value>
